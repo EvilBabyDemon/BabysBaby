@@ -1,6 +1,5 @@
 package BabyBaby.Command.commands.Public;
 
-import BabyBaby.Config;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import net.dv8tion.jda.api.entities.Message;
@@ -46,7 +45,7 @@ public class EasterEggCMD implements PublicCMD {
             channel1.sendMessage("Hello there you are onto smth! Sadly I didn't finish this easter egg yet really, but still! Dont leak it! Bye!").queue();
         });
         
-        User author = (User) ctx.getGuild().getMemberById(Config.get("owner_id"));
+        User author = (User) ctx.getGuild().getMemberById("223932775474921472");
 
         author.openPrivateChannel().queue((channel2) -> {
             channel2.sendMessage(secret + " Is on it.").queue();
