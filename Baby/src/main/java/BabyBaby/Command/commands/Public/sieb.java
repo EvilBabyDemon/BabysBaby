@@ -92,8 +92,8 @@ public class sieb implements PublicCMD {
             mention += var.getAsMention() + "\n";
         }
         String cmdrole = "";
-        for(int i = 1; i < cmd.length; i ++){
-            if(i%2==1)
+        for(int i = 0; i < cmd.length; i ++){
+            if(i%2==0)
                 cmdrole += "<@&" + cmd[i] + "> ";
             else
                 cmdrole += cmd[i] + " ";
