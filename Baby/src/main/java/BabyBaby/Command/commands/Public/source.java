@@ -34,7 +34,7 @@ public class source implements PublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        ctx.getChannel().sendMessage("Soon:tm:").queue();
+        ctx.getChannel().sendMessage("<https://github.com/EvilBabyDemon/BabysBaby>").queue();
     }   
 
     @Override
