@@ -1,0 +1,133 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 31.03.2021 18:55:46
+// Design Name: 
+// Module Name: FSMTopModule
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module FSMTopModule(
+    input clk,
+    input left,
+    input right,
+    input reset,
+    output LA,
+    output LB,
+    output LC,
+    output RA,
+    output RB,
+    output RC
+    );
+    
+    // CLOCK
+    wire clk_sig;
+    clk_div(.clk(clk), .rst(reset), .clk_en(clk_sig));
+    
+    reg[3:0] state_p;
+    //light dimm state
+    reg[1:0] state_li;
+    
+    
+    // NEXT STATE LOGIC
+    reg[3:0] state_n;
+    
+    always @ (posedge clk)
+        begin
+            
+            if(state_p[1] == 0 && state_p[0] == 0)
+                begin
+                    if(left)
+                        begin
+                            state_n[0] <= 1;
+                            state_n[3] <= 1;
+                        end
+                    if(right)
+                        begin
+                            state_n[0] <= 1;
+                            state_n[2] <= 1;
+                        end
+                end
+            else if(state_p[1] == 1 && state_p[0] == 1)
+                state_n <= 4'b0000;
+            else
+                begin
+                    state_n[1] <= (state_p[1] ^ state_p[0]);
+                    state_n[0] <= ~state_p[0];
+                end
+            if(reset)
+                begin
+                    state_n[0] <= 0;
+                    state_n[1] <= 0;
+                    state_n[2] <= 0;
+                    state_n[3] <= 0;
+                end
+            if(clk_sig)
+                state_p <= state_n;
+        end
+
+
+
+    // OUTPUT LOGIC
+    wire a,b,c,l,r;
+    
+    or(a, state_p[0], state_p[1]);
+    assign b = state_p[1];
+    and(c, state_p[0], state_p[1]);
+    assign r = state_p[2];
+    assign l = state_p[3];
+
+
+    state_li[0] <= a & ~b | c;
+    state_li[1] <= b;
+
+
+    always @ (posedge clk)
+        begin
+        
+        end
+
+
+    and(LA, a, l);
+    and(LB, b, l);
+    and(LC, c, l);
+    and(RA, a, r);
+    and(RB, b, r);
+    and(RC, c, r);
+    
+
+    //clock for first dimm state_li
+
+
+    always @ (posedge clk)
+        begin
+
+        end
+    
+    //clock for second dimm state_li
+    always @ (posedge clk)
+        begin
+        
+        
+        
+        end
+    
+
+
+
+
+
+endmodule

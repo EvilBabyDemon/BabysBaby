@@ -33,7 +33,7 @@ public class Baby {
             jda.addEventListener(new BabyListener(jda));
             //jda.addEventListener(new MyListener());
             jda.getPresence().setActivity(Activity.watching(" some pixels getting slowly placed."));
-        } catch (LoginException e) {
+        } catch (LoginException e) {    
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

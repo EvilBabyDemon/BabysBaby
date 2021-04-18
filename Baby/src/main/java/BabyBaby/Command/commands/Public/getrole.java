@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
@@ -45,11 +46,27 @@ public class getrole implements PublicCMD{
 
     @Override
     public String getName() {
-        return "getrole";
+        return "role";
     }
 
     @Override
     public void handlePublic(CommandContext ctx) {
+
+        List<String> cmds = ctx.getArgs();
+        
+        if(cmds.size() != 0){
+
+            
+
+
+
+
+
+
+
+
+        }
+
         Connection c = null;
         Statement stmt = null;
         MessageChannel channel = ctx.getChannel();

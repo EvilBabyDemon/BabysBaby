@@ -1,5 +1,6 @@
 package BabyBaby.Command.commands.Owner;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
@@ -24,15 +25,19 @@ public class SayMultiCMD implements OwnerCMD {
         MessageChannel channel = ctx.getChannel();
         
         List<String> args = ctx.getArgs();
+        LinkedList<String> cmds = new LinkedList<>();
 
+        for (String var : args) {
+            cmds.add(var);
+        }
 
-        int x = Integer.parseInt(args.remove(0));
+        int x = Integer.parseInt(cmds.get(0));
 
         Message message = ctx.getMessage();
         
         String content = message.getContentRaw();
 
-        content = content.substring(0, content.length());
+        content = content.substring(cmds.get(0).length(), content.length());
 
         channel.deleteMessageById(message.getId()).queue();
         for (int i = 0; i < x; i++) {

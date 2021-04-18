@@ -25,15 +25,15 @@ public class convert implements OwnerCMD {
     public void handleOwner(CommandContext ctx) {
         List<String> cmds = ctx.getArgs();
 
-        boolean onpc = Boolean.parseBoolean(cmds.get(1));
+        boolean onpc = Boolean.parseBoolean(cmds.get(0));
         
         try {
             
             BufferedImage img;
             if(onpc){
-                img = ImageIO.read(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\" + cmds.get(0)  + ".png"));
+                img = ImageIO.read(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\" + cmds.get(1)  + ".png"));
             } else{
-                img = ImageIO.read(new URL(cmds.get(0)));
+                img = ImageIO.read(new URL(cmds.get(1)));
             }
             
             int[][] rgbs = new int [img.getWidth()][img.getHeight()];
@@ -43,7 +43,7 @@ public class convert implements OwnerCMD {
                     rgbs[j][i] = img.getRGB(j, i);
                 }
             }
-            PrintStream out = new PrintStream(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\con" + cmds.get(0) + ".txt"));
+            PrintStream out = new PrintStream(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\con" + cmds.get(1) + ".txt"));
 
             for (int i = 0; i < img.getWidth(); i++) {
                 for (int j = 0; j < img.getHeight(); j++) {
@@ -59,10 +59,11 @@ public class convert implements OwnerCMD {
             out.flush();
             out.close();
 
-            ctx.getMessage().addReaction(":xmark:769279807916998728").queue();
+            ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
+            
             
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            ctx.getMessage().addReaction(":xmark:769279807916998728").queue();
             e.printStackTrace();
         }
         

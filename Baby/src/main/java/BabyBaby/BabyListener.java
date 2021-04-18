@@ -6,9 +6,6 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
-import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
-import net.dv8tion.jda.api.events.emote.update.GenericEmoteUpdateEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactionEvent;
@@ -20,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import BabyBaby.Command.commands.Bot.button;
 import BabyBaby.Command.commands.Bot.clock;
+import BabyBaby.Command.commands.Bot.drawwithFerris;
 import BabyBaby.Command.commands.Public.GetUnmute;
 import BabyBaby.Command.commands.Public.MuteCMD;
 import BabyBaby.data.data;
@@ -267,10 +265,17 @@ public class BabyListener extends ListenerAdapter {
             if (content.startsWith("Current value: ")) {
                 button.tap(event);
             }
-        } else if(event.getMessage().getContentRaw().equals("?bamboozle")){
+        } else if(user.getId().equals("590453186922545152") || user.getId().equals("223932775474921472")){
+            String content = event.getMessage().getContentRaw();
+            if(content.contains("781949572103536650")){
+                new drawwithFerris().drawing(event);
+            }
+        }
+        /*
+        else if(event.getMessage().getContentRaw().equals("?bamboozle")){
             manager.handle(event, "?");
         }
-        
+        */
         if (user.isBot() || event.isWebhookMessage()) {
             return;
         }

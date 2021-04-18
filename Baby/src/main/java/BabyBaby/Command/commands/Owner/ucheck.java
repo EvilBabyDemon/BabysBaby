@@ -37,7 +37,7 @@ public class ucheck implements OwnerCMD{
         }
 
         for (int i = 0; i < 1000; i++) {
-            for (int j = 0; j < 1000; j++) {
+            for (int j = 0; j < 1000; j++) {    
                 if(clock.rgbs[i][j] != 0 || clock.grid[i/100][j/100]){
                     clock.grid[i/100][j/100] = true;
                     j += -j%100 + 100;

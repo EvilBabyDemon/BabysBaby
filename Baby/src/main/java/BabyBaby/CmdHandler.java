@@ -12,6 +12,7 @@ import BabyBaby.Command.commands.Admin.whois;
 import BabyBaby.Command.commands.Owner.AdminHelpCMD;
 import BabyBaby.Command.commands.Owner.PlebHelpCMD;
 import BabyBaby.Command.commands.Owner.SayCMD;
+import BabyBaby.Command.commands.Owner.SayMultiCMD;
 import BabyBaby.Command.commands.Owner.SetButtonCMD;
 import BabyBaby.Command.commands.Owner.cleartable;
 import BabyBaby.Command.commands.Owner.convert;
@@ -21,8 +22,10 @@ import BabyBaby.Command.commands.Owner.operationsecret;
 import BabyBaby.Command.commands.Owner.sendollie;
 import BabyBaby.Command.commands.Owner.setPrefix;
 import BabyBaby.Command.commands.Owner.sort;
+import BabyBaby.Command.commands.Owner.stopdraw;
 import BabyBaby.Command.commands.Owner.testCMD;
 import BabyBaby.Command.commands.Owner.tick;
+import BabyBaby.Command.commands.Owner.toMultipixelCMD;
 import BabyBaby.Command.commands.Owner.ucheck;
 import BabyBaby.Command.commands.Owner.whereami;
 import BabyBaby.Command.commands.Public.DecryptCMD;
@@ -124,11 +127,12 @@ public class CmdHandler {
         addOwnerCommand(new ucheck());
         addOwnerCommand(new whereami());
         addOwnerCommand(new testCMD());
+        addOwnerCommand(new toMultipixelCMD());
+        addOwnerCommand(new stopdraw());
+        addOwnerCommand(new SayMultiCMD());
         //addOwnerCommand(new );
         addPublicCommand(new HelpCMD(this));
         //addPublicCommand(new EasterEggCMD());
-
-
 
     }
 

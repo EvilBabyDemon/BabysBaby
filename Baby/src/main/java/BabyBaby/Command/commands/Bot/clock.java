@@ -83,7 +83,7 @@ public class clock {
                             String col = Integer.toHexString(rgbs[i+xver][j+yver]);
                             col = col.substring(2);
                             //String pixelset = (Math.random()<0.5) ? "setpIxel" : "setpixel";
-                            channel.sendMessage(".place setpIxel " + (i+xver) + " " + (j+yver) + " " + "#" + col).complete();//String.format("#%02x%02x%02x", c1.getRed(),c1.getGreen(), c1.getBlue());
+                            channel.sendMessage(".place setpIxel " + (i+xver) + " " + (j+yver) + " " + "#" + col).queue();//String.format("#%02x%02x%02x", c1.getRed(),c1.getGreen(), c1.getBlue());
                         }	
                     }
                 }
@@ -127,7 +127,7 @@ public class clock {
                         if(tim[i+xver][j+yver] != rgbs2[i][j] && tim[i+xver][j+yver] != 0){
                             String col = Integer.toHexString(tim[i+xver][j+yver]);
                             col = col.substring(2);
-                            channel.sendMessage(".place setpIxel " + (i+xver) + " " + (j+yver) + " " + "#" + col + " | " + timename).complete();
+                            channel.sendMessage(".place setpIxel " + (i+xver) + " " + (j+yver) + " " + "#" + col + " | " + timename).queue();
                         }	
                     }
                 }

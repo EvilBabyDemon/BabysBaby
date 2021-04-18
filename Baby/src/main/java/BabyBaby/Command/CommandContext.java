@@ -23,7 +23,7 @@ public class CommandContext implements ICommandContext {
         // owner -> 2
         // admin -> 1
         // public -> 0
-        permissionLevel = member.getId().equals("223932775474921472") ? 2 : member.hasPermission(Permission.ADMINISTRATOR) ? 1 : 0;
+        permissionLevel = member.getId().equals("223932775474921472") ? 2 : member.hasPermission(Permission.ADMINISTRATOR) && event.getGuild().getId().equals("747752542741725244") ? 1 : 0;
     }
     
 

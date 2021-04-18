@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -49,6 +50,10 @@ public class MuteCMD implements PublicCMD {
 
     @Override
     public void handlePublic(CommandContext ctx) {
+
+        
+
+
 
         MessageChannel channel = ctx.getChannel();
         Guild called = ctx.getGuild();
@@ -156,8 +161,7 @@ public class MuteCMD implements PublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        // TODO Auto-generated method stub
-        return null;
+        return StandardHelp.Help(prefix, getName(), "<time> [unit]", "Mute yourself to learn better.");
     }
     
 }
