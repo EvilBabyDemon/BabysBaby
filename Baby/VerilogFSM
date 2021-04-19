@@ -37,7 +37,7 @@ module clk_div(
 endmodule
 
 
-module clk_div1(
+module clk_div1( 
     input clk,
     input rst,
     output clk_en
