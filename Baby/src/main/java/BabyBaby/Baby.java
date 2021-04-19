@@ -24,7 +24,7 @@ public class Baby {
             Scanner s = new Scanner(new File("C:\\Users\\Lukas\\Desktop\\From_Old_to_NEW\\VSCODE WORKSPACE\\BabysBaby\\Baby\\.gitignore\\token.txt"));
             String token = s.nextLine();
             JDABuilder builder = JDABuilder.createDefault(token);
-            builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
+            builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGE_TYPING);
             builder.setChunkingFilter(ChunkingFilter.ALL);
             //createDefault(token, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES,
            // GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.DIRECT_MESSAGES,

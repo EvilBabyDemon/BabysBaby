@@ -56,15 +56,6 @@ public class getrole implements PublicCMD{
         
         if(cmds.size() != 0){
 
-            
-
-
-
-
-
-
-
-
         }
 
         Connection c = null;
@@ -186,11 +177,11 @@ public class getrole implements PublicCMD{
 
             Message msgs = channel.sendMessage(eb.build()).complete();                
             data.msgid.add(msgs.getId());
-                for (String var : temp) {
-                    if(var == null || var.length() == 0)
-                           continue;
-                    channel.addReactionById(msgs.getId(), var).queue();
-                }
+            for (String var : temp) {
+                if(var == null || var.length() == 0)
+                        continue;
+                channel.addReactionById(msgs.getId(), var).queue();
+            }
         }
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
         

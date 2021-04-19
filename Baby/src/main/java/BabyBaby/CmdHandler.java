@@ -1,13 +1,16 @@
 package BabyBaby;
 
 import BabyBaby.Command.*;
+import BabyBaby.Command.commands.Admin.GetWarningsFromUser;
 import BabyBaby.Command.commands.Admin.MutePersonCMD;
 import BabyBaby.Command.commands.Admin.addrole;
 import BabyBaby.Command.commands.Admin.delrole;
+import BabyBaby.Command.commands.Admin.getWarned;
 import BabyBaby.Command.commands.Admin.removeRoles;
 import BabyBaby.Command.commands.Admin.roleassign;
 import BabyBaby.Command.commands.Admin.roleid;
 import BabyBaby.Command.commands.Admin.updaterole;
+import BabyBaby.Command.commands.Admin.warnCMD;
 import BabyBaby.Command.commands.Admin.whois;
 import BabyBaby.Command.commands.Owner.AdminHelpCMD;
 import BabyBaby.Command.commands.Owner.PlebHelpCMD;
@@ -107,6 +110,9 @@ public class CmdHandler {
         addAdminCommand(new updaterole());
         addAdminCommand(new whois());
         addAdminCommand(new roleassign());
+        addAdminCommand(new warnCMD());
+        addAdminCommand(new getWarned());
+        addAdminCommand(new GetWarningsFromUser());
 
         // adding commands visible to owner
         //addOwnerCommand(new TestCommand());

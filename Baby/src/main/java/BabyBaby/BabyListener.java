@@ -1,17 +1,21 @@
 package BabyBaby;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactionEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +35,7 @@ import java.sql.Statement;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +51,7 @@ public class BabyListener extends ListenerAdapter {
     public final JDA bot;
     private static HashMap<String, String> prefix = new HashMap<>();
     private final String ownerID = "223932775474921472";
+    private static boolean typing = true;
 
     public BabyListener(JDA bot) throws IOException {
         this.bot = bot;
@@ -242,6 +248,38 @@ public class BabyListener extends ListenerAdapter {
         }
     }
 
+    
+
+    @Override
+    public void onUserTyping(@Nonnull UserTypingEvent event) {
+        if(event.getMember().getId().equals("123841216662994944")){ //Hello Elthision :eyes:
+            if(typing){
+                Random rand = new Random();
+                if(rand.nextDouble() < 0.23){
+                    typing = false;
+                    event.getChannel().sendTyping().queue(response -> {
+                        typing = true;
+                    });
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onGuildBan(GuildBanEvent event) {
+        MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+
+        
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
+        eb.setColor(1);
+        eb.setThumbnail(event.getUser().getAvatarUrl());
+        User warned = event.getUser();
+
+        eb.setDescription(":warning: **Warned** " + warned.getAsMention() + "(" + warned.getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + "");
+
+        log.sendMessage(eb.build()).queue();
+    }
 
 
     @Override
