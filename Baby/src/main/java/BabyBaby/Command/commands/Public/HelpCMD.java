@@ -21,19 +21,19 @@ public class HelpCMD implements PublicCMD {
     Comparator<PublicCMD> compPub = new Comparator<>(){
         @Override
         public int compare(PublicCMD o1, PublicCMD o2) {
-            return Integer.parseInt(o1.getName().substring(0,1)) - Integer.parseInt(o2.getName().substring(0,1));
+            return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
     Comparator<AdminCMD> compAdm = new Comparator<>(){
         @Override
         public int compare(AdminCMD o1, AdminCMD o2) {
-            return Integer.parseInt(o1.getName().substring(0,1)) - Integer.parseInt(o2.getName().substring(0,1));
+            return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
     Comparator<OwnerCMD> compOwn = new Comparator<>(){
         @Override
         public int compare(OwnerCMD o1, OwnerCMD o2) {
-            return Integer.parseInt(o1.getName().substring(0,1)) - Integer.parseInt(o2.getName().substring(0,1));
+            return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
 
