@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelCreateEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
@@ -29,9 +28,7 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemove
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.ChannelManager;
-import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
-import net.dv8tion.jda.internal.entities.GuildImpl;
 import net.dv8tion.jda.internal.managers.ChannelManagerImpl;
 
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +50,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -130,7 +126,6 @@ public class BabyListener extends ListenerAdapter {
                 GetUnmute muteclass = new GetUnmute(muteUser, called, muteR);
                 mute.schedule(muteclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
                 MuteCMD.userMuted.put(called.getMember(muteUser), mute);
-                MuteCMD.variables.put(mute, muteclass);
             }
             stmt.close();
             c.close();
@@ -254,6 +249,9 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
+        if(!MutePersonCMD.userMuted.containsKey(event.getMember()))
+            return;
+        
         MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
         
         EmbedBuilder eb = new EmbedBuilder();
@@ -281,8 +279,9 @@ public class BabyListener extends ListenerAdapter {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
             
-            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USER = ?;");
-            stmt.setString(1, warned.getId());
+            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USERID = ? AND GUILDID = ?;");
+            stmt.setString(1, event.getMember().getId());
+            stmt.setString(2, event.getGuild().getId());
             stmt.execute();
             stmt.close();
             c.close();
@@ -296,8 +295,8 @@ public class BabyListener extends ListenerAdapter {
         if(MutePersonCMD.userMuted.get(warned)==null){
             MutePersonCMD.userMuted.remove(warned);
         } else {
-            MutePersonCMD.variables.remove(MutePersonCMD.userMuted.get(warned));
-            MutePersonCMD.userMuted.remove(warned);
+            ScheduledExecutorService stopper = MutePersonCMD.userMuted.remove(warned);
+            stopper.shutdown();
         }
 
     }

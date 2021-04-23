@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.List;
 
 public class HelpCMD implements PublicCMD {
+    String sigchange = "+mute moved to +muteme";
 
     private final CmdHandler manager;
 
@@ -35,15 +36,17 @@ public class HelpCMD implements PublicCMD {
             EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
 
             embed.setTitle("BabysBaby");
+            embed.setDescription("Significant changes: " + sigchange);
 
-            manager.getPublicCommands().stream().map(PublicCMD::getName).forEach(
-                    (it) -> embed.addField(""
-                            , new ColouredStringAsciiDoc()
-                                    .addBlueAboveEq(it.substring(0, 1).toUpperCase() + it.substring(1) + ":")
-                                    .addNormal(prefix + "help " + it)
-                                    .build()
-                            , true)
-            );
+            String publicstr = ""; 
+            List<PublicCMD> publiclist = manager.getPublicCommands();
+            for (PublicCMD var : publiclist) {
+                publicstr += prefix + var.getName() +  "\n";
+            }
+            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicstr).build(), true);
+
+           
+            embed.setFooter("With most CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
             channel.sendMessage(embed.build()).queue();
             return;
         }
@@ -75,24 +78,22 @@ public class HelpCMD implements PublicCMD {
             EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
 
             embed.setTitle("BabysBaby");
+            embed.setDescription("Significant changes: " + sigchange);
+            String publicstr = ""; 
+            List<PublicCMD> publiclist = manager.getPublicCommands();
+            for (PublicCMD var : publiclist) {
+                publicstr += prefix + var.getName() +  "\n";
+            }
+            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicstr).build(), true);
 
-            manager.getPublicCommands().stream().map(PublicCMD::getName).forEach(
-                    (it) -> embed.addField(""
-                            , new ColouredStringAsciiDoc()
-                                    .addBlueAboveEq(it.substring(0, 1).toUpperCase() + it.substring(1) + ":")
-                                    .addNormal(prefix + "help " + it)
-                                    .build()
-                            , true)
-            );
-            manager.getAdminCommands().stream().map(AdminCMD::getName).forEach(
-                    (it) -> embed.addField(""
-                            , new ColouredStringAsciiDoc()
-                                    .addBlueAboveEq(it.substring(0, 1).toUpperCase() + it.substring(1) + ":")
-                                    .addNormal(prefix + "help " + it)
-                                    .build()
-                            , true)
-            );
-            
+            String admin = ""; 
+            List<AdminCMD> adminlist = manager.getAdminCommands();
+            for (AdminCMD var : adminlist) {
+                admin += prefix + var.getName() +  "\n";
+            }
+            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Admin CMD").addDiff(admin).build(), true);
+           
+            embed.setFooter("With most CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
             channel.sendMessage(embed.build()).queue();
             return;
         }
@@ -121,6 +122,7 @@ public class HelpCMD implements PublicCMD {
             EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
 
             embed.setTitle("BabysBaby");
+            embed.setDescription("Significant changes: " + sigchange);
             String publicstr = ""; 
             List<PublicCMD> publiclist = manager.getPublicCommands();
             for (PublicCMD var : publiclist) {

@@ -23,7 +23,6 @@ import net.dv8tion.jda.api.entities.Role;
 
 public class MutePersonCMD implements AdminCMD {
     public static HashMap<Member, ScheduledExecutorService> userMuted = new HashMap<>();
-    public static HashMap<ScheduledExecutorService, GetUnmutePerson> variables = new HashMap<>();
 
 
     @Override
@@ -59,11 +58,12 @@ public class MutePersonCMD implements AdminCMD {
         person = person.replace(">", "");
         person = person.replace("!", "");
         person = person.replace("@", "");
-
+        boolean inList = false;
         try {
-            ctx.getGuild().getMemberById(person);
+            inList  = MutePersonCMD.userMuted.containsKey(ctx.getGuild().getMemberById(person));
         } catch (Exception e) {
             ctx.getChannel().sendMessage("This is not a snowflake ID or this user is not on this server.").queue();
+            return;
         }
 
 
@@ -93,7 +93,18 @@ public class MutePersonCMD implements AdminCMD {
 
         ctx.getChannel().sendMessage(eb.build()).queue();
 
-        Role muteR = ctx.getGuild().getRoleById("765542118701400134");
+        Role muteR = ctx.getGuild().getRoleById(data.stfuID);
+
+        if(inList){
+            ctx.getGuild().removeRoleFromMember(ctx.getMember(), muteR).queue();
+
+            if(MutePersonCMD.userMuted.get(warned)==null){
+                MutePersonCMD.userMuted.remove(warned);
+            } else {
+                MutePersonCMD.userMuted.remove(warned);
+            }
+
+        }
 
         ctx.getGuild().addRoleToMember(ctx.getMember(), muteR).queue();
 
@@ -106,7 +117,6 @@ public class MutePersonCMD implements AdminCMD {
             ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
             mute.schedule(scheduledclass, time*60 , TimeUnit.SECONDS);
             userMuted.put(ctx.getMember(), mute);
-            variables.put(mute, scheduledclass);
         } else {
             userMuted.put(ctx.getMember(), null);
         }
@@ -118,7 +128,7 @@ public class MutePersonCMD implements AdminCMD {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
              
-            stmt = c.prepareStatement("INSERT INTO ADMINMUTE (GUILDID, USERID, TIME) VALUES (?, ?, ?);");           
+            stmt = c.prepareStatement("REPLACE INTO ADMINMUTE (GUILDID, USERID, TIME) VALUES (?, ?, ?);");           
             stmt.setString(1, warned.getUser().getId());
             stmt.setString(2, ctx.getGuild().getId());
             stmt.setLong(3, timesql);

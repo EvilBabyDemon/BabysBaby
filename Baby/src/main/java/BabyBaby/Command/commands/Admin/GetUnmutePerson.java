@@ -36,8 +36,9 @@ public class GetUnmutePerson implements Runnable {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
             
-            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE PK = ?;");
-            stmt.setString(1, pk);
+            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USERID = ? AND GUILDID = ?;");
+            stmt.setString(1, reminder.getId());
+            stmt.setString(2, guild.getId());
             stmt.execute();
             stmt.close();
             c.close();
@@ -62,7 +63,6 @@ public class GetUnmutePerson implements Runnable {
         if(MutePersonCMD.userMuted.get(guild.getMember(reminder))==null){
             MutePersonCMD.userMuted.remove(guild.getMember(reminder));
         } else {
-            MutePersonCMD.variables.remove(MutePersonCMD.userMuted.get(guild.getMember(reminder)));
             MutePersonCMD.userMuted.remove(guild.getMember(reminder));
         }
 

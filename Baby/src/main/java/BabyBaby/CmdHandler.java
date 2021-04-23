@@ -3,6 +3,7 @@ package BabyBaby;
 import BabyBaby.Command.*;
 import BabyBaby.Command.commands.Admin.GetWarningsFromUser;
 import BabyBaby.Command.commands.Admin.MutePersonCMD;
+import BabyBaby.Command.commands.Admin.UnmutePersonCMD;
 import BabyBaby.Command.commands.Admin.addrole;
 import BabyBaby.Command.commands.Admin.delrole;
 import BabyBaby.Command.commands.Admin.getWarned;
@@ -116,6 +117,9 @@ public class CmdHandler {
         addAdminCommand(new warnCMD());
         addAdminCommand(new getWarned());
         addAdminCommand(new GetWarningsFromUser());
+        addAdminCommand(new MutePersonCMD());
+        addAdminCommand(new UnmutePersonCMD());
+        
 
         // adding commands visible to owner
         //addOwnerCommand(new TestCommand());

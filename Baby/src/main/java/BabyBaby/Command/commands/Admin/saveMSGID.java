@@ -9,7 +9,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class saveMSGID implements AdminCMD {
+public class SaveMSGID implements AdminCMD {
 
     @Override
     public void handleOwner(CommandContext ctx) {

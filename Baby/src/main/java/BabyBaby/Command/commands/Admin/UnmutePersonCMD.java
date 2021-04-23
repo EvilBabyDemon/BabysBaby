@@ -3,11 +3,8 @@ package BabyBaby.Command.commands.Admin;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
@@ -20,10 +17,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
 public class UnmutePersonCMD implements AdminCMD {
-    public static HashMap<Member, ScheduledExecutorService> userMuted = new HashMap<>();
-    public static HashMap<ScheduledExecutorService, GetUnmutePerson> variables = new HashMap<>();
-
-
+    
     @Override
     public void handleOwner(CommandContext ctx) {
         handleAdmin(ctx);
@@ -44,6 +38,8 @@ public class UnmutePersonCMD implements AdminCMD {
         if(!ctx.getGuild().getId().equals(data.ethid))
             return;
         
+        
+
         LinkedList<String> cmds = new LinkedList<>();
 
         for (String var : ctx.getArgs()) {
@@ -57,6 +53,15 @@ public class UnmutePersonCMD implements AdminCMD {
         person = person.replace(">", "");
         person = person.replace("!", "");
         person = person.replace("@", "");
+
+        try {
+            if(!MutePersonCMD.userMuted.containsKey(ctx.getGuild().getMemberById(person)))
+                return;
+        } catch (Exception e) {
+            ctx.getChannel().sendMessage("This is not a snowflake ID or this user is not on this server.").queue();
+            return;
+        }
+        
 
 
         MessageChannel log = ctx.getGuild().getTextChannelById(data.modlog);
@@ -85,8 +90,9 @@ public class UnmutePersonCMD implements AdminCMD {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
             
-            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USER = ?;");
+            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USERID = ? AND GUILDID = ?;");
             stmt.setString(1, warned.getId());
+            stmt.setString(2, ctx.getGuild().getId());
             stmt.execute();
             stmt.close();
             c.close();
@@ -100,8 +106,8 @@ public class UnmutePersonCMD implements AdminCMD {
         if(MutePersonCMD.userMuted.get(warned)==null){
             MutePersonCMD.userMuted.remove(warned);
         } else {
-            MutePersonCMD.variables.remove(MutePersonCMD.userMuted.get(warned));
-            MutePersonCMD.userMuted.remove(warned);
+            ScheduledExecutorService stopper = MutePersonCMD.userMuted.remove(warned);
+            stopper.shutdown();
         }
 
         ctx.getMessage().addReaction(data.check).queue();
