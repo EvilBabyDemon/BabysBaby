@@ -39,7 +39,6 @@ public class DecryptCMD implements PublicCMD {
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        // TODO Auto-generated method stub
 
 
 

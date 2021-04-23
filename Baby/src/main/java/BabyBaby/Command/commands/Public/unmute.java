@@ -60,6 +60,13 @@ public class unmute implements PublicCMD {
 
     private void actualcmd(User author, List<String> cmds){
         
+        if(author.getId().equals("177498563637542921")){
+            author.openPrivateChannel().queue(privchannel -> {
+                privchannel.sendMessage("Nope, not getting unmuted till the timer runs out. You did this to yourself.").queue();
+            });
+            return;
+        }
+
         LinkedList<GetUnmute> vars = new LinkedList<>();        
 
         String authorID = author.getId();

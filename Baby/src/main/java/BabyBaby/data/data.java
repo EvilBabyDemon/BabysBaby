@@ -1,5 +1,6 @@
 package BabyBaby.data;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -11,5 +12,9 @@ public class data {
     public static final String xmark = ":xmark:769279807916998728";
     public static final String db = "jdbc:sqlite:testone.db";
     public static final String modlog = "774322031688679454";
-
+    public static final String adminlog = "774322847812157450";
+    public static final String ethid = "747752542741725244";
+    public static final String spam = "768600365602963496";
+    public static final String stfuID = "765542118701400134";
+    public static OffsetDateTime kick;
 }

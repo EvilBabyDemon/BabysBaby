@@ -7,12 +7,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.HashSet;
 
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 
@@ -46,7 +45,14 @@ public class GetWarningsFromUser implements AdminCMD{
         person = person.replace("@", "");
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Warnings from " + ctx.getGuild().getMemberById(person).getAsMention(), null);
+        try{
+            Member warned = ctx.getGuild().getMemberById(person);
+            eb.setAuthor("Warnings from " + warned.getEffectiveName() + " (" + warned.getUser().getAsTag() + ")", warned.getUser().getAvatarUrl(), warned.getUser().getAvatarUrl());
+        } catch (Exception e){
+            ctx.getChannel().sendMessage("This is not a Member on this server.").queue();
+            return;
+        }
+        
         eb.setColor(1);
 
 
@@ -60,8 +66,8 @@ public class GetWarningsFromUser implements AdminCMD{
             
             String sql = "SELECT * FROM WARNINGS WHERE USER = ?;";
             stmt = c.prepareStatement(sql);
-            stmt.setString(1, person);
-            ResultSet rs = stmt.executeQuery(sql);
+            stmt.setLong(1, Long.parseLong(person));
+            ResultSet rs = stmt.executeQuery();
             while (rs.next()){
                 String time = rs.getString("DATE");
                 String reason = rs.getString("REASON");

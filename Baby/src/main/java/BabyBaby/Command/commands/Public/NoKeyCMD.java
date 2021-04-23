@@ -4,6 +4,7 @@ import java.util.List;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.StandardHelp;
 import CryptPart.VWA_MainEntschluesseln;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -55,8 +56,7 @@ public class NoKeyCMD implements PublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        // TODO Standard Help
-        return null;
+        return StandardHelp.Help(prefix, getName(), "<text encrypted with Caesar or Viginere>", "Tries to encrypt text that was encrypted with Caesar or Viginere where you dont know the key.");
     }
     
 }

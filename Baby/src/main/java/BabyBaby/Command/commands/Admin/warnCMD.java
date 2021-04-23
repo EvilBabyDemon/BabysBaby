@@ -97,7 +97,7 @@ public class warnCMD implements AdminCMD{
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(ctx.getAuthor().getAsTag() + " (" + ctx.getAuthor().getId() + ")", ctx.getAuthor().getAvatarUrl(), ctx.getAuthor().getAvatarUrl());
-        eb.setColor(300);
+        eb.setColor(0);
         eb.setThumbnail(ctx.getGuild().getMemberById(person).getUser().getAvatarUrl());
         Member warned = ctx.getGuild().getMemberById(person);
 
@@ -105,6 +105,10 @@ public class warnCMD implements AdminCMD{
 
         log.sendMessage(eb.build()).queue();
 
+        ctx.getChannel().sendMessage(eb.build()).queue();
+
+        warned.getUser().openPrivateChannel().complete().sendMessage(eb.build()).queue();
+        
         ctx.getMessage().addReaction(data.check).queue();
 
     }

@@ -1,0 +1,74 @@
+package BabyBaby.Command.commands.Admin;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+import BabyBaby.data.data;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
+
+public class GetUnmutePerson implements Runnable {
+    public User reminder;
+    public Guild guild;
+    public String pk;
+
+    public GetUnmutePerson(User user, Guild tempG, String pkey) {
+        reminder = user;
+        guild = tempG;
+        pk = pkey;
+
+    }
+
+    public void run() {	
+
+        Role muteR = guild.getRoleById("765542118701400134");
+
+        guild.removeRoleFromMember(guild.getMember(reminder), muteR).queue();
+
+        Connection c = null;
+        PreparedStatement stmt = null;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            
+            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE PK = ?;");
+            stmt.setString(1, pk);
+            stmt.execute();
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            e.printStackTrace(); 
+            return;
+        }
+        
+        MessageChannel log = guild.getTextChannelById(data.modlog);
+
+        User bot = guild.getMemberById("781949572103536650").getUser();
+
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor(bot.getAsTag() + " (" + bot.getId() + ")", bot.getAvatarUrl(), reminder.getAvatarUrl());
+        eb.setColor(0);
+        eb.setThumbnail(reminder.getAvatarUrl());
+
+        eb.setDescription(":loud_sound: **Unmuted ** " + reminder.getAsMention() + "(" + reminder.getAsTag() +")"+ " \n :page_facing_up: **Reason:** Mute Duration Expired");
+
+        log.sendMessage(eb.build()).queue();
+
+        if(MutePersonCMD.userMuted.get(guild.getMember(reminder))==null){
+            MutePersonCMD.userMuted.remove(guild.getMember(reminder));
+        } else {
+            MutePersonCMD.variables.remove(MutePersonCMD.userMuted.get(guild.getMember(reminder)));
+            MutePersonCMD.userMuted.remove(guild.getMember(reminder));
+        }
+
+
+        //guild.getTextChannelById("channelID").sendMessage(reminder.getAsMention()).queue();
+        //guild.getTextChannelById(channelID).sendMessage(eb.build()).queue();
+        
+    }
+}

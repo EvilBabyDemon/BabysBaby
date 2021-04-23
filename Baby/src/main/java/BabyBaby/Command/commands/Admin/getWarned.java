@@ -62,8 +62,9 @@ public class getWarned implements AdminCMD {
 
         String all = "";
         if(UserIds.size() != 0){
-            for (String var : UserIds) 
-                all = ctx.getGuild().getMemberById(var).getAsMention() + "\n";
+            for (String var : UserIds){
+                all += ctx.getGuild().getMemberById(var).getAsMention() + "\n";
+            }
         }
 
         eb.setDescription(all);

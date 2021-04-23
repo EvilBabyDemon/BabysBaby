@@ -20,8 +20,6 @@ public class GetUnmute implements Runnable {
     }
 
     public void run() {	
-        //TODO runnable
-
         
         guild.removeRoleFromMember(guild.retrieveMember(muted).complete(), stfu).queue();
         MuteCMD.variables.remove(MuteCMD.userMuted.get(guild.getMember(muted)));

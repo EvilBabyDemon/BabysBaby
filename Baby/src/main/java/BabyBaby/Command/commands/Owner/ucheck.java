@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.StandardHelp;
 import BabyBaby.Command.commands.Bot.clock;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -49,8 +50,7 @@ public class ucheck implements OwnerCMD{
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-        // TODO Auto-generated method stub
-        return null;
+        return StandardHelp.Help(prefix, getName(), "", "Should reload an Array, but is out of use atm.");
     }
     
 }

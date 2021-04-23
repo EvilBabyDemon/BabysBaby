@@ -40,16 +40,18 @@ import BabyBaby.Command.commands.Public.LearningCMD;
 import BabyBaby.Command.commands.Public.MuteCMD;
 import BabyBaby.Command.commands.Public.NoKeyCMD;
 import BabyBaby.Command.commands.Public.PingCMD;
+import BabyBaby.Command.commands.Public.PollCMD;
 import BabyBaby.Command.commands.Public.PolyCMD;
+import BabyBaby.Command.commands.Public.ReminderCMD;
 import BabyBaby.Command.commands.Public.RockPaperCMD;
 import BabyBaby.Command.commands.Public.RoleMuteCMD;
 import BabyBaby.Command.commands.Public.SuggestionCMD;
 import BabyBaby.Command.commands.Public.allroles;
 import BabyBaby.Command.commands.Public.getrole;
-import BabyBaby.Command.commands.Public.reminder;
 import BabyBaby.Command.commands.Public.sieb;
 import BabyBaby.Command.commands.Public.source;
 import BabyBaby.Command.commands.Public.unmute;
+import BabyBaby.data.data;
 //import BabyBaby.Command.commands.admin.SetPrefixCommand;
 //import BabyBaby.Command.commands.nonAdmin.*;
 //import BabyBaby.Command.commands.owner.*;
@@ -89,13 +91,14 @@ public class CmdHandler {
         addPublicCommand(new MuteCMD());
         addPublicCommand(new NoKeyCMD());
         addPublicCommand(new PolyCMD());
-        addPublicCommand(new reminder());
+        addPublicCommand(new ReminderCMD());
         addPublicCommand(new RockPaperCMD());
         addPublicCommand(new RoleMuteCMD());
         addPublicCommand(new sieb());
         addPublicCommand(new source());
         addPublicCommand(new SuggestionCMD());
         addPublicCommand(new unmute());
+        addPublicCommand(new PollCMD());
         //addPublicCommand(new WallpaperCMD());
 
 
@@ -196,26 +199,30 @@ public class CmdHandler {
         int permissionLevel = ctx.getPermissionLevel();
 
         String cmdName = split[0].toLowerCase();
-
-        switch (permissionLevel) {
-            case 0:
-                PublicCMD publicCommand = searchPublicCommand(cmdName);
-                if (publicCommand != null) {
-                    publicCommand.handlePublic(ctx);
-                }
-                break;
-            case 1:
-                AdminCMD adminCommand = searchAdminCommand(cmdName);
-                if (adminCommand != null) {
-                    adminCommand.handleAdmin(ctx);
-                }
-                break;
-            case 2:
-                OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
-                if (ownerCommand != null) {
-                    ownerCommand.handleOwner(ctx);
-                }
-                break;
+        try { 
+            switch (permissionLevel) {
+                case 0:
+                    PublicCMD publicCommand = searchPublicCommand(cmdName);
+                    if (publicCommand != null) {
+                        publicCommand.handlePublic(ctx);
+                    }
+                    break;
+                case 1:
+                    AdminCMD adminCommand = searchAdminCommand(cmdName);
+                    if (adminCommand != null) {
+                        adminCommand.handleAdmin(ctx);
+                    }
+                    break;
+                case 2:
+                    OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
+                    if (ownerCommand != null) {
+                        ownerCommand.handleOwner(ctx);
+                    }
+                    break;
+            }
+        } catch(Exception e){
+            ctx.getMessage().addReaction(data.xmark).queue();
+            e.printStackTrace();
         }
     }
 

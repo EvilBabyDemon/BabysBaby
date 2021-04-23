@@ -1,3 +1,4 @@
+/*
 package BabyBaby;
 
 import java.util.ArrayList;
@@ -33,11 +34,8 @@ import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import CryptPart.*;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -45,7 +43,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.Invite.Channel;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -80,7 +77,6 @@ public class MyListener extends ListenerAdapter {
 
 	@Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-		// TODO Auto-generated method stub
 		OffsetDateTime time = event.getUser().getTimeCreated();
 		String username = event.getUser().getName().toLowerCase();
 
@@ -161,36 +157,7 @@ public class MyListener extends ListenerAdapter {
 		}
 
 
-		//TODO 
-		//read: (File) role_json -> (Map) roles
-		//write (map) role-> (file)role_json:
-
-		/*
-		ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            String json = objectMapper.writeValueAsString(roles);
-            PrintStream out = new PrintStream(role_json);
-            out.println(json);
-            out.close();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-		ObjectMapper mapper = new ObjectMapper();
-        roles = mapper.readValue(new Scanner(role_json).next(), Map.class);
-		*/
-		
-		
-		/*
-		if(content.equals(prefix + "recur") && !(event.getAuthor().isBot())) {
-			MessageChannel channel = event.getChannel();
-			content = content.substring(6);
-			channel.deleteMessageById(message.getId()).queue();
-			channel.sendMessage(content).queue();
-		}
-		*/
-
+	
 
 
 		if(content.equals("Still in timeout") && timerchange){
@@ -343,35 +310,14 @@ public class MyListener extends ListenerAdapter {
 			allroles.add(event.getGuild().getRoleById(event.getGuild().getId()));
 			Role highest = allroles.peek();
 			Role hoisted = null;
-			/*
-			Comparator rolesorter = new Comparator<Role>(){
-				@Override
-				public int compare(Role o1, Role o2) {
-					return o1.compareTo(o2);
-				}
-			};
-			allroles.sort(rolesorter);
-			*/
+			
 			for (Role var : allroles) {
 				if(var.isHoisted()){
 					hoisted = var;
 					break;
 				}
 			}
-			/*
-			for(int i = 0; i < allroles.size(); i++){
-				Role top = null;
-				int index= 0;
-				int iter = 0;
-				for (Role var : allroles) {
-
-					if(top == null || var.getPosition() < top.getPosition()){
-						top = var;
-					}
-					iter++;
-				}
-			}
-			*/
+			
 			DateTimeFormatter jointime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
 			DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
 
@@ -478,8 +424,6 @@ public class MyListener extends ListenerAdapter {
 			}
 
 
-			// This cmd above shall not be used twice and removed or commented out as soon as it used
-			//TODO here lay all my sql cmds pls fix
 
 
 			if(content.startsWith(prefix + "removeRoles")){
@@ -634,7 +578,6 @@ public class MyListener extends ListenerAdapter {
 
 				cats.add("Other");
 
-				//TODO do embeds with each category
 
 
 				message.addReaction(check).queue();
@@ -771,23 +714,7 @@ public class MyListener extends ListenerAdapter {
 
 			}
 
-			/*
-			if (content.startsWith(prefix + "role")) { // +role name  
-				String[] cmd = content.split(" ");
-				String all = "";
-				for(int i = 1; i < cmd.length; i++){
-					all += cmd[i] + " ";
-				}
-				if(all.length() < 2){
-					
-					
-					
-					return;
-				}
-
-				all.substring(0, all.length()-1);
-			}
-			*/
+			
 
 			if (content.startsWith(prefix + "updaterole")) { // +updaterole ('field' or 'all') name new text 
 
@@ -1253,7 +1180,6 @@ public class MyListener extends ListenerAdapter {
 					}
 					s.close();
 				} catch (NumberFormatException | IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -1303,7 +1229,6 @@ public class MyListener extends ListenerAdapter {
 					try {
 						t.join();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					copier.add(tmp);
@@ -1322,7 +1247,6 @@ public class MyListener extends ListenerAdapter {
 					out.flush();
 					out.close();
 				} catch (NumberFormatException | IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				channel.sendMessage("Done").queue();
@@ -1391,7 +1315,6 @@ public class MyListener extends ListenerAdapter {
 					message.addReaction(check).queue();
 					
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -1481,7 +1404,6 @@ public class MyListener extends ListenerAdapter {
 						}
 						s.close();
 					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					channel.sendMessage("I did " + (i+1) +"/" + x + ". Lets go on! <@!223932775474921472>" ).queue();
@@ -1621,7 +1543,6 @@ public class MyListener extends ListenerAdapter {
 			});
 
 		} else if (content.startsWith(prefix + "mute")){
-			//TODO Mute role
 
 			MessageChannel channel = event.getChannel();
 			
@@ -1685,19 +1606,7 @@ public class MyListener extends ListenerAdapter {
 
 			Member gemuted = guild.retrieveMember(event.getAuthor()).complete();
 
-			/*
-			//TODO: stuff here to remove and add roles
-
-			List<Role> delrole = gemuted.getRoles();
 			
-			for (Role role : delrole) {
-				//save role
-			}		
-
-			for (Role role : delrole) {
-				guild.removeRoleFromMember(gemuted, role).queue();
-			}
-			*/
 			
 			
 
@@ -1711,40 +1620,11 @@ public class MyListener extends ListenerAdapter {
 			channel.sendMessage("You got muted for " + time + " " + sunit + ". Either wait out the timer or write me (the bot) in Private chat \"+unmute\"").queue();
 			userMuted.put(muteUser, mute);
 		} else if(content.startsWith(prefix + "rolemute")){
-			//TODO remove break when finished
 			if(true){
 				return;
 			}
 
-			//Member gemuted = guild.retrieveMember(event.getAuthor()).complete();
-			//List<Role> delrole = gemuted.getRoles();
 			
-			/*
-			for (Role role : delrole) {
-				//save role
-				try {
-					String json = mapper.writeValueAsString(role);
-					PrintStream out = new PrintStream(role_json);
-					out.println(json);
-					out.close();
-				} catch (JsonProcessingException e) {
-					e.printStackTrace();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-			}		
-			
-			for (Role role : delrole) {
-				guild.removeRoleFromMember(gemuted, role).queue();
-			}
-			try {
-				Map roles = mapper.readValue(new Scanner(role_json).next(), Map.class);
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}catch (FileNotFoundException e) {
-				e.printStackTrace();	
-			}
-			*/
 		}
 
 		
@@ -1763,23 +1643,7 @@ public class MyListener extends ListenerAdapter {
 			for (Role var : tmp) {
 				mention += var.getAsMention() + " (" + var.getId() + ") \n";
 			}
-			/*
-			if(mention.length() <= 2000){
-				String end = mention; 
-				event.getChannel().sendMessage("wait a sec").queue(response -> {
-					response.editMessage(end).queue();
-				});
-				
-			} else {	
-				while(mention.length() > 2000){
-					String end = mention.substring(0, 2000); 
-					event.getChannel().sendMessage("wait a sec").queue(response -> {
-						response.editMessage(end).queue();
-					});
-					mention.substring(2000, mention.length());
-				}
-			}
-			*/	
+			
 			
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Roles");
@@ -2193,7 +2057,6 @@ public class MyListener extends ListenerAdapter {
 		}
 
 		public void run() {	
-			//TODO runnable
 
 			muted.openPrivateChannel().queue((channel) -> {
 				channel.sendMessage("You shall be unmuted! Hope this worked...").queue();
@@ -2232,7 +2095,6 @@ public class MyListener extends ListenerAdapter {
 		}
 
 		public void run() {	
-			//TODO runnable
 
 
 			muted.openPrivateChannel().queue((channel) -> {
@@ -2283,3 +2145,4 @@ class Pair {
 	}
 
 }
+*/

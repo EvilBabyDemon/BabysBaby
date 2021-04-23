@@ -2,26 +2,43 @@ package BabyBaby;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.IPermissionHolder;
+import net.dv8tion.jda.api.entities.Invite;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
+import net.dv8tion.jda.api.events.channel.voice.VoiceChannelCreateEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactionEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.ChannelManager;
+import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
+import net.dv8tion.jda.internal.entities.GuildImpl;
+import net.dv8tion.jda.internal.managers.ChannelManagerImpl;
+
 import org.jetbrains.annotations.NotNull;
 
 import BabyBaby.Command.commands.Bot.button;
 import BabyBaby.Command.commands.Bot.clock;
 import BabyBaby.Command.commands.Bot.drawwithFerris;
+import BabyBaby.Command.commands.Public.GetReminder;
 import BabyBaby.Command.commands.Public.GetUnmute;
 import BabyBaby.Command.commands.Public.MuteCMD;
 import BabyBaby.data.data;
@@ -30,12 +47,15 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +71,7 @@ public class BabyListener extends ListenerAdapter {
     public final JDA bot;
     private static HashMap<String, String> prefix = new HashMap<>();
     private final String ownerID = "223932775474921472";
-    private static boolean typing = true;
+    //private static boolean typing = true;
 
     public BabyListener(JDA bot) throws IOException {
         this.bot = bot;
@@ -82,10 +102,10 @@ public class BabyListener extends ListenerAdapter {
             rs.close();
             stmt.close();
             c.close();
-            } catch ( Exception e ) {
-                System.out.println(e.getClass().getName() + ": " + e.getMessage());
-                return;
-            }
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            return;
+        }
         
         
         c = null;
@@ -158,19 +178,174 @@ public class BabyListener extends ListenerAdapter {
             return;
         }
 
+
+        List<Invite> inv = event.getJDA().getGuildById(data.ethid).retrieveInvites().complete();
+        HashMap<String, Invite> urls = new HashMap<>();
+        for (Invite var : inv) {
+            urls.put(var.getUrl(), var);
+        }
+
+
+        c = null;
+        PreparedStatement pstmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            for (String var : urls.keySet()) {
+                pstmt = c.prepareStatement("REPLACE INTO INVITES (URL, AMOUNT) VALUES (?, ?);");
+                pstmt.setString(1, var);
+                pstmt.setInt(2, urls.get(var).getUses());
+                pstmt.executeUpdate();
+                pstmt.close();
+            }
+            c.close();
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            return;
+        } 
+
+        AuditLogPaginationAction logs = event.getJDA().getGuildById(data.ethid).retrieveAuditLogs();
+        for (AuditLogEntry entry : logs) {
+            if(entry.getType().equals(ActionType.KICK)){
+                data.kick = entry.getTimeCreated();
+                break;
+            }   
+        }
+
+        c = null;
+        stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            stmt = c.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM REMINDERS;");
+
+            while(rs.next()){
+                ScheduledExecutorService remind = Executors.newScheduledThreadPool(1);
+                remind.schedule(new GetReminder(event.getJDA().getUserById(rs.getString("USERID")), event.getJDA().getGuildById(rs.getString("GUILDID")), rs.getString("TEXTS"), rs.getString("CHANNELID"), rs.getString("pk")), rs.getInt("TIME") , TimeUnit.SECONDS);
+            }
+            
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            e.printStackTrace(); 
+            return;
+        }
+        
+
+
         System.out.println("Started!");
     }
 
     @Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-		// TODO Auto-generated method stub
-		OffsetDateTime time = event.getUser().getTimeCreated();
+		if(!event.getGuild().getId().equals("747752542741725244"))
+            return;
+
+        OffsetDateTime time = event.getUser().getTimeCreated();
 		String username = event.getUser().getName().toLowerCase();
 
-		if(username.contains("lengler") || username.contains("emo") || username.contains("welzl")){
-			event.getGuild().getTextChannelById("747754931905364000").sendMessage("<@&773908766973624340> Account with name Onur joined. Time of creation of the account:" + time).queue();
+		if(username.contains("lengler") || username.contains("welzl")){
+			event.getGuild().getTextChannelById("747754931905364000").sendMessage("<@&773908766973624340> Account with Prof name joined. Time of creation of the account:" + time).queue();
 		}
+
+        
+        List<Invite> inv = event.getGuild().retrieveInvites().complete();
+        HashMap<String, Invite> urls = new HashMap<>();
+        for (Invite var : inv) {
+            urls.put(var.getUrl(), var);
+        }
+
+        String url = "";
+        int amount = 0;
+        boolean found = false;
+
+        Connection c = null;
+        Statement stmt = null;
+		
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            
+            stmt = c.createStatement();
+
+            ResultSet rs = stmt.executeQuery("SELECT * FROM INVITES;");
+            while (rs.next()) {
+                url = rs.getString("URL");
+                amount = rs.getInt("AMOUNT");
+                Invite temp = urls.get(url);
+                if(temp.getUses() > amount){
+                    found = true;
+                    break;
+                }
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            return;
+        }
+
+        if(!found){
+            event.getGuild().getTextChannelById("747768907992924192").sendMessage("Smth went wrong with the invite link stuff. Couldnt find the invite link... <@!223932775474921472>").queue();
+        }
+
+        MessageChannel log = event.getGuild().getTextChannelById(data.adminlog);
+
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
+        eb.setColor(1);
+        eb.setThumbnail(event.getUser().getAvatarUrl());
+
+        eb.setDescription("Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n Uses:" + ++amount + "\n Created at: " + urls.get(url).getTimeCreated().toLocalTime());
+
+        log.sendMessage(eb.build()).queue();
+
+
+        PreparedStatement pstmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            
+            pstmt = c.prepareStatement("UPDATE INVITES SET AMOUNT = ? where URL = ? ;");
+            pstmt.setInt(1, amount);
+            pstmt.setString(2, url);
+            pstmt.executeUpdate();
+            
+            pstmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+
+
 	}
+
+    @Override
+    public void onGuildInviteCreate(GuildInviteCreateEvent event) {
+        if(!event.getGuild().getId().equals("747752542741725244"))
+            return;
+        
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            
+            stmt = c.createStatement();
+            stmt.executeUpdate("INSERT INTO INVITES (URL, AMOUNT) VALUES ('" + event.getUrl() + "', 0) ;");
+            
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            return;
+        }
+    }
 
     @Override
     public void onPrivateMessageReceived(@NotNull PrivateMessageReceivedEvent event) {
@@ -248,8 +423,67 @@ public class BabyListener extends ListenerAdapter {
         }
     }
 
+
+    @Override
+    public void onTextChannelCreate(TextChannelCreateEvent event) {
+        if(!event.getGuild().getId().equals("747752542741725244"))
+            return;
+        ChannelManager test = new ChannelManagerImpl(event.getChannel());
+        Collection<Permission> deny = new LinkedList<>();
+        deny.add(Permission.MESSAGE_WRITE);
+		IPermissionHolder permHolder = event.getGuild().getRoleById("765542118701400134");
+        test.putPermissionOverride(permHolder, null, deny).queue();
+    }
+
+    @Override
+    public void onVoiceChannelCreate(VoiceChannelCreateEvent event) {
+        if(!event.getGuild().getId().equals("747752542741725244"))
+            return;
+        ChannelManager test = new ChannelManagerImpl(event.getChannel());
+        Collection<Permission> deny = new LinkedList<>();
+        deny.add(Permission.VOICE_SPEAK );
+		IPermissionHolder permHolder = event.getGuild().getRoleById("765542118701400134");
+        test.putPermissionOverride(permHolder, null, deny).queue();
+    }
+
+
     
 
+    //Put a if Kick event some time maybe.......
+
+    @Override
+    public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
+        AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
+        for (AuditLogEntry entry : logs) {
+            if(entry.getType().equals(ActionType.KICK)){
+                if(!data.kick.equals(entry.getTimeCreated())){
+
+                    data.kick = entry.getTimeCreated();
+                    MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+
+                    EmbedBuilder eb = new EmbedBuilder();
+                    eb.setAuthor(entry.getUser().getAsTag() + " (" + entry.getUser().getId() + ")", entry.getUser().getAvatarUrl(), entry.getUser().getAvatarUrl());
+                    eb.setColor(0);
+                    eb.setThumbnail(entry.getUser().getAvatarUrl());
+                    Member warned = event.getMember();
+                    
+                    eb.setDescription(":warning: **Kicked** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + entry.getReason());
+
+                    log.sendMessage(eb.build()).queue();
+
+                }
+                break;
+            }  
+        }
+    }
+    
+
+
+    
+
+
+    
+    /*
     @Override
     public void onUserTyping(@Nonnull UserTypingEvent event) {
         if(event.getMember().getId().equals("123841216662994944")){ //Hello Elthision :eyes:
@@ -264,19 +498,20 @@ public class BabyListener extends ListenerAdapter {
             }
         }
     }
+    */
+
 
     @Override
     public void onGuildBan(GuildBanEvent event) {
         MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
 
-        
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
         eb.setColor(1);
         eb.setThumbnail(event.getUser().getAvatarUrl());
         User warned = event.getUser();
 
-        eb.setDescription(":warning: **Warned** " + warned.getAsMention() + "(" + warned.getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + "");
+        eb.setDescription(":warning: **Banned** " + warned.getAsMention() + "(" + warned.getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + "");
 
         log.sendMessage(eb.build()).queue();
     }
@@ -303,7 +538,7 @@ public class BabyListener extends ListenerAdapter {
             if (content.startsWith("Current value: ")) {
                 button.tap(event);
             }
-        } else if(user.getId().equals("590453186922545152") || user.getId().equals("223932775474921472")){
+        } /*else if(user.getId().equals("590453186922545152") || user.getId().equals("223932775474921472")){
             String content = event.getMessage().getContentRaw();
             if(content.contains("781949572103536650")){
                 new drawwithFerris().drawing(event);
@@ -317,8 +552,6 @@ public class BabyListener extends ListenerAdapter {
         if (user.isBot() || event.isWebhookMessage()) {
             return;
         }
-        
-
 
         String prefixstr = prefix.get(event.getGuild().getId());
         if(prefixstr == null || prefixstr.length() == 0)

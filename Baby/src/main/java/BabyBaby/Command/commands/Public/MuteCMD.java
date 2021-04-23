@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -25,7 +26,7 @@ public class MuteCMD implements PublicCMD {
 
     @Override
     public void handleAdmin(CommandContext ctx) {
-        handlePublic(ctx);
+        ctx.getChannel().sendMessage("This feature is disabled for Admins because you cant use it anyway..... <:kekwait:786877342072832020>").queue();
     }
 
     @Override
@@ -51,9 +52,9 @@ public class MuteCMD implements PublicCMD {
     @Override
     public void handlePublic(CommandContext ctx) {
 
-        
-
-
+        if(!ctx.getGuild().equals(data.ethid)){
+            return;
+        }
 
         MessageChannel channel = ctx.getChannel();
         Guild called = ctx.getGuild();
@@ -110,7 +111,7 @@ public class MuteCMD implements PublicCMD {
                 rounder = (long) (time*60);
             } else if(timeunit.startsWith("d")){
                 sunit = "days";
-                rounder = (long) (time*60);
+                rounder = (long) (time*24*3600);
             } else {
                 sunit = "seconds";
                 rounder = (long) (time);

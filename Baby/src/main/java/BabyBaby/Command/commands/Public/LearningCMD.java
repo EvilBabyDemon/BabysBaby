@@ -60,11 +60,11 @@ public class LearningCMD implements PublicCMD {
             
             stmt = c.createStatement();
 
-            rs = stmt.executeQuery("SELECT ID FROM USERS WHERE GUILDUSER =" + called.getId() + ";");
+            rs = stmt.executeQuery("SELECT * FROM USERS WHERE GUILDUSER =" + called.getId() + ";");
             while ( rs.next() ) {
                 String mutedUser = rs.getString("ID");
                 countUsers++;
-                userNames += called.getMemberById(mutedUser).getAsMention() + "(" +  ((Long.parseLong(rs.getString("MUTETIME"))-System.currentTimeMillis())/60000.0) + "m), ";
+                userNames += called.getMemberById(mutedUser).getAsMention() + "(" + Math.round(((Long.parseLong(rs.getString("MUTETIME"))-System.currentTimeMillis())/60000.0)) + "m), ";
             }
             rs.close();
             stmt.close();
