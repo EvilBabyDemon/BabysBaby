@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactionEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -35,6 +36,7 @@ import net.dv8tion.jda.internal.managers.ChannelManagerImpl;
 
 import org.jetbrains.annotations.NotNull;
 
+import BabyBaby.Command.commands.Admin.MutePersonCMD;
 import BabyBaby.Command.commands.Bot.button;
 import BabyBaby.Command.commands.Bot.clock;
 import BabyBaby.Command.commands.Bot.drawwithFerris;
@@ -185,14 +187,27 @@ public class BabyListener extends ListenerAdapter {
             urls.put(var.getUrl(), var);
         }
 
-
         c = null;
         PreparedStatement pstmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
+            pstmt = c.prepareStatement("DELETE FROM INVITES;");
+            pstmt.execute();
+            pstmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            return;
+        }
+
+        c = null;
+        pstmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
             for (String var : urls.keySet()) {
-                pstmt = c.prepareStatement("REPLACE INTO INVITES (URL, AMOUNT) VALUES (?, ?);");
+                pstmt = c.prepareStatement("INSERT INTO INVITES (URL, AMOUNT) VALUES (?, ?);");
                 pstmt.setString(1, var);
                 pstmt.setInt(2, urls.get(var).getUses());
                 pstmt.executeUpdate();
@@ -238,8 +253,59 @@ public class BabyListener extends ListenerAdapter {
     }
 
     @Override
+    public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
+        MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+        
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor("Unmute through Role removal.");
+        eb.setColor(0);
+        Member warned = event.getMember();
+        eb.setThumbnail(warned.getUser().getAvatarUrl());
+        
+
+        eb.setDescription(":loud_sound: **Unmuted ** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** Manually unmuted with Role Removal.");
+
+        log.sendMessage(eb.build()).queue();
+
+        //ctx.getChannel().sendMessage(eb.build()).queue();
+
+
+        Role muteR = event.getGuild().getRoleById(data.stfuID);
+
+        event.getGuild().removeRoleFromMember(warned, muteR).queue();
+
+        Connection c = null;
+        PreparedStatement stmt = null;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            
+            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USER = ?;");
+            stmt.setString(1, warned.getId());
+            stmt.execute();
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            e.printStackTrace(); 
+            return;
+        }
+        
+        
+
+        if(MutePersonCMD.userMuted.get(warned)==null){
+            MutePersonCMD.userMuted.remove(warned);
+        } else {
+            MutePersonCMD.variables.remove(MutePersonCMD.userMuted.get(warned));
+            MutePersonCMD.userMuted.remove(warned);
+        }
+
+    }
+
+
+    @Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-		if(!event.getGuild().getId().equals("747752542741725244"))
+		if(!event.getGuild().getId().equals(data.ethid))
             return;
 
         OffsetDateTime time = event.getUser().getTimeCreated();
@@ -271,15 +337,20 @@ public class BabyListener extends ListenerAdapter {
 
             ResultSet rs = stmt.executeQuery("SELECT * FROM INVITES;");
             while (rs.next()) {
+
                 url = rs.getString("URL");
                 amount = rs.getInt("AMOUNT");
-                Invite temp = urls.get(url);
-                if(temp.getUses() > amount){
-                    found = true;
-                    break;
+                
+                try{
+                    Invite temp = urls.get(url);
+                    if(temp.getUses() > amount){
+                        found = true;
+                        break;
+                    }
+                } catch (Exception e) {
+                    continue;
                 }
             }
-
             rs.close();
             stmt.close();
             c.close();
@@ -327,7 +398,7 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onGuildInviteCreate(GuildInviteCreateEvent event) {
-        if(!event.getGuild().getId().equals("747752542741725244"))
+        if(!event.getGuild().getId().equals(data.ethid))
             return;
         
         Connection c = null;
@@ -449,7 +520,6 @@ public class BabyListener extends ListenerAdapter {
 
     
 
-    //Put a if Kick event some time maybe.......
 
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {

@@ -50,7 +50,7 @@ import BabyBaby.Command.commands.Public.allroles;
 import BabyBaby.Command.commands.Public.getrole;
 import BabyBaby.Command.commands.Public.sieb;
 import BabyBaby.Command.commands.Public.source;
-import BabyBaby.Command.commands.Public.unmute;
+import BabyBaby.Command.commands.Public.UnmuteMeCMD;
 import BabyBaby.data.data;
 //import BabyBaby.Command.commands.admin.SetPrefixCommand;
 //import BabyBaby.Command.commands.nonAdmin.*;
@@ -97,7 +97,7 @@ public class CmdHandler {
         addPublicCommand(new sieb());
         addPublicCommand(new source());
         addPublicCommand(new SuggestionCMD());
-        addPublicCommand(new unmute());
+        addPublicCommand(new UnmuteMeCMD());
         addPublicCommand(new PollCMD());
         //addPublicCommand(new WallpaperCMD());
 
@@ -236,8 +236,8 @@ public class CmdHandler {
         List<String> args = Arrays.asList(split).subList(1, split.length);
         
         String cmdName = split[0].toLowerCase();
-        if(cmdName.equals("unmute")){
-            unmute cmd = new unmute();
+        UnmuteMeCMD cmd = new UnmuteMeCMD();
+        if(cmdName.equals(cmd.getName())){
             cmd.privhandle(event.getAuthor(), args);
         }
         

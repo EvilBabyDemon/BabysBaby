@@ -19,9 +19,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
-
-
-public class MutePersonCMD implements AdminCMD {
+public class UnmutePersonCMD implements AdminCMD {
     public static HashMap<Member, ScheduledExecutorService> userMuted = new HashMap<>();
     public static HashMap<ScheduledExecutorService, GetUnmutePerson> variables = new HashMap<>();
 
@@ -38,7 +36,7 @@ public class MutePersonCMD implements AdminCMD {
 
     @Override
     public String getName() {
-        return "mute";
+        return "unmute";
     }
 
     @Override
@@ -60,24 +58,6 @@ public class MutePersonCMD implements AdminCMD {
         person = person.replace("!", "");
         person = person.replace("@", "");
 
-        try {
-            ctx.getGuild().getMemberById(person);
-        } catch (Exception e) {
-            ctx.getChannel().sendMessage("This is not a snowflake ID or this user is not on this server.").queue();
-        }
-
-
-        int time = 0;
-        String reason = "";
-        if(cmds.size() > 0){
-            try {
-                time = Integer.parseInt(cmds.get(0)); 
-                if(cmds.size()>1)
-                    reason = ctx.getMessage().getContentRaw().substring(1 + getName().length() + 1 + cmds.get(0).length() + 1);
-            } catch (Exception e) {
-                reason = ctx.getMessage().getContentRaw().substring(1 + getName().length() + 1);
-            }
-        }
 
         MessageChannel log = ctx.getGuild().getTextChannelById(data.modlog);
 
@@ -87,50 +67,41 @@ public class MutePersonCMD implements AdminCMD {
         eb.setThumbnail(ctx.getGuild().getMemberById(person).getUser().getAvatarUrl());
         Member warned = ctx.getGuild().getMemberById(person);
 
-        eb.setDescription(":warning: **Muted for** " + (time==0? "Infinite" : time) + " " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
+        eb.setDescription(":loud_sound: **Unmuted for** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** Manually unmuted with CMD");
 
         log.sendMessage(eb.build()).queue();
 
-        ctx.getChannel().sendMessage(eb.build()).queue();
+        //ctx.getChannel().sendMessage(eb.build()).queue();
 
-        Role muteR = ctx.getGuild().getRoleById("765542118701400134");
 
-        ctx.getGuild().addRoleToMember(ctx.getMember(), muteR).queue();
+        Role muteR = ctx.getGuild().getRoleById(data.stfuID);
 
-        
-
-        GetUnmutePerson scheduledclass = new GetUnmutePerson(warned.getUser(), ctx.getGuild(), "");
-        long timesql = 0;
-        if(time != 0){
-            timesql = (System.currentTimeMillis() + time*60*1000);
-            ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
-            mute.schedule(scheduledclass, time*60 , TimeUnit.SECONDS);
-            userMuted.put(ctx.getMember(), mute);
-            variables.put(mute, scheduledclass);
-        } else {
-            userMuted.put(ctx.getMember(), null);
-        }
-
+        ctx.getGuild().removeRoleFromMember(warned, muteR).queue();
 
         Connection c = null;
         PreparedStatement stmt = null;
+
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
-             
-            stmt = c.prepareStatement("INSERT INTO ADMINMUTE (GUILDID, USERID, TIME) VALUES (?, ?, ?);");           
-            stmt.setString(1, warned.getUser().getId());
-            stmt.setString(2, ctx.getGuild().getId());
-            stmt.setLong(3, timesql);
-            stmt.executeUpdate();
-
+            
+            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USER = ?;");
+            stmt.setString(1, warned.getId());
+            stmt.execute();
             stmt.close();
             c.close();
-            
         } catch ( Exception e ) {
-            ctx.getChannel().sendMessage( e.getClass().getName() + ": " + e.getMessage()).queue();
             e.printStackTrace(); 
             return;
+        }
+        
+        
+
+        if(MutePersonCMD.userMuted.get(warned)==null){
+            MutePersonCMD.userMuted.remove(warned);
+        } else {
+            MutePersonCMD.variables.remove(MutePersonCMD.userMuted.get(warned));
+            MutePersonCMD.userMuted.remove(warned);
         }
 
         ctx.getMessage().addReaction(data.check).queue();
@@ -139,7 +110,7 @@ public class MutePersonCMD implements AdminCMD {
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<User Ping> [Time]", "Command to mute a person.");
+        return StandardHelp.Help(prefix, getName(), "<User Ping>", "Command to unmute a person.");
     }
     
 }

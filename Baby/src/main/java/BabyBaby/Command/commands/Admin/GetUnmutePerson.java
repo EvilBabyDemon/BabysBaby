@@ -25,7 +25,7 @@ public class GetUnmutePerson implements Runnable {
 
     public void run() {	
 
-        Role muteR = guild.getRoleById("765542118701400134");
+        Role muteR = guild.getRoleById(data.stfuID);
 
         guild.removeRoleFromMember(guild.getMember(reminder), muteR).queue();
 
@@ -67,8 +67,7 @@ public class GetUnmutePerson implements Runnable {
         }
 
 
-        //guild.getTextChannelById("channelID").sendMessage(reminder.getAsMention()).queue();
-        //guild.getTextChannelById(channelID).sendMessage(eb.build()).queue();
+        
         
     }
 }
