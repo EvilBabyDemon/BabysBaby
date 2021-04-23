@@ -38,7 +38,7 @@ public class UnmuteMeCMD implements PublicCMD {
 
     @Override
     public String getName() {
-        return "unmute";
+        return "unmuteme";
     }
 
     @Override

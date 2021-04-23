@@ -108,7 +108,6 @@ public class CmdHandler {
         // adding commands visible to @admin
         addAdminCommand(new addrole());
         addAdminCommand(new delrole());
-        addAdminCommand(new MutePersonCMD());
         addAdminCommand(new removeRoles());
         addAdminCommand(new roleid());
         addAdminCommand(new updaterole());

@@ -110,7 +110,7 @@ public class MutePersonCMD implements AdminCMD {
 
         
 
-        GetUnmutePerson scheduledclass = new GetUnmutePerson(warned.getUser(), ctx.getGuild(), "");
+        GetUnmutePerson scheduledclass = new GetUnmutePerson(warned.getUser(), ctx.getGuild());
         long timesql = 0;
         if(time != 0){
             timesql = (System.currentTimeMillis() + time*60*1000);
@@ -149,7 +149,7 @@ public class MutePersonCMD implements AdminCMD {
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<User Ping> [Time]", "Command to mute a person.");
+        return StandardHelp.Help(prefix, getName(), "<User Ping> [Time in Minutes]", "Command to mute a person.");
     }
     
 }

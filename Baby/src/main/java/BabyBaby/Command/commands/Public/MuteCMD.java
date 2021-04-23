@@ -156,7 +156,7 @@ public class MuteCMD implements PublicCMD {
         variables.put(mute, scheduledclass);
 
         called.addRoleToMember(ctx.getMember(), muteR).queue();
-        channel.sendMessage("You got muted for ~" + time + " " + sunit + ". Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+unmute\"").queue();
+        channel.sendMessage("You got muted for ~" + time + " " + sunit + ". Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnmuteMeCMD().getName() + "\"").queue();
 
     }
 

@@ -13,10 +13,29 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Comparator;
 import java.util.List;
 
 public class HelpCMD implements PublicCMD {
     String sigchange = "+mute moved to +muteme";
+    Comparator<PublicCMD> compPub = new Comparator<>(){
+        @Override
+        public int compare(PublicCMD o1, PublicCMD o2) {
+            return Integer.parseInt(o1.getName().substring(0,1)) - Integer.parseInt(o2.getName().substring(0,1));
+        }
+    };
+    Comparator<AdminCMD> compAdm = new Comparator<>(){
+        @Override
+        public int compare(AdminCMD o1, AdminCMD o2) {
+            return Integer.parseInt(o1.getName().substring(0,1)) - Integer.parseInt(o2.getName().substring(0,1));
+        }
+    };
+    Comparator<OwnerCMD> compOwn = new Comparator<>(){
+        @Override
+        public int compare(OwnerCMD o1, OwnerCMD o2) {
+            return Integer.parseInt(o1.getName().substring(0,1)) - Integer.parseInt(o2.getName().substring(0,1));
+        }
+    };
 
     private final CmdHandler manager;
 
@@ -40,6 +59,7 @@ public class HelpCMD implements PublicCMD {
 
             String publicstr = ""; 
             List<PublicCMD> publiclist = manager.getPublicCommands();
+            publiclist.sort(compPub);
             for (PublicCMD var : publiclist) {
                 publicstr += prefix + var.getName() +  "\n";
             }
@@ -75,12 +95,15 @@ public class HelpCMD implements PublicCMD {
 
         // no search text given -> general help
         if (args == null || args.isEmpty()) {
+
             EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
 
             embed.setTitle("BabysBaby");
             embed.setDescription("Significant changes: " + sigchange);
             String publicstr = ""; 
             List<PublicCMD> publiclist = manager.getPublicCommands();
+            publiclist.sort(compPub);
+
             for (PublicCMD var : publiclist) {
                 publicstr += prefix + var.getName() +  "\n";
             }
@@ -88,6 +111,8 @@ public class HelpCMD implements PublicCMD {
 
             String admin = ""; 
             List<AdminCMD> adminlist = manager.getAdminCommands();
+            adminlist.sort(compAdm);
+
             for (AdminCMD var : adminlist) {
                 admin += prefix + var.getName() +  "\n";
             }
@@ -125,6 +150,8 @@ public class HelpCMD implements PublicCMD {
             embed.setDescription("Significant changes: " + sigchange);
             String publicstr = ""; 
             List<PublicCMD> publiclist = manager.getPublicCommands();
+            publiclist.sort(compPub);
+
             for (PublicCMD var : publiclist) {
                 publicstr += prefix + var.getName() +  "\n";
             }
@@ -132,6 +159,8 @@ public class HelpCMD implements PublicCMD {
 
             String admin = ""; 
             List<AdminCMD> adminlist = manager.getAdminCommands();
+            adminlist.sort(compAdm);
+
             for (AdminCMD var : adminlist) {
                 admin += prefix + var.getName() +  "\n";
             }
@@ -139,6 +168,7 @@ public class HelpCMD implements PublicCMD {
 
             String ownerstr = ""; 
             List<OwnerCMD> ownerlist = manager.getOwnerCommands();
+            ownerlist.sort(compOwn);
             for (OwnerCMD var : ownerlist) {
                 ownerstr += prefix + var.getName() +  "\n";
             }

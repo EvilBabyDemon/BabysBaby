@@ -33,6 +33,7 @@ import net.dv8tion.jda.internal.managers.ChannelManagerImpl;
 
 import org.jetbrains.annotations.NotNull;
 
+import BabyBaby.Command.commands.Admin.GetUnmutePerson;
 import BabyBaby.Command.commands.Admin.MutePersonCMD;
 import BabyBaby.Command.commands.Bot.button;
 import BabyBaby.Command.commands.Bot.clock;
@@ -233,6 +234,35 @@ public class BabyListener extends ListenerAdapter {
             while(rs.next()){
                 ScheduledExecutorService remind = Executors.newScheduledThreadPool(1);
                 remind.schedule(new GetReminder(event.getJDA().getUserById(rs.getString("USERID")), event.getJDA().getGuildById(rs.getString("GUILDID")), rs.getString("TEXTS"), rs.getString("CHANNELID"), rs.getString("pk")), rs.getInt("TIME") , TimeUnit.SECONDS);
+            }
+            
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            e.printStackTrace(); 
+            return;
+        }
+
+        c = null;
+        stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            stmt = c.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ADMINMUTE;");
+
+            while(rs.next()){
+                Guild muteG = event.getJDA().getGuildById(rs.getString("GUILDID"));
+                User mutedPerson = event.getJDA().getUserById(rs.getString("USERID"));
+                int time = rs.getInt("TIME");
+                if(time == 0){
+                    MutePersonCMD.userMuted.put(muteG.getMember(mutedPerson), null);
+                } else {
+                    ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
+                    mute.schedule(new GetUnmutePerson(mutedPerson, muteG), time , TimeUnit.SECONDS);
+                    MutePersonCMD.userMuted.put(muteG.getMember(mutedPerson), mute);
+                }
+                
             }
             
             stmt.close();

@@ -14,13 +14,10 @@ import net.dv8tion.jda.api.entities.User;
 public class GetUnmutePerson implements Runnable {
     public User reminder;
     public Guild guild;
-    public String pk;
 
-    public GetUnmutePerson(User user, Guild tempG, String pkey) {
+    public GetUnmutePerson(User user, Guild tempG) {
         reminder = user;
         guild = tempG;
-        pk = pkey;
-
     }
 
     public void run() {	
