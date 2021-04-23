@@ -41,7 +41,7 @@ public class SuggestionCMD implements PublicCMD {
     @Override
     public void handlePublic(CommandContext ctx) {
         MessageChannel channel = ctx.getChannel();
-        File suggestions = new File("src\\suggestions.txt");
+        File suggestions = new File("C:\\Users\\Lukas\\Desktop\\From_Old_to_NEW\\VSCODE WORKSPACE\\BabysBaby\\Baby\\src\\suggestions.txt");
         String content = "";
         
         List<String> args = ctx.getArgs();

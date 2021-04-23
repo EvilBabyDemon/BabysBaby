@@ -36,9 +36,7 @@ public class UnmutePersonCMD implements AdminCMD {
     @Override
     public void handleAdmin(CommandContext ctx) {
         if(!ctx.getGuild().getId().equals(data.ethid))
-            return;
-        
-        
+            return;        
 
         LinkedList<String> cmds = new LinkedList<>();
 
@@ -46,7 +44,6 @@ public class UnmutePersonCMD implements AdminCMD {
             cmds.add(var);
         }
         
-
         String person = cmds.remove(0);
         
         person = person.replace("<", "");
@@ -55,8 +52,10 @@ public class UnmutePersonCMD implements AdminCMD {
         person = person.replace("@", "");
 
         try {
-            if(!MutePersonCMD.userMuted.containsKey(ctx.getGuild().getMemberById(person)))
+            if(!MutePersonCMD.userMuted.containsKey(ctx.getGuild().getMemberById(person))){
+                System.out.println("Not in the Map.");
                 return;
+            }
         } catch (Exception e) {
             ctx.getChannel().sendMessage("This is not a snowflake ID or this user is not on this server.").queue();
             return;

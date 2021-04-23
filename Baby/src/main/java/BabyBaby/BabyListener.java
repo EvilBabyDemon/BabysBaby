@@ -103,7 +103,6 @@ public class BabyListener extends ListenerAdapter {
             c.close();
         } catch ( Exception e ) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
-            return;
         }
         
         
@@ -133,7 +132,6 @@ public class BabyListener extends ListenerAdapter {
 
         } catch ( Exception e ) {
             e.printStackTrace(); 
-            return;
         }
        
 
@@ -153,7 +151,6 @@ public class BabyListener extends ListenerAdapter {
             c.close();
         } catch ( Exception e ) {
             e.printStackTrace(); 
-            return;
         }
 
 
@@ -173,7 +170,6 @@ public class BabyListener extends ListenerAdapter {
             c.close();
         } catch ( Exception e ) {
             e.printStackTrace(); 
-            return;
         }
 
 
@@ -194,7 +190,6 @@ public class BabyListener extends ListenerAdapter {
             c.close();
         } catch ( Exception e ) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
-            return;
         }
 
         c = null;
@@ -212,7 +207,6 @@ public class BabyListener extends ListenerAdapter {
             c.close();
         } catch ( Exception e ) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
-            return;
         } 
 
         AuditLogPaginationAction logs = event.getJDA().getGuildById(data.ethid).retrieveAuditLogs();
@@ -240,7 +234,6 @@ public class BabyListener extends ListenerAdapter {
             c.close();
         } catch ( Exception e ) {
             e.printStackTrace(); 
-            return;
         }
 
         c = null;
@@ -252,24 +245,26 @@ public class BabyListener extends ListenerAdapter {
             rs = stmt.executeQuery("SELECT * FROM ADMINMUTE;");
 
             while(rs.next()){
-                Guild muteG = event.getJDA().getGuildById(rs.getString("GUILDID"));
-                User mutedPerson = event.getJDA().getUserById(rs.getString("USERID"));
-                int time = rs.getInt("TIME");
-                if(time == 0){
-                    MutePersonCMD.userMuted.put(muteG.getMember(mutedPerson), null);
-                } else {
-                    ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
-                    mute.schedule(new GetUnmutePerson(mutedPerson, muteG), time , TimeUnit.SECONDS);
-                    MutePersonCMD.userMuted.put(muteG.getMember(mutedPerson), mute);
-                }
-                
+                try{
+                    Guild muteG = event.getJDA().getGuildById(rs.getString("GUILDID"));
+                    User mutedPerson = event.getJDA().getUserById(rs.getString("USERID"));
+                    int time = rs.getInt("TIME");
+                    if(time == 0){
+                        MutePersonCMD.userMuted.put(muteG.getMember(mutedPerson), null);
+                    } else {
+                        ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
+                        mute.schedule(new GetUnmutePerson(mutedPerson, muteG), time , TimeUnit.SECONDS);
+                        MutePersonCMD.userMuted.put(muteG.getMember(mutedPerson), mute);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } 
             }
             
             stmt.close();
             c.close();
         } catch ( Exception e ) {
             e.printStackTrace(); 
-            return;
         }
         
 

@@ -53,6 +53,7 @@ public class MutePersonCMD implements AdminCMD {
         
 
         String person = cmds.remove(0);
+        int leng = person.length();
         
         person = person.replace("<", "");
         person = person.replace(">", "");
@@ -67,15 +68,16 @@ public class MutePersonCMD implements AdminCMD {
         }
 
 
+
         int time = 0;
         String reason = "";
         if(cmds.size() > 0){
             try {
                 time = Integer.parseInt(cmds.get(0)); 
                 if(cmds.size()>1)
-                    reason = ctx.getMessage().getContentRaw().substring(1 + getName().length() + 1 + cmds.get(0).length() + 1);
+                    reason = ctx.getMessage().getContentRaw().substring(1 + getName().length() + 1 + cmds.get(0).length() + 1 + leng + 1);
             } catch (Exception e) {
-                reason = ctx.getMessage().getContentRaw().substring(1 + getName().length() + 1);
+                reason = ctx.getMessage().getContentRaw().substring(1 + getName().length() + 1 + leng + 1);
             }
         }
 
@@ -87,7 +89,7 @@ public class MutePersonCMD implements AdminCMD {
         eb.setThumbnail(ctx.getGuild().getMemberById(person).getUser().getAvatarUrl());
         Member warned = ctx.getGuild().getMemberById(person);
 
-        eb.setDescription(":warning: **Muted for** " + (time==0? "Infinite" : time) + " " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
+        eb.setDescription(":warning: **Muted for** " + (time==0? "Infinite" : time) + " minutes " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
 
         log.sendMessage(eb.build()).queue();
 
@@ -96,29 +98,23 @@ public class MutePersonCMD implements AdminCMD {
         Role muteR = ctx.getGuild().getRoleById(data.stfuID);
 
         if(inList){
-            ctx.getGuild().removeRoleFromMember(ctx.getMember(), muteR).queue();
-
-            if(MutePersonCMD.userMuted.get(warned)==null){
-                MutePersonCMD.userMuted.remove(warned);
-            } else {
-                MutePersonCMD.userMuted.remove(warned);
-            }
-
+            userMuted.remove(warned);
         }
 
-        ctx.getGuild().addRoleToMember(ctx.getMember(), muteR).queue();
+        ctx.getGuild().addRoleToMember(warned, muteR).queue();
 
         
-
-        GetUnmutePerson scheduledclass = new GetUnmutePerson(warned.getUser(), ctx.getGuild());
+        
         long timesql = 0;
         if(time != 0){
+            GetUnmutePerson scheduledclass = new GetUnmutePerson(warned.getUser(), ctx.getGuild());
             timesql = (System.currentTimeMillis() + time*60*1000);
             ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
             mute.schedule(scheduledclass, time*60 , TimeUnit.SECONDS);
-            userMuted.put(ctx.getMember(), mute);
+            userMuted.put(ctx.getGuild().getMemberById(person), mute);
+
         } else {
-            userMuted.put(ctx.getMember(), null);
+            userMuted.put(ctx.getGuild().getMemberById(person), null);
         }
 
 
@@ -129,8 +125,8 @@ public class MutePersonCMD implements AdminCMD {
             c = DriverManager.getConnection(data.db);
              
             stmt = c.prepareStatement("REPLACE INTO ADMINMUTE (GUILDID, USERID, TIME) VALUES (?, ?, ?);");           
-            stmt.setString(1, warned.getUser().getId());
-            stmt.setString(2, ctx.getGuild().getId());
+            stmt.setString(1, ctx.getGuild().getId());
+            stmt.setString(2, warned.getUser().getId());
             stmt.setLong(3, timesql);
             stmt.executeUpdate();
 
@@ -149,7 +145,7 @@ public class MutePersonCMD implements AdminCMD {
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<User Ping> [Time in Minutes]", "Command to mute a person.");
+        return StandardHelp.Help(prefix, getName(), "<User Ping> [Time in Minutes] [Reason]", "Command to mute a person.");
     }
     
 }
