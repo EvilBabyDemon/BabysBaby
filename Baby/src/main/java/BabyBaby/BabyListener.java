@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactio
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.ChannelManager;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
@@ -56,6 +57,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +73,7 @@ public class BabyListener extends ListenerAdapter {
     public final JDA bot;
     private static HashMap<String, String> prefix = new HashMap<>();
     private final String ownerID = "223932775474921472";
-    //private static boolean typing = true;
+    private static boolean typing = true;
 
     public BabyListener(JDA bot) throws IOException {
         this.bot = bot;
@@ -590,10 +592,10 @@ public class BabyListener extends ListenerAdapter {
 
 
     
-    /*
+    
     @Override
     public void onUserTyping(@Nonnull UserTypingEvent event) {
-        if(event.getMember().getId().equals("123841216662994944")){ //Hello Elthision :eyes:
+        if(event.getMember().getId().equals("108305736131440640")){ //Hello Ollie :eyes:
             if(typing){
                 Random rand = new Random();
                 if(rand.nextDouble() < 0.23){
@@ -605,7 +607,7 @@ public class BabyListener extends ListenerAdapter {
             }
         }
     }
-    */
+    
 
 
     @Override
