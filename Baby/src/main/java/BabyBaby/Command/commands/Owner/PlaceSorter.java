@@ -16,7 +16,7 @@ import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class sort implements OwnerCMD {
+public class PlaceSorter implements OwnerCMD {
 
     @Override
     public String getName() {

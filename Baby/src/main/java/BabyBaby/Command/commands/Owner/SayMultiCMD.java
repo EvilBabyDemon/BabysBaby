@@ -37,7 +37,7 @@ public class SayMultiCMD implements OwnerCMD {
         
         String content = message.getContentRaw();
 
-        content = content.substring(cmds.get(0).length(), content.length());
+        content = content.substring(1 + getName().length() + 1 + cmds.get(0).length());
 
         channel.deleteMessageById(message.getId()).queue();
         for (int i = 0; i < x; i++) {

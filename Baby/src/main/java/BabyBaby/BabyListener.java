@@ -9,9 +9,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IPermissionHolder;
 import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.SelfUser;
+//import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
@@ -37,7 +38,7 @@ import BabyBaby.Command.commands.Admin.GetUnmutePerson;
 import BabyBaby.Command.commands.Admin.MutePersonCMD;
 import BabyBaby.Command.commands.Bot.button;
 import BabyBaby.Command.commands.Bot.clock;
-import BabyBaby.Command.commands.Bot.drawwithFerris;
+//import BabyBaby.Command.commands.Bot.drawwithFerris;
 import BabyBaby.Command.commands.Public.GetReminder;
 import BabyBaby.Command.commands.Public.GetUnmute;
 import BabyBaby.Command.commands.Public.MuteCMD;
@@ -65,7 +66,7 @@ public class BabyListener extends ListenerAdapter {
 
     private final CmdHandler manager;
 
-    private SelfUser botUser;
+    //private SelfUser botUser;
     private User owner;
     public final JDA bot;
     private static HashMap<String, String> prefix = new HashMap<>();
@@ -80,7 +81,7 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
-        botUser = event.getJDA().getSelfUser();
+        //botUser = event.getJDA().getSelfUser();
         Connection c = null;
         Statement stmt = null;
 
@@ -117,6 +118,7 @@ public class BabyListener extends ListenerAdapter {
 
             rs = stmt.executeQuery("SELECT * FROM USERS");            
             while(rs.next()){
+                try{
                 Guild called = bot.getGuildById( rs.getString("GUILDUSER"));
                 User muteUser = called.getMemberById(rs.getString("ID")).getUser();
                 long time = Long.parseLong(rs.getString("MUTETIME"));
@@ -126,6 +128,11 @@ public class BabyListener extends ListenerAdapter {
                 GetUnmute muteclass = new GetUnmute(muteUser, called, muteR);
                 mute.schedule(muteclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
                 MuteCMD.userMuted.put(called.getMember(muteUser), mute);
+                } catch (Exception e){
+                    e.printStackTrace();
+                    System.out.println("Probably a User that left the server while being muted.");
+                }
+
             }
             stmt.close();
             c.close();
@@ -226,8 +233,13 @@ public class BabyListener extends ListenerAdapter {
             rs = stmt.executeQuery("SELECT * FROM REMINDERS;");
 
             while(rs.next()){
+                try {
                 ScheduledExecutorService remind = Executors.newScheduledThreadPool(1);
                 remind.schedule(new GetReminder(event.getJDA().getUserById(rs.getString("USERID")), event.getJDA().getGuildById(rs.getString("GUILDID")), rs.getString("TEXTS"), rs.getString("CHANNELID"), rs.getString("pk")), rs.getInt("TIME") , TimeUnit.SECONDS);
+                } catch (Exception e){
+                    e.printStackTrace();
+                    System.out.println("Probably a User that left the server while being reminded.");
+                }
             }
             
             stmt.close();
@@ -258,6 +270,7 @@ public class BabyListener extends ListenerAdapter {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    System.out.println("Probably a User that left the server while being adminmuted.");
                 } 
             }
             
@@ -267,8 +280,6 @@ public class BabyListener extends ListenerAdapter {
             e.printStackTrace(); 
         }
         
-
-
         System.out.println("Started!");
     }
 
@@ -385,6 +396,7 @@ public class BabyListener extends ListenerAdapter {
 
         if(!found){
             event.getGuild().getTextChannelById("747768907992924192").sendMessage("Smth went wrong with the invite link stuff. Couldnt find the invite link... <@!223932775474921472>").queue();
+            return;
         }
 
         MessageChannel log = event.getGuild().getTextChannelById(data.adminlog);
@@ -395,7 +407,8 @@ public class BabyListener extends ListenerAdapter {
         eb.setThumbnail(event.getUser().getAvatarUrl());
 
         eb.setDescription("Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n Uses:" + ++amount + "\n Created at: " + urls.get(url).getTimeCreated().toLocalTime());
-
+        Message temp = log.sendMessage(".").complete();
+        temp.editMessage(urls.get(url).getInviter().getAsMention()).complete().delete().queue();
         log.sendMessage(eb.build()).queue();
 
 
