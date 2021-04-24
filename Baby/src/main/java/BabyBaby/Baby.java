@@ -20,7 +20,6 @@ public class Baby {
     public static void main(String[] args) throws IOException  {
         
         try {
-
             Scanner s = new Scanner(new File("C:\\Users\\Lukas\\Desktop\\From_Old_to_NEW\\VSCODE WORKSPACE\\BabysBaby\\Baby\\.gitignore\\token.txt"));
             String token = s.nextLine();
             JDABuilder builder = JDABuilder.createDefault(token);
@@ -33,9 +32,8 @@ public class Baby {
             jda.addEventListener(new BabyListener(jda));
             //jda.addEventListener(new MyListener());
             jda.getPresence().setActivity(Activity.watching(" some pixels getting slowly placed."));
-        } catch (LoginException e) {    
+        } catch (LoginException e) {
             e.printStackTrace();
         }
-        
     }
 }

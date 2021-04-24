@@ -50,8 +50,8 @@ public class PollCMD implements PublicCMD{
 			}
 		}
 
-		if(cmds.size()>10){
-			ctx.getChannel().sendMessage("You can only have at most 9 Options.").queue();
+		if(cmds.size()>12){
+			ctx.getChannel().sendMessage("You can only have at most 11 Options.").queue();
 			return;
 		}
 
@@ -60,16 +60,25 @@ public class PollCMD implements PublicCMD{
 			return;
 		}
 
-		String[] emot = {"0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣"};
+		String[] emot = {"0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣", ":keycap_ten:"};
  
 
 		String topic = cmds.remove();
 		topic = topic.replaceAll("\"", "");
+		if(topic.length() > 256){
+			ctx.getChannel().sendMessage("Your Title can't be longer than 256 chars.").queue();
+			return;
+		}
 		String options = "";
 		int amount = 0;
 		while(cmds.size()!=0){
 			options += emot[amount] + " : " + cmds.remove().replaceAll("\"", "") + "\n";
 			amount++;
+		}
+
+		if(options.length() > 2000){
+			ctx.getChannel().sendMessage("All your options together can't be more than 2000 chars, so keep it simpler!").queue();
+			return;
 		}
 
 		EmbedBuilder eb = new EmbedBuilder();

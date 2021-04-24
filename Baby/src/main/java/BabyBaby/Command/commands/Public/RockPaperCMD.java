@@ -5,6 +5,8 @@ import java.util.List;
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -49,11 +51,7 @@ public class RockPaperCMD implements PublicCMD {
         MessageChannel channel = ctx.getChannel();    
 
         // no subcommand -> allRoles
-        if (args == null || args.isEmpty()) {
-            channel.sendMessage("You have to type" + " " + "rock <rock/paper/scissors>").queue();
-            return;
-        }
-        if(args.size() > 1){
+        if (args == null || args.isEmpty() || args.size() > 1) {
             channel.sendMessage("You have to type" + " " + "rock <rock/paper/scissors>").queue();
             return;
         }
@@ -97,32 +95,23 @@ public class RockPaperCMD implements PublicCMD {
             } else if (content.equals(decision[0]) && result.equals(decision[1])
                     || content.equals(decision[1]) && result.equals(decision[2])
                     || content.equals(decision[2]) && result.equals(decision[0])) {
-                result = "The bot has chosen: " + result + " The bot has won over: " + content;
+                result = "The bot has chosen: " + result + "\n The bot has won against " + content;
             } else {
-                result = "The bot has chosen: " + result + " The bot has lost over: " + content;
+                result = "The bot has chosen: " + result + "\n The bot has lost against " + content;
             }
 
             channel.sendMessage(result).queue();
         } else {
             channel.sendMessage("You have to type rock, paper or scissors correctly!").queue();
+            return;
         }
 
+        ctx.getMessage().addReaction(data.check).queue();
     }
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
-
-        embed.setTitle("Help page of: `" + getName()+"`");
-        embed.setDescription("Play a game of Rock, Paper or Scissors against this Bot.");
-
-        // general use
-        embed.addField("", new ColouredStringAsciiDoc()
-                .addBlueAboveEq("general use")
-                .addOrange(prefix + "rock <rock/paper/scissors>")
-                .build(), false);
-
-        return embed.build();
+        return StandardHelp.Help(prefix, getName(), "<rock/paper/scissors>", "Play a game of Rock, Paper or Scissors against this Bot.");
     }
 
     
