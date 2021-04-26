@@ -8,6 +8,7 @@ import java.util.List;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -38,7 +39,7 @@ public class delrole implements AdminCMD {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             c.setAutoCommit(false);
     
             stmt = c.createStatement();

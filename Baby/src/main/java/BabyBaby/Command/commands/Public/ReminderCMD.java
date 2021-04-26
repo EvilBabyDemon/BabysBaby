@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -121,7 +122,7 @@ public class ReminderCMD implements PublicCMD {
         PreparedStatement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             
             stmt = c.prepareStatement("INSERT INTO REMINDERS (USERID, TEXTS, GUILDID, CHANNELID, TIME) VALUES (?, ?, ?, ?, ?);");
             //SELECT last_insert_rowid() FROM REMINDERS;

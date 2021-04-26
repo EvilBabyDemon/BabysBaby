@@ -61,7 +61,7 @@ public class GetWarningsFromUser implements AdminCMD{
 
         try { 	
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
 
             
             String sql = "SELECT * FROM WARNINGS WHERE USER = ?;";

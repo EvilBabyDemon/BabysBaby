@@ -9,6 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -118,7 +119,7 @@ public class UnmuteMeCMD implements PublicCMD {
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             
             stmt = c.createStatement();
             stmt.execute("DELETE FROM USERS WHERE ID = " + muted.getId() + " AND GUILDUSER = " + muteServ.getId() + ";");

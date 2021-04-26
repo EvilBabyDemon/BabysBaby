@@ -8,6 +8,7 @@ import java.util.List;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -41,7 +42,7 @@ public class SuggestionCMD implements PublicCMD {
     @Override
     public void handlePublic(CommandContext ctx) {
         MessageChannel channel = ctx.getChannel();
-        File suggestions = new File("C:\\Users\\Lukas\\Desktop\\From_Old_to_NEW\\VSCODE WORKSPACE\\BabysBaby\\Baby\\src\\suggestions.txt");
+        File suggestions = new File(data.SUGGESTION);
         String content = "";
         
         List<String> args = ctx.getArgs();
@@ -61,6 +62,8 @@ public class SuggestionCMD implements PublicCMD {
         }
         channel.sendMessage("Thx for the suggestion!").queue();
         
+        ctx.getJDA().getUserById(data.myselfID).openPrivateChannel().complete().sendMessage(content).queue();
+
     }
 
     @Override

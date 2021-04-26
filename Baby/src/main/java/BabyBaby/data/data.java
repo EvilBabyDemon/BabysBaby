@@ -17,4 +17,11 @@ public class data {
     public static final String spam = "768600365602963496";
     public static final String stfuID = "765542118701400134";
     public static OffsetDateTime kick;
+    public static final String myselfID = "223932775474921472";
+    public static final String dcvd = "306523617188118528";
+
+
+    //Filepaths
+    public static final String TOKEN = "token.txt";
+    public static final String SUGGESTION = "suggestions.txt";
 }

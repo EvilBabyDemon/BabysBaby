@@ -129,7 +129,7 @@ public class MuteCMD implements PublicCMD {
         long timesql = (System.currentTimeMillis() + rounder*1000);
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             
              
             stmt = c.createStatement();           

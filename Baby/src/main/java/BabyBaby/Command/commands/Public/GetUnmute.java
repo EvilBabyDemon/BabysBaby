@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
@@ -30,7 +31,7 @@ public class GetUnmute implements Runnable {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             
             stmt = c.createStatement();
             stmt.execute("DELETE FROM USERS WHERE ID = " + muted.getId() + " AND GUILDUSER = " + guild.getId() + ";");

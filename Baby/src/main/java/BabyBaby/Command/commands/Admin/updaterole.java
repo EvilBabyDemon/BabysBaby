@@ -9,6 +9,7 @@ import java.util.List;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -56,7 +57,7 @@ public class updaterole implements AdminCMD {
             case "emote":
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+                c = DriverManager.getConnection(data.db);
         
                 stmt = c.createStatement();
                 String sql= "UPDATE ASSIGNROLES SET EMOTE = '" + update + "' where ID=" + id + ";";
@@ -76,7 +77,7 @@ public class updaterole implements AdminCMD {
                 
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+                    c = DriverManager.getConnection(data.db);
             
                     stmt = c.createStatement();
                     String sql = "UPDATE ASSIGNROLES SET ID = " + update + " where ID=" + id + ";";
@@ -96,7 +97,7 @@ public class updaterole implements AdminCMD {
                 
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+                    c = DriverManager.getConnection(data.db);
             
                     stmt = c.createStatement();
                     String sql = "UPDATE ASSIGNROLES SET categories = '" + update + "' where ID=" + id + ";";

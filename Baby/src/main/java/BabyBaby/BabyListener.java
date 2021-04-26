@@ -90,7 +90,7 @@ public class BabyListener extends ListenerAdapter {
 		ResultSet rs;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             
             stmt = c.createStatement();
 
@@ -114,7 +114,7 @@ public class BabyListener extends ListenerAdapter {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             
             stmt = c.createStatement();
 
@@ -148,7 +148,7 @@ public class BabyListener extends ListenerAdapter {
         stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             stmt = c.createStatement();
             rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES;");
 
@@ -167,7 +167,7 @@ public class BabyListener extends ListenerAdapter {
         stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             stmt = c.createStatement();
             rs = stmt.executeQuery("SELECT * FROM MSGS;");
 
@@ -549,11 +549,21 @@ public class BabyListener extends ListenerAdapter {
     public void onVoiceChannelCreate(VoiceChannelCreateEvent event) {
         if(!event.getGuild().getId().equals("747752542741725244"))
             return;
-        ChannelManager test = new ChannelManagerImpl(event.getChannel());
+        AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
+        for (AuditLogEntry entry : logs) {
+            if(entry.getType().equals(ActionType.CHANNEL_CREATE)){
+                if(entry.getUser().getId().equals(data.dcvd))
+                    return;
+                else
+                    break;
+            }
+        }
+        
+        ChannelManager channelMan = new ChannelManagerImpl(event.getChannel());
         Collection<Permission> deny = new LinkedList<>();
         deny.add(Permission.VOICE_SPEAK );
 		IPermissionHolder permHolder = event.getGuild().getRoleById("765542118701400134");
-        test.putPermissionOverride(permHolder, null, deny).queue();
+        channelMan.putPermissionOverride(permHolder, null, deny).queue();
     }
 
 

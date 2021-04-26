@@ -59,7 +59,7 @@ public class addrole implements AdminCMD {
 
         try { 	
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
 
             stmt = c.createStatement();
             String sql = "INSERT INTO ASSIGNROLES (ID,CATEGORIES,EMOTE) " +

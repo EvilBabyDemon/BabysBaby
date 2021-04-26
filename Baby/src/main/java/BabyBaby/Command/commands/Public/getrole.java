@@ -67,7 +67,7 @@ public class getrole implements PublicCMD{
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             
             stmt = c.createStatement();
 
@@ -107,7 +107,7 @@ public class getrole implements PublicCMD{
             HashMap<Role, Object[]> sorting = new HashMap<>();
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+                c = DriverManager.getConnection(data.db);
                 
                 stmt = c.createStatement();
 

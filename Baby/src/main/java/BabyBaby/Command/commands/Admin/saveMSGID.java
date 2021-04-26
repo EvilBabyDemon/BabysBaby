@@ -7,6 +7,7 @@ import java.sql.Statement;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class SaveMSGID implements AdminCMD {
@@ -33,7 +34,7 @@ public class SaveMSGID implements AdminCMD {
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             stmt = c.createStatement();
             stmt.executeUpdate("INSERT INTO MSGS (GUILDID,MSGID) " +
             "VALUES (" + ctx.getGuild().getId() + ", " + ctx.getArgs().get(0) + " );");

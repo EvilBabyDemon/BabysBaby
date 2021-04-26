@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -55,7 +56,7 @@ public class LearningCMD implements PublicCMD {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
             c.setAutoCommit(true);
             
             stmt = c.createStatement();

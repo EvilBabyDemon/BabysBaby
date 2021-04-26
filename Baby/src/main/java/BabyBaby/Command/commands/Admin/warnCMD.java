@@ -73,7 +73,7 @@ public class warnCMD implements AdminCMD{
 
         try { 	
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:testone.db");
+            c = DriverManager.getConnection(data.db);
 
             
             String sql = "INSERT INTO WARNINGS (USER,REASON,DATE) " +

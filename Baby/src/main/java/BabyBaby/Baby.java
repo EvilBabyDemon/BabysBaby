@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import javax.security.auth.login.LoginException;
 
+import BabyBaby.data.data;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class Baby {
     public static void main(String[] args) throws IOException  {
         
         try {
-            Scanner s = new Scanner(new File("C:\\Users\\Lukas\\Desktop\\From_Old_to_NEW\\VSCODE WORKSPACE\\BabysBaby\\Baby\\.gitignore\\token.txt"));
+            Scanner s = new Scanner(new File(data.TOKEN));
             String token = s.nextLine();
             JDABuilder builder = JDABuilder.createDefault(token);
             builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGE_TYPING, GatewayIntent.GUILD_EMOJIS);
