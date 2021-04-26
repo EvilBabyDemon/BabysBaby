@@ -14,6 +14,7 @@ import BabyBaby.Command.commands.Admin.updaterole;
 import BabyBaby.Command.commands.Admin.warnCMD;
 import BabyBaby.Command.commands.Admin.whois;
 import BabyBaby.Command.commands.Owner.AdminHelpCMD;
+import BabyBaby.Command.commands.Owner.BigSiebCMD;
 import BabyBaby.Command.commands.Owner.PlaceSorter;
 import BabyBaby.Command.commands.Owner.PlebHelpCMD;
 import BabyBaby.Command.commands.Owner.SayCMD;
@@ -140,6 +141,7 @@ public class CmdHandler {
         addOwnerCommand(new toMultipixelCMD());
         addOwnerCommand(new stopdraw());
         addOwnerCommand(new SayMultiCMD());
+        addOwnerCommand(new BigSiebCMD());
         //addOwnerCommand(new );
         addPublicCommand(new HelpCMD(this));
         //addPublicCommand(new EasterEggCMD());

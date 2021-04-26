@@ -38,12 +38,18 @@ public class BigSiebCMD implements OwnerCMD{
         HashSet<Member> counter = new HashSet<>();
 
         List<Member> tmp = ctx.getGuild().getMembers();
-        Role role1 = ctx.getGuild().getRoleById(cmd[0]);
-        for (Member var : tmp) {
-            if(var.getRoles().contains(role1))
+        
+        if(cmd[0].equals(data.ethid)){
+            for (Member var : tmp) {
                 counter.add(var);
-        }
-
+            }
+        } else {
+            Role role1 = ctx.getGuild().getRoleById(cmd[0]);
+            for (Member var : tmp) {
+                if(var.getRoles().contains(role1))
+                    counter.add(var);
+            }
+        }   
         for(int i = 1; i < cmd.length-1; i +=2){
             Role role = ctx.getGuild().getRoleById(cmd[i+1]);
             switch (cmd[i]){
@@ -86,7 +92,7 @@ public class BigSiebCMD implements OwnerCMD{
         String cmdrole = "";
         for(int i = 0; i < cmd.length; i ++){
             if(i%2==0)
-                cmdrole += "<@&" + cmd[i] + "> ";
+                cmdrole += ctx.getGuild().getRoleById(cmd[i]).getAsMention() + " ";
             else
                 cmdrole += cmd[i] + " ";
         }
@@ -108,9 +114,9 @@ public class BigSiebCMD implements OwnerCMD{
             while(mention.length() > 1024){
                 String submention = mention.substring(0, 1024);
                 String[] part = submention.split("\n");
-                submention = mention.substring(0, 1024 - part[part.length-1].length());
+                submention = mention.substring(0, 1024 - part[part.length-1].length() -1 );
                 eb.addField(""+ dooku, submention, true);
-                mention = mention.substring(1024-part[part.length-1].length());
+                mention = mention.substring(submention.length());
                 dooku++;
                 cacherefresh.add(submention);
             }
@@ -121,11 +127,11 @@ public class BigSiebCMD implements OwnerCMD{
             alleb.add(eb);
         } else {
 
-
-            String firstmention = mention.substring(0, 5980);
+            int embsize = 5800 - ((cmdrole.length()>1024) ? 1024 : cmdrole.length());
+            String firstmention = mention.substring(0, embsize);
             String[] firstpart = firstmention.split("\n");
-            firstmention = firstmention.substring(0, 5990 - firstpart[firstpart.length-1].length());
-            mention = mention.substring(5990-firstpart[firstpart.length-1].length());
+            firstmention = firstmention.substring(0, embsize - firstpart[firstpart.length-1].length());
+            mention = mention.substring(firstmention.length());
 
             EmbedBuilder first = new EmbedBuilder();
             first.setTitle("People with ");
@@ -135,9 +141,9 @@ public class BigSiebCMD implements OwnerCMD{
             while(firstmention.length() > 1024){
                 String submention = firstmention.substring(0, 1024);
                 String[] part = submention.split("\n");
-                submention = firstmention.substring(0, 1024 - part[part.length-1].length());
+                submention = firstmention.substring(0, 1024 - part[part.length-1].length() - 1);
                 first.addField(""+ dooku, submention, true);
-                firstmention = firstmention.substring(1024-part[part.length-1].length());
+                firstmention = firstmention.substring(submention.length());
                 dooku++;
                 cacherefresh.add(submention);
             }
@@ -153,18 +159,18 @@ public class BigSiebCMD implements OwnerCMD{
             while(mention.length()>5990){
                 String embmention = mention.substring(0, 5990);
                 String[] embpart = embmention.split("\n");
-                embmention = embmention.substring(0, 5990 - embpart[embpart.length-1].length());
-                mention = mention.substring(5990-embpart[embpart.length-1].length());
+                embmention = embmention.substring(0, 5990 - embpart[embpart.length-1].length() - 1);
+                mention = mention.substring(embmention.length());
 
                 EmbedBuilder eb = new EmbedBuilder();
-                eb.setTitle("Page " + dookueb);
+                eb.setTitle("Page " + dookueb++);
                 eb.setColor(1);
                 dooku = 0;
                 while(embmention.length() > 1024){
                     String submention = embmention.substring(0, 1024);
                     String[] part = submention.split("\n");
                     submention = embmention.substring(0, 1024 - part[part.length-1].length());
-                    embmention = embmention.substring(1024-part[part.length-1].length());
+                    embmention = embmention.substring(submention.length());
                     eb.addField(""+ dooku, submention, true);
                     dooku++;
                     cacherefresh.add(submention);
@@ -181,9 +187,9 @@ public class BigSiebCMD implements OwnerCMD{
             while(mention.length() > 1024){
                 String submention = mention.substring(0, 1024);
                 String[] part = submention.split("\n");
-                submention = mention.substring(0, 1024 - part[part.length-1].length());
+                submention = mention.substring(0, 1024 - part[part.length-1].length() - 1);
                 eb.addField(""+ dooku, submention, true);
-                mention = mention.substring(1024-part[part.length-1].length());
+                mention = mention.substring(submention.length());
                 dooku++;
                 cacherefresh.add(submention);
             }
@@ -194,7 +200,9 @@ public class BigSiebCMD implements OwnerCMD{
         
         Message editor = ctx.getChannel().sendMessage("wait a sec").complete();
         for (String var : cacherefresh) {
-            editor.editMessage(var).complete();
+            if(var == null || var.length()==0)
+                continue;
+            editor.editMessage(var + " ").complete();
         }
         editor.delete().queue();
 
@@ -208,19 +216,20 @@ public class BigSiebCMD implements OwnerCMD{
             embeds.queue();
         }
 
-        MessageAction embeds = ctx.getChannel().sendMessage(alleb.remove().build());
+
+
+        
         for (EmbedBuilder var : alleb) {
-            embeds.embed(var.build());
+            ctx.getChannel().sendMessage(var.build()).queue();
         }
-        embeds.queue();
+        
+
+       
     }
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<roleID> {<!/&/|> <roleID>}", "Command to find out who has the Role AmongUs but also the Anime role for example.");
     }
-
-   
-
     
 }

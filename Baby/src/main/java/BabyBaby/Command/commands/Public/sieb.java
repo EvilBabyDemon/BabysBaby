@@ -8,8 +8,10 @@ import java.util.List;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
@@ -55,11 +57,17 @@ public class sieb implements PublicCMD {
         HashSet<Member> counter = new HashSet<>();
 
         List<Member> tmp = ctx.getGuild().getMembers();
-        Role role1 = ctx.getGuild().getRoleById(cmd[0]);
-        for (Member var : tmp) {
-            if(var.getRoles().contains(role1))
+        if(cmd[0].equals(data.ethid)){
+            for (Member var : tmp) {
                 counter.add(var);
-        }
+            }
+        } else {
+            Role role1 = ctx.getGuild().getRoleById(cmd[0]);
+            for (Member var : tmp) {
+                if(var.getRoles().contains(role1))
+                    counter.add(var);
+            }
+        }   
 
         for(int i = 1; i < cmd.length-1; i +=2){
             Role role = ctx.getGuild().getRoleById(cmd[i+1]);
@@ -124,9 +132,9 @@ public class sieb implements PublicCMD {
             while(mention.length() > 1024){
                 String submention = mention.substring(0, 1024);
                 String[] part = submention.split("\n");
-                submention = mention.substring(0, 1024 - part[part.length-1].length());
+                submention = mention.substring(0, 1024 - part[part.length-1].length() - 1);
                 eb.addField(""+ dooku, submention, true);
-                mention = mention.substring(1024-part[part.length-1].length());
+                mention = mention.substring(submention.length());
                 dooku++;
                 cacherefresh.add(submention);
             }
@@ -139,24 +147,16 @@ public class sieb implements PublicCMD {
         eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
         
 
-        String lastone = cacherefresh.removeLast();
 
+        Message editor = ctx.getChannel().sendMessage("wait a sec").complete();
         for (String var : cacherefresh) {
-            ctx.getChannel().sendMessage("wait a sec").queue(response -> {
-                response.editMessage(var).queue(response2 -> {
-                    response2.delete().queue();
-                });
-            });		
+            if(var == null || var.length()==0)
+                continue;
+            editor.editMessage(var + " ").complete();
         }
+        editor.delete().queue();
 
-        ctx.getChannel().sendMessage("wait a sec").queue(response -> {
-            response.editMessage(lastone).queue(response2 -> {
-                response2.delete().queue(response3 -> {
-                    ctx.getChannel().sendMessage(eb.build()).queue();
-                });
-            });
-        });	
-
+        ctx.getChannel().sendMessage(eb.build()).queue();
 
         ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
 
