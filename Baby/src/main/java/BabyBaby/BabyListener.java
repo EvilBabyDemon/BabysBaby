@@ -342,7 +342,7 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-		if(!event.getGuild().getId().equals(data.ethid))
+		if(!event.getGuild().getId().equals(data.ethid) || event.getUser().isBot())
             return;
 
         OffsetDateTime time = event.getUser().getTimeCreated();

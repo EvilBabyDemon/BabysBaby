@@ -1,5 +1,6 @@
 package BabyBaby.Command.commands.Public;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,9 +87,17 @@ public class sieb implements PublicCMD {
                     break;
             }
         }
+        LinkedList<Member> sorted = new LinkedList<>(counter);
+        Comparator<Member> idcomp = new Comparator<>(){
+            @Override
+            public int compare(Member o1, Member o2) {
+                return (o1.getIdLong() - o2.getIdLong()>0) ? 1 : -1;
+            }
+        };
+        sorted.sort(idcomp);
 
         String mention = "";
-        for (Member var : counter) {
+        for (Member var : sorted) {
             mention += var.getAsMention() + "\n";
         }
         String cmdrole = "";
@@ -110,7 +119,7 @@ public class sieb implements PublicCMD {
         eb.setTitle("People with ");
         eb.addField("" + counter.size(), (cmdrole.length()>1024) ? cmdrole.substring(0, 1024) : cmdrole, false);
         eb.setColor(1);
-        if(mention.length() <= 6000 && mention.length() > 5){
+        if(mention.length() <= 6000 - ((cmdrole.length()>1024) ? 1024 : cmdrole.length())){
             dooku = 0;
             while(mention.length() > 1024){
                 String submention = mention.substring(0, 1024);
