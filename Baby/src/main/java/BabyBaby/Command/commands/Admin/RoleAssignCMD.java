@@ -2,6 +2,7 @@ package BabyBaby.Command.commands.Admin;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -20,6 +21,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
 public class RoleAssignCMD implements AdminCMD {
+
+
     @Override
     public void handleAdmin(CommandContext ctx) {
         Connection c = null;
@@ -127,7 +130,25 @@ public class RoleAssignCMD implements AdminCMD {
 
             //TODO save the msg id here and put on startup into cache.
 
+            c = null;
+            PreparedStatement pstmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection(data.db);
+                pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID,MSGID) VALUES (?, ?);");
+                pstmt.setString(1, ctx.getGuild().getId()   );
+                pstmt.setString(2, msgs.getId()); 
+                pstmt.executeUpdate();
+                pstmt.close();
+                c.close();
+            } catch ( Exception e ) {
+                e.printStackTrace(); 
+                return;
+            }
+
         }
+
+
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
     }
 

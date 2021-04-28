@@ -46,7 +46,7 @@ public class MuteCMD implements PublicCMD {
 
     @Override
     public String getName() {
-        return "mute";
+        return "muteme";
     }
 
     @Override
@@ -68,7 +68,7 @@ public class MuteCMD implements PublicCMD {
         ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
         
         if(cmds.size() == 0){
-            channel.sendMessage("The command is +mute <time> [unit] (default unit is minutes)").queue();
+            channel.sendMessage("The command is +" + getName() +" <time> [unit] (default unit is minutes)").queue();
             return;
         }
 
@@ -130,6 +130,7 @@ public class MuteCMD implements PublicCMD {
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
+            
             
              
             stmt = c.createStatement();           

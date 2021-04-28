@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class HelpCMD implements PublicCMD {
-    String sigchange = "+mute moved to +muteme";
+    String sigchange = "+mute moved to +" + new MuteCMD().getName();
     Comparator<PublicCMD> compPub = new Comparator<>(){
         @Override
         public int compare(PublicCMD o1, PublicCMD o2) {

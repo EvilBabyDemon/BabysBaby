@@ -2,6 +2,7 @@ package BabyBaby.Command.commands.Public;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class RoleMuteCMD implements PublicCMD {
@@ -38,6 +39,8 @@ public class RoleMuteCMD implements PublicCMD {
     public void handlePublic(CommandContext ctx) {
         // TODO Auto-generated method stub
         
+        ctx.getChannel().sendMessage("Sry this cmd is in WIP").queue();
+
         //get Roles from user
 
         //save roles
@@ -49,8 +52,7 @@ public class RoleMuteCMD implements PublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        // TODO Auto-generated method stub
-        return null;
+        return StandardHelp.Help(prefix, getName(), "", "This removes all your roles and you wont see the server for that time but its still work in progress.");
     }
     
 }

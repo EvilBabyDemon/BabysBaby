@@ -2,7 +2,7 @@ package BabyBaby.Command.commands.Admin;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
@@ -31,14 +31,15 @@ public class SaveMSGID implements AdminCMD {
     public void handleAdmin(CommandContext ctx) {
 
         Connection c = null;
-        Statement stmt = null;
+        PreparedStatement pstmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
-            stmt = c.createStatement();
-            stmt.executeUpdate("INSERT INTO MSGS (GUILDID,MSGID) " +
-            "VALUES (" + ctx.getGuild().getId() + ", " + ctx.getArgs().get(0) + " );");
-            stmt.close();
+            pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID,MSGID) VALUES (?, ?);");
+            pstmt.setString(1, ctx.getGuild().getId()); 
+            pstmt.setString(2, ctx.getArgs().get(0));
+            pstmt.executeUpdate();
+            pstmt.close();
             c.close();
         } catch ( Exception e ) {
             e.printStackTrace(); 
