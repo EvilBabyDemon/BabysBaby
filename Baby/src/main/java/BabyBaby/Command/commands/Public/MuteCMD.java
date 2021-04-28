@@ -52,9 +52,8 @@ public class MuteCMD implements PublicCMD {
     @Override
     public void handlePublic(CommandContext ctx) {
 
-        if(!ctx.getGuild().equals(data.ethid)){
+        if(!ctx.getGuild().getId().equals(data.ethid))
             return;
-        }
 
         MessageChannel channel = ctx.getChannel();
         Guild called = ctx.getGuild();
@@ -131,7 +130,7 @@ public class MuteCMD implements PublicCMD {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
             
-            
+
              
             stmt = c.createStatement();           
 
