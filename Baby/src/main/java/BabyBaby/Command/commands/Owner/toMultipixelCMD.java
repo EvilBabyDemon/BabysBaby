@@ -23,7 +23,7 @@ public class toMultipixelCMD implements OwnerCMD{
     public void handleOwner(CommandContext ctx) {
 
         try {
-            Scanner scanner = new Scanner(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\" + ctx.getArgs().get(0) + ".txt"));
+            Scanner scanner = new Scanner(new File(data.PLACE + ctx.getArgs().get(0) + ".txt"));
             
             ArrayList<String> list = new ArrayList<String>();
             PrintStream writer = null;
@@ -34,7 +34,7 @@ public class toMultipixelCMD implements OwnerCMD{
             boolean first = true;
             for (int i = 0; i < list.size(); i++) {
                 if (i % 3600 == 0) {
-                    writer = new PrintStream("C:\\Users\\Lukas\\Desktop\\PlacePrint\\fix" + ctx.getArgs().get(0) + idx + ".txt");
+                    writer = new PrintStream(data.PLACE + ctx.getArgs().get(0) + idx + ".txt");
                     idx++;
                     first = true;
                 }

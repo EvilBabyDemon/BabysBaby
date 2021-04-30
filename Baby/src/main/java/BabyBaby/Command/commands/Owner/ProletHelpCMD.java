@@ -9,11 +9,11 @@ import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class PlebHelpCMD implements OwnerCMD {
+public class ProletHelpCMD implements OwnerCMD {
 
     @Override
     public String getName() {
-        return "plebhelp";
+        return "prolethelp";
     }
 
     @Override
@@ -23,7 +23,7 @@ public class PlebHelpCMD implements OwnerCMD {
         try {
             handler = new CmdHandler(null);
             PublicCMD cmd = handler.searchPublicCommand("help");
-            cmd.handlePublic(ctx);   
+            cmd.handleAdmin(ctx);   
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -32,7 +32,7 @@ public class PlebHelpCMD implements OwnerCMD {
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "", "Get Help of a mormal User.");
+        return StandardHelp.Help(prefix, getName(), "", "Get Help of a Admin.");
     }
     
 }

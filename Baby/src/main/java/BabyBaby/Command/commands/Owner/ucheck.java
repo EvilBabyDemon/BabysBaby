@@ -10,6 +10,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.Command.commands.Bot.clock;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class ucheck implements OwnerCMD{
@@ -45,7 +46,7 @@ public class ucheck implements OwnerCMD{
                 }
             }
         }
-        ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
+        ctx.getMessage().addReaction(data.check).queue();
     }
 
     @Override

@@ -13,15 +13,17 @@ import java.util.Scanner;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class PlaceSorter implements OwnerCMD {
-
+public class BubbleSortCMD implements OwnerCMD {
+    
+    public int xavg = 0;
+    public int yavg = 0;
+    
     @Override
     public String getName() {
-        return "sort";
+        return "bubblesort";
     }
 
     @Override
@@ -82,13 +84,30 @@ public class PlaceSorter implements OwnerCMD {
             //Multithreading to sort every bucket 
             Thread t = new Thread(new Runnable() {
                 @Override
-                public void run() {
-                    //Simple Comparator to sort them
+                public void run() {                   
+                    //get avg x and y for this bucket
+                    for (int i = 0; i < tmp.size(); i++) {
+                        String[] parts = tmp.get(i).split(" ");
+                        xavg += Integer.parseInt(parts[2]);
+                        yavg += Integer.parseInt(parts[3]);
+                    }
+                    xavg = xavg/tmp.size();
+                    yavg = yavg/tmp.size();
+
+                    
+                    //Comparator mit euklidischer distance on every Bucket 
                     Comparator<String> comp = new Comparator<String>(){
                         @Override
                         public int compare(String o1, String o2) {
-                            return Integer.parseInt(o1.substring(o1.length()-6, o1.length()),16)-Integer.parseInt(o2.substring(o2.length()-6, o2.length()),16);
+                            int[] oxy1 = tonum(o1);
+                            int[] oxy2 = tonum(o2);
+                            return (int) (Math.pow(xavg - oxy1[1],2) + Math.pow(xavg - oxy1[2],2)-(Math.pow(xavg - oxy2[1],2) + Math.pow(xavg - oxy2[2],2)));
                         }
+                        public int[] tonum (String s){
+                            String[] cmds = s.split(" ");
+                            return new int[] {Integer.parseInt(cmds[2]), Integer.parseInt(cmds[3])};
+                        }
+                        
                     };
                     tmp.sort(comp);
                 }
@@ -97,10 +116,11 @@ public class PlaceSorter implements OwnerCMD {
             //Storing threads and Sorted Lists in a HashMap
             threads.put(t, tmp);
 
-            copier.add(tmp);
+            //copier.add(tmp);
         }
         //I probably have way too many threads and this doesnt give any speedup but whatever xD
         //joining all threads and adding them all together in one List
+
         for (Thread var : threads.keySet()) {
             try{
                 var.join();
@@ -110,18 +130,37 @@ public class PlaceSorter implements OwnerCMD {
             copier.add(threads.get(var));
         }
 
+        
+
         //print everything in a file again
         try {
-            PrintStream out = new PrintStream(new File(data.PLACE + cmds.get(0) + ".txt"));	
+            PrintStream out = new PrintStream(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\bubblesort" + cmds.get(0) + ".txt"));	
+            PrintStream paraout = new PrintStream(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\parabubblesort" + cmds.get(0) + ".txt"));	
             
             for (ArrayList<String> var : copier) {
                 for (String var2 : var) {
                     out.println(var2);
                 }
             }
-
             out.flush();
             out.close();
+
+            int j = 0;
+            boolean doing = true;
+            while(doing){
+                doing = false;
+                for (int i = 0; i < copier.size(); i++) {
+                    try {
+                        paraout.println(copier.get(i).get(j));
+                    } catch (Exception e) {
+                        copier.remove(i--);
+                    }
+                }
+                j++;
+            }
+            
+            paraout.flush();
+            paraout.close();
         } catch (NumberFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -133,5 +172,4 @@ public class PlaceSorter implements OwnerCMD {
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<Filename>", "Command to sort a place file by colour.");
     }
-    
 }

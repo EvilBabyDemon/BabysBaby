@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.commands.Bot.clock;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -25,7 +26,7 @@ public class tick implements OwnerCMD {
         String minuteString = (myObj.getMinute() - myObj.getMinute()%15) == 0 ? ""  : "" + (myObj.getMinute() - myObj.getMinute()%15);
         clock.clock.schedule(new clockTower(((myObj.getHour())%12) + minuteString, ctx.getGuild()), 0, TimeUnit.SECONDS);
 
-        ctx.getMessage().addReaction(":xmark:769279807916998728").queue();
+        ctx.getMessage().addReaction(data.check).queue();
         
     }
 

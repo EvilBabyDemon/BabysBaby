@@ -41,7 +41,7 @@ public class draw implements OwnerCMD {
         
 
         try {
-            Scanner s = new Scanner(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\" + file + ".txt"));
+            Scanner s = new Scanner(new File(data.PLACE + file + ".txt"));
             while(s.hasNextLine()){
                 printer.add(s.nextLine());
             }

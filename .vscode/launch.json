@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch visualize",
+            "request": "launch",
+            "mainClass": "visualize",
+            "projectName": "BabysBaby"
+        },
+        {
+            "type": "java",
             "name": "Launch Main",
             "request": "launch",
             "mainClass": "Main",

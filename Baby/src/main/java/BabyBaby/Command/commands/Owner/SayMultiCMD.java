@@ -3,11 +3,9 @@ package BabyBaby.Command.commands.Owner;
 import java.util.LinkedList;
 import java.util.List;
 
-import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
-import me.duncte123.botcommons.messaging.EmbedUtils;
-import net.dv8tion.jda.api.EmbedBuilder;
+import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -47,18 +45,7 @@ public class SayMultiCMD implements OwnerCMD {
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
-
-        embed.setTitle("Help page of: `" + getName()+"`");
-        embed.setDescription("Iterative spam function.");
-
-        // general use
-        embed.addField("", new ColouredStringAsciiDoc()
-                .addBlueAboveEq("general use")
-                .addOrange(prefix + getName() + " <int> <text to spam>")
-                .build(), false);
-
-        return embed.build();
+        return StandardHelp.Help(prefix, getName(), "<int> <text to spam>", "Iterative spam function.");
     }
     
 

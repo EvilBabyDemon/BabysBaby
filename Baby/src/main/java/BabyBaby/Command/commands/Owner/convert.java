@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class convert implements OwnerCMD {
@@ -31,7 +33,7 @@ public class convert implements OwnerCMD {
             
             BufferedImage img;
             if(onpc){
-                img = ImageIO.read(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\" + cmds.get(1)  + ".png"));
+                img = ImageIO.read(new File(data.PLACE + cmds.get(1)  + ".png"));
             } else{
                 img = ImageIO.read(new URL(cmds.get(1)));
             }
@@ -43,7 +45,7 @@ public class convert implements OwnerCMD {
                     rgbs[j][i] = img.getRGB(j, i);
                 }
             }
-            PrintStream out = new PrintStream(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\con" + cmds.get(1) + ".txt"));
+            PrintStream out = new PrintStream(new File(data.PLACE + cmds.get(1) + ".txt"));
 
             for (int i = 0; i < img.getWidth(); i++) {
                 for (int j = 0; j < img.getHeight(); j++) {
@@ -59,11 +61,11 @@ public class convert implements OwnerCMD {
             out.flush();
             out.close();
 
-            ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
+            ctx.getMessage().addReaction(data.check).queue();
             
             
         } catch (IOException e) {
-            ctx.getMessage().addReaction(":xmark:769279807916998728").queue();
+            ctx.getMessage().addReaction(data.xmark).queue();
             e.printStackTrace();
         }
         
@@ -71,8 +73,7 @@ public class convert implements OwnerCMD {
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-        // TODO Auto-generated method stub
-        return null;
+        return StandardHelp.Help(prefix, getName(), "<boolean on pc or not> <file/filename>", "Converts an image to txt place file");
     }
     
 }

@@ -15,10 +15,8 @@ public class whereami implements OwnerCMD {
 
     @Override
     public void handleOwner(CommandContext ctx) {
-       
         for (Guild guild : ctx.getJDA().getGuilds())
             ctx.getChannel().sendMessage(guild.getName()).queue();
-        
     }
 
     @Override
