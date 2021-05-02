@@ -30,15 +30,18 @@
     </repository>
     
     <repository>
-	    <id>snapshots-repo</id>
-	    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-	    <releases>
-	      <enabled>false</enabled>
-	    </releases>
-	    <snapshots>
-	      <enabled>true</enabled>
-	    </snapshots>
-  	</repository>
+      <id>oss.sonatype.org</id>
+      <name>Sonatype Snapshot Repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository> 
+
+    
   	
   </repositories>
 
@@ -89,17 +92,20 @@
     	<version>4.2.0_207</version>
 	</dependency>
   
+
 	  
 	<dependency>
 		<groupId>org.apache.logging.log4j</groupId>
 		<artifactId>log4j-core</artifactId>
 		<version>2.13.3</version>
 	</dependency>
+
 	<dependency>
 		<groupId>org.apache.logging.log4j</groupId>
 		<artifactId>log4j-slf4j-impl</artifactId>
 		<version>2.13.3</version>
 	</dependency>
+
 	<dependency>
 		<groupId>org.apache.logging.log4j</groupId>
 		<artifactId>log4j-1.2-api</artifactId>

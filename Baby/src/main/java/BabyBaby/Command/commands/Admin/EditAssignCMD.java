@@ -22,11 +22,29 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
-public class RoleAssignCMD implements AdminCMD {
+public class EditAssignCMD implements AdminCMD{
 
+	@Override
+	public void handleOwner(CommandContext ctx) {
+		handleAdmin(ctx);
+		
+	}
 
-    @Override
-    public void handleAdmin(CommandContext ctx) {
+	@Override
+	public MessageEmbed getOwnerHelp(String prefix) {
+		return getAdminHelp(prefix);
+	}
+
+	@Override
+	public String getName() {
+		return "editassign";
+	}
+
+	@Override
+	public void handleAdmin(CommandContext ctx) {
+		if(!ctx.getGuild().getId().equals(data.ethid)){
+            return;
+        }
         Connection c = null;
         Statement stmt = null;
         MessageChannel channel = ctx.getChannel();
@@ -56,11 +74,7 @@ public class RoleAssignCMD implements AdminCMD {
         
         
 
-        //TODO do embeds with each category
-
         String msg = "";
-
-
 
         LinkedList<LinkedList<String>> emotes = new LinkedList<>();
         ArrayList<String> categ = new ArrayList<>();
@@ -113,6 +127,7 @@ public class RoleAssignCMD implements AdminCMD {
 
         LinkedList<EmbedBuilder> emb = new LinkedList<>();
 
+        LinkedList<String> remover = new LinkedList<>();
 
         for (int i = 0; i < categ.size(); i++) {
             emb.add(embeds(categ.get(i), roles.get(i)));
@@ -122,65 +137,90 @@ public class RoleAssignCMD implements AdminCMD {
             LinkedList<String> temp = new LinkedList<>();
             temp.addAll(emotes.remove(0));
 
-            Message msgs = channel.sendMessage(eb.build()).complete();                
-            data.msgid.add(msgs.getId());
-            for (String var : temp) {
-                if(var == null || var.length() == 0)
-                        continue;
-                try{
-                channel.addReactionById(msgs.getId(), var).queue();
-                } catch (Exception e){
-                    ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
-                }   
-            }
-
-            //TODO save the msg id here and put on startup into cache.
-
-            
             c = null;
             PreparedStatement pstmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(data.db);
-                pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?);");
-                pstmt.setString(1, ctx.getGuild().getId());
-                pstmt.setString(2, ctx.getChannel().getId());
-                pstmt.setString(3, msgs.getId());
-                pstmt.setString(4, categ.get(count++)); 
-                pstmt.executeUpdate();
+                pstmt = c.prepareStatement("SELECT * FROM MSGS WHERE CATEGORY = ? AND WHERE GUILDID = ?;");
+                pstmt.setString(1, categ.get(count));
+                pstmt.setString(2, ctx.getGuild().getId());
+                rs = pstmt.executeQuery();
+
+                String msgid = "";
+                boolean empty = true;
+                while(rs.next()){
+                    empty = false;
+                    msgid = rs.getString("MSGID");
+                    Message edited;
+                    try {
+                        edited = ctx.getGuild().getTextChannelById(rs.getString("CHANNELID")).editMessageById(msgid, eb.build()).complete();    
+                    } catch (Exception e) {
+                        remover.add(msgid);
+                        continue;
+                    }
+                    
+                    data.msgid.add(edited.getId());
+                    for (String var : temp) {
+                        if(var == null || var.length() == 0)
+                                continue;
+                        try{
+                        channel.addReactionById(edited.getId(), var).queue();
+                        } catch (Exception e){
+                            ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                        }
+                    }
+                }
+                if(empty){
+                    Message msgs = ctx.getChannel().sendMessage(eb.build()).complete();
+                    data.msgid.add(msgs.getId());
+                    for (String var : temp) {
+                        if(var == null || var.length() == 0)
+                                continue;
+                        try{
+                        channel.addReactionById(msgs.getId(), var).queue();
+                        } catch (Exception e){
+                            ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                        }
+                    }
+
+                    c = null;
+                    pstmt = null;
+                    try {
+                        Class.forName("org.sqlite.JDBC");
+                        c = DriverManager.getConnection(data.db);
+                        pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?);");
+                        pstmt.setString(1, ctx.getGuild().getId());
+                        pstmt.setString(2, msgs.getId());
+                        pstmt.setString(3, categ.get(count)); 
+                        pstmt.executeUpdate();
+                        pstmt.close();
+                        c.close();
+                    } catch ( Exception e ) {
+                        e.printStackTrace(); 
+                        return;
+                    }
+                }
+                
                 pstmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 e.printStackTrace(); 
-                return;
             }
             
-
+            count++;
         }
 
 
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
-    }
 
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "", "Command to see all roles with each category as an own embed. For RoleAssign Channels.");
-    }
+		
+	}
 
-    @Override
-    public void handleOwner(CommandContext ctx) {
-       handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
-
-    @Override
-    public String getName() {
-        return "assign";
-    }
+	@Override
+	public MessageEmbed getAdminHelp(String prefix) {
+		return StandardHelp.Help(prefix, getName(), "", "Update'" + new RoleAssignCMD().getName() + "' cmd messages. This technically can be used in any channel and it will update all saved embeds but if a new category was added it will send that embed in the channel the command was used.");
+	}
 
 
     public EmbedBuilder embeds(String title, String msg){
@@ -189,8 +229,6 @@ public class RoleAssignCMD implements AdminCMD {
         eb.setTitle(title);
         eb.setColor(1);
         eb.setDescription(msg);
-
-        
         eb.setFooter("Click on the Emotes to assign yourself Roles.");
 
         return eb;

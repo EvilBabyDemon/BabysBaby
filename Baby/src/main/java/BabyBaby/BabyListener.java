@@ -250,6 +250,8 @@ public class BabyListener extends ListenerAdapter {
             e.printStackTrace(); 
         }
 
+
+        //Put admin mutes in cache
         c = null;
         stmt = null;
         try {
@@ -281,6 +283,28 @@ public class BabyListener extends ListenerAdapter {
         } catch ( Exception e ) {
             e.printStackTrace(); 
         }
+
+
+        //put assign message ids in cache
+        c = null;
+        stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            stmt = c.createStatement();
+            rs = stmt.executeQuery("SELECT MSGID FROM MSGS;");
+
+            while(rs.next()){
+                data.msgid.add(rs.getString("MSGID"));
+            }
+            
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            e.printStackTrace(); 
+        }
+
+
         
         System.out.println("Started!");
     }
@@ -482,6 +506,10 @@ public class BabyListener extends ListenerAdapter {
     public void onGenericGuildMessageReaction(GenericGuildMessageReactionEvent event) {
         if (event.getUser().isBot())
             return;
+        //This should be switched with a HashMap instead of a HashSet such that other servers could also at least technically use it. 
+        if(!event.getGuild().getId().equals(data.ethid))
+            return;
+        
         if(data.msgid.contains(event.getMessageId())){
             String emote = "";
             try{

@@ -1,6 +1,7 @@
 package BabyBaby;
 
 import BabyBaby.Command.*;
+import BabyBaby.Command.commands.Admin.EditAssignCMD;
 import BabyBaby.Command.commands.Admin.GetWarningsFromUser;
 import BabyBaby.Command.commands.Admin.MutePersonCMD;
 import BabyBaby.Command.commands.Admin.RoleAssignCMD;
@@ -119,7 +120,7 @@ public class CmdHandler {
         addAdminCommand(new GetWarningsFromUser());
         addAdminCommand(new MutePersonCMD());
         addAdminCommand(new UnmutePersonCMD());
-        
+        addAdminCommand(new EditAssignCMD());
 
         // adding commands visible to owner
         //addOwnerCommand(new TestCommand());

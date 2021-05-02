@@ -13,6 +13,7 @@ import java.util.Scanner;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -37,7 +38,7 @@ public class BubbleSortCMD implements OwnerCMD {
         List<String> cmds = ctx.getArgs();
         LinkedList<String> sort = new LinkedList<>();
         try {
-            Scanner s = new Scanner(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\" + cmds.get(0) + ".txt"));
+            Scanner s = new Scanner(new File(data.PLACE + cmds.get(0) + ".txt"));
             
             while(s.hasNext()){
                 sort.add(s.nextLine());
@@ -134,8 +135,8 @@ public class BubbleSortCMD implements OwnerCMD {
 
         //print everything in a file again
         try {
-            PrintStream out = new PrintStream(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\bubblesort" + cmds.get(0) + ".txt"));	
-            PrintStream paraout = new PrintStream(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\parabubblesort" + cmds.get(0) + ".txt"));	
+            PrintStream out = new PrintStream(new File(data.PLACE + "bubblesortseq" + cmds.get(0) + ".txt"));	
+            PrintStream paraout = new PrintStream(new File(data.PLACE + "bubblesort" + cmds.get(0) + ".txt"));	
             
             for (ArrayList<String> var : copier) {
                 for (String var2 : var) {
