@@ -110,7 +110,6 @@ public class CmdHandler {
         // adding commands visible to @admin
         addAdminCommand(new addrole());
         addAdminCommand(new delrole());
-        addAdminCommand(new removeRoles());
         addAdminCommand(new roleid());
         addAdminCommand(new updaterole());
         addAdminCommand(new whois());
@@ -230,6 +229,7 @@ public class CmdHandler {
             }
         } catch(Exception e){
             ctx.getMessage().addReaction(data.xmark).queue();
+            System.out.println(event.getMessage().getContentRaw());
             e.printStackTrace();
         }
     }

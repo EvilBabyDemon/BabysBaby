@@ -172,7 +172,12 @@ public class getrole implements PublicCMD{
             LinkedList<String> temp = new LinkedList<>();
             max = emotewhen.remove(0)-max;
             for (int i = 0; i < max; i++) {
-                temp.addAll(emotes.remove(0));
+                try {
+                    temp.addAll(emotes.remove(0));
+                } catch (Exception e) {
+                    break;
+                }
+               
             }
 
             Message msgs = channel.sendMessage(eb.build()).complete();                

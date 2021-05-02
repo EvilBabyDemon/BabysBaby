@@ -142,7 +142,7 @@ public class RoleAssignCMD implements AdminCMD {
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(data.db);
-                pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?);");
+                pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
                 pstmt.setString(1, ctx.getGuild().getId());
                 pstmt.setString(2, ctx.getChannel().getId());
                 pstmt.setString(3, msgs.getId());

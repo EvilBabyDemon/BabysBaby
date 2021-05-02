@@ -91,7 +91,7 @@ public class GetWarningsFromUser implements AdminCMD{
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "", "Get all the users that got a Warning.");
+        return StandardHelp.Help(prefix, getName(), "", "Get all the warnings from a specific User.");
     }
     
 }

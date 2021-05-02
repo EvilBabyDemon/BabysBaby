@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import BabyBaby.Command.AdminCMD;
@@ -20,6 +21,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.Role;
 
 public class EditAssignCMD implements AdminCMD{
@@ -142,7 +144,7 @@ public class EditAssignCMD implements AdminCMD{
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(data.db);
-                pstmt = c.prepareStatement("SELECT * FROM MSGS WHERE CATEGORY = ? AND WHERE GUILDID = ?;");
+                pstmt = c.prepareStatement("SELECT * FROM MSGS WHERE CATEGORY = ? AND GUILDID = ?;");
                 pstmt.setString(1, categ.get(count));
                 pstmt.setString(2, ctx.getGuild().getId());
                 rs = pstmt.executeQuery();
@@ -150,7 +152,6 @@ public class EditAssignCMD implements AdminCMD{
                 String msgid = "";
                 boolean empty = true;
                 while(rs.next()){
-                    empty = false;
                     msgid = rs.getString("MSGID");
                     Message edited;
                     try {
@@ -161,15 +162,25 @@ public class EditAssignCMD implements AdminCMD{
                     }
                     
                     data.msgid.add(edited.getId());
+                    
+                    List<MessageReaction> reactions = edited.getReactions();
+                    for (MessageReaction var : reactions) {
+                        if(!cont(temp, var.getReactionEmote().getName())){
+                            var.clearReactions().complete();
+                        }
+                    }
+
+
                     for (String var : temp) {
                         if(var == null || var.length() == 0)
                                 continue;
                         try{
-                        channel.addReactionById(edited.getId(), var).queue();
+                            channel.addReactionById(edited.getId(), var).queue();
                         } catch (Exception e){
                             ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                         }
                     }
+                    empty = false;
                 }
                 if(empty){
                     Message msgs = ctx.getChannel().sendMessage(eb.build()).complete();
@@ -189,27 +200,48 @@ public class EditAssignCMD implements AdminCMD{
                     try {
                         Class.forName("org.sqlite.JDBC");
                         c = DriverManager.getConnection(data.db);
-                        pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?);");
+                        pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
                         pstmt.setString(1, ctx.getGuild().getId());
-                        pstmt.setString(2, msgs.getId());
-                        pstmt.setString(3, categ.get(count)); 
+                        pstmt.setString(2, ctx.getChannel().getId());
+                        pstmt.setString(3, msgs.getId());
+                        pstmt.setString(4, categ.get(count));
+
                         pstmt.executeUpdate();
                         pstmt.close();
                         c.close();
                     } catch ( Exception e ) {
                         e.printStackTrace(); 
-                        return;
                     }
                 }
                 
                 pstmt.close();
                 c.close();
             } catch (Exception e) {
-                e.printStackTrace(); 
+                channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+                e.printStackTrace();
             }
             
             count++;
         }
+
+        for (String var : remover) {
+            c = null;
+            PreparedStatement pstmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection(data.db);
+                pstmt = c.prepareStatement("DELETE FROM MSGS WHERE MSGID = ?;");
+                pstmt.setString(1, var);
+                pstmt.executeUpdate();
+                pstmt.close();
+                c.close();
+            } catch ( Exception e ) {
+                channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+                e.printStackTrace(); 
+            }
+        }
+        
+
 
 
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
@@ -247,6 +279,15 @@ public class EditAssignCMD implements AdminCMD{
             sorting.remove(highest);
         }
         return res;
+    }
+
+    public boolean cont (List<String> c, String s){
+        for (String var : c) {
+            if(var.contains(s)){
+                return true;
+            }
+        }
+        return false;
     }
     
 }
