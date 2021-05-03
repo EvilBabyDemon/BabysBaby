@@ -16,7 +16,7 @@ import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class convert implements OwnerCMD {
+public class ConvertPlace implements OwnerCMD {
 
     @Override
     public String getName() {
@@ -35,7 +35,7 @@ public class convert implements OwnerCMD {
             if(onpc){
                 img = ImageIO.read(new File(data.PLACE + cmds.get(1)  + ".png"));
             } else{
-                img = ImageIO.read(new URL(cmds.get(1)));
+                img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
             }
             
             int[][] rgbs = new int [img.getWidth()][img.getHeight()];

@@ -24,5 +24,5 @@ public class data {
     //Filepaths
     public static final String TOKEN = "token.txt";
     public static final String SUGGESTION = "suggestions.txt";
-    public static final String PLACE = "place\\";
+    public static final String PLACE = "place/";
 }

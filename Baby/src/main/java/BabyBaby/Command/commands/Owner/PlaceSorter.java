@@ -35,7 +35,7 @@ public class PlaceSorter implements OwnerCMD {
         List<String> cmds = ctx.getArgs();
         LinkedList<String> sort = new LinkedList<>();
         try {
-            Scanner s = new Scanner(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\" + cmds.get(0) + ".txt"));
+            Scanner s = new Scanner(new File(data.PLACE + cmds.get(0) + ".txt"));
             
             while(s.hasNext()){
                 sort.add(s.nextLine());

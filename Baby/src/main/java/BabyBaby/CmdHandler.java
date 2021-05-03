@@ -24,7 +24,7 @@ import BabyBaby.Command.commands.Owner.SayMultiCMD;
 import BabyBaby.Command.commands.Owner.SetButtonCMD;
 import BabyBaby.Command.commands.Owner.TxtToGifCMD;
 import BabyBaby.Command.commands.Owner.cleartable;
-import BabyBaby.Command.commands.Owner.convert;
+import BabyBaby.Command.commands.Owner.ConvertPlace;
 import BabyBaby.Command.commands.Owner.draw;
 import BabyBaby.Command.commands.Owner.operationcheck;
 import BabyBaby.Command.commands.Owner.operationsecret;
@@ -125,7 +125,7 @@ public class CmdHandler {
         //addOwnerCommand(new TestCommand());
         addOwnerCommand(new AdminHelpCMD());
         addOwnerCommand(new cleartable());
-        addOwnerCommand(new convert());
+        addOwnerCommand(new ConvertPlace());
         addOwnerCommand(new draw());
         addOwnerCommand(new operationcheck());
         addOwnerCommand(new operationsecret());
