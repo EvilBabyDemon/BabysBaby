@@ -19,8 +19,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class BubbleSortCMD implements OwnerCMD {
     
-    public int xavg = 0;
-    public int yavg = 0;
     
     @Override
     public String getName() {
@@ -84,8 +82,13 @@ public class BubbleSortCMD implements OwnerCMD {
 
             //Multithreading to sort every bucket 
             Thread t = new Thread(new Runnable() {
+                public int xavg;
+                public int yavg;
                 @Override
-                public void run() {                   
+                public void run() {    
+                    xavg = 0;
+                    yavg = 0;
+                    
                     //get avg x and y for this bucket
                     for (int i = 0; i < tmp.size(); i++) {
                         String[] parts = tmp.get(i).split(" ");
@@ -95,20 +98,25 @@ public class BubbleSortCMD implements OwnerCMD {
                     xavg = xavg/tmp.size();
                     yavg = yavg/tmp.size();
 
-                    
+
                     //Comparator mit euklidischer distance on every Bucket 
                     Comparator<String> comp = new Comparator<String>(){
                         @Override
                         public int compare(String o1, String o2) {
                             int[] oxy1 = tonum(o1);
                             int[] oxy2 = tonum(o2);
+                            /*
+                            double first = Math.pow(xavg - oxy1[0],2) + Math.pow(xavg - oxy1[1],2);
+                            double second = (Math.pow(xavg - oxy2[0],2) + Math.pow(xavg - oxy2[1],2));
+                            return (first>second) ? 1 : (first<second) ? -1 : 0;
+                            */
+
                             return (int) (Math.pow(xavg - oxy1[0],2) + Math.pow(xavg - oxy1[1],2)-(Math.pow(xavg - oxy2[0],2) + Math.pow(xavg - oxy2[1],2)));
                         }
                         public int[] tonum (String s){
                             String[] cmds = s.split(" ");
                             return new int[] {Integer.parseInt(cmds[2]), Integer.parseInt(cmds[3])};
                         }
-                        
                     };
                     tmp.sort(comp);
                 }
@@ -147,9 +155,7 @@ public class BubbleSortCMD implements OwnerCMD {
             out.close();
 
             int j = 0;
-            boolean doing = true;
-            while(doing){
-                doing = false;
+            while(copier.size()!=0){
                 for (int i = 0; i < copier.size(); i++) {
                     try {
                         paraout.println(copier.get(i).get(j));

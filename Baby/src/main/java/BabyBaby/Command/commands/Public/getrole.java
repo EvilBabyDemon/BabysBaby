@@ -21,7 +21,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
-public class getrole implements PublicCMD{
+public class GetRole implements PublicCMD{
 
     @Override
     public void handleAdmin(CommandContext ctx) {
@@ -51,10 +51,18 @@ public class getrole implements PublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
+        if(!ctx.getGuild().getId().equals(data.ethid))
+            return;
+
 
         List<String> cmds = ctx.getArgs();
         
         if(cmds.size() != 0){
+            HashMap<String, String> emoterolelist = data.emoteassign;
+            HashMap<String, String> namerole = new HashMap<>();
+            for (String var : emoterolelist.keySet()) {
+                
+            }
 
         }
 

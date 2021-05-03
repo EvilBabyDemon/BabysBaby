@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class draw implements OwnerCMD {
+public class PlaceDraw implements OwnerCMD {
     public static boolean on;
     public static int stopped;
     static ArrayList<String> printer;
@@ -66,7 +66,7 @@ public class draw implements OwnerCMD {
     }
     
     public void drawing(){
-        Random rand = new Random();
+        //Random rand = new Random();
        
         for (int i = stopped; i < x; i++) {
             for (int j = i; j < printer.size();) {
@@ -74,11 +74,13 @@ public class draw implements OwnerCMD {
                     stopped = i;
                     return;
                 }
+                /*
                 String tmp = "";
                 for (int k = 0; k < 10; k++) {
                     tmp += "\n " + allemo.get(rand.nextInt(allemo.size())).getAsMention();
                 }
-                channel.sendMessage(printer.get(j) + tmp).queue();
+                */
+                channel.sendMessage(printer.get(j)).queue();
                 j += x;
             }   
         }

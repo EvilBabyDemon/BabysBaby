@@ -14,9 +14,9 @@ public class stopdraw implements OwnerCMD{
 
     @Override
     public void handleOwner(CommandContext ctx) {
-        draw.on = !draw.on;
-        if(draw.on){
-            new draw().drawing();
+        PlaceDraw.on = !PlaceDraw.on;
+        if(PlaceDraw.on){
+            new PlaceDraw().drawing();
         }
     }
 

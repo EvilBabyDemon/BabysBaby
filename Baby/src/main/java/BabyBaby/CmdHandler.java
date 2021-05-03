@@ -25,7 +25,7 @@ import BabyBaby.Command.commands.Owner.SetButtonCMD;
 import BabyBaby.Command.commands.Owner.TxtToGifCMD;
 import BabyBaby.Command.commands.Owner.cleartable;
 import BabyBaby.Command.commands.Owner.ConvertPlace;
-import BabyBaby.Command.commands.Owner.draw;
+import BabyBaby.Command.commands.Owner.PlaceDraw;
 import BabyBaby.Command.commands.Owner.operationcheck;
 import BabyBaby.Command.commands.Owner.operationsecret;
 import BabyBaby.Command.commands.Owner.sendollie;
@@ -51,7 +51,7 @@ import BabyBaby.Command.commands.Public.RockPaperCMD;
 import BabyBaby.Command.commands.Public.RoleMuteCMD;
 import BabyBaby.Command.commands.Public.SuggestionCMD;
 import BabyBaby.Command.commands.Public.allroles;
-import BabyBaby.Command.commands.Public.getrole;
+import BabyBaby.Command.commands.Public.GetRole;
 import BabyBaby.Command.commands.Public.sieb;
 import BabyBaby.Command.commands.Public.source;
 import BabyBaby.Command.commands.Public.UnmuteMeCMD;
@@ -88,7 +88,7 @@ public class CmdHandler {
         addPublicCommand(new DuckyCMD());
 
         addPublicCommand(new EncryptCMD());
-        addPublicCommand(new getrole());
+        addPublicCommand(new GetRole());
 
         addPublicCommand(new LearningCMD());
         addPublicCommand(new MuteCMD());
@@ -126,7 +126,7 @@ public class CmdHandler {
         addOwnerCommand(new AdminHelpCMD());
         addOwnerCommand(new cleartable());
         addOwnerCommand(new ConvertPlace());
-        addOwnerCommand(new draw());
+        addOwnerCommand(new PlaceDraw());
         addOwnerCommand(new operationcheck());
         addOwnerCommand(new operationsecret());
         addOwnerCommand(new PlebHelpCMD());
