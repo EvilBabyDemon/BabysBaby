@@ -32,6 +32,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.ChannelManager;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 import net.dv8tion.jda.internal.managers.ChannelManagerImpl;
+import net.dv8tion.jda.internal.requests.Route.Roles;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -311,6 +312,33 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
+        if(!event.getGuild().getId().equals(data.ethid))
+            return;
+        
+        List<Role> removed = event.getRoles();
+        if(!removed.contains(event.getGuild().getRoleById(data.stfuID)))
+            return;
+        
+
+        if(event.getUser().getId().equals("177498563637542921")){
+            Connection c = null;
+            PreparedStatement stmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection(data.db);
+                
+                stmt = c.prepareStatement("DELETE FROM USERS WHERE ID = ? AND GUILDID = ?;");
+                stmt.setString(1, event.getUser().getId());
+                stmt.setString(2, event.getGuild().getId());
+                stmt.execute();
+                stmt.close();
+                c.close();
+            } catch ( Exception e ) {
+                e.printStackTrace(); 
+            }
+            return;
+        }
+        
         if(!MutePersonCMD.userMuted.containsKey(event.getMember()))
             return;
         
@@ -321,13 +349,10 @@ public class BabyListener extends ListenerAdapter {
         eb.setColor(0);
         Member warned = event.getMember();
         eb.setThumbnail(warned.getUser().getAvatarUrl());
-        
 
         eb.setDescription(":loud_sound: **Unmuted ** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** Manually unmuted with Role Removal.");
 
         log.sendMessage(eb.build()).queue();
-
-        //ctx.getChannel().sendMessage(eb.build()).queue();
 
 
         Role muteR = event.getGuild().getRoleById(data.stfuID);
@@ -523,12 +548,13 @@ public class BabyListener extends ListenerAdapter {
                 if(event instanceof GuildMessageReactionAddEvent) {
                     //767315361443741717 External
                     //747786383317532823 Student
+                    event.getGuild().addRoleToMember(event.getMember(), assign).complete();
                     if(assign.getId().equals("747786383317532823")){
-                        event.getGuild().removeRoleFromMember(event.getMember(), event.getGuild().getRoleById("767315361443741717")).queueAfter(1, TimeUnit.SECONDS);
+                        event.getGuild().removeRoleFromMember(event.getMember(), event.getGuild().getRoleById("767315361443741717")).complete();
                     } else if(assign.getId().equals("767315361443741717")){
-                        event.getGuild().removeRoleFromMember(event.getMember(), event.getGuild().getRoleById("747786383317532823")).queueAfter(1, TimeUnit.SECONDS);
+                        event.getGuild().removeRoleFromMember(event.getMember(), event.getGuild().getRoleById("747786383317532823")).complete();
                     }
-                    event.getGuild().addRoleToMember(event.getMember(), assign).queue();
+                    
                     
                 } else if (event instanceof GuildMessageReactionRemoveEvent){
                     //767315361443741717 External
@@ -537,7 +563,8 @@ public class BabyListener extends ListenerAdapter {
                         List<Role> tmp = event.getMember().getRoles();
                         Role external = event.getGuild().getRoleById("767315361443741717");
                         if(tmp.contains(external)){
-                            event.getGuild().removeRoleFromMember(event.getMember(), assign).queue();
+                            event.getGuild().addRoleToMember(event.getMember(), external).complete();
+                            event.getGuild().removeRoleFromMember(event.getMember(), assign).complete();
                         } else{
                             event.getUser().openPrivateChannel().complete().sendMessage("You need at least either the Student or External Role").queue();
                         }
@@ -545,12 +572,13 @@ public class BabyListener extends ListenerAdapter {
                         List<Role> tmp = event.getMember().getRoles();
                         Role student = event.getGuild().getRoleById("747786383317532823");
                         if(tmp.contains(student)){
-                            event.getGuild().removeRoleFromMember(event.getMember(), assign).queue();
+                            event.getGuild().addRoleToMember(event.getMember(), student).complete();
+                            event.getGuild().removeRoleFromMember(event.getMember(), assign).complete();
                         } else{
                             event.getUser().openPrivateChannel().complete().sendMessage("You need at least either the Student or External Role").queue();
                         }
                     } else {
-                        event.getGuild().removeRoleFromMember(event.getMember(), assign).queue();
+                        event.getGuild().removeRoleFromMember(event.getMember(), assign).complete();
                     }
                 
                 } else {

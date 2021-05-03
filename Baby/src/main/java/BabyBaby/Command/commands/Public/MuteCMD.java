@@ -2,7 +2,7 @@ package BabyBaby.Command.commands.Public;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -124,20 +124,18 @@ public class MuteCMD implements PublicCMD {
 
         
         Connection c = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         long timesql = (System.currentTimeMillis() + rounder*1000);
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
             
+            stmt = c.prepareStatement("INSERT INTO USERS (ID, GUILDID, MUTETIME) VALUES (?,?,?);");           
 
-             
-            stmt = c.createStatement();           
-
-            String sql = "INSERT INTO USERS (ID, GUILDUSER, MUTETIME) VALUES (" + 
-                            ctx.getAuthor().getId() + ", " + called.getId() + ", '"
-                            +  timesql + "');"; 
-            stmt.executeUpdate(sql);
+            stmt.setString(1, ctx.getAuthor().getId());
+            stmt.setString(2, called.getId());
+            stmt.setString(3, timesql+""); 
+            stmt.executeUpdate();
 
             stmt.close();
             c.close();

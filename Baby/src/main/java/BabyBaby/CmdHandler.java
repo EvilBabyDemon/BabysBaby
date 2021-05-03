@@ -96,7 +96,7 @@ public class CmdHandler {
         addPublicCommand(new PolyCMD());
         addPublicCommand(new ReminderCMD());
         addPublicCommand(new RockPaperCMD());
-        addPublicCommand(new RoleMuteCMD());
+        //addPublicCommand(new RoleMuteCMD());
         addPublicCommand(new sieb());
         addPublicCommand(new source());
         addPublicCommand(new SuggestionCMD());

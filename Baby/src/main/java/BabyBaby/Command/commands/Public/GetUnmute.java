@@ -2,7 +2,7 @@ package BabyBaby.Command.commands.Public;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.Guild;
@@ -27,14 +27,15 @@ public class GetUnmute implements Runnable {
         MuteCMD.userMuted.remove(guild.getMember(muted));
         
         Connection c = null;
-        Statement stmt = null;
-
+        PreparedStatement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);
             
-            stmt = c.createStatement();
-            stmt.execute("DELETE FROM USERS WHERE ID = " + muted.getId() + " AND GUILDUSER = " + guild.getId() + ";");
+            stmt = c.prepareStatement("DELETE FROM USERS WHERE ID = ? AND GUILDID = ?;");
+            stmt.setString(1, muted.getId());
+            stmt.setString(2, guild.getId());
+            stmt.execute();
             stmt.close();
             c.close();
         } catch ( Exception e ) {
