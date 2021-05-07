@@ -114,6 +114,7 @@ public class BabyListener extends ListenerAdapter {
                 }
             }
         }));
+        threads.getLast().start();
 
         threads.add(new Thread(new Runnable() {
             @Override
@@ -154,6 +155,7 @@ public class BabyListener extends ListenerAdapter {
                 }
             }
         }));
+        threads.getLast().start();
 
         threads.add(new Thread(new Runnable() {
             @Override
@@ -178,7 +180,7 @@ public class BabyListener extends ListenerAdapter {
                 }
             }
         }));
-
+        threads.getLast().start();
 
 
         threads.add(new Thread(new Runnable() {
@@ -202,7 +204,7 @@ public class BabyListener extends ListenerAdapter {
                 }
             }
         }));
-
+        threads.getLast().start();
 
         threads.add(new Thread(new Runnable() {
             @Override
@@ -245,6 +247,8 @@ public class BabyListener extends ListenerAdapter {
                 } 
             }
         }));
+        threads.getLast().start();
+
 
         threads.add(new Thread(new Runnable() {
             @Override
@@ -264,6 +268,8 @@ public class BabyListener extends ListenerAdapter {
                 }
             }
         }));
+        threads.getLast().start();
+
 
         threads.add(new Thread(new Runnable() {
             @Override
@@ -294,6 +300,8 @@ public class BabyListener extends ListenerAdapter {
                 }
             }
         }));
+        threads.getLast().start();
+
 
         //Put admin mutes in cache
         threads.add(new Thread(new Runnable() {
@@ -333,6 +341,8 @@ public class BabyListener extends ListenerAdapter {
                 }
             }
         }));
+        threads.getLast().start();
+
 
 
         //put assign message ids in cache
@@ -359,11 +369,8 @@ public class BabyListener extends ListenerAdapter {
                 }
             }
         }));
+        threads.getLast().start();
 
-
-        for (Thread var : threads) {
-            var.start();
-        }
         for (Thread var : threads) {
             try{
                 var.join();
