@@ -81,6 +81,10 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
+        long timestopper = System.currentTimeMillis();
+
+        //TODO Put each in a own Thread and make it go brrrr
+
         //botUser = event.getJDA().getSelfUser();
         Connection c = null;
         Statement stmt = null;
@@ -302,9 +306,8 @@ public class BabyListener extends ListenerAdapter {
             e.printStackTrace(); 
         }
 
-
         
-        System.out.println("Started!");
+        System.out.println("Started!" + (System.currentTimeMillis()-timestopper));
     }
 
     @Override

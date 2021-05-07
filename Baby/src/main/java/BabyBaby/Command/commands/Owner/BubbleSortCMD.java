@@ -160,20 +160,15 @@ public class BubbleSortCMD implements OwnerCMD {
             int[] lastdone = new int[copier.size()];
             for (int i = 0; i < 100; i++) {
                 for (int j = 0; j < copier.size(); j++) {
-                    for (int k = lastdone[j]; k < copier.get(j).size()/100+1 && k <copier.get(j).size() ; k++) {
+                    for (int k = lastdone[j]; k < lastdone[j]+copier.get(j).size()/100+1 && k <copier.get(j).size() ; k++) {
                         oneout.println(copier.get(j).get(k));
                     }
-                    lastdone[j]= copier.get(j).size()/100+1;
-                }
-            }
-            for (ArrayList<String> var : copier) {
-                for (String var2 : var) {
-                    oneout.println(var2);
-                }
+                    lastdone[j] += copier.get(j).size()/100+1;
+                }   
             }
             oneout.flush();
             oneout.close();
-
+            
 
 
             int j = 0;

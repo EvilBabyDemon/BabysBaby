@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.entities.Message.Attachment;
 
 public class PlaceGifCMD implements PublicCMD {
     File inp;
+    static boolean doing;
 
     @Override
     public void handleAdmin(CommandContext ctx) {
@@ -57,6 +58,8 @@ public class PlaceGifCMD implements PublicCMD {
 
     @Override
     public void handlePublic(CommandContext ctx) {
+        if(doing)
+            ctx.getChannel().sendMessage("Wait till someone else is done").queue();
 
         if(inp==null){
             try {
@@ -69,7 +72,7 @@ public class PlaceGifCMD implements PublicCMD {
 
 
         try {
-            
+            doing = true;
             ImageOutputStream output = new FileImageOutputStream(new File(data.PLACE + ctx.getAuthor().getId() + ".gif"));
             GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 50, true);
         
@@ -87,44 +90,50 @@ public class PlaceGifCMD implements PublicCMD {
             while (scanner.hasNextLine()) {
                 try {
                     String s = scanner.nextLine();
-                    if(s!=null && s == "")
-                        allcmds.add(scanner.nextLine());
+                    if(s!=null && s != "")
+                        allcmds.add(s);
                 } catch (Exception e) {
                     continue;
                 }
             }
+            scanner.close();
+            if(allcmds.size()>1000000){
+                ctx.getChannel().sendMessage("Your file cant be bigger than 1000000 sry.").queue();
+                return;
+            }
+
+            int perc = Math.max((int) (allcmds.size()*0.01), 1500);
             
             for (String var : allcmds) {
-                String[] s =var.split(" ");
+                String[] s = var.split(" ");
                 try {
                     img.setRGB(Integer.parseInt(s[2]), Integer.parseInt(s[3]), Color.decode(s[4]).getRGB());
                 } catch (Exception e) {
-                    writer.writeToSequence(img);
                     break;
                 }
-                if (++lineCnt % 2000 == 0) {
+                if (++lineCnt % perc == 0) {
                     writer.writeToSequence(img);
                 }
             }
-            if (lineCnt % 2000 != 0) {
+            if (lineCnt % perc != 0) {
                 writer.writeToSequence(img);
             }
-           
-            
-            scanner.close();
             writer.close();
             output.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            doing = false;
         }
         File gif = new File(data.PLACE + ctx.getAuthor().getId() + ".gif");
+        ctx.getChannel().sendMessage(ctx.getAuthor().getAsMention()).queue();
         ctx.getChannel().sendFile(gif).complete();
         gif.delete();
     }
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "", "Make a gif for place.");
+        return StandardHelp.Help(prefix, getName(), "<txt file as Attachment>", "Make a gif for place.");
     }
     
 }
