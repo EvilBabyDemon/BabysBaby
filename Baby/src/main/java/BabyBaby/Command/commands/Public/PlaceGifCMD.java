@@ -82,22 +82,44 @@ public class PlaceGifCMD implements PublicCMD {
                 }
             }
 
+            ArrayList<String> allcmds = new ArrayList<>();
+
             while (scanner.hasNextLine()) {
-                String[] s = scanner.nextLine().split(" ");
-                img.setRGB(Integer.parseInt(s[0]), Integer.parseInt(s[1]), Color.decode(s[2]).getRGB());
+                try {
+                    String s = scanner.nextLine();
+                    if(s!=null && s == "")
+                        allcmds.add(scanner.nextLine());
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+            
+            for (String var : allcmds) {
+                String[] s =var.split(" ");
+                try {
+                    img.setRGB(Integer.parseInt(s[2]), Integer.parseInt(s[3]), Color.decode(s[4]).getRGB());
+                } catch (Exception e) {
+                    writer.writeToSequence(img);
+                    break;
+                }
                 if (++lineCnt % 2000 == 0) {
                     writer.writeToSequence(img);
                 }
             }
+            if (lineCnt % 2000 != 0) {
+                writer.writeToSequence(img);
+            }
+           
+            
             scanner.close();
             writer.close();
             output.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        ctx.getChannel().sendFile(new File(data.PLACE + ctx.getAuthor().getId() + ".gif")).queue();
-
+        File gif = new File(data.PLACE + ctx.getAuthor().getId() + ".gif");
+        ctx.getChannel().sendFile(gif).complete();
+        gif.delete();
     }
 
     @Override

@@ -258,7 +258,7 @@ public class GetRole implements PublicCMD{
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "[Role name]", "Command to see all roles with emotes such that you can assign them yourself. Or add the role name and directly get a Role added or removed.");
+        return StandardHelp.Help(prefix, getName(), "[Role name / Category]", "Command to see all roles with emotes such that you can assign them yourself. Or add the role name and directly get a Role added or removed.");
     }
 
 
