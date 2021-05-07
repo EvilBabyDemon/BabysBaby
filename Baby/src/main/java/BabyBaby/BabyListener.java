@@ -27,12 +27,10 @@ import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactio
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.ChannelManager;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 import net.dv8tion.jda.internal.managers.ChannelManagerImpl;
-import net.dv8tion.jda.internal.requests.Route.Roles;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -58,7 +56,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -74,7 +71,7 @@ public class BabyListener extends ListenerAdapter {
     public final JDA bot;
     private static HashMap<String, String> prefix = new HashMap<>();
     private final String ownerID = "223932775474921472";
-    private static boolean typing = true;
+    //private static boolean typing = true;
 
     public BabyListener(JDA bot) throws IOException {
         this.bot = bot;
