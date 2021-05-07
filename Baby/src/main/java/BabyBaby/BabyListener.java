@@ -378,7 +378,6 @@ public class BabyListener extends ListenerAdapter {
                 e.printStackTrace();
             }
         }
-
         
         System.out.println("Started!" + (System.currentTimeMillis()-timestopper));
     }
