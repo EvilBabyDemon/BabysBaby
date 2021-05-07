@@ -19,7 +19,8 @@ public class data {
     public static OffsetDateTime kick;
     public static final String myselfID = "223932775474921472";
     public static final String dcvd = "306523617188118528";
-
+    public static final String ethstudent = "747786383317532823";
+    public static final String ethexternal = "767315361443741717";
 
     //Filepaths
     public static final String TOKEN = "token.txt";

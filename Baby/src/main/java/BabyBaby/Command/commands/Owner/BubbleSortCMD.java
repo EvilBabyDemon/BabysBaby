@@ -145,7 +145,9 @@ public class BubbleSortCMD implements OwnerCMD {
         try {
             PrintStream out = new PrintStream(new File(data.PLACE + "bubblesortseq" + cmds.get(0) + ".txt"));	
             PrintStream paraout = new PrintStream(new File(data.PLACE + "bubblesort" + cmds.get(0) + ".txt"));	
-            
+            PrintStream oneout = new PrintStream(new File(data.PLACE + "bubblesortper" + cmds.get(0) + ".txt"));
+
+
             for (ArrayList<String> var : copier) {
                 for (String var2 : var) {
                     out.println(var2);
@@ -153,6 +155,26 @@ public class BubbleSortCMD implements OwnerCMD {
             }
             out.flush();
             out.close();
+
+
+            int[] lastdone = new int[copier.size()];
+            for (int i = 0; i < 100; i++) {
+                for (int j = 0; j < copier.size(); j++) {
+                    for (int k = lastdone[j]; k < copier.get(j).size()/100+1 && k <copier.get(j).size() ; k++) {
+                        oneout.println(copier.get(j).get(k));
+                    }
+                    lastdone[j]= copier.get(j).size()/100+1;
+                }
+            }
+            for (ArrayList<String> var : copier) {
+                for (String var2 : var) {
+                    oneout.println(var2);
+                }
+            }
+            oneout.flush();
+            oneout.close();
+
+
 
             int j = 0;
             while(copier.size()!=0){

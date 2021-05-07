@@ -22,7 +22,6 @@ import BabyBaby.Command.commands.Owner.PlebHelpCMD;
 import BabyBaby.Command.commands.Owner.SayCMD;
 import BabyBaby.Command.commands.Owner.SayMultiCMD;
 import BabyBaby.Command.commands.Owner.SetButtonCMD;
-import BabyBaby.Command.commands.Owner.TxtToGifCMD;
 import BabyBaby.Command.commands.Owner.cleartable;
 import BabyBaby.Command.commands.Owner.ConvertPlace;
 import BabyBaby.Command.commands.Owner.PlaceDraw;
@@ -145,7 +144,6 @@ public class CmdHandler {
         addOwnerCommand(new SayMultiCMD());
         addOwnerCommand(new BigSiebCMD());
         addOwnerCommand(new BubbleSortCMD());
-        addOwnerCommand(new TxtToGifCMD());
         //addOwnerCommand(new );
         addPublicCommand(new HelpCMD(this));
         //addPublicCommand(new EasterEggCMD());
@@ -223,7 +221,9 @@ public class CmdHandler {
                 case 2:
                     OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
                     if (ownerCommand != null) {
+                        long time = System.currentTimeMillis();
                         ownerCommand.handleOwner(ctx);
+                        System.out.println(System.currentTimeMillis()-time);
                     }
                     break;
             }

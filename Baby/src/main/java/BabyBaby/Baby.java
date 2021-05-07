@@ -22,15 +22,11 @@ public class Baby {
         
         try {
             String token = "";
-            try {
-                Scanner s = new Scanner(new File(data.TOKEN));
-                token = s.nextLine();
-                s.close();
-            } catch (Exception e) {
-                Scanner s = new Scanner(new File("C:\\Users\\Lukas\\Desktop\\From_Old_to_NEW\\VSCODE WORKSPACE\\BabysBaby\\Baby\\.gitignore\\token.txt"));
-                token = s.nextLine();
-                s.close();
-            } 
+            
+            Scanner s = new Scanner(new File(data.TOKEN));
+            token = s.nextLine();
+            s.close();
+            
             JDABuilder builder = JDABuilder.createDefault(token);
             builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGE_TYPING, GatewayIntent.GUILD_EMOJIS);
             builder.setChunkingFilter(ChunkingFilter.ALL);

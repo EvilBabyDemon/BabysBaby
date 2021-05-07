@@ -56,7 +56,7 @@ public class RoleAssignCMD implements AdminCMD {
         
         
 
-        //TODO do embeds with each category
+        //doing embeds with each category
 
         String msg = "";
 
@@ -128,13 +128,11 @@ public class RoleAssignCMD implements AdminCMD {
                 if(var == null || var.length() == 0)
                         continue;
                 try{
-                channel.addReactionById(msgs.getId(), var).queue();
+                    channel.addReactionById(msgs.getId(), var).queue();
                 } catch (Exception e){
                     ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }   
             }
-
-            //TODO save the msg id here and put on startup into cache.
 
             
             c = null;

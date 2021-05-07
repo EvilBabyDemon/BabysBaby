@@ -658,10 +658,11 @@ public class BabyListener extends ListenerAdapter {
 
 
     
-    
+    /*
     @Override
     public void onUserTyping(@Nonnull UserTypingEvent event) {
-        if(event.getMember().getId().equals("108305736131440640")){ //Hello Ollie :eyes:
+        
+        if(event.getMember().getId().equals("1083057361314406401")){ //Hello Ollie :eyes:
             if(typing){
                 Random rand = new Random();
                 if(rand.nextDouble() < 0.23){
@@ -673,7 +674,7 @@ public class BabyListener extends ListenerAdapter {
             }
         }
     }
-    
+    */
 
 
     @Override

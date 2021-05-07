@@ -113,8 +113,11 @@ public class ReminderCMD implements PublicCMD {
         }
 
         String message = ctx.getMessage().getContentRaw();
+        try{
         message = message.substring(1 + getName().length() + 1 + cmds.get(0).length() + 1 + cmds.get(1).length() + 1);
-
+        } catch (Exception e){
+            message = "Just a Reminder. Didn't specify about what.";
+        }
         String pk = "";
         long timesql = (System.currentTimeMillis() + rounder*1000);
 
