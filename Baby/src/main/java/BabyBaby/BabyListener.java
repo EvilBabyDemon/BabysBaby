@@ -227,6 +227,13 @@ public class BabyListener extends ListenerAdapter {
                 break;
             }   
         }
+        for (AuditLogEntry entry : logs) {
+            if(entry.getType().equals(ActionType.BAN)){
+                data.ban = entry.getTimeCreated();
+                break;
+            }   
+        }
+
 
         c = null;
         stmt = null;
@@ -650,6 +657,26 @@ public class BabyListener extends ListenerAdapter {
                 break;
             }  
         }
+        for (AuditLogEntry entry : logs) {
+            if(entry.getType().equals(ActionType.BAN)){
+                if(!data.ban.equals(entry.getTimeCreated())){
+
+                    data.ban = entry.getTimeCreated();
+                    MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+
+                    EmbedBuilder eb = new EmbedBuilder();
+                    eb.setAuthor(entry.getUser().getAsTag() + " (" + entry.getUser().getId() + ")", entry.getUser().getAvatarUrl(), entry.getUser().getAvatarUrl());
+                    eb.setColor(0);
+                    eb.setThumbnail(entry.getUser().getAvatarUrl());
+                    Member warned = event.getMember();
+                    
+                    eb.setDescription(":warning: **Banned** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + entry.getReason());
+                    log.sendMessage(eb.build()).queue();
+
+                }
+                break;
+            }  
+        }
     }
     
 
@@ -676,21 +703,6 @@ public class BabyListener extends ListenerAdapter {
     }
     */
 
-
-    @Override
-    public void onGuildBan(GuildBanEvent event) {
-        MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
-
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
-        eb.setColor(1);
-        eb.setThumbnail(event.getUser().getAvatarUrl());
-        User warned = event.getUser();
-
-        eb.setDescription(":warning: **Banned** " + warned.getAsMention() + "(" + warned.getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + "");
-
-        log.sendMessage(eb.build()).queue();
-    }
 
 
     @Override
