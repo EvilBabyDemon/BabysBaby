@@ -1,18 +1,17 @@
 package BabyBaby.Command.commands.Public;
 
 import BabyBaby.Command.PublicCMD;
-import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
-import BabyBaby.ColouredStrings.ColouredStringDiff;
+import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
 import BabyBaby.Command.CommandContext;
-import me.duncte123.botcommons.messaging.EmbedUtils;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class PingCMD implements PublicCMD {
 
     @Override
     public void handlePublic(CommandContext ctx) {
+        /*
         JDA jda = ctx.getJDA();
 
         jda.getRestPing().queue(
@@ -32,19 +31,14 @@ public class PingCMD implements PublicCMD {
                                 .build()
                 ).queue()
         );
-
-        /*
-        MessageChannel channel = event.getChannel();
-        message.addReaction(check).queue();
-
-        if (content.equals(prefix + "pong"))
-            ping = "<:pinged:747783377322508290> Ping!";
-
+        */
+        MessageChannel channel = ctx.getChannel();
+		ctx.getMessage().addReaction(data.check).complete();
+        String ping = "<:pinged:747783377322508290> Ping!";
         long time = System.currentTimeMillis();
         channel.sendMessage(ping).queue(response -> {
             response.editMessageFormat(ping + ": %d ms", System.currentTimeMillis() - time).queue();
         });
-        */
 
     }
 
@@ -60,18 +54,7 @@ public class PingCMD implements PublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
-
-        embed.setTitle("Help page of: `" + getName()+"`");
-        embed.setDescription("A really simple ping command.");
-
-        // general use
-        embed.addField("", new ColouredStringAsciiDoc()
-                .addBlueAboveEq("general use")
-                .addOrange(prefix + "ping")
-                .build(), false);
-
-        return embed.build();
+        return StandardHelp.Help(prefix, getName(), "", "A really simple ping command.");
     }
 
     @Override

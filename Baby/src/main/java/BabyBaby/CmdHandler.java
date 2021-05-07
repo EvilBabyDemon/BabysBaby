@@ -43,6 +43,7 @@ import BabyBaby.Command.commands.Public.LearningCMD;
 import BabyBaby.Command.commands.Public.MuteCMD;
 import BabyBaby.Command.commands.Public.NoKeyCMD;
 import BabyBaby.Command.commands.Public.PingCMD;
+import BabyBaby.Command.commands.Public.PlaceGifCMD;
 import BabyBaby.Command.commands.Public.PollCMD;
 import BabyBaby.Command.commands.Public.PolyCMD;
 import BabyBaby.Command.commands.Public.ReminderCMD;
@@ -101,6 +102,7 @@ public class CmdHandler {
         addPublicCommand(new SuggestionCMD());
         addPublicCommand(new UnmuteMeCMD());
         addPublicCommand(new PollCMD());
+        addPublicCommand(new PlaceGifCMD());
         //addPublicCommand(new WallpaperCMD());
 
 
