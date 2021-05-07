@@ -102,8 +102,8 @@ public class PlaceGifCMD implements PublicCMD {
                 return;
             }
 
-            int perc = Math.max((int) (allcmds.size()*0.01), 1500);
-            
+            int perc = Math.max((int) (allcmds.size()*0.012), 1500);
+
             for (String var : allcmds) {
                 String[] s = var.split(" ");
                 try {
