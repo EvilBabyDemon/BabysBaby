@@ -96,8 +96,6 @@ public class PlaceSorter implements OwnerCMD {
             t.start();
             //Storing threads and Sorted Lists in a HashMap
             threads.put(t, tmp);
-
-            copier.add(tmp);
         }
         //I probably have way too many threads and this doesnt give any speedup but whatever xD
         //joining all threads and adding them all together in one List
@@ -112,7 +110,7 @@ public class PlaceSorter implements OwnerCMD {
 
         //print everything in a file again
         try {
-            PrintStream out = new PrintStream(new File(data.PLACE + cmds.get(0) + ".txt"));	
+            PrintStream out = new PrintStream(new File(data.PLACE + "sort" + cmds.get(0) + ".txt"));	
             
             for (ArrayList<String> var : copier) {
                 for (String var2 : var) {

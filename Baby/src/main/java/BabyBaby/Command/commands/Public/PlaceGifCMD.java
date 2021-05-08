@@ -71,12 +71,10 @@ public class PlaceGifCMD implements PublicCMD {
             }
         }
 
+        ctx.getMessage().addReaction(data.check).queue();
 
         try {
             doing = true;
-            ImageOutputStream output = new FileImageOutputStream(new File(data.PLACE + ctx.getAuthor().getId() + ".gif"));
-            GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 50, true);
-        
             Scanner scanner = new Scanner(inp);
             int lineCnt = 0; // imgCnt = 0;
             BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_ARGB);
@@ -97,10 +95,13 @@ public class PlaceGifCMD implements PublicCMD {
                 }
             }
             scanner.close();
-            if(allcmds.size()>1000000){
+            if(allcmds.size()>1001*1001){
                 ctx.getChannel().sendMessage("Your file cant be bigger than 1000000 sry.").queue();
                 return;
             }
+
+            ImageOutputStream output = new FileImageOutputStream(new File(data.PLACE + ctx.getAuthor().getId() + ".gif"));
+            GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 50, true);
 
             int perc = Math.max((int) (allcmds.size()*0.012), 1500);
 

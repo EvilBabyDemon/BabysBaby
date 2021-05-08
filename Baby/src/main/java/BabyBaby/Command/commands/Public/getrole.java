@@ -11,10 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
-import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.data;
+import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -252,13 +253,30 @@ public class GetRole implements PublicCMD{
             }
         }
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
-        
-        
     }
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "[Role name / Category]", "Command to see all roles with emotes such that you can assign them yourself. Or add the role name and directly get a Role added or removed.");
+        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+
+        embed.setTitle("Help page of: `" + getName() +"`");
+        embed.setDescription("Command to see all roles with emotes such that you can assign them yourself. Or add the role name and directly get a Role added or removed.");
+
+        // general use
+        embed.addField("", new ColouredStringAsciiDoc()
+                .addBlueAboveEq("general use")
+                .addNormal(prefix + getName() + " " + "[Role name | Category]")
+                .build(), false);
+        embed.addField("", new ColouredStringAsciiDoc()
+                .addBlueAboveEq("Example for normal use:")
+                .addNormal(prefix + getName() + " " + "")
+                .addBlueAboveEq("Example for addding/removing role:")
+                .addNormal(prefix + getName() + " " + "1. Semester")
+                .addBlueAboveEq("Example for getting category embed:")
+                .addNormal(prefix + getName() + " " + "Channel Roles")
+                .build(), true);
+        return embed.build();
+        
     }
 
 
@@ -299,8 +317,8 @@ public class GetRole implements PublicCMD{
     public int minDistance(String word1, String word2) {
         int len1 = word1.length();
         int len2 = word2.length();
-        
-
+        word1 = word1.toLowerCase();
+        word2 = word2.toLowerCase();
         // len1+1, len2+1, because finally return dp[len1][len2]
         int[][] dp = new int[len1 + 1][len2 + 1];
      
@@ -335,11 +353,11 @@ public class GetRole implements PublicCMD{
                 if(minimal>dp[i + 1][j + 1])
                     minimal = dp[i + 1][j + 1];
             }
-            if(minimal >= (1 + Math.min(len1, len2)/5*2))
+            if(minimal >= (2 + Math.min(len1, len2)/5*2))
                 return 100;
         }
         
-        return (dp[len1][len2]<(1 + Math.min(len1, len2)/5*2)? dp[len1][len2]:100);
+        return (dp[len1][len2]<(2 + Math.min(len1, len2)/5*2)? dp[len1][len2]:100);
     }
 
 
