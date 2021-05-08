@@ -58,9 +58,10 @@ public class PlaceGifCMD implements PublicCMD {
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        if(doing)
+        if(doing){
             ctx.getChannel().sendMessage("Wait till someone else is done").queue();
-
+            return;
+        }
         if(inp==null){
             try {
                 Attachment placefile = ctx.getMessage().getAttachments().get(0);
@@ -90,8 +91,7 @@ public class PlaceGifCMD implements PublicCMD {
             while (scanner.hasNextLine()) {
                 try {
                     String s = scanner.nextLine();
-                    if(s!=null && s != "")
-                        allcmds.add(s);
+                    allcmds.add(s);
                 } catch (Exception e) {
                     continue;
                 }
@@ -109,7 +109,7 @@ public class PlaceGifCMD implements PublicCMD {
                 try {
                     img.setRGB(Integer.parseInt(s[2]), Integer.parseInt(s[3]), Color.decode(s[4]).getRGB());
                 } catch (Exception e) {
-                    break;
+                    continue;
                 }
                 if (++lineCnt % perc == 0) {
                     writer.writeToSequence(img);
@@ -123,6 +123,7 @@ public class PlaceGifCMD implements PublicCMD {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            inp = null;
             doing = false;
         }
         File gif = new File(data.PLACE + ctx.getAuthor().getId() + ".gif");

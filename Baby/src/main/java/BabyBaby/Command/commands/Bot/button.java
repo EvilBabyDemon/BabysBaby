@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class button {
-    public static int firstplace = 1100;
+    public static int firstplace = 1600;
     static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     static boolean shut = false;
     static Guild eth;

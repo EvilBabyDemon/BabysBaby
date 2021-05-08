@@ -105,13 +105,8 @@ public class BubbleSortCMD implements OwnerCMD {
                         public int compare(String o1, String o2) {
                             int[] oxy1 = tonum(o1);
                             int[] oxy2 = tonum(o2);
-                            /*
-                            double first = Math.pow(xavg - oxy1[0],2) + Math.pow(xavg - oxy1[1],2);
-                            double second = (Math.pow(xavg - oxy2[0],2) + Math.pow(xavg - oxy2[1],2));
-                            return (first>second) ? 1 : (first<second) ? -1 : 0;
-                            */
 
-                            return (int) (Math.pow(xavg - oxy1[0],2) + Math.pow(xavg - oxy1[1],2)-(Math.pow(xavg - oxy2[0],2) + Math.pow(xavg - oxy2[1],2)));
+                            return (int) (Math.pow(xavg - oxy1[0],2) + Math.pow(yavg - oxy1[1],2)-(Math.pow(xavg - oxy2[0],2) + Math.pow(yavg - oxy2[1],2)));
                         }
                         public int[] tonum (String s){
                             String[] cmds = s.split(" ");

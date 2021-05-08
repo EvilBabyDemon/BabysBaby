@@ -1,8 +1,10 @@
 package BabyBaby;
 
 import BabyBaby.Command.*;
+import BabyBaby.Command.commands.Admin.BanCMD;
 import BabyBaby.Command.commands.Admin.EditAssignCMD;
 import BabyBaby.Command.commands.Admin.GetWarningsFromUser;
+import BabyBaby.Command.commands.Admin.KickCMD;
 import BabyBaby.Command.commands.Admin.MutePersonCMD;
 import BabyBaby.Command.commands.Admin.RoleAssignCMD;
 import BabyBaby.Command.commands.Admin.UnmutePersonCMD;
@@ -18,6 +20,7 @@ import BabyBaby.Command.commands.Owner.AdminHelpCMD;
 import BabyBaby.Command.commands.Owner.BigSiebCMD;
 import BabyBaby.Command.commands.Owner.BubbleSortCMD;
 import BabyBaby.Command.commands.Owner.PlaceSorter;
+import BabyBaby.Command.commands.Owner.PlaceTravelingSalesmanColour;
 import BabyBaby.Command.commands.Owner.PlebHelpCMD;
 import BabyBaby.Command.commands.Owner.SayCMD;
 import BabyBaby.Command.commands.Owner.SayMultiCMD;
@@ -121,9 +124,11 @@ public class CmdHandler {
         addAdminCommand(new MutePersonCMD());
         addAdminCommand(new UnmutePersonCMD());
         addAdminCommand(new EditAssignCMD());
+        addAdminCommand(new KickCMD());
+        addAdminCommand(new BanCMD());
+
 
         // adding commands visible to owner
-        //addOwnerCommand(new TestCommand());
         addOwnerCommand(new AdminHelpCMD());
         addOwnerCommand(new cleartable());
         addOwnerCommand(new ConvertPlace());
@@ -146,7 +151,7 @@ public class CmdHandler {
         addOwnerCommand(new SayMultiCMD());
         addOwnerCommand(new BigSiebCMD());
         addOwnerCommand(new BubbleSortCMD());
-        //addOwnerCommand(new );
+        addOwnerCommand(new PlaceTravelingSalesmanColour());
         addPublicCommand(new HelpCMD(this));
         //addPublicCommand(new EasterEggCMD());
 
@@ -211,21 +216,39 @@ public class CmdHandler {
                 case 0:
                     PublicCMD publicCommand = searchPublicCommand(cmdName);
                     if (publicCommand != null) {
-                        publicCommand.handlePublic(ctx);
+                        Thread cmd = new Thread(new Runnable() {
+                            @Override
+                            public void run() {  
+                                publicCommand.handlePublic(ctx);
+                            }
+                        });
+                        cmd.start();
                     }
                     break;
                 case 1:
                     AdminCMD adminCommand = searchAdminCommand(cmdName);
                     if (adminCommand != null) {
-                        adminCommand.handleAdmin(ctx);
+                        Thread cmd = new Thread(new Runnable() {
+                            @Override
+                            public void run() {  
+                                adminCommand.handleAdmin(ctx);
+                            }
+                        });
+                        cmd.start();
                     }
                     break;
                 case 2:
                     OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
                     if (ownerCommand != null) {
-                        long time = System.currentTimeMillis();
-                        ownerCommand.handleOwner(ctx);
-                        System.out.println(System.currentTimeMillis()-time);
+                        Thread cmd = new Thread(new Runnable() {
+                            @Override
+                            public void run() {    
+                                long time = System.currentTimeMillis();
+                                ownerCommand.handleOwner(ctx);
+                                System.out.println(System.currentTimeMillis()-time);
+                            }
+                        });
+                        cmd.start();
                     }
                     break;
             }
