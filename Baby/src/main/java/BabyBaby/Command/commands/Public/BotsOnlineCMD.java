@@ -1,10 +1,12 @@
 package BabyBaby.Command.commands.Public;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -37,12 +39,40 @@ public class BotsOnlineCMD implements PublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
+        ArrayList<Member> online = new ArrayList<>();
+        ArrayList<Member> offline = new ArrayList<>();        
         for (Member var : ctx.getGuild().getMembers()) {
             if(var.getUser().isBot()){
-                
+                OnlineStatus stat = var.getOnlineStatus();
+                if(stat.equals(OnlineStatus.OFFLINE)){
+                    offline.add(var);
+                } else{
+                    online.add(var);
+                }
             }            
         }
 
+        String on = "";
+        String off = "";
+
+        for (Member var : online) {
+            on += var.getAsMention() + "\n";
+        }
+
+        for (Member var : offline) {
+            off += var.getAsMention() + "\n";
+        }
+
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Bots on this server:");
+        eb.addField("Online Bots" + online.size(), on, true);
+        eb.addField("Offline Bots" + offline.size(), off, true);
+        
+        String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
+                : ctx.getMember().getEffectiveName();
+        eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
+
+        ctx.getChannel().sendMessage(eb.build()).queue();
     }
 
     @Override

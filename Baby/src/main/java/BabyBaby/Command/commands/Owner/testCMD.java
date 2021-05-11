@@ -14,6 +14,7 @@ import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -55,24 +56,9 @@ public class testCMD implements OwnerCMD{
             e.printStackTrace();
         }
         */
-        MessageChannel channel = ctx.getChannel();
-
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("title");
-        eb.setColor(1);
-        eb.setDescription("This is the first message.");
+        Member test = ctx.getGuild().getMemberById(ctx.getArgs().get(0));
         
-        eb.setFooter("A first test.");
-        
-        Message editor = channel.sendMessage(eb.build()).complete();
-
-        eb.setTitle("Title 2");
-
-        eb.setDescription("This should be a new message.");
-
-        editor.editMessage(eb.build()).queueAfter(10, TimeUnit.SECONDS);
-
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getChannel().sendMessage("" + test.getOnlineStatus()).queue();
     }
 
     @Override
