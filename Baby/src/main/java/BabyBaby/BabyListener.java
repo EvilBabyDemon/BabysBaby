@@ -522,14 +522,13 @@ public class BabyListener extends ListenerAdapter {
             return;
         }
 
-        MessageChannel log = event.getGuild().getTextChannelById(data.adminlog);
+        MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
         eb.setColor(1);
         eb.setThumbnail(event.getUser().getAvatarUrl());
-
-        eb.setDescription("Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n Uses:" + ++amount + "\n Created at: " + urls.get(url).getTimeCreated().toLocalTime());
+        eb.setDescription("Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n Uses: " + ++amount + "\n Created at: " + urls.get(url).getTimeCreated().toLocalDateTime());
         Message temp = log.sendMessage(".").complete();
         temp.editMessage(urls.get(url).getInviter().getAsMention()).complete().delete().queue();
         log.sendMessage(eb.build()).queue();
@@ -744,7 +743,6 @@ public class BabyListener extends ListenerAdapter {
         }
     }
     
-
 
     
 

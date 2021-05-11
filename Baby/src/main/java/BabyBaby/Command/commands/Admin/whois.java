@@ -102,7 +102,7 @@ public class whois implements AdminCMD{
 			eb.setTitle("@" + stalking.getUser().getAsTag() + " (" + stalking.getId() + ")");
 			eb.setColor(highest.getColor());
 			
-			eb.addField("Nickname", "`" + ((stalking.getNickname() != null) ? stalking.getNickname() : stalking.getEffectiveName()) + "`", false);
+			eb.addField("Nickname", "`" + ((stalking.getNickname() != null) ? stalking.getNickname() : stalking.getEffectiveName()) + "` " + stalking.getAsMention(), false);
 			eb.addField("Joined at", "`" + stalking.getTimeJoined().format(jointime) + "`", false);
 			eb.addField("Highest Role", highest.getAsMention(), true);
 			eb.addField("Hoisted Role",(hoisted != null) ? hoisted.getAsMention(): "`Unhoisted`", true);
