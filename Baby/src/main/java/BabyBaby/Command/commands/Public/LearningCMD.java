@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -98,8 +99,7 @@ public class LearningCMD implements PublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        // TODO Auto-generated method stub
-        return null;
+        return StandardHelp.Help(prefix, getName(), "", "Get all people that muted themself to concentrate better.");
     }
     
 }

@@ -8,6 +8,7 @@ import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class BotsOnlineCMD implements PublicCMD{
@@ -54,14 +55,21 @@ public class BotsOnlineCMD implements PublicCMD{
 
         String on = "";
         String off = "";
+        String pingstr = "";
 
         for (Member var : online) {
             on += var.getAsMention() + "\n";
+            pingstr += var.getAsMention() + " ";
         }
 
         for (Member var : offline) {
             off += var.getAsMention() + "\n";
+            pingstr += var.getAsMention() + " ";
         }
+
+        Message ping =  ctx.getChannel().sendMessage("wait").complete();
+        ping.editMessage(pingstr).complete();
+
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Bots on this server:");
@@ -72,7 +80,7 @@ public class BotsOnlineCMD implements PublicCMD{
                 : ctx.getMember().getEffectiveName();
         eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
 
-        ctx.getChannel().sendMessage(eb.build()).queue();
+        ping.editMessage(eb.build()).complete();
     }
 
     @Override

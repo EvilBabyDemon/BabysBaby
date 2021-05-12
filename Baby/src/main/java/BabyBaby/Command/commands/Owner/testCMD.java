@@ -1,5 +1,5 @@
 package BabyBaby.Command.commands.Owner;
-
+/*
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -8,15 +8,11 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
-
+*/
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class testCMD implements OwnerCMD{
@@ -63,7 +59,6 @@ public class testCMD implements OwnerCMD{
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-        // TODO Auto-generated method stub
         return StandardHelp.Help(prefix, getName(), "(whatever it is atm)", "A cmd to test things out.");
     }
     /*
