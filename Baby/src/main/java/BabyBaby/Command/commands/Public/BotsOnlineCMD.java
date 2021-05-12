@@ -49,7 +49,7 @@ public class BotsOnlineCMD implements PublicCMD{
                 } else{
                     online.add(var);
                 }
-            }            
+            }        
         }
 
         String on = "";
@@ -65,8 +65,8 @@ public class BotsOnlineCMD implements PublicCMD{
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Bots on this server:");
-        eb.addField("Online Bots" + online.size(), on, true);
-        eb.addField("Offline Bots" + offline.size(), off, true);
+        eb.addField("Online Bots: " + online.size(), on, true);
+        eb.addField("Offline Bots: " + offline.size(), off, true);
         
         String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
                 : ctx.getMember().getEffectiveName();

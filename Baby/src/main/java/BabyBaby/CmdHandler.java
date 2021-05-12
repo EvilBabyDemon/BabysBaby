@@ -38,6 +38,7 @@ import BabyBaby.Command.commands.Owner.tick;
 import BabyBaby.Command.commands.Owner.toMultipixelCMD;
 import BabyBaby.Command.commands.Owner.ucheck;
 import BabyBaby.Command.commands.Owner.whereami;
+import BabyBaby.Command.commands.Public.BotsOnlineCMD;
 import BabyBaby.Command.commands.Public.DecryptCMD;
 import BabyBaby.Command.commands.Public.DuckyCMD;
 import BabyBaby.Command.commands.Public.EncryptCMD;
@@ -107,6 +108,7 @@ public class CmdHandler {
         addPublicCommand(new PollCMD());
         addPublicCommand(new PlaceGifCMD());
         //addPublicCommand(new WallpaperCMD());
+        addPublicCommand(new BotsOnlineCMD());
 
 
 
