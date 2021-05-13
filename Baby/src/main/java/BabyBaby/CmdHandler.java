@@ -155,51 +155,63 @@ public class CmdHandler {
         int permissionLevel = ctx.getPermissionLevel();
 
         String cmdName = split[0].toLowerCase();
-        try { 
-            switch (permissionLevel) {
-                case 0:
-                    PublicCMD publicCommand = searchPublicCommand(cmdName);
-                    if (publicCommand != null) {
-                        Thread cmd = new Thread(new Runnable() {
-                            @Override
-                            public void run() {  
-                                publicCommand.handlePublic(ctx);
+        switch (permissionLevel) {
+            case 0:
+                PublicCMD publicCommand = searchPublicCommand(cmdName);
+                if (publicCommand != null) {
+                    Thread cmd = new Thread(new Runnable() {
+                        @Override
+                        public void run() {  
+                            try {
+                            publicCommand.handlePublic(ctx);
+                            } catch(Exception e){
+                                ctx.getMessage().addReaction(data.xmark).queue();
+                                System.out.println(event.getMessage().getContentRaw());
+                                e.printStackTrace();
                             }
-                        });
-                        cmd.start();
-                    }
-                    break;
-                case 1:
-                    AdminCMD adminCommand = searchAdminCommand(cmdName);
-                    if (adminCommand != null) {
-                        Thread cmd = new Thread(new Runnable() {
-                            @Override
-                            public void run() {  
+                        }
+                    });
+                    cmd.start();
+                }
+                break;
+            case 1:
+                AdminCMD adminCommand = searchAdminCommand(cmdName);
+                if (adminCommand != null) {
+                    Thread cmd = new Thread(new Runnable() {
+                        @Override
+                        public void run() {  
+                            try {
                                 adminCommand.handleAdmin(ctx);
+                            } catch(Exception e){
+                                ctx.getMessage().addReaction(data.xmark).queue();
+                                System.out.println(event.getMessage().getContentRaw());
+                                e.printStackTrace();
                             }
-                        });
-                        cmd.start();
-                    }
-                    break;
-                case 2:
-                    OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
-                    if (ownerCommand != null) {
-                        Thread cmd = new Thread(new Runnable() {
-                            @Override
-                            public void run() {    
+                        }
+                    });
+                    cmd.start();
+                }
+                break;
+            case 2:
+                OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
+                if (ownerCommand != null) {
+                    Thread cmd = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
                                 long time = System.currentTimeMillis();
                                 ownerCommand.handleOwner(ctx);
                                 System.out.println(System.currentTimeMillis()-time);
-                            }
-                        });
-                        cmd.start();
-                    }
-                    break;
-            }
-        } catch(Exception e){
-            ctx.getMessage().addReaction(data.xmark).queue();
-            System.out.println(event.getMessage().getContentRaw());
-            e.printStackTrace();
+                            } catch(Exception e){
+                                ctx.getMessage().addReaction(data.xmark).queue();
+                                System.out.println(event.getMessage().getContentRaw());
+                                e.printStackTrace();
+                            }    
+                        }
+                    });
+                    cmd.start();
+                }
+                break;
         }
     }
 

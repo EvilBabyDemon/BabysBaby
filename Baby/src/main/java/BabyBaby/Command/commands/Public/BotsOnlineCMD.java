@@ -68,7 +68,7 @@ public class BotsOnlineCMD implements PublicCMD{
         }
 
         Message ping =  ctx.getChannel().sendMessage("wait").complete();
-        ping.editMessage(pingstr).complete();
+        ping.editMessage(pingstr).complete().delete().queue();
 
 
         EmbedBuilder eb = new EmbedBuilder();
@@ -79,8 +79,7 @@ public class BotsOnlineCMD implements PublicCMD{
         String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
                 : ctx.getMember().getEffectiveName();
         eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
-
-        ping.editMessage(eb.build()).complete();
+        ctx.getChannel().sendMessage(eb.build()).complete();
     }
 
     @Override
