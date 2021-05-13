@@ -501,7 +501,7 @@ public class BabyListener extends ListenerAdapter {
         eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
         eb.setColor(1);
         eb.setThumbnail(event.getUser().getAvatarUrl());
-        eb.setDescription("Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n Uses: " + ++amount + "\n Created at: " + urls.get(url).getTimeCreated().toLocalDateTime());
+        eb.setDescription("User that joined " +event.getUser().getAsMention() +  "\n" + "Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n Uses: " + ++amount + "\n Created at: " + urls.get(url).getTimeCreated().toLocalDateTime());
         Message temp = log.sendMessage(".").complete();
         temp.editMessage(urls.get(url).getInviter().getAsMention()).complete().delete().queue();
         log.sendMessage(eb.build()).queue();
