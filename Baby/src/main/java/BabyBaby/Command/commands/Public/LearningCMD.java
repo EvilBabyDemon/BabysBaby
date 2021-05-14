@@ -62,7 +62,7 @@ public class LearningCMD implements PublicCMD {
             
             stmt = c.createStatement();
 
-            rs = stmt.executeQuery("SELECT * FROM USERS WHERE GUILDUSER =" + called.getId() + ";");
+            rs = stmt.executeQuery("SELECT * FROM USERS WHERE GUILDID =" + called.getId() + ";");
             while ( rs.next() ) {
                 String mutedUser = rs.getString("ID");
                 countUsers++;
