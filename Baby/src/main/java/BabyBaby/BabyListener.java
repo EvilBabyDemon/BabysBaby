@@ -502,8 +502,7 @@ public class BabyListener extends ListenerAdapter {
         eb.setColor(1);
         eb.setThumbnail(event.getUser().getAvatarUrl());
         eb.setDescription("User that joined " +event.getUser().getAsMention() +  "\n" + "Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n Uses: " + ++amount + "\n Created at: " + urls.get(url).getTimeCreated().toLocalDateTime());
-        Message temp = log.sendMessage(".").complete();
-        temp.editMessage(urls.get(url).getInviter().getAsMention()).complete().delete().queue();
+        log.sendMessage("cache reload").complete().editMessage(urls.get(url).getInviter().getAsMention()).complete().delete().queue();
         log.sendMessage(eb.build()).queue();
 
 
@@ -685,7 +684,9 @@ public class BabyListener extends ListenerAdapter {
                     eb.setColor(0);
                     eb.setThumbnail(entry.getUser().getAvatarUrl());
                     Member warned = event.getMember();
+                    log.sendMessage("cache reload").complete().editMessage(warned.getAsMention() + " " + entry.getUser().getAsMention()).complete().delete().complete();
                     
+
                     eb.setDescription(":warning: **Kicked** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + entry.getReason());
 
                     log.sendMessage(eb.build()).queue();
@@ -694,6 +695,7 @@ public class BabyListener extends ListenerAdapter {
                 break;
             }  
         }
+        
         for (AuditLogEntry entry : logs) {
             if(entry.getType().equals(ActionType.BAN)){
                 if(!data.ban.equals(entry.getTimeCreated())){
@@ -701,6 +703,7 @@ public class BabyListener extends ListenerAdapter {
                     data.ban = entry.getTimeCreated();
                     MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
 
+                    
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setAuthor(entry.getUser().getAsTag() + " (" + entry.getUser().getId() + ")", entry.getUser().getAvatarUrl(), entry.getUser().getAvatarUrl());
                     eb.setColor(0);
@@ -708,6 +711,9 @@ public class BabyListener extends ListenerAdapter {
                     Member warned = event.getMember();
                     
                     eb.setDescription(":warning: **Banned** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + entry.getReason());
+                    log.sendMessage("cache reload").complete().editMessage(warned.getAsMention() + " " + entry.getUser().getAsMention()).complete().delete().complete();
+
+                    
                     log.sendMessage(eb.build()).queue();
 
                 }
