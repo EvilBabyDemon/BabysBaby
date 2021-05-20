@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -22,6 +23,8 @@ public class CmdHandler {
     private final List<PublicCMD> publicCommands = new ArrayList<>();
     private final List<AdminCMD> adminCommands = new ArrayList<>();
     private final List<OwnerCMD> ownerCommands = new ArrayList<>();
+
+    public static HashSet<OwnerCMD> offCMD = new HashSet<>();
 
     //private final List<Command> allCommands = new ArrayList<>();
 
@@ -74,6 +77,7 @@ public class CmdHandler {
         addAdminCommand(new EditAssignCMD());
         addAdminCommand(new KickCMD());
         addAdminCommand(new BanCMD());
+        addAdminCommand(new AdminMuteBlindCMD());
 
 
         // adding commands visible to owner
@@ -166,7 +170,7 @@ public class CmdHandler {
         switch (permissionLevel) {
             case 0:
                 PublicCMD publicCommand = searchPublicCommand(cmdName);
-                if (publicCommand != null) {
+                if (publicCommand != null && !offCMD.contains(publicCommand)) {
                     Thread cmd = new Thread(new Runnable() {
                         @Override
                         public void run() {  
@@ -184,7 +188,7 @@ public class CmdHandler {
                 break;
             case 1:
                 AdminCMD adminCommand = searchAdminCommand(cmdName);
-                if (adminCommand != null) {
+                if (adminCommand != null && !offCMD.contains(adminCommand)) {
                     Thread cmd = new Thread(new Runnable() {
                         @Override
                         public void run() {  
@@ -202,7 +206,7 @@ public class CmdHandler {
                 break;
             case 2:
                 OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
-                if (ownerCommand != null) {
+                if (ownerCommand != null && !offCMD.contains(ownerCommand)) {
                     Thread cmd = new Thread(new Runnable() {
                         @Override
                         public void run() {

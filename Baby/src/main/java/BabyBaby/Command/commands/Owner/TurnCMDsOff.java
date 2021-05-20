@@ -1,0 +1,48 @@
+package BabyBaby.Command.commands.Owner;
+
+import java.io.IOException;
+
+import BabyBaby.CmdHandler;
+import BabyBaby.Command.CommandContext;
+import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.data;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
+public class TurnCMDsOff implements OwnerCMD{
+
+    @Override
+    public String getName() {
+        return "stop";
+    }
+
+    @Override
+    public void handleOwner(CommandContext ctx) {
+        try {
+            CmdHandler tmp = new CmdHandler(ctx.getJDA());
+
+            OwnerCMD switsch = tmp.searchOwnerCommand(ctx.getArgs().get(0));
+            String output = "Couldn't find the Command.";
+            if(switsch != null){
+                if(CmdHandler.offCMD.contains(switsch)){
+                    CmdHandler.offCMD.remove(switsch);
+                    output = "Turned the cmd on.";
+                } else {
+                    CmdHandler.offCMD.add(switsch);
+                    output = "Turned the cmd off.";
+                }
+            }
+            ctx.getChannel().sendMessage(output).queue();
+        } catch (IOException e) {
+            ctx.getMessage().addReaction(data.xmark).queue();
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public MessageEmbed getOwnerHelp(String prefix) {
+        return StandardHelp.Help(prefix, getName(), "<cmd name>", "Turn Commands off or on.");
+    }
+    
+}
