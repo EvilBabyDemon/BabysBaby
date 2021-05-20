@@ -95,8 +95,8 @@ public class PlaceGifCMD implements PublicCMD {
                 }
             }
             scanner.close();
-            if(allcmds.size()>1001*1001){
-                ctx.getChannel().sendMessage("Your file cant be bigger than 1000000 sry.").queue();
+            if(allcmds.size()>1001*1001*10){
+                ctx.getChannel().sendMessage("Your file cant be bigger than 10000000 sry.").queue();
                 return;
             }
 

@@ -1,4 +1,10 @@
 package BabyBaby.Command.commands.Owner;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 /*
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +18,11 @@ import java.awt.Color;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
 
 public class testCMD implements OwnerCMD{
 
@@ -52,9 +61,35 @@ public class testCMD implements OwnerCMD{
             e.printStackTrace();
         }
         */
-        Member test = ctx.getGuild().getMemberById(ctx.getArgs().get(0));
-        
-        ctx.getChannel().sendMessage("" + test.getOnlineStatus()).queue();
+
+
+        if(Boolean.parseBoolean(ctx.getArgs().get(0))){
+
+            Message adder = ctx.getChannel().retrieveMessageById(ctx.getArgs().get(1)).complete();
+
+            LinkedList<Emote> liste = new LinkedList<>();
+
+            for (Emote var : ctx.getGuild().getEmotes()) {
+                liste.add(var);
+            }
+
+            Collections.shuffle(liste);
+
+            for (int i = 0; i < 20; i++) {
+                adder.addReaction(liste.pop()).queue();
+            }
+        } else {
+            LinkedList<Role> addRole = new LinkedList<>();
+            LinkedList<Role> delRole = new LinkedList<>();
+            List<String> t = ctx.getArgs();
+
+            addRole.add(ctx.getGuild().getRoleById(t.get(1)));
+            delRole.add(ctx.getGuild().getRoleById(t.get(2)));
+
+
+
+            ctx.getGuild().modifyMemberRoles(ctx.getMember(), addRole, delRole).complete();
+        }
     }
 
     @Override

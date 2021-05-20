@@ -16,12 +16,15 @@ public class data {
     public static final String ethid = "747752542741725244";
     public static final String spam = "768600365602963496";
     public static final String stfuID = "765542118701400134";
+    public static final String blindID= "844136589163626526";
     public static OffsetDateTime kick;
     public static OffsetDateTime ban;
     public static final String myselfID = "223932775474921472";
     public static final String dcvd = "306523617188118528";
     public static final String ethstudent = "747786383317532823";
     public static final String ethexternal = "767315361443741717";
+    public static boolean elthision = false;
+    public static boolean marc = false;
 
     //Filepaths
     public static final String TOKEN = "token.txt";

@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.GetUnmute;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -90,7 +91,7 @@ public class UnmuteMeCMD implements PublicCMD {
                     break;
                 default:
                     author.openPrivateChannel().queue(privchannel -> {
-                        privchannel.sendMessage("Pls use +unmute <key> as there are multiple servers you are muted on. These are the keys:").queue();
+                        privchannel.sendMessage("Pls use +" + getName()  + " <key> as there are multiple servers you are muted on. These are the keys:").queue();
                         for (GetUnmute var : vars) {
                             privchannel.sendMessage("Key: " + var.guild.getId() + " " + var.guild.getName()).queue();
                         }

@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.GetUnmute;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -87,9 +88,6 @@ public class MuteCMD implements PublicCMD {
             return;
         }			
 
-
-        //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-        //LocalDateTime now = LocalDateTime.now(); 
         
         List<Role> stfuroles = called.getRolesByName("STFU", true); 
         Role muteR = stfuroles.get(0);

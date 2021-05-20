@@ -51,6 +51,10 @@ public class CmdHandler {
         addPublicCommand(new PlaceGifCMD());
         //addPublicCommand(new WallpaperCMD());
         addPublicCommand(new BotsOnlineCMD());
+        addPublicCommand(new RemoveRoles());
+        addPublicCommand(new UnblindCMD());
+        addPublicCommand(new FlashedCMD());
+        addPublicCommand(new RemoveRolesForce());
 
 
 
@@ -96,6 +100,10 @@ public class CmdHandler {
         addOwnerCommand(new BigSiebCMD());
         addOwnerCommand(new BubbleSortCMD());
         addOwnerCommand(new PlaceTravelingSalesmanColour());
+        addOwnerCommand(new RoleChangeCMD());
+        
+        
+        
         addPublicCommand(new HelpCMD(this));
         //addPublicCommand(new EasterEggCMD());
 
@@ -225,9 +233,13 @@ public class CmdHandler {
         List<String> args = Arrays.asList(split).subList(1, split.length);
         
         String cmdName = split[0].toLowerCase();
+        
         UnmuteMeCMD cmd = new UnmuteMeCMD();
+        UnblindCMD cmd2 = new UnblindCMD();
         if(cmdName.equals(cmd.getName())){
             cmd.privhandle(event.getAuthor(), args);
+        } else if(cmdName.equals(cmd2.getName())){
+            cmd2.privhandle(event.getAuthor(), args);
         }
         
     }

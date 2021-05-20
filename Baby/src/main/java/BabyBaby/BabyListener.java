@@ -23,6 +23,8 @@ import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Bot.*;
 //import BabyBaby.Command.commands.Bot.drawwithFerris;
 import BabyBaby.Command.commands.Public.*;
+import BabyBaby.data.GetRolesBack;
+import BabyBaby.data.GetUnmute;
 import BabyBaby.data.data;
 
 import javax.annotation.Nonnull;
@@ -344,6 +346,49 @@ public class BabyListener extends ListenerAdapter {
         }));
         threads.getLast().start();
 
+        threads.add(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ResultSet rs;
+                Connection c = null;
+                Statement stmt = null;
+
+                try {
+                    Class.forName("org.sqlite.JDBC");
+                    c = DriverManager.getConnection(data.db);
+                    
+                    stmt = c.createStatement();
+
+                    rs = stmt.executeQuery("SELECT * FROM ROLEREMOVAL");            
+                    while(rs.next()){
+                        try{
+                        Guild called = bot.getGuildById( rs.getString("GUILDID"));
+                        User blindUser = called.getMemberById(rs.getString("USERID")).getUser();
+                        long time = Long.parseLong(rs.getString("MUTETIME"));
+                        ScheduledExecutorService blindex = Executors.newScheduledThreadPool(1);
+                        
+                        GetRolesBack blindclass = new GetRolesBack(blindUser, called, rs.getString("ROLES"));
+                        blindex.schedule(blindclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
+                        RemoveRoles.blind.put(called.getMember(blindUser), blindex);
+                        RemoveRoles.blindexe.put(blindex, blindclass);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                            System.out.println("Probably a User that left the server while being blinded.");
+                        }
+
+                    }
+                    stmt.close();
+                    c.close();
+
+                } catch ( Exception e ) {
+                    e.printStackTrace(); 
+                }
+            }
+        }));
+        threads.getLast().start();
+
+
+
         for (Thread var : threads) {
             try{
                 var.join();
@@ -361,8 +406,88 @@ public class BabyListener extends ListenerAdapter {
             return;
         
         List<Role> removed = event.getRoles();
-        if(!removed.contains(event.getGuild().getRoleById(data.stfuID)))
+        if(!removed.contains(event.getGuild().getRoleById(data.stfuID))){
+            if(!removed.contains(event.getGuild().getRoleById(data.blindID))){
+                return;
+            }
+            
+            GetRolesBack blindclass = RemoveRoles.blindexe.get(RemoveRoles.blind.get(event.getMember()));
+
+            if(blindclass==null){
+                System.out.println("Not in cache");
+                return;
+            }
+
+            Guild blindServ = blindclass.guild;
+            Member blinded = blindServ.getMember(blindclass.blind);
+            String roles = "";
+
+            Connection c = null;
+            PreparedStatement stmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection(data.db);
+                
+                stmt = c.prepareStatement("SELECT ROLES FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
+                stmt.setString(1, blinded.getId());
+                stmt.setString(2, blindServ.getId());
+                ResultSet rs = stmt.executeQuery();
+
+                roles = rs.getString("ROLES");
+
+                stmt.close();
+                c.close();
+            } catch ( Exception e ) {
+                e.printStackTrace(); 
+                return;
+            }
+
+            LinkedList<Role> addRole = new LinkedList<>();
+            LinkedList<Role> delRole = new LinkedList<>();
+
+            for (String var : roles.split(" ")) {
+                try {
+                    addRole.add(blindServ.getRoleById(var));
+                } catch (Exception e) {
+                    System.out.println("Role doesnt exist anymore");
+                }
+            }
+
+            try {
+                delRole.add(blindServ.getRoleById("844136589163626526"));
+            } catch (Exception e) {
+                System.out.println("Role Blind doesnt exist anymore. This could be a serious issue.");
+            }
+
+            blindServ.modifyMemberRoles(blinded, addRole, delRole).complete();
+            
+
+            ScheduledExecutorService blind = RemoveRoles.blind.get(blinded);
+            RemoveRolesForce.force.remove(RemoveRoles.blindexe.get(blind));
+            RemoveRoles.blindexe.remove(blind);
+            blind.shutdownNow();
+            RemoveRoles.blind.remove(blinded);
+
+        
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection(data.db);
+                
+                stmt = c.prepareStatement("DELETE FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
+                stmt.setString(1, blinded.getId());
+                stmt.setString(2, blindServ.getId());
+                stmt.execute();
+                stmt.close();
+                c.close();
+            } catch ( Exception e ) {
+                e.printStackTrace(); 
+                return;
+            }
+            
+
             return;
+        }
+            
         
 
         if(event.getUser().getId().equals("177498563637542921")){
@@ -574,10 +699,120 @@ public class BabyListener extends ListenerAdapter {
     public void onGenericGuildMessageReaction(GenericGuildMessageReactionEvent event) {
         if (event.getUser().isBot())
             return;
-        //This should be switched with a HashMap instead of a HashSet such that other servers could also at least technically use it. 
+        //This should be switched with a HashMap instead of a HashSet such that other servers could also at least technically use it.
+
         if(!event.getGuild().getId().equals(data.ethid))
             return;
-        
+
+
+        //gib marc admin
+        if(event.getMessageId().equals("843623107944120350")){
+            if(!(event.getUser().getId().equals("321022340412735509") || event.getUser().getId().equals("769542250635460649")))
+                return;
+            
+            for (MessageReaction var : event.retrieveMessage().complete().getReactions()) {
+                if(!var.retrieveUsers().complete().contains(event.getUser()))
+                    return;
+            }
+
+            if(data.marc){
+                return;
+            }
+            data.marc = true;
+            
+            
+
+            TextChannel channel = event.getChannel();
+
+            String text = "You have finally done it! <@!321022340412735509> <@!769542250635460649> <:yay:778745219733520426> <:pog:753549087172853764> ";
+
+            String jk = "Oh well sry this was just a joke <@!321022340412735509> <@!769542250635460649> <:sadge:772760101198102528> <:pepecry:778609762563784714>";
+            
+            String gif = "https://tenor.com/view/boiled-soundcloud-boiled-boiled-irl-boiled-utsc-boiled-cheesestick-agem-soundcloud-gif-20049996";
+            String ouch = "https://tenor.com/view/the-office-ouch-michael-scott-steve-carell-lip-bite-gif-11838665";
+            String alone = "https://tenor.com/view/zelda-loz-legend-of-its-gif-4598758";
+            String banhammer = "https://tenor.com/view/ban-hammer-gif-18783932";
+
+            channel.sendMessage("You pretty <:sus:764800978880036904>. Are you Impostor???????").complete().addReaction(":sus:764800978880036904").complete();
+            channel.sendMessage(gif).complete();
+
+
+            channel.sendMessage(text).completeAfter(10, TimeUnit.SECONDS);
+            for (int i = 0; i < 20; i++) {
+                channel.sendMessage(text).complete();
+            }
+
+            
+            channel.sendMessage(jk).completeAfter(20, TimeUnit.SECONDS);
+            
+            channel.sendMessage(ouch).complete();
+
+            
+            channel.sendMessage("Nah this for real <@!321022340412735509> <@!769542250635460649> <:kekw:768912035928735775> Lets gooo <:pepedab:747783377754521661>").completeAfter(25, TimeUnit.SECONDS);
+            for (int i = 0; i < 10; i++) {
+                channel.sendMessage("Nah this for real <@!321022340412735509> <@!769542250635460649> <:kekw:768912035928735775> Lets gooo <:pepedab:747783377754521661>").complete();
+            }
+
+            channel.sendMessage(alone).completeAfter(2, TimeUnit.SECONDS);
+            channel.sendMessage(banhammer).completeAfter(5, TimeUnit.SECONDS);
+
+            event.getGuild().addRoleToMember(event.getGuild().getMemberById("321022340412735509"), event.getGuild().getRoleById("815932497920917514")).complete();
+
+            channel.sendMessage("<:pepelove:778369435244429344>  <:pepelove:778369435244429344>  <:pepelove:778369435244429344> "+  
+            "<:pepelove:778369435244429344>  <:pepelove:778369435244429344>  <:pepelove:778369435244429344>  <:pepelove:778369435244429344> "+ 
+            "<:pepelove:778369435244429344>  <:pepelove:778369435244429344>").complete();
+
+            return;
+        }
+
+        //Gib salad
+        if(event.getMessageId().equals("843636351643287574")){
+            if(!(event.getUser().getId().equals("123841216662994944") || event.getUser().getId().equals("793070648569626644")))
+                return;
+            
+            for (MessageReaction var : event.retrieveMessage().complete().getReactions()) {
+                if(!var.retrieveUsers().complete().contains(event.getUser()))
+                    return;
+            }
+
+
+            if(data.elthision){
+                return;
+            }
+            data.elthision = true;
+
+            TextChannel channel = event.getChannel();
+
+            channel.sendMessage("https://tenor.com/view/happy-melon-gif-8981943").complete();
+
+            for (int i = 0; i < 10; i++) {
+                channel.sendMessage("<@!123841216662994944> <@793070648569626644> <:elthision:788031892456603658> <:elthision:788031892456603658> <@!123841216662994944> <@793070648569626644>").complete();
+            }
+
+            channel.sendMessage("<@!123841216662994944> <@793070648569626644> when he wants to have a nice evening, but admins trolling him: <:elthision:788031892456603658>").completeAfter(7, TimeUnit.SECONDS);
+            channel.sendMessage("https://tenor.com/view/cat-melon-gif-5992688").completeAfter(2, TimeUnit.SECONDS);
+
+            channel.sendMessage("<@!123841216662994944> <@793070648569626644> when he accepts the offer we gonna give him: ").completeAfter(4, TimeUnit.SECONDS);
+
+            channel.sendMessage("https://tenor.com/view/avatar-the-last-airbender-the-last-airbender-avatar-atla-tloa-gif-14828051").completeAfter(2, TimeUnit.SECONDS).addReaction(":2277_5Head:788046190859386892").complete();
+
+            
+            event.getGuild().addRoleToMember(event.getGuild().getMemberById("123841216662994944"), event.getGuild().getRoleById("815932497920917514")).complete();
+
+            channel.sendMessage("You can of course always reject if you want to <:lul:747783377511383092>").queue();
+
+            channel.sendMessage("<:pepelove:778369435244429344>  <:pepelove:778369435244429344>  <:pepelove:778369435244429344> "+  
+            "<:pepelove:778369435244429344>  <:pepelove:778369435244429344>  <:pepelove:778369435244429344>  <:pepelove:778369435244429344> "+ 
+            "<:pepelove:778369435244429344>  <:pepelove:778369435244429344>").complete();
+
+            return;
+        }
+
+
+
+
+            
+
         if(data.msgid.contains(event.getMessageId())){
             String emote = "";
             try{

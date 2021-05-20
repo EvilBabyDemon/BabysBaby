@@ -1,10 +1,10 @@
-package BabyBaby.Command.commands.Public;
+package BabyBaby.data;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
-import BabyBaby.data.data;
+import BabyBaby.Command.commands.Public.MuteCMD;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
