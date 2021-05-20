@@ -175,11 +175,12 @@ public class RemoveRoles implements PublicCMD{
                 role += var.getId() + " ";
             }
 
-            stmt = c.prepareStatement("INSERT INTO ROLEREMOVAL (USERID, GUILDID, MUTETIME, ROLES) VALUES (?, ?, ?, ?);");
+            stmt = c.prepareStatement("INSERT INTO ROLEREMOVAL (USERID, GUILDID, MUTETIME, ROLES, ADMINMUTE) VALUES (?, ?, ?, ?, ?);");
             stmt.setString(1, ctx.getAuthor().getId());
             stmt.setString(2, ctx.getGuild().getId());
             stmt.setString(3, timesql + "");
             stmt.setString(4, role);
+            stmt.setString(5, "false");
             
             stmt.executeUpdate();
 
@@ -213,7 +214,7 @@ public class RemoveRoles implements PublicCMD{
         try {
             ctx.getAuthor().openPrivateChannel().complete().sendMessage("You got blinded for ~" + time + " " + sunit + ". Either wait out the timer or write me here \n+" + new UnblindCMD().getName()).queue();
         } catch (Exception e) {
-            System.out.println("Author did allow private message.");
+            System.out.println("Author didn't allow private message.");
         }
         
 

@@ -6,10 +6,13 @@ import java.sql.PreparedStatement;
 import java.util.LinkedList;
 import java.util.concurrent.ScheduledExecutorService;
 
+import BabyBaby.Command.commands.Admin.AdminMuteBlindCMD;
 import BabyBaby.Command.commands.Public.RemoveRoles;
 import BabyBaby.Command.commands.Public.RemoveRolesForce;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
@@ -53,8 +56,24 @@ public class GetRolesBack implements Runnable {
         RemoveRolesForce.force.remove(RemoveRoles.blindexe.get(blindex));
 
         RemoveRoles.blindexe.remove(blindex);
-        blindex.shutdownNow();
         RemoveRoles.blind.remove(mem);
+
+
+        if(AdminMuteBlindCMD.userBlinded.contains(mem)){
+
+            MessageChannel log = guild.getTextChannelById(data.modlog);
+            
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setAuthor(guild.getSelfMember().getUser().getAsTag() + " (" + guild.getSelfMember().getId() + ")", guild.getSelfMember().getUser().getAvatarUrl(), guild.getSelfMember().getUser().getAvatarUrl());
+            eb.setColor(0);
+            eb.setThumbnail(mem.getUser().getAvatarUrl());
+
+            eb.setDescription(":warning: **Muteblind** " + " stopped for " + mem.getAsMention() + "(" + mem.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + "Time ran out");
+
+            log.sendMessage(eb.build()).queue();
+
+            AdminMuteBlindCMD.userBlinded.remove(mem);
+        }
 
 
 

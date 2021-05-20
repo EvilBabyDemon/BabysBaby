@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.Command.commands.Admin.AdminMuteBlindCMD;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.entities.Guild;
@@ -73,6 +74,9 @@ public class UnblindCMD implements PublicCMD {
         }
         */
 
+        
+
+
         LinkedList<GetRolesBack> vars = new LinkedList<>();        
 
         String authorID = author.getId();
@@ -90,7 +94,7 @@ public class UnblindCMD implements PublicCMD {
                     });
                     return;
                 case 1:
-                blindclass = vars.get(0);
+                    blindclass = vars.get(0);
                     break;
                 default:
                     author.openPrivateChannel().queue(privchannel -> {
@@ -111,6 +115,12 @@ public class UnblindCMD implements PublicCMD {
             }
         }
         
+        Member mem = blindclass.guild.getMember(blindclass.blind);
+        if(AdminMuteBlindCMD.userBlinded.contains(mem)){
+            author.openPrivateChannel().complete().sendMessage("You got blinded by admins. You can't unblind yourself.").complete();
+            return;
+        }
+
         if(RemoveRolesForce.force.contains(blindclass)){
             author.openPrivateChannel().queue(privchannel -> {
                 privchannel.sendMessage("You did a Force Blind. That are the consequences to your actions. Do not contact the admins! If it is an emergency contact Lukas, same if it is pobably a Bug.").queue();

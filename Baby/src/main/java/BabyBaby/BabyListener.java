@@ -371,6 +371,11 @@ public class BabyListener extends ListenerAdapter {
                         blindex.schedule(blindclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
                         RemoveRoles.blind.put(called.getMember(blindUser), blindex);
                         RemoveRoles.blindexe.put(blindex, blindclass);
+                        
+                        if(rs.getBoolean("ADMINMUTE")){
+                            AdminMuteBlindCMD.userBlinded.add(called.getMember(blindUser));
+                        }
+
                         } catch (Exception e){
                             e.printStackTrace();
                             System.out.println("Probably a User that left the server while being blinded.");
@@ -410,16 +415,13 @@ public class BabyListener extends ListenerAdapter {
             if(!removed.contains(event.getGuild().getRoleById(data.blindID))){
                 return;
             }
-            
-            GetRolesBack blindclass = RemoveRoles.blindexe.get(RemoveRoles.blind.get(event.getMember()));
-
-            if(blindclass==null){
-                System.out.println("Not in cache");
+            if(!RemoveRoles.blind.containsKey(event.getMember())){
                 return;
             }
+            
 
-            Guild blindServ = blindclass.guild;
-            Member blinded = blindServ.getMember(blindclass.blind);
+            Guild blindServ = event.getGuild();
+            Member blinded = event.getMember();
             String roles = "";
 
             Connection c = null;
@@ -453,6 +455,9 @@ public class BabyListener extends ListenerAdapter {
                 }
             }
 
+
+            
+
             try {
                 delRole.add(blindServ.getRoleById("844136589163626526"));
             } catch (Exception e) {
@@ -460,13 +465,17 @@ public class BabyListener extends ListenerAdapter {
             }
 
             blindServ.modifyMemberRoles(blinded, addRole, delRole).complete();
+    
             
 
-            ScheduledExecutorService blind = RemoveRoles.blind.get(blinded);
-            RemoveRolesForce.force.remove(RemoveRoles.blindexe.get(blind));
-            RemoveRoles.blindexe.remove(blind);
-            blind.shutdownNow();
-            RemoveRoles.blind.remove(blinded);
+            if(RemoveRoles.blind.get(event.getMember())!=null){
+                ScheduledExecutorService blind = RemoveRoles.blind.get(blinded);
+                RemoveRolesForce.force.remove(RemoveRoles.blindexe.get(blind));
+                RemoveRoles.blindexe.remove(blind);
+                blind.shutdownNow();
+                RemoveRoles.blind.remove(blinded);
+            }
+            RemoveRoles.blind.remove(event.getMember());
 
         
             try {
@@ -482,6 +491,21 @@ public class BabyListener extends ListenerAdapter {
             } catch ( Exception e ) {
                 e.printStackTrace(); 
                 return;
+            }
+
+            if(AdminMuteBlindCMD.userBlinded.contains(blinded)){
+                MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+        
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor("Unmute through Role removal.");
+                
+                eb.setColor(0);
+                eb.setThumbnail(blinded.getUser().getAvatarUrl());
+
+                eb.setDescription(":loud_sound: **Unblinded ** " + blinded.getAsMention() + "(" + blinded.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** Manually unblinded with Role Removal.");
+
+                log.sendMessage(eb.build()).queue();
+                AdminMuteBlindCMD.userBlinded.remove(blinded);
             }
             
 

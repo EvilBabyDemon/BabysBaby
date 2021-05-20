@@ -61,7 +61,7 @@ public class MutePersonCMD implements AdminCMD {
         person = person.replace("@", "");
         boolean inList = false;
         try {
-            inList  = MutePersonCMD.userMuted.containsKey(ctx.getGuild().getMemberById(person));
+            inList  = userMuted.containsKey(ctx.getGuild().getMemberById(person));
         } catch (Exception e) {
             ctx.getChannel().sendMessage("This is not a snowflake ID or this user is not on this server.").queue();
             return;
@@ -98,9 +98,15 @@ public class MutePersonCMD implements AdminCMD {
         Role muteR = ctx.getGuild().getRoleById(data.stfuID);
 
         if(inList){
+
+            ScheduledExecutorService temp = userMuted.get(ctx.getGuild().getMemberById(person));
+            try {
+                temp.shutdown();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             userMuted.remove(warned);
         }
-
         ctx.getGuild().addRoleToMember(warned, muteR).queue();
 
         
