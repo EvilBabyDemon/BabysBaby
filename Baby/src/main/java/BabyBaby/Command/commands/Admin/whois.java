@@ -92,25 +92,25 @@ public class whois implements AdminCMD{
 			OffsetDateTime created = stalking.getUser().getTimeCreated();
 			OffsetDateTime now = OffsetDateTime.now();
 			int day = now.getDayOfYear() - created.getDayOfYear();
-			int year =  now.getYear() - created.getYear();
+			int year =  now.getYear() - created.getYear() + ((now.getDayOfYear()<created.getDayOfYear())?-1:0);
 			String actualtime = (year >0) ?  (year + Math.round(day/365.0)) + " years ago": day + " days ago";
 			
 			String addchecks = "Created as: **a " + ((stalking.getUser().isBot()) ? "bot" : "user") + " account** \n Created at: **" + stalking.getUser().getTimeCreated().format(createtime) + "** `(" + actualtime + ")`"; 
-
+			
+			
 			
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("@" + stalking.getUser().getAsTag() + " (" + stalking.getId() + ")");
 			eb.setColor(highest.getColor());
 			
 			eb.addField("Nickname", "`" + ((stalking.getNickname() != null) ? stalking.getNickname() : stalking.getEffectiveName()) + "` " + stalking.getAsMention(), false);
-			eb.addField("Joined at", "`" + stalking.getTimeJoined().format(jointime) + "`", false);
+			eb.addField("Joined at", "`" + stalking.getTimeJoined().toLocalDateTime().format(jointime) + "`", false);
 			eb.addField("Highest Role", highest.getAsMention(), true);
 			eb.addField("Hoisted Role",(hoisted != null) ? hoisted.getAsMention(): "`Unhoisted`", true);
 			eb.addField("Roles obtained (" + (1+allrolesList.size()) + ")" , rolementions, false);
 			eb.addField("Additional Checks", addchecks, false);
 			// eb.addBlankField(false);
 			eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
-			// eb.setImage("https://github.com/zekroTJA/DiscordBot/blob/master/.websrc/logo%20-%20title.png%22);
 			eb.setThumbnail(stalking.getUser().getAvatarUrl());
 
 			channel.sendMessage(eb.build()).queue();

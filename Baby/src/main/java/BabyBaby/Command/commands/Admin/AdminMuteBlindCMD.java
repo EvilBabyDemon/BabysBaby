@@ -143,12 +143,6 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
         ctx.getChannel().sendMessage(eb.build()).queue();
 
-
-        
-
-
-        
-        
         
         long timesql = 0;
         
@@ -173,11 +167,9 @@ public class AdminMuteBlindCMD implements AdminCMD{
                 stmt.setString(1, blinded.getId());
                 stmt.setString(2, ctx.getGuild().getId());
                 
-                
                 ResultSet rs = stmt.executeQuery();
                 
                 role = rs.getString("ROLES");
-                
                 timeold = rs.getInt("MUTETIME");
 
                 stmt.close();
@@ -200,10 +192,11 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
 
             if(time != 0){
+                time = time*60;
                 GetRolesBack scheduledclass = new GetRolesBack(blinded.getUser(), called, role);
-                timesql = (System.currentTimeMillis() + time*60*1000);
+                timesql = (System.currentTimeMillis() + time*1000);
                 ScheduledExecutorService blind = Executors.newScheduledThreadPool(1);
-                blind.schedule(scheduledclass, time*60 , TimeUnit.SECONDS);
+                blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
     
                 blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
                 RemoveRoles.blind.put(blinded, blind);
@@ -218,7 +211,7 @@ public class AdminMuteBlindCMD implements AdminCMD{
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(data.db);
     
-                stmt = c.prepareStatement("INSERT INTO ROLEREMOVAL (MUTETIME) VALUES (?) WHERE USERID=? AND GUILDID=?;");
+                stmt = c.prepareStatement("REPLACE INTO ROLEREMOVAL (MUTETIME) VALUES (?) WHERE USERID=? AND GUILDID=?;");
                 stmt.setString(2, blinded.getId());
                 stmt.setString(3, ctx.getGuild().getId());
                 stmt.setString(1, timesql + "");
@@ -291,10 +284,6 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
         
 
-        
-        
-        
-
         LinkedList<Role> tmp = new LinkedList<>();
         try {
             tmp.add(ctx.getGuild().getRoleById("844136589163626526"));
@@ -302,7 +291,7 @@ public class AdminMuteBlindCMD implements AdminCMD{
            ctx.getChannel().sendMessage("Role Blind doesnt exist anymore. This could be a serious issue.").queue();
         }
         
-        called.modifyMemberRoles(ctx.getMember(), tmp, permrole).completeAfter(10, TimeUnit.SECONDS);
+        called.modifyMemberRoles(ctx.getMember(), tmp, permrole).complete();
 
     }
 

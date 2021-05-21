@@ -24,11 +24,11 @@ public class TurnCMDsOff implements OwnerCMD{
             OwnerCMD switsch = tmp.searchOwnerCommand(ctx.getArgs().get(0));
             String output = "Couldn't find the Command.";
             if(switsch != null){
-                if(CmdHandler.offCMD.contains(switsch)){
-                    CmdHandler.offCMD.remove(switsch);
+                if(CmdHandler.offCMD.contains(switsch.getName())){
+                    CmdHandler.offCMD.remove(switsch.getName());
                     output = "Turned the cmd on.";
                 } else {
-                    CmdHandler.offCMD.add(switsch);
+                    CmdHandler.offCMD.add(switsch.getName());
                     output = "Turned the cmd off.";
                 }
             }

@@ -201,7 +201,7 @@ public class RemoveRolesForce implements PublicCMD{
         RemoveRoles.blind.put(ctx.getMember(), mute);
         RemoveRoles.blindexe.put(mute, scheduledclass);
         force.add(scheduledclass);
-        channel.sendMessage("You got blinded for ~" + time + " " + sunit + ". **Wait out the timer!!!** And hopefully you are productive!").queue();
+        channel.sendMessage(ctx.getMember().getAsMention() + " got blinded for ~" + time + " " + sunit + ". **Wait out the timer!!!** And hopefully you are productive!").queue();
 
         try {
             ctx.getAuthor().openPrivateChannel().complete().sendMessage("You got blinded for ~" + time + " " + sunit + ". **Wait out the timer!!!** And hopefully you are productive!").queue();

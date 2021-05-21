@@ -201,7 +201,7 @@ public class RemoveRoles implements PublicCMD{
         
         blind.put(ctx.getMember(), mute);
         blindexe.put(mute, scheduledclass);
-        channel.sendMessage("You got blinded for ~" + time + " " + sunit + ". Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnblindCMD().getName() + "\"").queue();
+        channel.sendMessage(ctx.getMember().getAsMention() + " got blinded for ~" + time + " " + sunit + ". Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnblindCMD().getName() + "\"").queue();
 
         LinkedList<Role> tmp = new LinkedList<>();
         try {

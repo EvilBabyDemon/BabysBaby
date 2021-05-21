@@ -375,7 +375,7 @@ public class BabyListener extends ListenerAdapter {
                         if(rs.getBoolean("ADMINMUTE")){
                             AdminMuteBlindCMD.userBlinded.add(called.getMember(blindUser));
                         }
-
+                        
                         } catch (Exception e){
                             e.printStackTrace();
                             System.out.println("Probably a User that left the server while being blinded.");
@@ -407,7 +407,7 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
-        if(!event.getGuild().getId().equals(data.ethid))
+        if(!event.getGuild().getId().equals(data.ethid) || event.getUser().isBot())
             return;
         
         List<Role> removed = event.getRoles();
@@ -460,11 +460,12 @@ public class BabyListener extends ListenerAdapter {
 
             try {
                 delRole.add(blindServ.getRoleById("844136589163626526"));
+                blindServ.modifyMemberRoles(blinded, addRole, delRole).complete();
             } catch (Exception e) {
                 System.out.println("Role Blind doesnt exist anymore. This could be a serious issue.");
+                blindServ.modifyMemberRoles(blinded, addRole, null).complete();
             }
 
-            blindServ.modifyMemberRoles(blinded, addRole, delRole).complete();
     
             
 
@@ -473,9 +474,8 @@ public class BabyListener extends ListenerAdapter {
                 RemoveRolesForce.force.remove(RemoveRoles.blindexe.get(blind));
                 RemoveRoles.blindexe.remove(blind);
                 blind.shutdownNow();
-                RemoveRoles.blind.remove(blinded);
             }
-            RemoveRoles.blind.remove(event.getMember());
+            RemoveRoles.blind.remove(blinded);
 
         
             try {
@@ -503,7 +503,7 @@ public class BabyListener extends ListenerAdapter {
                 eb.setThumbnail(blinded.getUser().getAvatarUrl());
 
                 eb.setDescription(":loud_sound: **Unblinded ** " + blinded.getAsMention() + "(" + blinded.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** Manually unblinded with Role Removal.");
-
+                
                 log.sendMessage(eb.build()).queue();
                 AdminMuteBlindCMD.userBlinded.remove(blinded);
             }

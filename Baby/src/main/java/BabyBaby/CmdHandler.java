@@ -24,7 +24,7 @@ public class CmdHandler {
     private final List<AdminCMD> adminCommands = new ArrayList<>();
     private final List<OwnerCMD> ownerCommands = new ArrayList<>();
 
-    public static HashSet<OwnerCMD> offCMD = new HashSet<>();
+    public static HashSet<String> offCMD = new HashSet<>();
 
     //private final List<Command> allCommands = new ArrayList<>();
 
@@ -105,6 +105,7 @@ public class CmdHandler {
         addOwnerCommand(new BubbleSortCMD());
         addOwnerCommand(new PlaceTravelingSalesmanColour());
         addOwnerCommand(new RoleChangeCMD());
+        addOwnerCommand(new TurnCMDsOff());
         
         
         
@@ -170,7 +171,7 @@ public class CmdHandler {
         switch (permissionLevel) {
             case 0:
                 PublicCMD publicCommand = searchPublicCommand(cmdName);
-                if (publicCommand != null && !offCMD.contains(publicCommand)) {
+                if (publicCommand != null && !offCMD.contains(publicCommand.getName())) {
                     Thread cmd = new Thread(new Runnable() {
                         @Override
                         public void run() {  
@@ -188,10 +189,10 @@ public class CmdHandler {
                 break;
             case 1:
                 AdminCMD adminCommand = searchAdminCommand(cmdName);
-                if (adminCommand != null && !offCMD.contains(adminCommand)) {
+                if (adminCommand != null && !offCMD.contains(adminCommand.getName())) {
                     Thread cmd = new Thread(new Runnable() {
                         @Override
-                        public void run() {  
+                        public void run() {
                             try {
                                 adminCommand.handleAdmin(ctx);
                             } catch(Exception e){
@@ -206,7 +207,7 @@ public class CmdHandler {
                 break;
             case 2:
                 OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
-                if (ownerCommand != null && !offCMD.contains(ownerCommand)) {
+                if (ownerCommand != null && !offCMD.contains(ownerCommand.getName())) {
                     Thread cmd = new Thread(new Runnable() {
                         @Override
                         public void run() {
