@@ -49,7 +49,7 @@ public class GetWarningsFromUser implements AdminCMD{
             Member warned = ctx.getGuild().getMemberById(person);
             eb.setAuthor("Warnings from " + warned.getEffectiveName() + " (" + warned.getUser().getAsTag() + ")", warned.getUser().getAvatarUrl(), warned.getUser().getAvatarUrl());
         } catch (Exception e){
-            ctx.getChannel().sendMessage("This is not a Member on this server.").queue();
+            eb.setAuthor("Warnings from " + person);
             return;
         }
         

@@ -144,15 +144,15 @@ public class RemoveRoles implements PublicCMD{
 
 
         Role highestbot = null;
-        for (Role var : ctx.getSelfMember().getRoles()) {
-            highestbot = var;
-            break;
-        }
+        
+        highestbot = ctx.getSelfMember().getRoles().get(0);
+        
+        
 
         for (Role var : begone) {
             for (GuildChannel var2 : gchan) {
                 if(var.hasAccess(var2)){
-                    if(var.getPosition()>highestbot.getPosition()){
+                    if(var.getPosition()>=highestbot.getPosition()){
                         channel.sendMessage("Sry you have a higher Role than this bot with viewing permissions. Can't take your roles away").queue();
                         return;
                     }

@@ -10,10 +10,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +55,7 @@ public class CmdHandler {
         addPublicCommand(new UnblindCMD());
         addPublicCommand(new FlashedCMD());
         addPublicCommand(new RemoveRolesForce());
-
+        addPublicCommand(new TillBlindCMD());
 
 
 
@@ -240,11 +237,15 @@ public class CmdHandler {
         String cmdName = split[0].toLowerCase();
         
         UnmuteMeCMD cmd = new UnmuteMeCMD();
-        UnblindCMD cmd2 = new UnblindCMD();
+        UnblindCMD cmd1 = new UnblindCMD();
+        TillBlindCMD cmd2 = new TillBlindCMD();
+
         if(cmdName.equals(cmd.getName())){
             cmd.privhandle(event.getAuthor(), args);
+        } else if(cmdName.equals(cmd1.getName())){
+            cmd1.privhandle(event.getAuthor(), args);
         } else if(cmdName.equals(cmd2.getName())){
-            cmd2.privhandle(event.getAuthor(), args);
+            cmd2.privhandle(event.getAuthor(), args, event.getJDA());
         }
         
     }

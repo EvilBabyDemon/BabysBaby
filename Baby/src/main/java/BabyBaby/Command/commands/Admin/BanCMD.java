@@ -6,6 +6,7 @@ import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -32,6 +33,12 @@ public class BanCMD implements AdminCMD{
         LinkedList<String> cmds = new LinkedList<>();
         MessageChannel channel = ctx.getChannel();
 
+        
+        if(!ctx.getMember().hasPermission(Permission.BAN_MEMBERS)){
+            ctx.getChannel().sendMessage("Missing Permissions.").complete();
+            return;
+        }
+
         for (String var : ctx.getArgs()) {
             cmds.add(var);
         }
@@ -48,12 +55,25 @@ public class BanCMD implements AdminCMD{
         person = person.replace("!", "");
         person = person.replace("@", "");
 
-        Member bad = ctx.getGuild().getMemberById(person);
+        Member bad;
+        try {
+            bad = ctx.getGuild().getMemberById(person);
+        } catch (Exception e) {
+            ctx.getChannel().sendMessage("This is no Member").complete();
+            return;
+        }
+        
+
+        if(bad.getRoles().get(0).getPosition() >= ctx.getMember().getRoles().get(0).getPosition()){
+            ctx.getChannel().sendMessage("Can't ban someone with a higher or same role.").complete();
+            return;
+        }
+                
 
         if(reason==""){
-            bad.kick().complete();
+            bad.ban(0).complete();
         } else {
-            bad.kick(reason).complete();
+            bad.ban(0, reason).complete();
         }
 
         EmbedBuilder eb = new EmbedBuilder();

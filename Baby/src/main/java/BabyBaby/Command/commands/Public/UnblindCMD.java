@@ -196,7 +196,9 @@ public class UnblindCMD implements PublicCMD {
         }
         
         try {
-            author.openPrivateChannel().complete().sendMessage("You shall see light again! **I advise to press CTRL + R to reload Discord as you may not see some messages else!**").queue();
+            author.openPrivateChannel().complete().sendMessage("You shall see light again! \n "+ 
+            "If you were only shortly blinded: **I advise to press CTRL + R to reload Discord as you may not see some messages else!**\n "+
+            " If you were blinded for a long time: **Right click on the server and click \"Mark read All\" or Shift + ESC**").queue();
         } catch (Exception e) {
             System.out.println("Author didn't allow private message.");
         }

@@ -133,7 +133,7 @@ public class RemoveRolesForce implements PublicCMD{
             channel.sendMessage("Use numbers above 29 seconds pls! (As it takes a while to remove and add roles.)").queue();
             return;
         } else if(rounder > 43200){
-            ctx.getChannel().sendMessage("Your value has to be below 12 hours (43000 seconds).").queue();
+            ctx.getChannel().sendMessage("Your value has to be below 12 hours (43200 seconds).").queue();
             return;
         }
 
@@ -151,7 +151,7 @@ public class RemoveRolesForce implements PublicCMD{
         for (Role var : begone) {
             for (GuildChannel var2 : gchan) {
                 if(var.hasAccess(var2)){
-                    if(var.getPosition()>highestbot.getPosition()){
+                    if(var.getPosition()>=highestbot.getPosition()){
                         channel.sendMessage("Sry you have a higher Role than this bot with viewing permissions. Can't take your roles away").queue();
                         return;
                     }
