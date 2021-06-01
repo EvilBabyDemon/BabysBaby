@@ -37,7 +37,7 @@ public class GroupBlindEx implements Runnable {
 
     public void run() {	
         ArrayList<String> group = BlindGroupCMD.groups.get(id);
-
+        GroupBlindEx blindEx = new GroupBlindEx(id, guild, !switcher, breaktime, learntime, counter);
         if(group.size()==0){
             counter++;
         } else {
@@ -126,19 +126,19 @@ public class GroupBlindEx implements Runnable {
                         System.out.println("Author didn't allow private message.");
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     group.remove(i--);
                 }
             }
 
-            ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
-            GroupBlindEx blindEx = new GroupBlindEx(id, guild, !switcher, breaktime, learntime, counter);
+            ScheduledExecutorService exec = Executors.newScheduledThreadPool(100);
             exec.schedule(blindEx, learntime, TimeUnit.MINUTES);
 
             return;
         } 
         
         
-        for (int i = 0; i < group.size(); i++) {
+        main2: for (int i = 0; i < group.size(); i++) {
             try {
                 Member blinded = guild.getMemberById(group.get(0));
 
@@ -160,8 +160,9 @@ public class GroupBlindEx implements Runnable {
                     stmt.close();
                     c.close();
                 } catch ( Exception e ) {
-                    e.printStackTrace(); 
-                    return;
+                    e.printStackTrace();
+                    group.remove(i--);
+                    continue main2;
                 }
 
                 LinkedList<Role> addRole = new LinkedList<>();
@@ -199,8 +200,9 @@ public class GroupBlindEx implements Runnable {
                     stmt.close();
                     c.close();
                 } catch ( Exception e ) {
-                    e.printStackTrace(); 
-                    return;
+                    e.printStackTrace();
+                    group.remove(i--);
+                    continue main2;
                 }
                 
                 try {
@@ -211,13 +213,12 @@ public class GroupBlindEx implements Runnable {
                     System.out.println("Author didn't allow private message.");
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 group.remove(i--);
             }
         }
 
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
-        GroupBlindEx blindEx = new GroupBlindEx(id, guild, !switcher, breaktime, learntime, counter);
-        
         exec.schedule(blindEx, breaktime, TimeUnit.MINUTES);
         
     }

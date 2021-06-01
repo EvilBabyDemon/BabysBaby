@@ -102,7 +102,17 @@ public class BlindGroupCMD implements PublicCMD {
                 ctx.getMessage().addReaction(data.check).queue();
                 break;
             default:
-                ctx.getMessage().addReaction(data.xmark).queue();
+                String tmp = "";
+
+                for (Integer var : groups.keySet()) {
+                    tmp += "" + var;
+                    for (String var2 : groups.get(var)) {
+                        tmp += " " + var2; 
+                    }
+                    tmp += "\n";
+                }
+                ctx.getChannel().sendMessage((tmp == "") ? "no content" : tmp).queue();    
+                
                 break;
         }
         
@@ -139,7 +149,7 @@ public class BlindGroupCMD implements PublicCMD {
         
         GroupBlindEx creat = new GroupBlindEx(id, ctx.getGuild(), true, breaks, blind, 0);
         
-        ScheduledExecutorService startgroup = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService startgroup = Executors.newScheduledThreadPool(100);
         ctx.getChannel().sendMessage("You joined Group : " + id + " The breaktime is " + breaks + " the learning time is " + blind + " minutes long. You will get blinded in 5 minutes from now!").complete();
         startgroup.schedule(creat, 5, TimeUnit.SECONDS);
     }
