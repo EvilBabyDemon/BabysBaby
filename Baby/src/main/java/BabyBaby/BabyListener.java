@@ -466,16 +466,26 @@ public class BabyListener extends ListenerAdapter {
                 blindServ.modifyMemberRoles(blinded, addRole, null).complete();
             }
 
-    
             
-
-            if(RemoveRoles.blind.get(event.getMember())!=null){
+            
+            
+            if(RemoveRoles.blind.get(blinded)!=null){
                 ScheduledExecutorService blind = RemoveRoles.blind.get(blinded);
                 RemoveRolesForce.force.remove(RemoveRoles.blindexe.get(blind));
                 RemoveRoles.blindexe.remove(blind);
                 blind.shutdownNow();
             }
             RemoveRoles.blind.remove(blinded);
+
+            //remove from a group
+            String id = event.getMember().getId();
+            for (int ids : BlindGroupCMD.groups.keySet()) {
+                ArrayList<String> var = BlindGroupCMD.groups.get(ids);
+                if(var.contains(id)){
+                    var.remove(id);
+                    break;
+                }
+            }
 
         
             try {

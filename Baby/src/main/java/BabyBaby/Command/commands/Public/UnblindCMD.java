@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
@@ -73,64 +74,83 @@ public class UnblindCMD implements PublicCMD {
             return;
         }
         */
-
         
-
-
-        LinkedList<GetRolesBack> vars = new LinkedList<>();        
-
         String authorID = author.getId();
-        for (Member var : RemoveRoles.blind.keySet()) {
-            if(var.getId().equals(authorID)){
-                vars.add(RemoveRoles.blindexe.get(RemoveRoles.blind.get(var)));
+        boolean group = false;
+        //remove from a group
+        for (int ids : BlindGroupCMD.groups.keySet()) {
+            ArrayList<String> var = BlindGroupCMD.groups.get(ids);
+            if(var.contains(authorID)){
+                var.remove(authorID);
+                group = true;
+                break;
             }
         }
-        GetRolesBack blindclass = null;
-        if(cmds.size() == 0){
-            switch(vars.size()){
-                case 0:
-                    author.openPrivateChannel().queue(privchannel -> {
-                        privchannel.sendMessage("You were never blinded. Or at least not by this bot. If you were pls report this problem to Lukas.").queue();
-                    });
-                    return;
-                case 1:
-                    blindclass = vars.get(0);
-                    break;
-                default:
-                    author.openPrivateChannel().queue(privchannel -> {
-                        privchannel.sendMessage("Pls use +" + getName() + " <key> as there are multiple servers you are blinded on. These are the keys:").queue();
-                        for (GetRolesBack var : vars) {
-                            privchannel.sendMessage("Key: " + var.guild.getId() + " " + var.guild.getName()).queue();
-                        }
-                        //TO DO FIX FOR multiple server
-                    });
-                    return;
-            }
-        } else {
-            for (GetRolesBack var : vars) {
-                if(var.guild.getId().equals(cmds.get(0))){
-                    blindclass = var;
-                    break;
+        
+
+        if(!group){
+            LinkedList<GetRolesBack> vars = new LinkedList<>();        
+            
+            for (Member var : RemoveRoles.blind.keySet()) {
+                if(var.getId().equals(authorID)){
+                    vars.add(RemoveRoles.blindexe.get(RemoveRoles.blind.get(var)));
                 }
             }
-        }
-        
-        Member mem = blindclass.guild.getMember(blindclass.blind);
-        if(AdminMuteBlindCMD.userBlinded.contains(mem)){
-            author.openPrivateChannel().complete().sendMessage("You got blinded by admins. You can't unblind yourself.").complete();
-            return;
-        }
+            GetRolesBack blindclass = null;
+            if(cmds.size() == 0){
+                switch(vars.size()){
+                    case 0:
+                        author.openPrivateChannel().queue(privchannel -> {
+                            privchannel.sendMessage("You were never blinded. Or at least not by this bot. If you were pls report this problem to Lukas.").queue();
+                        });
+                        return;
+                    case 1:
+                        blindclass = vars.get(0);
+                        break;
+                    default:
+                        author.openPrivateChannel().queue(privchannel -> {
+                            privchannel.sendMessage("Pls use +" + getName() + " <key> as there are multiple servers you are blinded on. These are the keys:").queue();
+                            for (GetRolesBack var : vars) {
+                                privchannel.sendMessage("Key: " + var.guild.getId() + " " + var.guild.getName()).queue();
+                            }
+                            //TO DO FIX FOR multiple server
+                        });
+                        return;
+                }
+            } else {
+                for (GetRolesBack var : vars) {
+                    if(var.guild.getId().equals(cmds.get(0))){
+                        blindclass = var;
+                        break;
+                    }
+                }
+            }
+            
 
-        if(RemoveRolesForce.force.contains(blindclass)){
-            author.openPrivateChannel().queue(privchannel -> {
-                privchannel.sendMessage("You did a Force Blind. That are the consequences to your actions. Do not contact the admins! If it is an emergency contact Lukas, same if it is pobably a Bug.").queue();
-            });
-            return;
+            
+
+
+            Member mem = blindclass.guild.getMember(blindclass.blind);
+            if(AdminMuteBlindCMD.userBlinded.contains(mem)){
+                author.openPrivateChannel().complete().sendMessage("You got blinded by admins. You can't unblind yourself.").complete();
+                return;
+            }
+
+            if(RemoveRolesForce.force.contains(blindclass)){
+                author.openPrivateChannel().queue(privchannel -> {
+                    privchannel.sendMessage("You did a Force Blind. That are the consequences to your actions. Do not contact the admins! If it is an emergency contact Lukas, same if it is pobably a Bug.").queue();
+                });
+                return;
+            }
+
+            Guild blindServ = blindclass.guild;
+            Member blinded = blindServ.getMember(blindclass.blind);
+
+            ScheduledExecutorService blind = RemoveRoles.blind.get(blinded);
+            RemoveRoles.blindexe.remove(blind);
+            blind.shutdownNow();
+            RemoveRoles.blind.remove(blinded);
         }
-
-        Guild blindServ = blindclass.guild;
-        Member blinded = blindServ.getMember(blindclass.blind);
-
 
         String roles = "";
 
@@ -141,8 +161,8 @@ public class UnblindCMD implements PublicCMD {
             c = DriverManager.getConnection(data.db);
             
             stmt = c.prepareStatement("SELECT ROLES FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
-            stmt.setString(1, blinded.getId());
-            stmt.setString(2, blindServ.getId());
+            stmt.setString(1, authorID);
+            stmt.setString(2, data.ethid);
             ResultSet rs = stmt.executeQuery();
 
             roles = rs.getString("ROLES");
@@ -153,6 +173,9 @@ public class UnblindCMD implements PublicCMD {
             e.printStackTrace(); 
             return;
         }
+        
+        Guild blindServ = author.getJDA().getGuildById(data.ethid);
+        Member blinded = blindServ.getMember(author);
 
         LinkedList<Role> addRole = new LinkedList<>();
         LinkedList<Role> delRole = new LinkedList<>();
@@ -173,13 +196,6 @@ public class UnblindCMD implements PublicCMD {
 
         blindServ.modifyMemberRoles(blinded, addRole, delRole).complete();
         
-
-        ScheduledExecutorService blind = RemoveRoles.blind.get(blinded);
-        RemoveRoles.blindexe.remove(blind);
-        blind.shutdownNow();
-        RemoveRoles.blind.remove(blinded);
-
-     
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(data.db);

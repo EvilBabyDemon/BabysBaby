@@ -3,6 +3,7 @@ package BabyBaby.Command.commands.Public;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class RemoveRoles implements PublicCMD{
 
         LinkedList<GuildChannel> gchan = new LinkedList<>();
 
+        //TODO this should be changed with a check if @everyone can see that channel
         for (GuildChannel var : ctx.getGuild().getChannels()) {
             if(!var.getId().equals("769261792491995176") && !var.getId().equals("815881148307210260") && var.getParent() != null){
                 gchan.add(var);
@@ -140,15 +142,9 @@ public class RemoveRoles implements PublicCMD{
         long timesql = (System.currentTimeMillis() + rounder*1000);
 
 
-        
+        Role highestbot = ctx.getSelfMember().getRoles().get(0);
 
-
-        Role highestbot = null;
-        
-        highestbot = ctx.getSelfMember().getRoles().get(0);
-        
-        
-
+        //check if there is a role that is higher than a bot but also can see a channel
         for (Role var : begone) {
             for (GuildChannel var2 : gchan) {
                 if(var.hasAccess(var2)){
@@ -161,6 +157,19 @@ public class RemoveRoles implements PublicCMD{
                 }
             }
         }
+
+        //Check if one is already in a group
+        String id = ctx.getAuthor().getId();
+        for (int ids : BlindGroupCMD.groups.keySet()) {
+            ArrayList<String> var = BlindGroupCMD.groups.get(ids);
+            if(var.contains(id)){
+                ctx.getChannel().sendMessage("You are still in a group. Pls leave that one first.").queue();
+                return;
+            }
+        }
+
+
+        
 
 
         Connection c = null;

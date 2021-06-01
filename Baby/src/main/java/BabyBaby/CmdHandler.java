@@ -56,8 +56,8 @@ public class CmdHandler {
         addPublicCommand(new FlashedCMD());
         addPublicCommand(new RemoveRolesForce());
         addPublicCommand(new TillBlindCMD());
-
-
+        addPublicCommand(new EmoteQueryCMD());
+        addPublicCommand(new BlindGroupCMD());
 
         // adding commands visible to @admin
         addAdminCommand(new addrole());
@@ -74,7 +74,8 @@ public class CmdHandler {
         addAdminCommand(new EditAssignCMD());
         addAdminCommand(new KickCMD());
         addAdminCommand(new BanCMD());
-        addAdminCommand(new AdminMuteBlindCMD());
+        //TODO Fix that cmd
+        //addAdminCommand(new AdminMuteBlindCMD());
 
 
         // adding commands visible to owner

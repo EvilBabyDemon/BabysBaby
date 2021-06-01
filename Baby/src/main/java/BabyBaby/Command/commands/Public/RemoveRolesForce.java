@@ -3,6 +3,7 @@ package BabyBaby.Command.commands.Public;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -158,6 +159,18 @@ public class RemoveRolesForce implements PublicCMD{
                     permrole.add(var);
                     break;
                 }
+            }
+        }
+
+
+
+        //check if already in group
+        String id = ctx.getAuthor().getId();
+        for (int ids : BlindGroupCMD.groups.keySet()) {
+            ArrayList<String> var = BlindGroupCMD.groups.get(ids);
+            if(var.contains(id)){
+                ctx.getChannel().sendMessage("You are still in a group. Pls leave that one first.").queue();
+                return;
             }
         }
 
