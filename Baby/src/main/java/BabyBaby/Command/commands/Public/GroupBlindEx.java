@@ -49,6 +49,7 @@ public class GroupBlindEx implements Runnable {
 
             if(counter > 5){
                 BlindGroupCMD.groups.remove(id);
+                System.out.println("Removed old group" + id);
                 return;
             }
 
@@ -106,6 +107,7 @@ public class GroupBlindEx implements Runnable {
                         c.close();
                     } catch ( Exception e ) {
                         System.out.println(e.getClass().getName() + ": " + e.getMessage());
+                        group.remove(i--);
                         continue main;
                     }
 
@@ -133,6 +135,8 @@ public class GroupBlindEx implements Runnable {
 
             ScheduledExecutorService exec = Executors.newScheduledThreadPool(100);
             exec.schedule(blindEx, learntime, TimeUnit.MINUTES);
+
+            BlindGroupCMD.groups.put(id, group);
 
             return;
         } 
@@ -218,7 +222,8 @@ public class GroupBlindEx implements Runnable {
             }
         }
 
-        ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
+        BlindGroupCMD.groups.put(id, group);
+        ScheduledExecutorService exec = Executors.newScheduledThreadPool(100);
         exec.schedule(blindEx, breaktime, TimeUnit.MINUTES);
         
     }

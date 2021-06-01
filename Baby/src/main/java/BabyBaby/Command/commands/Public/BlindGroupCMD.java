@@ -57,7 +57,7 @@ public class BlindGroupCMD implements PublicCMD {
 
         String id = ctx.getAuthor().getId();
 
-        switch (cmd) {
+        sw: switch (cmd) {
             case "create": case "c":
                 createGroup(ctx);
                 ctx.getMessage().addReaction(data.check).queue();
@@ -74,7 +74,7 @@ public class BlindGroupCMD implements PublicCMD {
                     ArrayList<String> var = groups.get(ids);
                     if(var.contains(id)){
                         ctx.getChannel().sendMessage("You are still in a group. Pls leave that one first.").queue();
-                        break;
+                        break sw;
                     }
                 }
                 
