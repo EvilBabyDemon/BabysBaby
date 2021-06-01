@@ -164,6 +164,7 @@ public class GroupBlindEx implements Runnable {
                     stmt.close();
                     c.close();
                 } catch ( Exception e ) {
+                    System.out.println("ERROR");
                     e.printStackTrace();
                     group.remove(i--);
                     continue main2;
@@ -214,8 +215,10 @@ public class GroupBlindEx implements Runnable {
                     "If you were only shortly blinded: **I advise to press CTRL + R to reload Discord as you may not see some messages else!**\n "+
                     "If you were blinded for a long time: **Right click on the server and click \"Mark read All\" or Shift + ESC**").queue();
                 } catch (Exception e) {
-                    System.out.println("Author didn't allow private message.");
+                    System.out.println("Author didn't allow private message."); 
                 }
+                
+                
             } catch (Exception e) {
                 e.printStackTrace();
                 group.remove(i--);
