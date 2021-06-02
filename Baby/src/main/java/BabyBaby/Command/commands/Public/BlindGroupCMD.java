@@ -79,7 +79,7 @@ public class BlindGroupCMD implements PublicCMD {
                 }
                 
                 if(!groups.containsKey(group)){
-                    ctx.getChannel().sendMessage("This is group does not exist!").queue();
+                    ctx.getChannel().sendMessage("This group does not exist!").queue();
                     break;
                 }
                 groups.get(group).add(ctx.getAuthor().getId());    
@@ -135,6 +135,13 @@ public class BlindGroupCMD implements PublicCMD {
             ctx.getChannel().sendMessage("The command is" + getName() + " create <blind time> <break time>").queue();
             return;
         }
+
+        if(breaks<1 || blind < 1){
+            ctx.getChannel().sendMessage("Pls use numbers above 0.").queue();
+            return;
+        }
+
+
         int id = 0;
         for (int i = 0; i < 1000; i++) {
             if(groups.containsKey(i)){

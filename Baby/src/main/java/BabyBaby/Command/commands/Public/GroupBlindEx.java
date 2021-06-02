@@ -140,14 +140,13 @@ public class GroupBlindEx implements Runnable {
 
             return;
         } 
-        
-        
+
         main2: for (int i = 0; i < group.size(); i++) {
             try {
                 Member blinded = guild.getMemberById(group.get(0));
 
                 String roles = "";
-
+                
                 Connection c = null;
                 PreparedStatement stmt = null;
                 try {
@@ -170,6 +169,7 @@ public class GroupBlindEx implements Runnable {
                     continue main2;
                 }
 
+
                 LinkedList<Role> addRole = new LinkedList<>();
                 LinkedList<Role> delRole = new LinkedList<>();
 
@@ -181,19 +181,15 @@ public class GroupBlindEx implements Runnable {
                     }
                 }
 
+
                 try {
                     delRole.add(guild.getRoleById("844136589163626526"));
                 } catch (Exception e) {
                     System.out.println("Role Blind doesnt exist anymore. This could be a serious issue.");
                 }
-
                 guild.modifyMemberRoles(blinded, addRole, delRole).complete();
-                
-
-                ScheduledExecutorService blind = RemoveRoles.blind.get(blinded);
-                RemoveRoles.blindexe.remove(blind);
                 RemoveRoles.blind.remove(blinded);
-            
+                
                 try {
                     Class.forName("org.sqlite.JDBC");
                     c = DriverManager.getConnection(data.db);
@@ -209,7 +205,6 @@ public class GroupBlindEx implements Runnable {
                     group.remove(i--);
                     continue main2;
                 }
-                
                 try {
                     blinded.getUser().openPrivateChannel().complete().sendMessage("Its break time! <:yay:778745219733520426> \nYou shall see light again! \n "+ 
                     "If you were only shortly blinded: **I advise to press CTRL + R to reload Discord as you may not see some messages else!**\n "+
@@ -218,16 +213,13 @@ public class GroupBlindEx implements Runnable {
                     System.out.println("Author didn't allow private message."); 
                 }
                 
-                
             } catch (Exception e) {
                 e.printStackTrace();
                 group.remove(i--);
             }
         }
-
         BlindGroupCMD.groups.put(id, group);
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(100);
         exec.schedule(blindEx, breaktime, TimeUnit.MINUTES);
-        
     }
 }

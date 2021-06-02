@@ -407,16 +407,31 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
-        if(!event.getGuild().getId().equals(data.ethid) || event.getUser().isBot())
+        if(!event.getGuild().getId().equals(data.ethid))
             return;
+        
+        
+
         
         List<Role> removed = event.getRoles();
         if(!removed.contains(event.getGuild().getRoleById(data.stfuID))){
             if(!removed.contains(event.getGuild().getRoleById(data.blindID))){
                 return;
             }
+
+
             if(!RemoveRoles.blind.containsKey(event.getMember())){
                 return;
+            }
+
+            AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
+            for (AuditLogEntry entry : logs) {
+                if(entry.getType().equals(ActionType.MEMBER_ROLE_UPDATE)){
+                    if(entry.getUser().getId().equals(event.getJDA().getSelfUser().getId()))
+                        return;
+                    else
+                        break;
+                }
             }
             
 
