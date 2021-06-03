@@ -7,14 +7,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
-import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.data;
+import me.duncte123.botcommons.messaging.EmbedUtils;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class BlindGroupCMD implements PublicCMD {
     public static HashMap<Integer, ArrayList<String>> groups = new HashMap<>();
+    public static HashMap<Integer, int[]> times = new HashMap<>();
+    public static ScheduledExecutorService skedula = Executors.newScheduledThreadPool(20);
 
     @Override
     public void handleAdmin(CommandContext ctx) {
@@ -50,9 +54,9 @@ public class BlindGroupCMD implements PublicCMD {
         String cmd;
 
         try {
-            cmd = ctx.getArgs().get(0);
+            cmd = ctx.getArgs().get(0).toLowerCase();
         } catch (Exception e) {
-            cmd = "help";
+            cmd = "g";
         }
 
         String id = ctx.getAuthor().getId();
@@ -61,7 +65,7 @@ public class BlindGroupCMD implements PublicCMD {
             case "create": case "c":
                 createGroup(ctx);
                 ctx.getMessage().addReaction(data.check).queue();
-                break;
+            break;
             case "join": case "j":
                 int group;
                 try {
@@ -85,7 +89,7 @@ public class BlindGroupCMD implements PublicCMD {
                 groups.get(group).add(ctx.getAuthor().getId());    
             
                 ctx.getMessage().addReaction(data.check).queue();   
-                break;
+            break;
             case "leave": case "l":
                 for (int ids : groups.keySet()) {
                 ArrayList<String> var = groups.get(ids);
@@ -95,32 +99,59 @@ public class BlindGroupCMD implements PublicCMD {
                     }
                 }
                 ctx.getMessage().addReaction(data.check).queue();
-                break;
-            case "help":
-                String pre = ctx.getMessage().getContentRaw().split(" ")[0];
-                getPublicHelp(pre.substring(0, pre.length() - getName().length()));
-                ctx.getMessage().addReaction(data.check).queue();
-                break;
-            default:
-                String tmp = "";
+            break;
+            case "groups": case "g":            
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setTitle("Groups you can join!", null);
+                eb.setColor(1);
 
                 for (Integer var : groups.keySet()) {
-                    tmp += "" + var;
+                    String tmp = "";
                     for (String var2 : groups.get(var)) {
-                        tmp += " " + var2; 
+                        try {
+                            tmp += ctx.getGuild().getMemberById(var2).getAsMention() + " "; 
+                        } catch (Exception e) {
+                            System.out.println("User left guild while in Group?");
+                        }
                     }
-                    tmp += "\n";
+                    eb.addField("ID: " + var + ", Learntime: " + times.get(var)[0] + ", Breaktime: " + times.get(var)[1], tmp, false);
                 }
-                ctx.getChannel().sendMessage((tmp == "") ? "no content" : tmp).queue();    
-                
-                break;
+
+                String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname() : ctx.getMember().getEffectiveName();
+                eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
+
+                ctx.getChannel().sendMessage(eb.build()).queue();
+            break;
+            default:
+                String pre = ctx.getMessage().getContentRaw().split(" ")[0];
+                ctx.getChannel().sendMessage(getPublicHelp(pre.substring(0, pre.length() - getName().length()))).queue();
+                ctx.getMessage().addReaction(data.check).queue();
+            break;
         }
         
     }
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<time to mute> <breaktime>", "Start a group to get together blinded");
+        
+        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+
+        embed.setTitle("Help page of: `" + getName() +"`");
+        embed.setDescription("Make a group to be blinded together!");
+        embed.addField("", "This works on the principle of working/learning 45 minutes and having a break for 15 minutes. "+
+        "You can set the specific time you want to learn and have break yourself and that will happen repeatedly in a cycle. "+
+        "People then can join you and be blinded together. You can always unblind yourself with +" + new UnblindCMD().getName() + " The unit is minutes.", false);
+
+        // general use
+        embed.addField("", new ColouredStringAsciiDoc()
+                .addBlueAboveEq("general use")
+                .addNormal(prefix + getName() + " " + "<create | c> " + "<time to mute> <breaktime>  [delay in minutes]")
+                .addNormal(prefix + getName() + " " + "<join | j> " + "<group id>")
+                .addNormal(prefix + getName() + " " + "<leave | l> " + "<group id>")
+                .addNormal(prefix + getName() + " " + "[groups | g] (to see all groups)")
+                .build(), false);
+        
+        return embed.build();
     }
 
     public void createGroup(CommandContext ctx){
@@ -155,10 +186,16 @@ public class BlindGroupCMD implements PublicCMD {
         }
         
         GroupBlindEx creat = new GroupBlindEx(id, ctx.getGuild(), true, breaks, blind, 0);
-        
-        ScheduledExecutorService startgroup = Executors.newScheduledThreadPool(100);
-        ctx.getChannel().sendMessage("You joined Group : " + id + " The breaktime is " + breaks + " the learning time is " + blind + " minutes long. You will get blinded in 5 minutes from now!").complete();
-        startgroup.schedule(creat, 5, TimeUnit.SECONDS);
+        times.put(id, new int[] {blind, breaks});
+        ctx.getChannel().sendMessage("You joined Group : " + id + " The learning is " + blind + " the break time is " + breaks + " minutes long. You will get blinded in 5 minutes from now!").complete();
+        try {
+            int x = Integer.parseInt(cmds.get(3));
+            if(x<0 || x> 1000)
+                throw new Error("Bad Argument Exception");
+            skedula.schedule(creat, x, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            skedula.schedule(creat, 5, TimeUnit.MINUTES);
+        }
     }
     
 }

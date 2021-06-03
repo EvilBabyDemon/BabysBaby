@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import BabyBaby.data.data;
@@ -35,14 +33,14 @@ public class GroupBlindEx implements Runnable {
         counter = c;
     }
 
-    public void run() {	
-        ArrayList<String> group = BlindGroupCMD.groups.get(id);
-        GroupBlindEx blindEx = new GroupBlindEx(id, guild, !switcher, breaktime, learntime, counter);
+    public void run() {
+        ArrayList<String> group = new ArrayList<>(BlindGroupCMD.groups.get(id));
         if(group.size()==0){
             counter++;
         } else {
             counter = 0;
         }
+        GroupBlindEx blindEx = new GroupBlindEx(id, guild, !switcher, breaktime, learntime, counter);
 
         if(switcher){
             LinkedList<GuildChannel> gchan = new LinkedList<>();
@@ -123,7 +121,7 @@ public class GroupBlindEx implements Runnable {
                     RemoveRoles.blind.put(blinded, null);
                     guild.modifyMemberRoles(blinded, tmp, permrole).complete();
                     try {
-                        priv.sendMessage("You got blinded for ~" + breaktime + " minutes. Either wait out the timer or write me here \n+" + new UnblindCMD().getName()+ ". This will kick you from the group.").queue();
+                        priv.sendMessage("You got blinded for ~" + learntime + " minutes. Either wait out the timer or write me here \n+" + new UnblindCMD().getName()+ ". This will kick you from the group.").queue();
                     } catch (Exception e) {
                         System.out.println("Author didn't allow private message.");
                     }
@@ -133,9 +131,7 @@ public class GroupBlindEx implements Runnable {
                 }
             }
 
-            ScheduledExecutorService exec = Executors.newScheduledThreadPool(100);
-            exec.schedule(blindEx, learntime, TimeUnit.MINUTES);
-
+            BlindGroupCMD.skedula.schedule(blindEx, learntime, TimeUnit.MINUTES);
             BlindGroupCMD.groups.put(id, group);
 
             return;
@@ -219,7 +215,7 @@ public class GroupBlindEx implements Runnable {
             }
         }
         BlindGroupCMD.groups.put(id, group);
-        ScheduledExecutorService exec = Executors.newScheduledThreadPool(100);
-        exec.schedule(blindEx, breaktime, TimeUnit.MINUTES);
+        BlindGroupCMD.skedula.schedule(blindEx, breaktime, TimeUnit.MINUTES);
+        
     }
 }
