@@ -92,8 +92,12 @@ public class whois implements AdminCMD{
 			OffsetDateTime created = stalking.getUser().getTimeCreated();
 			OffsetDateTime now = OffsetDateTime.now();
 			int day = now.getDayOfYear() - created.getDayOfYear();
+			day = (day<0)? 365+day:day;
 			int year =  now.getYear() - created.getYear() + ((now.getDayOfYear()<created.getDayOfYear())?-1:0);
-			String actualtime = (year >0) ?  (year + Math.round(day/365.0)) + " years ago": day + " days ago";
+
+			String multyear = ((year + Math.round(day/365.0)) == 1) ? " year ago" : " years ago";
+			String multday = (day== 1) ? " day ago" : " days ago";
+			String actualtime = (year >0) ?  (year + Math.round(day/365.0)) + multyear : day + multday;
 			
 			String addchecks = "Created as: **a " + ((stalking.getUser().isBot()) ? "bot" : "user") + " account** \n Created at: **" + stalking.getUser().getTimeCreated().format(createtime) + "** `(" + actualtime + ")`"; 
 			

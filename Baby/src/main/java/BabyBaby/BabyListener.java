@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.guild.member.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.*;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.ChannelManager;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.sql.*;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -669,15 +671,37 @@ public class BabyListener extends ListenerAdapter {
             return;
         }
 
+        DateTimeFormatter linkcreate = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
+        DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
+        OffsetDateTime created = event.getUser().getTimeCreated();
+        OffsetDateTime now = OffsetDateTime.now();
+        int day = now.getDayOfYear() - created.getDayOfYear();
+        day = (day<0)? 365+day:day;
+        int year =  now.getYear() - created.getYear() + ((now.getDayOfYear()<created.getDayOfYear())?-1:0);
+
+        String multyear = ((year + Math.round(day/365.0)) == 1) ? " year ago" : " years ago";
+        String multday = (day== 1) ? " day ago" : " days ago";
+        String actualtime = (year >0) ?  (year + Math.round(day/365.0)) + multyear : day + multday;
+
+        
+        String acccrea = "Account created at: **" + event.getUser().getTimeCreated().format(createtime) + "** `(" + actualtime + ")`"; 
+		
+        String desc = "User that joined " + event.getUser().getAsMention() +  "\n" +
+                        "Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n" +
+                        "Uses: " + ++amount + "\n"+
+                        "Invite created at: " + urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate) + "\n" +
+                        acccrea;
+
         MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
         eb.setColor(1);
         eb.setThumbnail(event.getUser().getAvatarUrl());
-        eb.setDescription("User that joined " +event.getUser().getAsMention() +  "\n" + "Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n Uses: " + ++amount + "\n Created at: " + urls.get(url).getTimeCreated().toLocalDateTime());
-        log.sendMessage("cache reload").complete().editMessage(urls.get(url).getInviter().getAsMention()).complete().delete().queue();
-        log.sendMessage(eb.build()).queue();
+        eb.setDescription(desc);
+        
+
+        log.sendMessage("cache reload").complete().editMessage(urls.get(url).getInviter().getAsMention() + event.getUser().getAsMention()).complete().editMessage(eb.build()).complete();
 
 
         PreparedStatement pstmt = null;
@@ -904,23 +928,14 @@ public class BabyListener extends ListenerAdapter {
 
 
     
-    /*
+    
     @Override
     public void onUserTyping(@Nonnull UserTypingEvent event) {
-        
-        if(event.getMember().getId().equals("1083057361314406401")){ //Hello Ollie :eyes:
-            if(typing){
-                Random rand = new Random();
-                if(rand.nextDouble() < 0.23){
-                    typing = false;
-                    event.getChannel().sendTyping().queue(response -> {
-                        typing = true;
-                    });
-                }
-            }
+        if(event.getMember().getId().equals("848908721900093440") && event.getChannel().getId().equals("768600365602963496")){
+            event.getGuild().getTextChannelById("789509420447039510").sendMessage("<@!223932775474921472> <:uhh:816589889898414100> <#768600365602963496>").queue();
         }
     }
-    */
+    
 
 
 
