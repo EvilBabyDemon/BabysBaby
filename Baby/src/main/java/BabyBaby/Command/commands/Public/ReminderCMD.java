@@ -100,7 +100,7 @@ public class ReminderCMD implements PublicCMD {
             rounder = (long) (time*60);
         } else if(timeunit.startsWith("d")){
             sunit = "days";
-            rounder = (long) (time*60);
+            rounder = (long) (time*3600*24);
         } else {
             sunit = "seconds";
             rounder = (long) (time);
@@ -119,7 +119,7 @@ public class ReminderCMD implements PublicCMD {
             message = "Just a Reminder. Didn't specify about what.";
         }
         String pk = "";
-        long timesql = (System.currentTimeMillis() + rounder*1000);
+        long timesql = System.currentTimeMillis() + rounder*1000;
 
         Connection c = null;
         PreparedStatement stmt = null;

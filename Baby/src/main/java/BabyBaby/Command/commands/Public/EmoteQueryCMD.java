@@ -56,15 +56,15 @@ public class EmoteQueryCMD implements PublicCMD{
         
         String first = "```.sql query select concat('<:', EmoteName, ':', DiscordEmoteId, '>'), count(*) as c from DiscordEmoteHistory join DiscordEmotes using (DiscordEmoteId) where DiscordEmoteId IN (";
         
-        String seco = ") group by EmoteName order by c ```";
+        String seco = ") and DateTimePosted  >= (DATE(NOW()) - INTERVAL 20 DAY) group by EmoteName order by c ```";
 
         int leng = first.length() + seco.length();
 
         while(ids.length() + leng >2000){
             String[] arrid = ids.substring(0, 2000 - leng).split(",");
-            String tmp = ids.substring(0, 2000 - leng - arrid[arrid.length-1].length());
+            String tmp = ids.substring(0, 2000 - leng - arrid[arrid.length-1].length()-1);
             ctx.getChannel().sendMessage(first + tmp + seco).queue();
-            ids = ids.substring(tmp.length());
+            ids = ids.substring(tmp.length()+1);
         }
         
         ctx.getChannel().sendMessage(first + ids + seco).queue();

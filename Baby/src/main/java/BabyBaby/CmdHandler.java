@@ -153,7 +153,7 @@ public class CmdHandler {
     }
 
 
-    void handle(GuildMessageReceivedEvent event, String prefix) {
+    public void handle(GuildMessageReceivedEvent event, String prefix) {
 
         String[] split = event.getMessage().getContentRaw()
                 .replaceFirst("(?i)" + Pattern.quote(prefix), "")
