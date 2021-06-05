@@ -61,6 +61,12 @@ public class ReminderCMD implements PublicCMD {
         MessageChannel channel = ctx.getChannel();
 
         List<String> cmds = ctx.getArgs();
+
+        if(cmds.size()==0){
+            ctx.getChannel().sendMessage("Arguments missing").queue();
+            return;
+        }
+
         String number = cmds.get(0);
 		
         double time;
@@ -165,7 +171,7 @@ public class ReminderCMD implements PublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<time> <Unit (s,m,h or d)> [Your Text could be written here]", "Cmd to Renind me.");
+        return StandardHelp.Help(prefix, getName(), "<time> <Unit (s,m,h or d)> [Your Text could be written here]", "Command to remind you.");
     }
     
 }

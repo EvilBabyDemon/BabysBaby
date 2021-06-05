@@ -64,7 +64,7 @@ public class RemoveRoles implements PublicCMD{
             }
         }
 
-
+        
 
         Member silenced = ctx.getMember();
         List<Role> begone = silenced.getRoles();
