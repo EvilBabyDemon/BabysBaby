@@ -2,18 +2,12 @@ package BabyBaby.Listeners;
 
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.Command.SubcommandGroup;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
-import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
-import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege.Type;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.audit.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
-import net.dv8tion.jda.api.utils.data.DataObject;
 import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.data.GetRolesBack;
@@ -22,7 +16,6 @@ import BabyBaby.data.data;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.lang.StackWalker.Option;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -385,6 +378,7 @@ public class StartupListener extends ListenerAdapter{
 
 
         try {
+            ArrayList<CommandData> slashcmds = new ArrayList<>();
             CommandData poll = new CommandData("poll", "A cmd to create a simple Poll.");
             poll.addOption(OptionType.STRING, "title", "This is the Title of your poll.", true);
             
@@ -394,14 +388,23 @@ public class StartupListener extends ListenerAdapter{
             for (int i = 2; i < 10; i++) {
                 poll.addOption(OptionType.STRING, "option" +(i+1), "This is Option " + (i+1));
             }
-            bot.getGuildById(data.ethid).upsertCommand(poll).complete();
+            slashcmds.add(poll);
+            bot.getGuildById(data.ethid).upsertCommand(poll).queue();
 
-            CommandData blind = new CommandData("blind", "A command to create to blind yourself. Do not use this cmd if you dont know what it does");
+
+            CommandData blind = new CommandData("blind", "A command to blind yourself. Do not use this cmd if you dont know what it does");
                         
             blind.addOption(OptionType.INTEGER, "time", "Length of the blind.", true);
-            blind.addOption(OptionType.STRING, "hour", "description");
+            blind.addOption(OptionType.STRING, "unit", "Default is minutes. Seconds, minutes, hours, days.");
+            blind.addOption(OptionType.BOOLEAN, "force", "If forceblind or not. Default is false");
+            slashcmds.add(blind);
+            
+            bot.getGuildById(data.ethid).upsertCommand(blind).queue();
 
-            blind.addOption(OptionType.BOOLEAN, "force", "If forceblind or not");
+            for (CommandData cmd : slashcmds) {
+                BabyListener.slash.add(cmd.getName());
+            }
+
 
             //CommandPrivilege tmp = new CommandPrivilege(Type.ROLE, true, 810478625748025384L);
 

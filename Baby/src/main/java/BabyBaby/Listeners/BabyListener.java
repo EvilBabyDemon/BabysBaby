@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.events.message.guild.react.*;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.managers.ChannelManager;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 import net.dv8tion.jda.internal.managers.ChannelManagerImpl;
@@ -41,13 +40,13 @@ public class BabyListener extends ListenerAdapter {
 
 
     private final CmdHandler manager;
-
     //private SelfUser botUser;
     private User owner;
     public final JDA bot;
     public static HashMap<String, String> prefix = new HashMap<>();
     private final String ownerID = "223932775474921472";
     //private static boolean typing = true;
+    public static HashSet<String> slash = new HashSet<>(); 
 
     public BabyListener(JDA bot) throws IOException {
         this.bot = bot;
@@ -575,60 +574,23 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onSlashCommand (SlashCommandEvent event) {
-        if(!event.getName().equals("poll"))
+        if(!slash.contains(event.getName()))
             return;
 
-        event.deferReply(true).complete();
-        
-        
-
-        String topic = event.getOption("title").getAsString();
-        
-
-        String[] emot = {"0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣", ":keycap_ten:"};
-    
-
-        if(topic.length() > 256){
-            event.getChannel().sendMessage("Your Title can't be longer than 256 chars.").queue();
-            return;
+        if(event.getName().equals("poll")){
+            new PollCMD().slashCommand(event);
+        } else if(event.getName().equals("blind")){
+            String unit = (event.getOption("unit")!=null) ? event.getOption("unit").getAsString() : null;
+            boolean force = (event.getOption("force")!=null) ? event.getOption("force").getAsBoolean() : false;
+            new RemoveRoles().roleRemoval(event.getOption("time").getAsString(), event.getMember(), event.getGuild(), unit, force, event.getChannel());
         }
 
-        String options = "";
-        int amount = 0;
-        for (int i = 0; i < 10; i++) {
-            if(event.getOption("option"+ (i+1))==null)
-                continue;
-            options += emot[amount] + " : " + event.getOption("option"+ (i+1)).getAsString() + "\n";
-            amount++;
-        }
-        
-        
-        
 
-        if(options.length() > 2000){
-            event.getChannel().sendMessage("All your options together can't be more than 2000 chars, so keep it simpler!").queue();
-            return;
-        }
-
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle(topic);
-        eb.setColor(0);
-        eb.setDescription(options);
-        String nickname = (event.getMember().getNickname() != null) ? event.getMember().getNickname()
-                : event.getMember().getEffectiveName();
-        eb.setFooter("Summoned by: " + nickname, event.getMember().getUser().getAvatarUrl());
-
-        Message built = event.getChannel().sendMessage(eb.build()).complete();
-        for (int i = 0; i < amount; i++) {
-            built.addReaction(emot[i]).queue();
-        }
-
-        event.reply("message").setEphemeral(true).complete();
             
     }
 
 
-    
+     
     
     @Override
     public void onUserTyping(@Nonnull UserTypingEvent event) {
