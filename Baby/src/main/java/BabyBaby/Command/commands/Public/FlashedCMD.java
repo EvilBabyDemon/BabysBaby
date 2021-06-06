@@ -46,6 +46,7 @@ public class FlashedCMD implements PublicCMD {
         MessageChannel channel = ctx.getChannel();
         int countUsers = 0;
         String userNames = "";
+        String cache = "";
         
         Guild called = ctx.getGuild();
 
@@ -67,6 +68,7 @@ public class FlashedCMD implements PublicCMD {
                 String mutedUser = rs.getString("USERID");
                 countUsers++;
                 userNames += called.getMemberById(mutedUser).getAsMention() + "(" + Math.round(((Long.parseLong(rs.getString("MUTETIME"))-System.currentTimeMillis())/60000.0)) + "m), ";
+                cache += called.getMemberById(mutedUser).getAsMention();
             }
             rs.close();
             stmt.close();
@@ -90,7 +92,7 @@ public class FlashedCMD implements PublicCMD {
             eb.addField("people who should be studying right now",  shouldbeLearning, false);
             // eb.addBlankField(false);
             eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
-
+        channel.sendMessage("cache refresh").complete().editMessage(cache).complete().delete().queue();
         channel.sendMessage(eb.build()).queue();
     }
 
