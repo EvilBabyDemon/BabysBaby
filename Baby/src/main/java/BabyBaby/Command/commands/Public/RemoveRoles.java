@@ -54,41 +54,46 @@ public class RemoveRoles implements PublicCMD{
 
         ctx.getMessage().addReaction(data.check).queue();
 
+        List<String> cmds = ctx.getArgs();
 
+        if(cmds.size() == 0){
+            ctx.getChannel().sendMessage("The command is +" + getName() +" <time> [unit] (default unit is minutes)").queue();
+            return;
+        }
+
+        String unit = null;
+        if(cmds.size()>2)
+            unit = cmds.get(1);
+        
+
+        roleRemoval(cmds.get(0), ctx.getMember(), ctx.getGuild(), unit, false, ctx.getChannel());
+
+    }
+
+
+
+
+
+    public void roleRemoval (String number, Member mem, Guild guild, String unit, boolean force, MessageChannel channel){
+        
         LinkedList<GuildChannel> gchan = new LinkedList<>();
-
-        //TODO this should be changed with a check if @everyone can see that channel
-        for (GuildChannel var : ctx.getGuild().getChannels()) {
-            if(!var.getId().equals("769261792491995176") && !var.getId().equals("815881148307210260") && var.getParent() != null){
+        Role everyone = guild.getRoleById(guild.getId());
+        
+        for (GuildChannel var : guild.getChannels()) {
+            if(!everyone.hasAccess(var)){
                 gchan.add(var);
             }
         }
 
-        
-
-        Member silenced = ctx.getMember();
+        Member silenced = mem;
         List<Role> begone = silenced.getRoles();
         LinkedList<Role> permrole = new LinkedList<>();
-        MessageChannel channel = ctx.getChannel();
 
 
-        if(!ctx.getGuild().getId().equals(data.ethid))
-        return;
 
-        Guild called = ctx.getGuild();
-
-        List<String> cmds = ctx.getArgs();
-
-        if(cmds.size() == 0){
-            channel.sendMessage("The command is +" + getName() +" <time> [unit] (default unit is minutes)").queue();
-            return;
-        }
-
-        String number = cmds.get(0);
-        
         double time;
         String sunit;
-        User muteUser = ctx.getAuthor(); 
+        User blindUser = mem.getUser();
         ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
         
         
@@ -112,19 +117,18 @@ public class RemoveRoles implements PublicCMD{
         
         long rounder = 0;
         
-        if(cmds.size() < 2) {
+        if(unit == null) {
             sunit = "minutes";
             rounder = (long) (time*60);
         } else {
-            String timeunit = cmds.get(1);
-            timeunit = timeunit.toLowerCase();
-            if (timeunit.startsWith("h")){
+            unit = unit.toLowerCase();
+            if (unit.startsWith("h")){
                 sunit = "hours";
                 rounder = (long) (time*3600);
-            } else if(timeunit.startsWith("m")){
+            } else if(unit.startsWith("m")){
                 sunit = "minutes";
                 rounder = (long) (time*60);
-            } else if(timeunit.startsWith("d")){
+            } else if(unit.startsWith("d")){
                 sunit = "days";
                 rounder = (long) (time*24*3600);
             } else {
@@ -136,13 +140,16 @@ public class RemoveRoles implements PublicCMD{
         if(rounder <= 29){
             channel.sendMessage("Use numbers above 29 seconds pls! (As it takes a while to remove and add roles.)").queue();
             return;
+        } else if(force && rounder > 43200){
+            channel.sendMessage("Your value has to be below 12 hours (43200 seconds).").queue();
+            return;
         }
 
         
         long timesql = (System.currentTimeMillis() + rounder*1000);
 
 
-        Role highestbot = ctx.getSelfMember().getRoles().get(0);
+        Role highestbot = guild.getSelfMember().getRoles().get(0);
 
         //check if there is a role that is higher than a bot but also can see a channel
         for (Role var : begone) {
@@ -158,12 +165,12 @@ public class RemoveRoles implements PublicCMD{
             }
         }
 
-        //Check if one is already in a group
-        String id = ctx.getAuthor().getId();
+        //Check if already in a group
+        String id = mem.getId();
         for (int ids : BlindGroupCMD.groups.keySet()) {
             ArrayList<String> var = BlindGroupCMD.groups.get(ids);
             if(var.contains(id)){
-                ctx.getChannel().sendMessage("You are still in a group. Pls leave that one first.").queue();
+                channel.sendMessage("You are still in a group. Pls leave that one first.").queue();
                 return;
             }
         }
@@ -185,8 +192,8 @@ public class RemoveRoles implements PublicCMD{
             }
 
             stmt = c.prepareStatement("INSERT INTO ROLEREMOVAL (USERID, GUILDID, MUTETIME, ROLES, ADMINMUTE) VALUES (?, ?, ?, ?, ?);");
-            stmt.setString(1, ctx.getAuthor().getId());
-            stmt.setString(2, ctx.getGuild().getId());
+            stmt.setString(1, mem.getId());
+            stmt.setString(2, guild.getId());
             stmt.setString(3, timesql + "");
             stmt.setString(4, role);
             stmt.setString(5, "false");
@@ -202,32 +209,40 @@ public class RemoveRoles implements PublicCMD{
 
         
         
-        GetRolesBack scheduledclass = new GetRolesBack(muteUser, called, role);
+        GetRolesBack scheduledclass = new GetRolesBack(blindUser, guild, role);
         mute.schedule(scheduledclass, rounder , TimeUnit.SECONDS);
 
         
         
         
-        blind.put(ctx.getMember(), mute);
+        blind.put(mem, mute);
         blindexe.put(mute, scheduledclass);
-        channel.sendMessage(ctx.getMember().getAsMention() + " got blinded for ~" + time + " " + sunit + ". Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnblindCMD().getName() + "\"").queue();
 
-        LinkedList<Role> tmp = new LinkedList<>();
+        String msg = " got blinded for ~" + time + " " + sunit + ".";
+        if(force){
+            RemoveRolesForce.force.add(scheduledclass);
+            msg += " Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnblindCMD().getName() + "\"";
+        } else {
+            msg +=  " **Wait out the timer!!!** And hopefully you are productive!";
+        }
+        channel.sendMessage(mem.getAsMention() + msg).queue();
+        
+        LinkedList<Role> addrole = new LinkedList<>();
         try {
-            tmp.add(ctx.getGuild().getRoleById("844136589163626526"));
+            addrole.add(guild.getRoleById("844136589163626526"));
         } catch (Exception e) {
             System.out.println("Role Blind doesnt exist anymore. This could be a serious issue.");
         }
         
-        called.modifyMemberRoles(ctx.getMember(), tmp, permrole).complete();
+        guild.modifyMemberRoles(mem, addrole, permrole).complete();
         try {
-            ctx.getAuthor().openPrivateChannel().complete().sendMessage("You got blinded for ~" + time + " " + sunit + ". Either wait out the timer or write me here \n+" + new UnblindCMD().getName()).queue();
+            blindUser.openPrivateChannel().complete().sendMessage("You" + msg).queue();
         } catch (Exception e) {
             System.out.println("Author didn't allow private message.");
         }
-        
+    } 
 
-    }
+
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
