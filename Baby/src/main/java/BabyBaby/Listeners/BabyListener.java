@@ -371,6 +371,7 @@ public class BabyListener extends ListenerAdapter {
             } else {
                 event.getGuild().addRoleToMember(event.getMember(), role).complete();
             }
+
         }
 
 
