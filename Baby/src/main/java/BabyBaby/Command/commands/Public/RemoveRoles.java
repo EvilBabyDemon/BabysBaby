@@ -62,7 +62,7 @@ public class RemoveRoles implements PublicCMD{
         }
 
         String unit = null;
-        if(cmds.size()>2)
+        if(cmds.size()>1)
             unit = cmds.get(1);
         
 
@@ -221,9 +221,9 @@ public class RemoveRoles implements PublicCMD{
         String msg = " got blinded for ~" + time + " " + sunit + ".";
         if(force){
             RemoveRolesForce.force.add(scheduledclass);
-            msg += " Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnblindCMD().getName() + "\"";
-        } else {
             msg +=  " **Wait out the timer!!!** And hopefully you are productive!";
+        } else {
+            msg += " Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnblindCMD().getName() + "\"";
         }
         channel.sendMessage(mem.getAsMention() + msg).queue();
         

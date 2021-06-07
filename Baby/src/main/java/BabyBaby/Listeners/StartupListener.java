@@ -2,7 +2,12 @@ package BabyBaby.Listeners;
 
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.Command.SubcommandGroup;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
+import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
+import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege.Type;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.audit.*;
 import net.dv8tion.jda.api.entities.*;
@@ -15,6 +20,9 @@ import BabyBaby.data.GetUnmute;
 import BabyBaby.data.data;
 
 import javax.annotation.Nonnull;
+
+import org.unix4j.unix.sed.Command;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
@@ -94,7 +102,6 @@ public class StartupListener extends ListenerAdapter{
                             e.printStackTrace();
                             System.out.println("Probably a User that left the server while being muted.");
                         }
-
                     }
                     stmt.close();
                     c.close();
@@ -119,7 +126,9 @@ public class StartupListener extends ListenerAdapter{
                     rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES;");
 
                     while(rs.next()){
-                        data.emoteassign.put(rs.getString("EMOTE"), rs.getString("ID"));
+                        String id = rs.getString("ID");
+                        data.emoteassign.put(rs.getString("EMOTE"), id);
+                        data.roles.add(id);
                     }
 
                     stmt.close();
@@ -378,6 +387,8 @@ public class StartupListener extends ListenerAdapter{
 
 
         try {
+            Guild eth = bot.getGuildById(data.ethid);
+
             ArrayList<CommandData> slashcmds = new ArrayList<>();
             CommandData poll = new CommandData("poll", "A cmd to create a simple Poll.");
             poll.addOption(OptionType.STRING, "title", "This is the Title of your poll.", true);
@@ -389,17 +400,76 @@ public class StartupListener extends ListenerAdapter{
                 poll.addOption(OptionType.STRING, "option" +(i+1), "This is Option " + (i+1));
             }
             slashcmds.add(poll);
-            bot.getGuildById(data.ethid).upsertCommand(poll).queue();
+            eth.upsertCommand(poll).complete();
 
 
-            CommandData blind = new CommandData("blind", "A command to blind yourself. Do not use this cmd if you dont know what it does");
+            CommandData blind = new CommandData("blind", "A command to blind yourself. Do not use this cmd if you dont know what it does.");
                         
             blind.addOption(OptionType.INTEGER, "time", "Length of the blind.", true);
             blind.addOption(OptionType.STRING, "unit", "Default is minutes. Seconds, minutes, hours, days.");
             blind.addOption(OptionType.BOOLEAN, "force", "If forceblind or not. Default is false");
             slashcmds.add(blind);
             
-            bot.getGuildById(data.ethid).upsertCommand(blind).queue();
+            eth.upsertCommand(blind).complete();
+
+
+
+            CommandData role = new CommandData("role", "A command to get/remove a role.");
+                        
+            role.addOption(OptionType.ROLE, "role", "The Role you want to have or get removed.", true);
+            slashcmds.add(role);
+            
+            eth.upsertCommand(role).complete();
+
+
+            try {
+                CommandData test = new CommandData("test", "A command to test stuff");
+                
+                
+                test.setDefaultEnabled(false);
+                //SubcommandGroupData sgd = new SubcommandGroupData("testing", "test2");
+                SubcommandData testing = new SubcommandData("testingdata", "test3");
+                SubcommandData testing2 = new SubcommandData("test2", "But actually test4");
+                
+                testing.addOption(OptionType.ROLE, "options", "Mentionable stuff", true);
+                test.addSubcommands(testing);
+                test.addSubcommands(testing2);
+
+                
+                
+
+                /*
+                sgd.addSubcommands(testing);
+                sgd.addSubcommands(testing2);
+                
+                SubcommandGroupData sgd2 = new SubcommandGroupData("2ndsgd", "Second subcommandgroup");
+                SubcommandData tmptesting = new SubcommandData("subcmd", "subcommand 1");
+                SubcommandData tmptesting2 = new SubcommandData("subcmd2", "subcmd 2 in group2");
+                sgd2.addSubcommands(tmptesting);
+                sgd2.addSubcommands(tmptesting2);
+
+                test.addSubcommandGroups(sgd2);
+                test.addSubcommandGroups(sgd);
+                */
+
+
+                
+                var cmd = eth.upsertCommand(test).complete();
+                
+                long id = cmd.getIdLong();
+                slashcmds.add(test);
+                
+                CommandPrivilege me = new CommandPrivilege(Type.USER, true, 223932775474921472L);
+                
+                eth.updateCommandPrivilegesById(id, me).complete();
+                
+            } catch (Exception e) {
+                System.out.println("Didn't work");
+                e.printStackTrace();
+            }   
+            
+            
+
 
             for (CommandData cmd : slashcmds) {
                 BabyListener.slash.add(cmd.getName());

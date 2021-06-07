@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.List;
 
+
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
@@ -32,10 +33,30 @@ public class delrole implements AdminCMD {
     @Override
     public void handleAdmin(CommandContext ctx) {
         List<String> cmds = ctx.getArgs();
-       
+        if(cmds.size()==0){
+            ctx.getChannel().sendMessage("gib args").queue();
+            return;
+        }
+        
+
+        if(!data.roles.contains(cmds.get(0))){
+            ctx.getChannel().sendMessage("Doesnt exist sry").queue();
+            return;
+        }
+        data.roles.remove(cmds.get(0));
+        for (String var : data.emoteassign.keySet()) {
+            if(data.emoteassign.get(var).equals(cmds.get(0))){
+                data.emoteassign.remove(var);
+                break;
+            }
+        }
+
+
         MessageChannel channel = ctx.getChannel();
         Connection c = null;
         Statement stmt = null;
+
+
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -54,7 +75,7 @@ public class delrole implements AdminCMD {
             return;
         }
 
-        ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
+        ctx.getMessage().addReaction(data.check).queue();
         
     }
 

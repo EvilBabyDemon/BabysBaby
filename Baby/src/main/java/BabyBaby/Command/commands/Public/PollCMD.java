@@ -103,9 +103,7 @@ public class PollCMD implements PublicCMD{
 	}
 
 	public void slashCommand(SlashCommandEvent event){
-		event.deferReply(true).complete();
-        
-        
+		
 
         String topic = event.getOption("title").getAsString();
         
@@ -128,7 +126,7 @@ public class PollCMD implements PublicCMD{
         }
         
         
-        
+		
 
         if(options.length() > 2000){
             event.getChannel().sendMessage("All your options together can't be more than 2000 chars, so keep it simpler!").queue();

@@ -53,22 +53,32 @@ public class updaterole implements AdminCMD {
 
         //ASSIGNROLES ID categories emote
 
+        //TODO add new HashSet and also old HashMap to update
         switch(casing){
             case "emote":
-            try {
-                Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
-        
-                stmt = c.createStatement();
-                String sql= "UPDATE ASSIGNROLES SET EMOTE = '" + update + "' where ID=" + id + ";";
-                stmt.executeUpdate(sql); 
-                
-                stmt.close();
-                c.close();
-            } catch ( Exception e ) {
-                channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
-                return;
-            }
+                try {
+                    Class.forName("org.sqlite.JDBC");
+                    c = DriverManager.getConnection(data.db);
+            
+                    stmt = c.createStatement();
+                    String sql= "UPDATE ASSIGNROLES SET EMOTE = '" + update + "' where ID=" + id + ";";
+                    stmt.executeUpdate(sql); 
+                    
+                    stmt.close();
+                    c.close();
+                } catch ( Exception e ) {
+                    channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+                    return;
+                }
+                String oldemo = "";
+                for (String var : data.emoteassign.keySet()) {
+                    if(data.emoteassign.get(var).equals(cmds.get(0))){
+                        oldemo = var;
+                        break;
+                    }
+                }
+                data.emoteassign.remove(oldemo);
+                data.emoteassign.put(update, id);
 
 
                 break;
@@ -89,6 +99,8 @@ public class updaterole implements AdminCMD {
                     channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                     return;
                 }
+                data.roles.remove(update);
+                data.roles.add(id);
 
 
                 break;
@@ -112,11 +124,11 @@ public class updaterole implements AdminCMD {
                 
                 break;
             default:
-                ctx.getMessage().addReaction(":xmark:769279807916998728").queue();
+                ctx.getMessage().addReaction(data.xmark).queue();
                 return;
         }	
     
-        ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
+        ctx.getMessage().addReaction(data.check).queue();
         
     }
 
