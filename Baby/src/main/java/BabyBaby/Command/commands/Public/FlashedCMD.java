@@ -92,7 +92,7 @@ public class FlashedCMD implements PublicCMD {
             eb.addField("people who should be studying right now",  shouldbeLearning, false);
             // eb.addBlankField(false);
             eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
-        channel.sendMessage("cache refresh").complete().editMessage(cache).complete().delete().queue();
+        channel.sendMessage("cache refresh").complete().editMessage("a " + cache).complete().delete().queue();
         channel.sendMessage(eb.build()).queue();
     }
 
