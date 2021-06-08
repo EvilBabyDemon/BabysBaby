@@ -95,7 +95,7 @@ public class GroupBlindEx implements Runnable {
                         stmt = c.prepareStatement("INSERT INTO ROLEREMOVAL (USERID, GUILDID, MUTETIME, ROLES, ADMINMUTE) VALUES (?, ?, ?, ?, ?);");
                         stmt.setString(1, blinded.getId());
                         stmt.setString(2, guild.getId());
-                        stmt.setString(3, System.currentTimeMillis() + breaktime*1000*60 + "");
+                        stmt.setString(3, System.currentTimeMillis() + learntime*1000*60 + "");
                         stmt.setString(4, role);
                         stmt.setString(5, "false");
                         
