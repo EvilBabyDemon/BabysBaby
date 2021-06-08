@@ -46,7 +46,7 @@ public class Baby {
             builder.setChunkingFilter(ChunkingFilter.ALL);
             
             JDA jda = builder.build();
-            jda.addEventListener(new StartupListener(jda) , new BabyListener(jda));
+            jda.addEventListener(new StartupListener(jda), new BabyListener(jda));
             //jda.addEventListener(new MyListener());
             jda.getPresence().setActivity(Activity.watching(" some pixels getting slowly placed."));
         } catch (LoginException e) {

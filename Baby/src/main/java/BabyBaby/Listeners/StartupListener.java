@@ -3,9 +3,6 @@ package BabyBaby.Listeners;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
-import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege.Type;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.audit.*;
 import net.dv8tion.jda.api.entities.*;
@@ -386,6 +383,8 @@ public class StartupListener extends ListenerAdapter{
         try {
             Guild eth = bot.getGuildById(data.ethid);
 
+            eth.updateCommands().complete();
+
             ArrayList<CommandData> slashcmds = new ArrayList<>();
             CommandData poll = new CommandData("poll", "A cmd to create a simple Poll.");
             poll.addOption(OptionType.STRING, "title", "This is the Title of your poll.", true);
@@ -418,7 +417,7 @@ public class StartupListener extends ListenerAdapter{
             
             eth.upsertCommand(role).complete();
 
-
+            /*
             try {
                 CommandData test = new CommandData("test", "A command to test stuff");
                 
@@ -447,7 +446,7 @@ public class StartupListener extends ListenerAdapter{
 
                 test.addSubcommandGroups(sgd2);
                 test.addSubcommandGroups(sgd);
-                */
+                
 
 
                 
@@ -464,30 +463,12 @@ public class StartupListener extends ListenerAdapter{
                 System.out.println("Didn't work");
                 e.printStackTrace();
             }   
-            
-            
-
+            */
 
             for (CommandData cmd : slashcmds) {
                 BabyListener.slash.add(cmd.getName());
             }
 
-
-            //CommandPrivilege tmp = new CommandPrivilege(Type.ROLE, true, 810478625748025384L);
-
-            //bot.getGuildById(data.ethid).updateCommandPrivilegesById("poll", )
-            /*
-            CommandData cmd2 = new CommandData("poll2", "A cmd to create a simple Poll but 2.");
-            cmd2.addOption(OptionType.SUB_COMMAND_GROUP, "test123", "description 1");
-            bot.getGuildById(data.ethid).upsertCommand(cmd2).complete();
-
-
-            CommandData cmd3 = new CommandData("poll3", "A cmd to create a simple Poll but 3.");
-            cmd3.addOption(OptionType.SUB_COMMAND_GROUP, "poll3", "description 1");
-            SubcommandGroupData test = new SubcommandGroupData("Test", "test2");
-            cmd3.addSubcommandGroups(test);
-            bot.getGuildById(data.ethid).upsertCommand(cmd3).complete();
-            */
         } catch (Exception e) {
             e.printStackTrace();
         }

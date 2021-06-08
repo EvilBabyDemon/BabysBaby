@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.events.message.guild.react.*;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 
 import org.jetbrains.annotations.NotNull;
@@ -345,10 +346,13 @@ public class BabyListener extends ListenerAdapter {
     public void onSlashCommand (SlashCommandEvent event) {
         if(!slash.contains(event.getName()))
             return;
+        InteractionHook msgHook = null;
+        boolean failed = false;
         try {
-            event.deferReply(true).complete();        
+            msgHook = event.deferReply(true).complete();
         } catch (Exception e) {
-            System.out.println("Bot not fast enough for deferReply");
+            System.out.println("Why so slow :/");
+            failed = true;
         }
 
         String cmd = event.getName();
@@ -361,17 +365,33 @@ public class BabyListener extends ListenerAdapter {
             new RemoveRoles().roleRemoval(event.getOption("time").getAsString(), event.getMember(), event.getGuild(), unit, force, event.getChannel());
         } else if(cmd.equals("role")){
             Role role = event.getOption("role").getAsRole();
-            if(!data.roles.contains(role.getId())){
-                
+            if(!data.roles.contains(role.getId()) && !event.getMember().getId().equals(data.myselfID)){
+                String nope = "I can't give you that role.";
+                if(failed){
+                    event.getUser().openPrivateChannel().complete().sendMessage(nope).complete();
+                } else {
+                    msgHook.editOriginal(nope).queue();   
+                }
                 return;
             }
             List<Role> memRole = event.getMember().getRoles();
             if(memRole.contains(role)){
                 event.getGuild().removeRoleFromMember(event.getMember(), role).complete();
+                String remove = "I removed ";
+                if(failed){
+                    event.getUser().openPrivateChannel().complete().sendMessage(remove + role.getName() + " from you.").complete();
+                } else {
+                    msgHook.editOriginal(remove + role.getAsMention() + " from you.").queue();   
+                }
             } else {
                 event.getGuild().addRoleToMember(event.getMember(), role).complete();
+                String added = "I gave you ";
+                if(failed){
+                    event.getUser().openPrivateChannel().complete().sendMessage(added + role.getName() + ".").complete();
+                } else {
+                    msgHook.editOriginal(added + role.getAsMention() + ".").queue();   
+                }
             }
-
         }
 
 

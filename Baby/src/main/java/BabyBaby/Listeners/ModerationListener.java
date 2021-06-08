@@ -192,7 +192,7 @@ public class ModerationListener extends ListenerAdapter{
         channelMan.putPermissionOverride(permHolder, null, deny).queue();
     }
 
-
+    
 
 
 
