@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.audit.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.*;
+import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.*;
@@ -49,6 +50,8 @@ public class BabyListener extends ListenerAdapter {
     }
 
 
+
+    // Role Removal
     @Override
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
         if(!event.getGuild().getId().equals(data.ethid))
@@ -254,7 +257,7 @@ public class BabyListener extends ListenerAdapter {
     
 
     
-
+    //Private Message
     @Override
     public void onPrivateMessageReceived(@NotNull PrivateMessageReceivedEvent event) {
         
@@ -275,7 +278,7 @@ public class BabyListener extends ListenerAdapter {
     }
 
     
-
+    //Message Reaction
     @Override
     public void onGenericGuildMessageReaction(GenericGuildMessageReactionEvent event) {
         if (event.getUser().isBot())
@@ -341,6 +344,14 @@ public class BabyListener extends ListenerAdapter {
         }
     }
 
+    @Override
+    public void onButtonClick(ButtonClickEvent event) {
+        if (event.getComponentId().equals("hello")) {
+            
+        }
+    }
+
+    
     //Slash Commands
     @Override
     public void onSlashCommand (SlashCommandEvent event) {
@@ -400,7 +411,7 @@ public class BabyListener extends ListenerAdapter {
 
 
      
-    
+    //User Typing
     @Override
     public void onUserTyping(@Nonnull UserTypingEvent event) {
         if(event.getMember().getId().equals("848908721900093440") && event.getChannel().getId().equals("768600365602963496")){
@@ -408,7 +419,7 @@ public class BabyListener extends ListenerAdapter {
         }
     }
 
-
+    //Message Received
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
 
