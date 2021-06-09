@@ -54,7 +54,7 @@ public class RemoveRolesForce implements PublicCMD{
         }
 
         String unit = null;
-        if(cmds.size()>2)
+        if(cmds.size()>1)
             unit = cmds.get(1);
 
 
