@@ -49,17 +49,23 @@ public class updaterole implements AdminCMD {
         for (String var : cmds) {
             update += var + " "; 
         }
-        update = update.substring(0, update.length()-1);
+        
 
         //ASSIGNROLES ID categories emote
-
+        try {
+            update = update.substring(0, update.length()-1);
+        } catch (Exception e) {
+            ctx.getChannel().sendMessage("You forgot an arg.").queue();
+            return;
+        }
         //TODO add new HashSet and also old HashMap to update
         switch(casing){
             case "emote":
                 try {
                     Class.forName("org.sqlite.JDBC");
                     c = DriverManager.getConnection(data.db);
-            
+                    update = update.replace("<", "");
+                    update = update.replace(">", "");
                     stmt = c.createStatement();
                     String sql= "UPDATE ASSIGNROLES SET EMOTE = '" + update + "' where ID=" + id + ";";
                     stmt.executeUpdate(sql); 
@@ -72,7 +78,7 @@ public class updaterole implements AdminCMD {
                 }
                 String oldemo = "";
                 for (String var : data.emoteassign.keySet()) {
-                    if(data.emoteassign.get(var).equals(cmds.get(0))){
+                    if(data.emoteassign.get(var).equals(id)){
                         oldemo = var;
                         break;
                     }
@@ -88,8 +94,8 @@ public class updaterole implements AdminCMD {
                 try {
                     Class.forName("org.sqlite.JDBC");
                     c = DriverManager.getConnection(data.db);
-            
-                    stmt = c.createStatement();
+                    
+                    stmt = c.createStatement(); 
                     String sql = "UPDATE ASSIGNROLES SET ID = " + update + " where ID=" + id + ";";
                     stmt.executeUpdate(sql);
             
@@ -134,7 +140,7 @@ public class updaterole implements AdminCMD {
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<id/categories/emote> <roleID atm> <new emote/id/...>", "Command to update the assignable roles if a emote or something changed.");
+        return StandardHelp.Help(prefix, getName(), "<id/category/emote> <roleID atm> <new emote/id/...>", "Command to update the assignable roles if a emote or something changed.");
     }
     
 }

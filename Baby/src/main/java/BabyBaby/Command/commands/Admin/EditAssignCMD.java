@@ -150,12 +150,14 @@ public class EditAssignCMD implements AdminCMD{
                 rs = pstmt.executeQuery();
 
                 String msgid = "";
+                String channelid = "";
                 boolean empty = true;
                 while(rs.next()){
                     msgid = rs.getString("MSGID");
+                    channelid = rs.getString("CHANNELID");
                     Message edited;
                     try {
-                        edited = ctx.getGuild().getTextChannelById(rs.getString("CHANNELID")).editMessageById(msgid, eb.build()).complete();    
+                        edited = ctx.getGuild().getTextChannelById(channelid).editMessageById(msgid, eb.build()).complete();    
                     } catch (Exception e) {
                         remover.add(msgid);
                         continue;
@@ -165,7 +167,7 @@ public class EditAssignCMD implements AdminCMD{
                     
                     List<MessageReaction> reactions = edited.getReactions();
                     for (MessageReaction var : reactions) {
-                        if(!cont(temp, var.getReactionEmote().getName())){
+                        if(!cont(temp, var.getReactionEmote().getAsReactionCode())){
                             var.clearReactions().complete();
                         }
                     }
@@ -175,9 +177,9 @@ public class EditAssignCMD implements AdminCMD{
                         if(var == null || var.length() == 0)
                                 continue;
                         try{
-                            channel.addReactionById(edited.getId(), var).queue();
+                            edited.addReaction(var).complete();
                         } catch (Exception e){
-                            ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                            ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete();
                         }
                     }
                     empty = false;

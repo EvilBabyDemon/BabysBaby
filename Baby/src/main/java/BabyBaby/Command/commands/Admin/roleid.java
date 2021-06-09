@@ -44,7 +44,14 @@ public class roleid implements AdminCMD {
             String result = "";
             while ( rs.next() ) {
                 String id = rs.getString("id");
-                result += id + " " + ctx.getGuild().getRoleById(id).getName() + "\n";
+
+                String rolename = "deleted-role";
+                try {
+                    rolename = ctx.getGuild().getRoleById(id).getName();
+                } catch (Exception e) {
+                }
+
+                result += id + " " + rolename + "\n";
             }
             rs.close();
             stmt.close();
