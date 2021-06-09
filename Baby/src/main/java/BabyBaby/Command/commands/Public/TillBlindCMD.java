@@ -91,7 +91,7 @@ public class TillBlindCMD implements PublicCMD {
         }    
 
         EmbedBuilder eb = new EmbedBuilder();
-            eb.setTitle("People who are learning or rather should be! (Blinded)", null);
+            eb.setTitle("How long you are still blinded:", null);
             eb.setColor(1);
             eb.setDescription(user);
             eb.setFooter("Summoned by: " + author.getAsTag(), author.getAvatarUrl());
