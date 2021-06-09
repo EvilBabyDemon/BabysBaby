@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import javax.security.auth.login.LoginException;
 
 import BabyBaby.Listeners.BabyListener;
+import BabyBaby.Listeners.ModerationListener;
 import BabyBaby.Listeners.StartupListener;
 import BabyBaby.data.data;
 
@@ -46,7 +47,7 @@ public class Baby {
             builder.setChunkingFilter(ChunkingFilter.ALL);
             
             JDA jda = builder.build();
-            jda.addEventListener(new StartupListener(jda), new BabyListener(jda));
+            jda.addEventListener(new StartupListener(jda), new BabyListener(jda), new ModerationListener());
             //jda.addEventListener(new MyListener());
             jda.getPresence().setActivity(Activity.watching(" some pixels getting slowly placed."));
         } catch (LoginException e) {
