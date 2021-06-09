@@ -18,11 +18,11 @@ import java.awt.Color;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 public class testCMD implements OwnerCMD{
 
@@ -33,64 +33,13 @@ public class testCMD implements OwnerCMD{
 
     @Override
     public void handleOwner(CommandContext ctx) {
-        /*
-        BufferedImage img;
-        PrintStream writer;
-        try {
-            img = ImageIO.read(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\" + ctx.getArgs().get(0) + ".png"));
-            writer = new PrintStream("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\" + ctx.getArgs().get(0) + ".txt");
-    
-            boolean[][] usedPixels = new boolean[img.getWidth()][img.getHeight()];
-            
-            for (int i = 1250; i >= -10; i--) {
-                for (double j = 0; j < 2 * Math.PI; j += 0.0001) {
-                    int x = img.getWidth() / 2 + (int)(Math.sin(j) * i);
-                    int y = img.getHeight() / 2 - (int)(Math.cos(j) * i);
-                    
-                    
-                    if (x < img.getWidth() && x >= 0 && y < img.getHeight() && y >= 0 && !usedPixels[x][y]) {
-                        Color color = new Color(img.getRGB(x, y), true);
-                        if (color.getAlpha() > 230)
-                            writer.println(".place setpixel " + (0 + x) + " " + (0 + y) + " " + rgbToHex(color));
-                        usedPixels[x][y] = true;
-                    }
-                }
-            }
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
 
-
-        if(Boolean.parseBoolean(ctx.getArgs().get(0))){
-
-            Message adder = ctx.getChannel().retrieveMessageById(ctx.getArgs().get(1)).complete();
-
-            LinkedList<Emote> liste = new LinkedList<>();
-
-            for (Emote var : ctx.getGuild().getEmotes()) {
-                liste.add(var);
-            }
-
-            Collections.shuffle(liste);
-
-            for (int i = 0; i < 20; i++) {
-                adder.addReaction(liste.pop()).queue();
-            }
-        } else {
-            LinkedList<Role> addRole = new LinkedList<>();
-            LinkedList<Role> delRole = new LinkedList<>();
-            List<String> t = ctx.getArgs();
-
-            addRole.add(ctx.getGuild().getRoleById(t.get(1)));
-            delRole.add(ctx.getGuild().getRoleById(t.get(2)));
-
-
-
-            ctx.getGuild().modifyMemberRoles(ctx.getMember(), addRole, delRole).complete();
-        }
-    }
+        Emote emo = ctx.getGuild().getEmoteById("845063390187225128");
+        Button tmp = Button.primary("idcustom", " test");
+        tmp = tmp.withEmoji(Emoji.fromEmote(emo));
+        ctx.getChannel().sendMessage("text").setActionRows(ActionRow.of(tmp)).queue();
+        
+    }   
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
