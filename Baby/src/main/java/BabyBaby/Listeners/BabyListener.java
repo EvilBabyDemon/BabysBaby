@@ -293,10 +293,12 @@ public class BabyListener extends ListenerAdapter {
         if(data.msgid.contains(event.getMessageId())){
             String emote = "";
             try{
-                emote += ":" + event.getReactionEmote().getName() + ":" + event.getReactionEmote().getId(); 
+                emote += (event.getReactionEmote().getEmote().isAnimated() ? "a" : "") +":"+ event.getReactionEmote().getAsReactionCode(); 
+                //event.getReactionEmote().getEmote().isAnimated()
             } catch (Exception e) {
                 emote += event.getReactionEmote().getName();
             }
+
 
             if(data.emoteassign.containsKey(emote)){
                 Role assign = event.getGuild().getRoleById(data.emoteassign.get(emote));
