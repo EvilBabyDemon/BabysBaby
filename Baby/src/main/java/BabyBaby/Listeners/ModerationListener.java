@@ -107,6 +107,8 @@ public class ModerationListener extends ListenerAdapter{
             return;
         }
 
+        String inviter = urls.get(url).getInviter() == null ? urls.get(url).getInviter().getAsMention() : "null";
+
         DateTimeFormatter linkcreate = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
         DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
         OffsetDateTime created = event.getUser().getTimeCreated();
@@ -123,7 +125,7 @@ public class ModerationListener extends ListenerAdapter{
         String acccrea = "Account created at: **" + event.getUser().getTimeCreated().format(createtime) + "** `(" + actualtime + ")`"; 
 		
         String desc = "User that joined " + event.getUser().getAsMention() +  "\n" +
-                        "Used Link: " + url + "\n Creator: " + urls.get(url).getInviter().getAsMention() + "\n" +
+                        "Used Link: " + url + "\n Creator: " + inviter + "\n" +
                         "Uses: " + ++amount + "\n"+
                         "Invite created at: " + urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate) + "\n" +
                         acccrea;
@@ -137,7 +139,7 @@ public class ModerationListener extends ListenerAdapter{
         eb.setDescription(desc);
         
 
-        log.sendMessage("cache reload").complete().editMessage(urls.get(url).getInviter().getAsMention() + event.getUser().getAsMention()).complete().editMessage(eb.build()).complete();
+        log.sendMessage("cache reload").complete().editMessage(inviter + event.getUser().getAsMention()).complete().editMessage(eb.build()).complete();
 
 
         PreparedStatement pstmt = null;
