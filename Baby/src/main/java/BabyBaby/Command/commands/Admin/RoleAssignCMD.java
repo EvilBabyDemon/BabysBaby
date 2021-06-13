@@ -16,11 +16,16 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 public class RoleAssignCMD implements AdminCMD {
 
@@ -122,18 +127,37 @@ public class RoleAssignCMD implements AdminCMD {
             LinkedList<String> temp = new LinkedList<>();
             temp.addAll(emotes.remove(0));
 
-            Message msgs = channel.sendMessage(eb.build()).complete();                
-            data.msgid.add(msgs.getId());
+            
+            ArrayList<Button> butt = new ArrayList<>();
             for (String var : temp) {
                 if(var == null || var.length() == 0)
                         continue;
+                
+                boolean gemo = false;
+                if((gemo=var.contains(":"))){
+                    var = var.split(":")[1];
+                }
+                
                 try{
-                    channel.addReactionById(msgs.getId(), var).queue();
+                    butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(var)): Emoji.fromUnicode(var)));
                 } catch (Exception e){
                     ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
-                }   
+                }
             }
 
+            MessageAction msgAct = channel.sendMessage(eb.build());                
+            
+            LinkedList<ActionRow> acR = new LinkedList<>();
+            for (int i = 0; i < butt.size(); i +=5) {
+                ArrayList<Button> row = new ArrayList<>();
+                for (int j = 0; j < 5 && j+i < butt.size(); j++) {
+                    row.add(butt.get(i+j));
+                }
+                acR.add(ActionRow.of(row));
+            }
+            msgAct.setActionRows(acR);
+            Message msgs = msgAct.complete();   
+            data.msgid.add(msgs.getId());
             
             c = null;
             PreparedStatement pstmt = null;
