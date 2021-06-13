@@ -17,12 +17,15 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.Button;
 
 public class EditAssignCMD implements AdminCMD{
 
@@ -164,24 +167,38 @@ public class EditAssignCMD implements AdminCMD{
                     }
                     
                     data.msgid.add(edited.getId());
-                    
-                    List<MessageReaction> reactions = edited.getReactions();
-                    for (MessageReaction var : reactions) {
-                        if(!cont(temp, var.getReactionEmote().getAsReactionCode())){
-                            var.clearReactions().complete();
-                        }
-                    }
+                
 
 
+                    ArrayList<Button> butt = new ArrayList<>();
                     for (String var : temp) {
                         if(var == null || var.length() == 0)
                                 continue;
+                        
+                        boolean gemo = false;
+                        if((gemo=var.contains(":"))){
+                            var = var.split(":")[1];
+                        }
+                        
                         try{
-                            edited.addReaction(var).complete();
+                            butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(var)): Emoji.fromUnicode(var)));
                         } catch (Exception e){
-                            ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete();
+                            ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                         }
                     }
+        
+                                    
+                    
+                    LinkedList<ActionRow> acR = new LinkedList<>();
+                    for (int i = 0; i < butt.size(); i +=5) {
+                        ArrayList<Button> row = new ArrayList<>();
+                        for (int j = 0; j < 5 && j+i < butt.size(); j++) {
+                            row.add(butt.get(i+j));
+                        }
+                        acR.add(ActionRow.of(row));
+                    }
+                    edited.editMessage("newContent").setActionRows(acR);
+
                     empty = false;
                 }
                 if(empty){
