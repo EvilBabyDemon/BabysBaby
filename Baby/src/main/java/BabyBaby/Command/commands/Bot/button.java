@@ -22,12 +22,7 @@ public class button {
             eth = event.getGuild();
         }
 
-        String content = event.getMessage().getContentRaw();
-        content = content.substring(16);
-
-        String[] number = content.split("`");
-
-        int time = Integer.parseInt(number[0]);
+        int time = Integer.parseInt(event.getMessage().getActionRows().get(0).getButtons().get(0).getLabel());
 
         if (time > firstplace) {
             time = 0;
