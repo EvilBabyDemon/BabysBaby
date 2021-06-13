@@ -104,6 +104,7 @@ public class CmdHandler {
         addOwnerCommand(new PlaceTravelingSalesmanColour());
         addOwnerCommand(new RoleChangeCMD());
         addOwnerCommand(new TurnCMDsOff());
+        addOwnerCommand(new ChangeLogCMD());
         
         
         

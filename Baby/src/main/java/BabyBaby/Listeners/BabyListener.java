@@ -346,7 +346,32 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onButtonClick(ButtonClickEvent event) {
-        if (event.getComponentId().equals("hello")) {
+        if (data.buttonid.contains(event.getMessageId())) {
+            
+            
+            InteractionHook msgHook = null;
+            boolean failed = false;
+            try {
+                msgHook = event.deferReply(true).complete();
+            } catch (Exception e) {
+                System.out.println("Why so slow :/");
+                failed = true;
+            }
+            
+            if(event.getComponentId().equals("role")){
+                if(!failed){
+                    msgHook.editOriginal("This doesnt work yet").complete();
+                }
+                return;
+            }
+
+            Emote emo = event.getGuild().getEmoteById(event.getComponentId());
+            
+            if(failed){
+                event.getUser().openPrivateChannel().complete().sendMessage(emo.getAsMention()).complete();
+            } else {
+                msgHook.editOriginal(emo.getAsMention()).complete();
+            }
             
         }
     }
@@ -365,9 +390,11 @@ public class BabyListener extends ListenerAdapter {
             System.out.println("Why so slow :/");
             failed = true;
         }
+        if(event.getUser().isBot())
+            return;
 
         String cmd = event.getName();
-
+        
         if(cmd.equals("poll")){
             new PollCMD().slashCommand(event);
         } else if(cmd.equals("blind")){
@@ -414,7 +441,7 @@ public class BabyListener extends ListenerAdapter {
     //User Typing
     @Override
     public void onUserTyping(@Nonnull UserTypingEvent event) {
-        if(event.getMember().getId().equals("848908721900093440") && event.getChannel().getId().equals("768600365602963496")){
+        if(event.getGuild() != null && event.getMember().getId().equals("848908721900093440") && event.getChannel().getId().equals("768600365602963496")){
             event.getGuild().getTextChannelById("789509420447039510").sendMessage("<@!223932775474921472> <:uhh:816589889898414100> <#768600365602963496>").queue();
         }
     }

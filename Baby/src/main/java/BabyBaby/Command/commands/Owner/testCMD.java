@@ -1,9 +1,14 @@
 package BabyBaby.Command.commands.Owner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /*
 import java.io.File;
@@ -18,11 +23,12 @@ import java.awt.Color;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.entities.Emote;
+import BabyBaby.data.data;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 public class testCMD implements OwnerCMD{
 
@@ -33,12 +39,64 @@ public class testCMD implements OwnerCMD{
 
     @Override
     public void handleOwner(CommandContext ctx) {
+        ArrayList<Button> buttons = new ArrayList<>();
+        ArrayList<String> roles = new ArrayList<>();
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(data.db);
+            
+            stmt = c.createStatement();
 
-        Emote emo = ctx.getGuild().getEmoteById("845063390187225128");
-        Button tmp = Button.primary("idcustom", " test");
-        tmp = tmp.withEmoji(Emoji.fromEmote(emo));
-        ctx.getChannel().sendMessage("text").setActionRows(ActionRow.of(tmp)).queue();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES;");
+            while ( rs.next() ) {
+                roles.add(ctx.getGuild().getRoleById(rs.getString("ID")).getName());
+            }
+            rs.close();
+            stmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            ctx.getChannel().sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+            return;
+        }
+        boolean switcher = true;
+        for (int i = 0; i < 25; i++) {
+            buttons.add(switcher ? Button.success("role", roles.remove((int) (Math.random()*roles.size()))) : Button.danger("role", roles.remove((int) (Math.random()*roles.size()))));
+            switcher = !switcher;
+        }
         
+        MessageAction adder = ctx.getChannel().sendMessage("Click the buttons :");
+        LinkedList<ActionRow> actionRows = new LinkedList<>();
+        for (int i = 0; i < 5; i++) {
+            actionRows.add(ActionRow.of(buttons.remove(0), buttons.remove(0), buttons.remove(0), buttons.remove(0), buttons.remove(0)));
+        }
+        adder.setActionRows(actionRows);
+        
+        
+
+        Message msg = adder.complete();
+        data.buttonid.add(msg.getId());
+        msg.editMessage("newContent").setActionRow(Button.success("role", "yay")).completeAfter(10, TimeUnit.SECONDS);
+
+
+        /*
+        ArrayList<Button> buttons = new ArrayList<>();
+        ArrayList<Emote> allemo = new ArrayList<>(ctx.getGuild().getEmotes());
+        for (int i = 0; i < 25; i++) {
+            Emote emo = allemo.remove((int) (Math.random()*allemo.size()));
+            Button tmp = Button.primary(emo.getId(), Emoji.fromEmote(emo));
+            //tmp = tmp.withEmoji(Emoji.fromEmote(emo));
+            buttons.add(tmp);
+        }
+        MessageAction adder = ctx.getChannel().sendMessage("Click the buttons :");
+        LinkedList<ActionRow> actionRows = new LinkedList<>();
+        for (int i = 0; i < 5; i++) {
+            actionRows.add(ActionRow.of(buttons.remove(0), buttons.remove(0), buttons.remove(0), buttons.remove(0), buttons.remove(0)));
+        }
+        adder.setActionRows(actionRows);
+        data.buttonid.add(adder.complete().getId());
+        */
     }   
 
     @Override

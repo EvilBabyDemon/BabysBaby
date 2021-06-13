@@ -26,6 +26,7 @@ public class data {
     public static final String ethexternal = "767315361443741717";
     public static boolean elthision = false;
     public static boolean marc = false;
+    public static HashSet<String> buttonid = new HashSet<>();
 
     //Filepaths
     public static final String TOKEN = "token.txt";
