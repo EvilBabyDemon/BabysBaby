@@ -48,7 +48,7 @@ public class ModerationListener extends ListenerAdapter{
     //Member Join
     @Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-		if(!event.getGuild().getId().equals(data.ethid) || event.getUser().isBot())
+		if(!event.getGuild().getId().equals(data.ethid))
             return;
 
         OffsetDateTime time = event.getUser().getTimeCreated();
