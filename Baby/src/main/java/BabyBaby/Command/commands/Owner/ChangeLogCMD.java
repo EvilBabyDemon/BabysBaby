@@ -1,10 +1,11 @@
 package BabyBaby.Command.commands.Owner;
 
-import java.security.acl.Owner;
+import java.util.LinkedList;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -19,13 +20,19 @@ public class ChangeLogCMD implements OwnerCMD {
     public void handleOwner(CommandContext ctx) {
         String result = "<:plusplus:816779826202411038> ";
 
+        LinkedList<Emote> emo = new LinkedList<>();
+        
         for (String var : ctx.getArgs()) {
-            result += ctx.getGuild().getEmoteById(var).getAsMention() + " ";
+            emo.add(ctx.getGuild().getEmotesByName(var, true).get(0));
+        }
+
+        for (Emote var : emo) {
+            result += var.getAsMention() + " ";
         }
         Message tmp = ctx.getChannel().sendMessage(result).complete();
 
-        for (String var : ctx.getArgs()) {
-            tmp.addReaction(ctx.getGuild().getEmoteById(var)).complete();
+        for (Emote var : emo) {
+            tmp.addReaction(var).complete();
         }
     }
 
