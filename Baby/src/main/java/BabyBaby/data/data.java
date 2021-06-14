@@ -1,12 +1,16 @@
 package BabyBaby.data;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class data {
     public static boolean antibamboozle = true;
+    //TODO Remove msgid and check on msgToChan
     public static HashSet<String> msgid = new HashSet<>();
+    public static HashMap<String, ArrayList<String>> catToMsg = new HashMap<>();
+    public static HashMap<String, String> msgToChan = new HashMap<>();
     public static HashMap<String, String> emoteassign = new HashMap<>();
     public static HashSet<String> roles = new HashSet<>();
     public static final String check = ":checkmark:769279808244809798";
