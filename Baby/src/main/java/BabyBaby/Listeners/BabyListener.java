@@ -197,7 +197,7 @@ public class BabyListener extends ListenerAdapter {
                 stmt.close();
                 c.close();
             } catch ( Exception e ) {
-                e.printStackTrace(); 
+                e.printStackTrace();
             }
             return;
         }
@@ -288,7 +288,7 @@ public class BabyListener extends ListenerAdapter {
         if(!event.getGuild().getId().equals(data.ethid))
             return;
 
-
+        
 
         if(data.msgid.contains(event.getMessageId())){
             String emote = "";
@@ -360,6 +360,31 @@ public class BabyListener extends ListenerAdapter {
                 failed = true;
             }
             
+            if(data.emoteassign.containsKey(event.getComponentId())){
+                
+                Member mem = event.getMember();
+                Guild guild = event.getGuild();
+                Role chnge = guild.getRoleById(data.emoteassign.get(event.getComponentId()));
+
+                if(mem.getRoles().contains(chnge)){
+                    String fail = "Removed the role ";
+                    if(failed){
+                        event.getUser().openPrivateChannel().complete().sendMessage(fail + chnge.getName()).queue();
+                    } else {
+                        msgHook.editOriginal(fail + chnge.getAsMention()).queue();
+                    }
+                    guild.removeRoleFromMember(mem, chnge).complete();
+                } else {
+                    String succes = "Added the role ";
+                    if(failed){
+                        event.getUser().openPrivateChannel().complete().sendMessage(succes + chnge.getName()).queue();
+                    } else {
+                        msgHook.editOriginal(succes + chnge.getAsMention()).queue();
+                    }
+                    guild.addRoleToMember(mem, chnge).complete();
+                }
+            }
+
             if(event.getComponentId().equals("role")){
                 if(!failed){
                     msgHook.editOriginal("This doesnt work yet").complete();
@@ -467,7 +492,7 @@ public class BabyListener extends ListenerAdapter {
             }
         } else if(user.getId().equals("778731540359675904") && data.antibamboozle){
             String content = event.getMessage().getContentRaw();
-            if (content.startsWith("Current value: ")) {
+            if (content.equals("Press the button to claim the points.")) {
                 button.tap(event);
             }
         } /*else if(user.getId().equals("590453186922545152") || user.getId().equals("223932775474921472")){
