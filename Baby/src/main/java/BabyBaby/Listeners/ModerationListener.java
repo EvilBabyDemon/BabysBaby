@@ -102,12 +102,12 @@ public class ModerationListener extends ListenerAdapter{
             return;
         }
 
-        if(!found){
+        if(!found && !event.getUser().isBot()){
             event.getGuild().getTextChannelById("747768907992924192").sendMessage("Smth went wrong with the invite link stuff. Couldnt find the invite link... <@!223932775474921472>").queue();
             return;
         }
 
-        String inviter = urls.get(url).getInviter() == null ? urls.get(url).getInviter().getAsMention() : "null";
+        String inviter =  (urls.get(url)==null) ? "bot?" : urls.get(url).getInviter() == null ? urls.get(url).getInviter().getAsMention() : "vanity?" ;
 
         DateTimeFormatter linkcreate = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
         DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
@@ -124,10 +124,16 @@ public class ModerationListener extends ListenerAdapter{
         
         String acccrea = "Account created at: **" + event.getUser().getTimeCreated().format(createtime) + "** `(" + actualtime + ")`"; 
 		
+        String timecreate = "NaN";
+
+        if(urls.get(url) != null) {
+            timecreate = urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate);
+        }
+
         String desc = "User that joined " + event.getUser().getAsMention() +  "\n" +
                         "Used Link: " + url + "\n Creator: " + inviter + "\n" +
                         "Uses: " + ++amount + "\n"+
-                        "Invite created at: " + urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate) + "\n" +
+                        "Invite created at: " + timecreate + "\n" +
                         acccrea;
 
         MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
@@ -141,23 +147,24 @@ public class ModerationListener extends ListenerAdapter{
 
         log.sendMessage("cache reload").complete().editMessage(inviter + event.getUser().getAsMention()).complete().editMessage(eb.build()).complete();
 
-
-        PreparedStatement pstmt = null;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
-            
-            pstmt = c.prepareStatement("UPDATE INVITES SET AMOUNT = ? where URL = ? ;");
-            pstmt.setInt(1, amount);
-            pstmt.setString(2, url);
-            pstmt.executeUpdate();
-            
-            pstmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            System.out.println(e.getClass().getName() + ": " + e.getMessage());
-            e.printStackTrace();
-            return;
+        if(urls.get(url) != null) {
+            PreparedStatement pstmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection(data.db);
+                
+                pstmt = c.prepareStatement("UPDATE INVITES SET AMOUNT = ? where URL = ? ;");
+                pstmt.setInt(1, amount);
+                pstmt.setString(2, url);
+                pstmt.executeUpdate();
+                
+                pstmt.close();
+                c.close();
+            } catch ( Exception e ) {
+                System.out.println(e.getClass().getName() + ": " + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
         }
 	}
 
