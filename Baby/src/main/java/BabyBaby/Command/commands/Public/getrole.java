@@ -261,7 +261,7 @@ public class GetRole implements PublicCMD{
 
         embed.setTitle("Help page of: `" + getName() +"`");
         embed.setDescription("Command to see all roles with emotes such that you can assign them yourself. Or add the role name and directly get a Role added or removed.");
-
+        
         // general use
         embed.addField("", new ColouredStringAsciiDoc()
                 .addBlueAboveEq("general use")
