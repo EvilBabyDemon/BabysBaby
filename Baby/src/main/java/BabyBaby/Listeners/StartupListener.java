@@ -147,7 +147,14 @@ public class StartupListener extends ListenerAdapter{
                     stmt = c.createStatement();
                     rs = stmt.executeQuery("SELECT * FROM MSGS;");
                     while(rs.next()){
-                        data.msgid.add(rs.getString("MSGID"));
+                        String id = rs.getString("MSGID");
+                        data.msgid.add(id);
+                        String cat = rs.getString("CATEGORY");
+                        ArrayList<String> temp = data.catToMsg.getOrDefault(cat, new ArrayList<String>());
+                        temp.add(id);
+                        data.catToMsg.put(cat, temp);
+                        
+                        data.msgToChan.put(id, rs.getString("CHANNELID"));
                     }
                     stmt.close();
                     c.close();

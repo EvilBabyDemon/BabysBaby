@@ -17,7 +17,6 @@ import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -50,6 +49,7 @@ public class RoleAssignCMD implements AdminCMD {
                 String cat = rs.getString("categories");
                 cats.add(cat);
             }
+            
             rs.close();
             stmt.close();
             c.close();
@@ -59,8 +59,6 @@ public class RoleAssignCMD implements AdminCMD {
             return;
         }
         
-        
-
         //doing embeds with each category
 
         String msg = "";
@@ -116,14 +114,14 @@ public class RoleAssignCMD implements AdminCMD {
             msg = "";
         }
 
-        LinkedList<EmbedBuilder> emb = new LinkedList<>();
+        ArrayList<EmbedBuilder> emb = new ArrayList<>();
 
 
         for (int i = 0; i < categ.size(); i++) {
             emb.add(embeds(categ.get(i), roles.get(i)));
         }
-        int count = 0;
-        for (EmbedBuilder eb : emb) {
+        for (int k = 0; k < emb.size(); k++) {
+            EmbedBuilder eb = emb.get(k);
             LinkedList<String> temp = new LinkedList<>();
             temp.addAll(emotes.remove(0));
 
@@ -145,7 +143,7 @@ public class RoleAssignCMD implements AdminCMD {
                 }
             }
 
-            MessageAction msgAct = channel.sendMessage(eb.build());                
+            MessageAction msgAct = channel.sendMessage(eb.build());
             
             LinkedList<ActionRow> acR = new LinkedList<>();
             for (int i = 0; i < butt.size(); i +=5) {
@@ -156,8 +154,14 @@ public class RoleAssignCMD implements AdminCMD {
                 acR.add(ActionRow.of(row));
             }
             msgAct.setActionRows(acR);
-            Message msgs = msgAct.complete();   
+            Message msgs = msgAct.complete();
             data.msgid.add(msgs.getId());
+
+            ArrayList<String> templist = data.catToMsg.getOrDefault(categ.get(k), new ArrayList<String>());
+            templist.add(msgs.getId());
+            data.catToMsg.put(categ.get(k), templist);
+
+            data.msgToChan.put(msgs.getId(), msgs.getChannel().getId());
             
             c = null;
             PreparedStatement pstmt = null;
@@ -168,7 +172,7 @@ public class RoleAssignCMD implements AdminCMD {
                 pstmt.setString(1, ctx.getGuild().getId());
                 pstmt.setString(2, ctx.getChannel().getId());
                 pstmt.setString(3, msgs.getId());
-                pstmt.setString(4, categ.get(count++)); 
+                pstmt.setString(4, categ.get(k)); 
                 pstmt.executeUpdate();
                 pstmt.close();
                 c.close();
