@@ -22,10 +22,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 public class EditAssignCMD implements AdminCMD{
 
@@ -50,6 +51,11 @@ public class EditAssignCMD implements AdminCMD{
 		if(!ctx.getGuild().getId().equals(data.ethid)){
             return;
         }
+        
+        
+        
+    
+
         Connection c = null;
         Statement stmt = null;
         MessageChannel channel = ctx.getChannel();
@@ -68,6 +74,7 @@ public class EditAssignCMD implements AdminCMD{
                 String cat = rs.getString("categories");
                 cats.add(cat);
             }
+            
             rs.close();
             stmt.close();
             c.close();
@@ -77,14 +84,16 @@ public class EditAssignCMD implements AdminCMD{
             return;
         }
         
-        
+        //doing embeds with each category
 
         String msg = "";
+
+
 
         LinkedList<LinkedList<String>> emotes = new LinkedList<>();
         ArrayList<String> categ = new ArrayList<>();
         LinkedList<String> roles = new LinkedList<>();
-
+        
         for (String var : cats) {
             HashMap<Role, Object[]> sorting = new HashMap<>();
             try {
@@ -130,119 +139,98 @@ public class EditAssignCMD implements AdminCMD{
             msg = "";
         }
 
-        LinkedList<EmbedBuilder> emb = new LinkedList<>();
-
+        ArrayList<EmbedBuilder> emb = new ArrayList<>();
         LinkedList<String> remover = new LinkedList<>();
 
         for (int i = 0; i < categ.size(); i++) {
             emb.add(embeds(categ.get(i), roles.get(i)));
         }
-        int count = 0;
-        for (EmbedBuilder eb : emb) {
+
+        for (int k = 0; k < emb.size(); k++) {
+            EmbedBuilder eb = emb.get(k);
             LinkedList<String> temp = new LinkedList<>();
             temp.addAll(emotes.remove(0));
 
-            c = null;
-            PreparedStatement pstmt = null;
-            try {
-                Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
-                pstmt = c.prepareStatement("SELECT * FROM MSGS WHERE CATEGORY = ? AND GUILDID = ?;");
-                pstmt.setString(1, categ.get(count));
-                pstmt.setString(2, ctx.getGuild().getId());
-                rs = pstmt.executeQuery();
-
-                String msgid = "";
-                String channelid = "";
-                boolean empty = true;
-                while(rs.next()){
-                    msgid = rs.getString("MSGID");
-                    channelid = rs.getString("CHANNELID");
-                    Message edited;
-                    try {
-                        edited = ctx.getGuild().getTextChannelById(channelid).editMessageById(msgid, eb.build()).complete();    
-                    } catch (Exception e) {
-                        remover.add(msgid);
-                        continue;
-                    }
-                    
-                    data.msgid.add(edited.getId());
-                
-
-
-                    ArrayList<Button> butt = new ArrayList<>();
-                    for (String var : temp) {
-                        if(var == null || var.length() == 0)
-                                continue;
-                        
-                        boolean gemo = false;
-                        if((gemo=var.contains(":"))){
-                            var = var.split(":")[1];
-                        }
-                        
-                        try{
-                            butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(var)): Emoji.fromUnicode(var)));
-                        } catch (Exception e){
-                            ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
-                        }
-                    }
-        
-                                    
-                    
-                    LinkedList<ActionRow> acR = new LinkedList<>();
-                    for (int i = 0; i < butt.size(); i +=5) {
-                        ArrayList<Button> row = new ArrayList<>();
-                        for (int j = 0; j < 5 && j+i < butt.size(); j++) {
-                            row.add(butt.get(i+j));
-                        }
-                        acR.add(ActionRow.of(row));
-                    }
-                    edited.editMessage("newContent").setActionRows(acR);
-
-                    empty = false;
-                }
-                if(empty){
-                    Message msgs = ctx.getChannel().sendMessage(eb.build()).complete();
-                    data.msgid.add(msgs.getId());
-                    for (String var : temp) {
-                        if(var == null || var.length() == 0)
-                                continue;
-                        try{
-                        channel.addReactionById(msgs.getId(), var).queue();
-                        } catch (Exception e){
-                            ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
-                        }
-                    }
-
-                    c = null;
-                    pstmt = null;
-                    try {
-                        Class.forName("org.sqlite.JDBC");
-                        c = DriverManager.getConnection(data.db);
-                        pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
-                        pstmt.setString(1, ctx.getGuild().getId());
-                        pstmt.setString(2, ctx.getChannel().getId());
-                        pstmt.setString(3, msgs.getId());
-                        pstmt.setString(4, categ.get(count));
-
-                        pstmt.executeUpdate();
-                        pstmt.close();
-                        c.close();
-                    } catch ( Exception e ) {
-                        e.printStackTrace(); 
-                    }
-                }
-                
-                pstmt.close();
-                c.close();
-            } catch (Exception e) {
-                channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
-                e.printStackTrace();
-            }
             
-            count++;
+            ArrayList<Button> butt = new ArrayList<>();
+            for (String var : temp) {
+                if(var == null || var.length() == 0)
+                        continue;
+                
+                boolean gemo = false;
+                if((gemo=var.contains(":"))){
+                    var = var.split(":")[1];
+                }
+                
+                try{
+                    butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(var)): Emoji.fromUnicode(var)));
+                } catch (Exception e){
+                    ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                }
+            }
+
+            LinkedList<ActionRow> acR = new LinkedList<>();
+            for (int i = 0; i < butt.size(); i +=5) {
+                ArrayList<Button> row = new ArrayList<>();
+                for (int j = 0; j < 5 && j+i < butt.size(); j++) {
+                    row.add(butt.get(i+j));
+                }
+                acR.add(ActionRow.of(row));
+            }
+
+            MessageAction msgAct;
+
+            if(!data.catToMsg.containsKey(categ.get(k))){
+                msgAct = channel.sendMessage(eb.build());
+                msgAct.setActionRows(acR);
+                Message msgs = msgAct.complete();
+                data.msgid.add(msgs.getId());
+                ArrayList<String> templist = data.catToMsg.getOrDefault(categ.get(k), new ArrayList<String>());
+                templist.add(msgs.getId());
+                data.catToMsg.put(categ.get(k), templist);
+                data.msgToChan.put(msgs.getId(), msgs.getChannel().getId());
+                
+                c = null;
+                PreparedStatement pstmt = null;
+                try {
+                    Class.forName("org.sqlite.JDBC");
+                    c = DriverManager.getConnection(data.db);
+                    pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
+                    pstmt.setString(1, ctx.getGuild().getId());
+                    pstmt.setString(2, ctx.getChannel().getId());
+                    pstmt.setString(3, msgs.getId());
+                    pstmt.setString(4, categ.get(k)); 
+                    pstmt.executeUpdate();
+                    pstmt.close();
+                    c.close();
+                } catch ( Exception e ) {
+                    e.printStackTrace(); 
+                    return;
+                }
+                continue;
+            }
+
+
+
+            
+            for (String msgid : data.catToMsg.get(categ.get(k))) {
+                TextChannel chan = ctx.getGuild().getTextChannelById(data.msgToChan.get(msgid));
+                try {
+                    Message sent = chan.retrieveMessageById(msgid).complete();
+                    msgAct = sent.editMessage(eb.build());
+                } catch (Exception e) {
+                    remover.add(msgid);
+                    continue;
+                }
+                
+                msgAct.setActionRows(acR);
+                msgAct.complete();
+            }
+
         }
 
+
+        
         for (String var : remover) {
             c = null;
             PreparedStatement pstmt = null;
@@ -258,12 +246,12 @@ public class EditAssignCMD implements AdminCMD{
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 e.printStackTrace(); 
             }
+            data.msgid.remove(var);
+            
+            data.msgToChan.remove(var);
         }
-        
 
-
-
-        channel.deleteMessageById(ctx.getMessage().getId()).queue();
+        ctx.getMessage().delete().queue();
 
 		
 	}
