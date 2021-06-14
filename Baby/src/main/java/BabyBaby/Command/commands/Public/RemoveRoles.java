@@ -62,11 +62,25 @@ public class RemoveRoles implements PublicCMD{
         }
 
         String unit = null;
-        if(cmds.size()>1)
+        String amount;
+        
+        
+        amount = cmds.get(0);        
+        if(cmds.size()>1){
             unit = cmds.get(1);
+        } else {
+            String s = cmds.get(0);
+            for(int i = 0; i < s.length(); i++) {
+                if (Character.isLetter(s.charAt(i))) {
+                amount = s.substring(0, i);
+                unit = s.substring(i, i+1);
+                break;
+                }
+            }
+        }
         
 
-        roleRemoval(cmds.get(0), ctx.getMember(), ctx.getGuild(), unit, false, ctx.getChannel());
+        roleRemoval(amount, ctx.getMember(), ctx.getGuild(), unit, false, ctx.getChannel());
 
     }
 
@@ -89,7 +103,7 @@ public class RemoveRoles implements PublicCMD{
         List<Role> begone = silenced.getRoles();
         LinkedList<Role> permrole = new LinkedList<>();
 
-
+        
 
         double time;
         String sunit;
