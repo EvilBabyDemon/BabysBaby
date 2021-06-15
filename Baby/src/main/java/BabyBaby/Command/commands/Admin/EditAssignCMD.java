@@ -156,16 +156,16 @@ public class EditAssignCMD implements AdminCMD{
             for (String var : temp) {
                 if(var == null || var.length() == 0)
                         continue;
-                
+                String emote = var;
                 boolean gemo = false;
-                if((gemo=var.contains(":"))){
-                    var = var.split(":")[1];
+                if((gemo=emote.contains(":"))){
+                    emote = emote.split(":")[2];
                 }
                 
                 try{
-                    butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(var)): Emoji.fromUnicode(var)));
+                    butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
                 } catch (Exception e){
-                    ctx.getChannel().sendMessage("Reaction with ID:" + var + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                    ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
