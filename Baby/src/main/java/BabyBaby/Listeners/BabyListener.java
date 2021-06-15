@@ -348,7 +348,7 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onButtonClick(ButtonClickEvent event) {
-        if (data.buttonid.contains(event.getMessageId())) {
+        if (data.buttonid.contains(event.getMessageId()) || data.msgid.contains(event.getMessageId())) {
             
             
             InteractionHook msgHook = null;
@@ -383,21 +383,7 @@ public class BabyListener extends ListenerAdapter {
                     }
                     guild.addRoleToMember(mem, chnge).complete();
                 }
-            }
-
-            if(event.getComponentId().equals("role")){
-                if(!failed){
-                    msgHook.editOriginal("This doesnt work yet").complete();
-                }
                 return;
-            }
-
-            Emote emo = event.getGuild().getEmoteById(event.getComponentId());
-            
-            if(failed){
-                event.getUser().openPrivateChannel().complete().sendMessage(emo.getAsMention()).complete();
-            } else {
-                msgHook.editOriginal(emo.getAsMention()).complete();
             }
             
         }
