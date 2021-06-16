@@ -9,21 +9,11 @@ import java.util.List;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class delrole implements AdminCMD {
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-       handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
+public class DelRoleCMD implements AdminCMD {
 
     @Override
     public String getName() {
@@ -39,14 +29,14 @@ public class delrole implements AdminCMD {
         }
         
 
-        if(!data.roles.contains(cmds.get(0))){
+        if(!Data.roles.contains(cmds.get(0))){
             ctx.getChannel().sendMessage("Doesnt exist sry").queue();
             return;
         }
-        data.roles.remove(cmds.get(0));
-        for (String var : data.emoteassign.keySet()) {
-            if(data.emoteassign.get(var).equals(cmds.get(0))){
-                data.emoteassign.remove(var);
+        Data.roles.remove(cmds.get(0));
+        for (String var : Data.emoteassign.keySet()) {
+            if(Data.emoteassign.get(var).equals(cmds.get(0))){
+                Data.emoteassign.remove(var);
                 break;
             }
         }
@@ -60,7 +50,7 @@ public class delrole implements AdminCMD {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             c.setAutoCommit(false);
     
             stmt = c.createStatement();
@@ -75,7 +65,7 @@ public class delrole implements AdminCMD {
             return;
         }
 
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
         
     }
 

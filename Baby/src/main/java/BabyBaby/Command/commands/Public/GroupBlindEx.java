@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
@@ -86,7 +86,7 @@ public class GroupBlindEx implements Runnable {
 
                     try {
                         Class.forName("org.sqlite.JDBC");
-                        c = DriverManager.getConnection(data.db);
+                        c = DriverManager.getConnection(Data.db);
                         
                         for (Role var : permrole) {
                             role += var.getId() + " ";
@@ -118,10 +118,10 @@ public class GroupBlindEx implements Runnable {
                     }
                     
 
-                    RemoveRoles.blind.put(blinded, null);
+                    BlindCMD.blind.put(blinded, null);
                     guild.modifyMemberRoles(blinded, tmp, permrole).complete();
                     try {
-                        priv.sendMessage("You got blinded for ~" + learntime + " minutes. Either wait out the timer or write me here \n+" + new UnblindCMD().getName()+ ". This will kick you from the group.").queue();
+                        priv.sendMessage("You got blinded for ~" + learntime + " minutes. Either wait out the timer or write me here \n+" + new UnBlindCMD().getName()+ ". This will kick you from the group.").queue();
                     } catch (Exception e) {
                         System.out.println("Author didn't allow private message.");
                     }
@@ -147,7 +147,7 @@ public class GroupBlindEx implements Runnable {
                 PreparedStatement stmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     
                     stmt = c.prepareStatement("SELECT ROLES FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
                     stmt.setString(1, blinded.getId());
@@ -184,11 +184,11 @@ public class GroupBlindEx implements Runnable {
                     System.out.println("Role Blind doesnt exist anymore. This could be a serious issue.");
                 }
                 guild.modifyMemberRoles(blinded, addRole, delRole).complete();
-                RemoveRoles.blind.remove(blinded);
+                BlindCMD.blind.remove(blinded);
                 
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     
                     stmt = c.prepareStatement("DELETE FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
                     stmt.setString(1, blinded.getId());

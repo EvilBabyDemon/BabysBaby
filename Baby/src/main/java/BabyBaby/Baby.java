@@ -10,7 +10,7 @@ import javax.security.auth.login.LoginException;
 import BabyBaby.Listeners.BabyListener;
 import BabyBaby.Listeners.ModerationListener;
 import BabyBaby.Listeners.StartupListener;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class Baby {
         try {
             String token = "";
             
-            Scanner s = new Scanner(new File(data.TOKEN));
+            Scanner s = new Scanner(new File(Data.TOKEN));
             token = s.nextLine();
             s.close();
             

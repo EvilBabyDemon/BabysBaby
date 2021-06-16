@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class ConvertPlace implements OwnerCMD {
@@ -33,7 +33,7 @@ public class ConvertPlace implements OwnerCMD {
             
             BufferedImage img;
             if(onpc){
-                img = ImageIO.read(new File(data.PLACE + cmds.get(1)  + ".png"));
+                img = ImageIO.read(new File(Data.PLACE + cmds.get(1)  + ".png"));
             } else{
                 img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
             }
@@ -45,7 +45,7 @@ public class ConvertPlace implements OwnerCMD {
                     rgbs[j][i] = img.getRGB(j, i);
                 }
             }
-            PrintStream out = new PrintStream(new File(data.PLACE + cmds.get(1) + ".txt"));
+            PrintStream out = new PrintStream(new File(Data.PLACE + cmds.get(1) + ".txt"));
 
             for (int i = 0; i < img.getWidth(); i++) {
                 for (int j = 0; j < img.getHeight(); j++) {
@@ -61,11 +61,11 @@ public class ConvertPlace implements OwnerCMD {
             out.flush();
             out.close();
 
-            ctx.getMessage().addReaction(data.check).queue();
+            ctx.getMessage().addReaction(Data.check).queue();
             
             
         } catch (IOException e) {
-            ctx.getMessage().addReaction(data.xmark).queue();
+            ctx.getMessage().addReaction(Data.xmark).queue();
             e.printStackTrace();
         }
         

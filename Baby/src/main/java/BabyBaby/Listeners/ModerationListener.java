@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.managers.ChannelManager;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 import net.dv8tion.jda.internal.managers.ChannelManagerImpl;
 
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 
 import java.sql.*;
 import java.time.OffsetDateTime;
@@ -23,14 +23,14 @@ public class ModerationListener extends ListenerAdapter{
     //Invite
     @Override
     public void onGuildInviteCreate(GuildInviteCreateEvent event) {
-        if(!event.getGuild().getId().equals(data.ethid))
+        if(!event.getGuild().getId().equals(Data.ethid))
             return;
         
         Connection c = null;
         PreparedStatement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("INSERT INTO INVITES (URL, AMOUNT) VALUES (?, 0) ;");
             stmt.setString(1, event.getUrl());
@@ -48,7 +48,7 @@ public class ModerationListener extends ListenerAdapter{
     //Member Join
     @Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-		if(!event.getGuild().getId().equals(data.ethid))
+		if(!event.getGuild().getId().equals(Data.ethid))
             return;
 
         OffsetDateTime time = event.getUser().getTimeCreated();
@@ -74,7 +74,7 @@ public class ModerationListener extends ListenerAdapter{
 		
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.createStatement();
 
@@ -136,7 +136,7 @@ public class ModerationListener extends ListenerAdapter{
                         "Invite created at: " + timecreate + "\n" +
                         acccrea;
 
-        MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+        MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
@@ -151,7 +151,7 @@ public class ModerationListener extends ListenerAdapter{
             PreparedStatement pstmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
+                c = DriverManager.getConnection(Data.db);
                 
                 pstmt = c.prepareStatement("UPDATE INVITES SET AMOUNT = ? where URL = ? ;");
                 pstmt.setInt(1, amount);
@@ -171,23 +171,23 @@ public class ModerationListener extends ListenerAdapter{
     //Channel Create
     @Override
     public void onTextChannelCreate(TextChannelCreateEvent event) {
-        if(!event.getGuild().getId().equals(data.ethid))
+        if(!event.getGuild().getId().equals(Data.ethid))
             return;
         ChannelManager test = new ChannelManagerImpl(event.getChannel());
         Collection<Permission> deny = new LinkedList<>();
         deny.add(Permission.MESSAGE_WRITE);
-		IPermissionHolder permHolder = event.getGuild().getRoleById(data.stfuID);
+		IPermissionHolder permHolder = event.getGuild().getRoleById(Data.stfuID);
         test.putPermissionOverride(permHolder, null, deny).queue();
     }
 
     @Override
     public void onVoiceChannelCreate(VoiceChannelCreateEvent event) {
-        if(!event.getGuild().getId().equals(data.ethid))
+        if(!event.getGuild().getId().equals(Data.ethid))
             return;
         AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
         for (AuditLogEntry entry : logs) {
             if(entry.getType().equals(ActionType.CHANNEL_CREATE)){
-                if(entry.getUser().getId().equals(data.dcvd))
+                if(entry.getUser().getId().equals(Data.dcvd))
                     return;
                 else
                     break;
@@ -197,7 +197,7 @@ public class ModerationListener extends ListenerAdapter{
         ChannelManager channelMan = new ChannelManagerImpl(event.getChannel());
         Collection<Permission> deny = new LinkedList<>();
         deny.add(Permission.VOICE_SPEAK );
-		IPermissionHolder permHolder = event.getGuild().getRoleById(data.stfuID);
+		IPermissionHolder permHolder = event.getGuild().getRoleById(Data.stfuID);
         channelMan.putPermissionOverride(permHolder, null, deny).queue();
     }
 
@@ -211,10 +211,10 @@ public class ModerationListener extends ListenerAdapter{
         AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
         for (AuditLogEntry entry : logs) {
             if(entry.getType().equals(ActionType.KICK)){
-                if(!data.kick.equals(entry.getTimeCreated())){
+                if(!Data.kick.equals(entry.getTimeCreated())){
 
-                    data.kick = entry.getTimeCreated();
-                    MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+                    Data.kick = entry.getTimeCreated();
+                    MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setAuthor(entry.getUser().getAsTag() + " (" + entry.getUser().getId() + ")", entry.getUser().getAvatarUrl(), entry.getUser().getAvatarUrl());
@@ -235,10 +235,10 @@ public class ModerationListener extends ListenerAdapter{
         
         for (AuditLogEntry entry : logs) {
             if(entry.getType().equals(ActionType.BAN)){
-                if(!data.ban.equals(entry.getTimeCreated())){
+                if(!Data.ban.equals(entry.getTimeCreated())){
 
-                    data.ban = entry.getTimeCreated();
-                    MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+                    Data.ban = entry.getTimeCreated();
+                    MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
                     
                     EmbedBuilder eb = new EmbedBuilder();

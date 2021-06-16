@@ -14,16 +14,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class BanCMD implements AdminCMD{
 
     @Override
-    public void handleOwner(CommandContext ctx) {
-       handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
-
-    @Override
     public String getName() {
         return "ban";
     }

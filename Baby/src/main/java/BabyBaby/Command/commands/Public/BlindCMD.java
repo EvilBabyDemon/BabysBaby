@@ -13,46 +13,27 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.GetRolesBack;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.*;
 
-public class RemoveRoles implements PublicCMD{
+public class BlindCMD implements PublicCMD{
     
     public static HashMap<Member, ScheduledExecutorService> blind = new HashMap<>();
     public static HashMap<ScheduledExecutorService, GetRolesBack> blindexe = new HashMap<>();
 
 
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
+    
     @Override
     public String getName() {
         return "blind";
     }
 
     @Override
-    public void handleAdmin(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
     public void handlePublic(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(data.ethid))
+        if(!ctx.getGuild().getId().equals(Data.ethid))
             return;
 
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
 
         List<String> cmds = ctx.getArgs();
 
@@ -199,7 +180,7 @@ public class RemoveRoles implements PublicCMD{
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             for (Role var : permrole) {
                 role += var.getId() + " ";
@@ -234,10 +215,10 @@ public class RemoveRoles implements PublicCMD{
 
         String msg = " got blinded for ~" + time + " " + sunit + ".";
         if(force){
-            RemoveRolesForce.force.add(scheduledclass);
+            BlindForceCMD.force.add(scheduledclass);
             msg +=  " **Wait out the timer!!!** And hopefully you are productive!";
         } else {
-            msg += " Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnblindCMD().getName() + "\"";
+            msg += " Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnBlindCMD().getName() + "\"";
         }
         channel.sendMessage(mem.getAsMention() + msg).queue();
         

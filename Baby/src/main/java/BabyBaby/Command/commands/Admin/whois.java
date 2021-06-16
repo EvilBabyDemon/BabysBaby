@@ -5,10 +5,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
-import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
-import me.duncte123.botcommons.messaging.EmbedUtils;
+import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -20,18 +19,6 @@ public class whois implements AdminCMD{
     @Override
     public String getName() {
         return "whois";
-    }
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handleAdmin(ctx);
-	}
-        
-    
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
     }
     
     @Override
@@ -123,18 +110,7 @@ public class whois implements AdminCMD{
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
-
-        embed.setTitle("Help page of: `" + getName()+"`");
-        embed.setDescription("Return Info about yourself or others.");
-
-        // general use
-        embed.addField("", new ColouredStringAsciiDoc()
-                .addBlueAboveEq("general use")
-                .addOrange(prefix + getName() + "[id/mention]")
-                .build(), false);
-
-        return embed.build();
+        return StandardHelp.Help(prefix, getName(), "[id/mention]", "Return Info about yourself or others.");
     }
 
 

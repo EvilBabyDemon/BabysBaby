@@ -13,7 +13,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.GetUnmute;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -31,21 +31,6 @@ public class MuteCMD implements PublicCMD {
     }
 
     @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
     public String getName() {
         return "muteme";
     }
@@ -53,7 +38,7 @@ public class MuteCMD implements PublicCMD {
     @Override
     public void handlePublic(CommandContext ctx) {
 
-        if(!ctx.getGuild().getId().equals(data.ethid))
+        if(!ctx.getGuild().getId().equals(Data.ethid))
             return;
 
         MessageChannel channel = ctx.getChannel();
@@ -126,7 +111,7 @@ public class MuteCMD implements PublicCMD {
         long timesql = (System.currentTimeMillis() + rounder*1000);
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("INSERT INTO USERS (ID, GUILDID, MUTETIME) VALUES (?,?,?);");           
 

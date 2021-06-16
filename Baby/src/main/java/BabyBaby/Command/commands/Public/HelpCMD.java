@@ -3,7 +3,7 @@ package BabyBaby.Command.commands.Public;
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.CmdHandler;
 import BabyBaby.Command.*;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -255,7 +255,7 @@ public class HelpCMD implements PublicCMD {
         String prefix = "+";
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             c.setAutoCommit(false);
             
             stmt = c.createStatement();

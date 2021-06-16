@@ -12,25 +12,6 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public class PollCMD implements PublicCMD{
 
-	@Override
-	public void handleAdmin(CommandContext ctx) {
-		handlePublic(ctx);
-	}
-
-	@Override
-	public MessageEmbed getAdminHelp(String prefix) {
-		return getPublicHelp(prefix);
-	}
-
-	@Override
-	public void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
-	}
-
-	@Override
-	public MessageEmbed getOwnerHelp(String prefix) {
-		return getPublicHelp(prefix);
-	}
 
 	@Override
 	public String getName() {

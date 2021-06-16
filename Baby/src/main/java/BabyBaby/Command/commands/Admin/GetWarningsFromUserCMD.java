@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -17,17 +17,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 
 
 
-public class GetWarningsFromUser implements AdminCMD{
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
+public class GetWarningsFromUserCMD implements AdminCMD{
 
     @Override
     public String getName() {
@@ -61,7 +51,7 @@ public class GetWarningsFromUser implements AdminCMD{
 
         try { 	
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
 
             
             String sql = "SELECT * FROM WARNINGS WHERE USER = ?;";
@@ -86,7 +76,7 @@ public class GetWarningsFromUser implements AdminCMD{
 
         channel.sendMessage(eb.build()).queue();
 
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
     }
 
     @Override

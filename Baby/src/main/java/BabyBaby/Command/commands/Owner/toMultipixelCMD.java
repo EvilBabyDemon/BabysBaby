@@ -3,7 +3,7 @@ package BabyBaby.Command.commands.Owner;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 
@@ -23,7 +23,7 @@ public class toMultipixelCMD implements OwnerCMD{
     public void handleOwner(CommandContext ctx) {
 
         try {
-            Scanner scanner = new Scanner(new File(data.PLACE + ctx.getArgs().get(0) + ".txt"));
+            Scanner scanner = new Scanner(new File(Data.PLACE + ctx.getArgs().get(0) + ".txt"));
             
             ArrayList<String> list = new ArrayList<String>();
             PrintStream writer = null;
@@ -34,7 +34,7 @@ public class toMultipixelCMD implements OwnerCMD{
             boolean first = true;
             for (int i = 0; i < list.size(); i++) {
                 if (i % 3600 == 0) {
-                    writer = new PrintStream(data.PLACE + ctx.getArgs().get(0) + idx + ".txt");
+                    writer = new PrintStream(Data.PLACE + ctx.getArgs().get(0) + idx + ".txt");
                     idx++;
                     first = true;
                 }
@@ -46,12 +46,12 @@ public class toMultipixelCMD implements OwnerCMD{
             }
             writer.close();
         } catch (FileNotFoundException e1) {
-            ctx.getMessage().addReaction(data.xmark).queue();
+            ctx.getMessage().addReaction(Data.xmark).queue();
             e1.printStackTrace();
             return;
         }
         
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
 
 
     }

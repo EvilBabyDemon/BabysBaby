@@ -14,34 +14,15 @@ import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.Command.commands.Admin.AdminMuteBlindCMD;
 import BabyBaby.data.GetRolesBack;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
-public class UnblindCMD implements PublicCMD {
+public class UnBlindCMD implements PublicCMD {
 
-    @Override
-    public void handleAdmin(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
 
     @Override
     public String getName() {
@@ -91,9 +72,9 @@ public class UnblindCMD implements PublicCMD {
         if(!group){
             LinkedList<GetRolesBack> vars = new LinkedList<>();        
             
-            for (Member var : RemoveRoles.blind.keySet()) {
+            for (Member var : BlindCMD.blind.keySet()) {
                 if(var.getId().equals(authorID)){
-                    vars.add(RemoveRoles.blindexe.get(RemoveRoles.blind.get(var)));
+                    vars.add(BlindCMD.blindexe.get(BlindCMD.blind.get(var)));
                 }
             }
             GetRolesBack blindclass = null;
@@ -136,7 +117,7 @@ public class UnblindCMD implements PublicCMD {
                 return;
             }
 
-            if(RemoveRolesForce.force.contains(blindclass)){
+            if(BlindForceCMD.force.contains(blindclass)){
                 author.openPrivateChannel().queue(privchannel -> {
                     privchannel.sendMessage("You did a Force Blind. That are the consequences to your actions. Do not contact the admins! If it is an emergency contact Lukas, same if it is pobably a Bug.").queue();
                 });
@@ -146,10 +127,10 @@ public class UnblindCMD implements PublicCMD {
             Guild blindServ = blindclass.guild;
             Member blinded = blindServ.getMember(blindclass.blind);
 
-            ScheduledExecutorService blind = RemoveRoles.blind.get(blinded);
-            RemoveRoles.blindexe.remove(blind);
+            ScheduledExecutorService blind = BlindCMD.blind.get(blinded);
+            BlindCMD.blindexe.remove(blind);
             blind.shutdownNow();
-            RemoveRoles.blind.remove(blinded);
+            BlindCMD.blind.remove(blinded);
         }
 
         String roles = "";
@@ -158,11 +139,11 @@ public class UnblindCMD implements PublicCMD {
         PreparedStatement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("SELECT ROLES FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
             stmt.setString(1, authorID);
-            stmt.setString(2, data.ethid);
+            stmt.setString(2, Data.ethid);
             ResultSet rs = stmt.executeQuery();
 
             roles = rs.getString("ROLES");
@@ -174,7 +155,7 @@ public class UnblindCMD implements PublicCMD {
             return;
         }
         
-        Guild blindServ = author.getJDA().getGuildById(data.ethid);
+        Guild blindServ = author.getJDA().getGuildById(Data.ethid);
         Member blinded = blindServ.getMember(author);
 
         LinkedList<Role> addRole = new LinkedList<>();
@@ -198,7 +179,7 @@ public class UnblindCMD implements PublicCMD {
         
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("DELETE FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
             stmt.setString(1, blinded.getId());

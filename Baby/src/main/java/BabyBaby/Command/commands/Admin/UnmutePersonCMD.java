@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -17,16 +17,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
 public class UnmutePersonCMD implements AdminCMD {
-    
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
 
     @Override
     public String getName() {
@@ -35,7 +25,7 @@ public class UnmutePersonCMD implements AdminCMD {
 
     @Override
     public void handleAdmin(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(data.ethid))
+        if(!ctx.getGuild().getId().equals(Data.ethid))
             return;        
 
         LinkedList<String> cmds = new LinkedList<>();
@@ -63,7 +53,7 @@ public class UnmutePersonCMD implements AdminCMD {
         
 
 
-        MessageChannel log = ctx.getGuild().getTextChannelById(data.modlog);
+        MessageChannel log = ctx.getGuild().getTextChannelById(Data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(ctx.getAuthor().getAsTag() + " (" + ctx.getAuthor().getId() + ")", ctx.getAuthor().getAvatarUrl(), ctx.getAuthor().getAvatarUrl());
@@ -78,7 +68,7 @@ public class UnmutePersonCMD implements AdminCMD {
         //ctx.getChannel().sendMessage(eb.build()).queue();
 
 
-        Role muteR = ctx.getGuild().getRoleById(data.stfuID);
+        Role muteR = ctx.getGuild().getRoleById(Data.stfuID);
 
         ctx.getGuild().removeRoleFromMember(warned, muteR).queue();
 
@@ -87,7 +77,7 @@ public class UnmutePersonCMD implements AdminCMD {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USERID = ? AND GUILDID = ?;");
             stmt.setString(1, warned.getId());
@@ -109,7 +99,7 @@ public class UnmutePersonCMD implements AdminCMD {
             stopper.shutdown();
         }
 
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
 
     }
 

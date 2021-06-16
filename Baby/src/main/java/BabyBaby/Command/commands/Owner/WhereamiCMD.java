@@ -6,7 +6,7 @@ import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class whereami implements OwnerCMD {
+public class WhereamiCMD implements OwnerCMD {
 
     @Override
     public String getName() {

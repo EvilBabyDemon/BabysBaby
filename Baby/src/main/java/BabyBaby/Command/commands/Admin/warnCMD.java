@@ -9,23 +9,13 @@ import java.util.LinkedList;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class warnCMD implements AdminCMD{
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
 
     @Override
     public String getName() {
@@ -73,7 +63,7 @@ public class warnCMD implements AdminCMD{
 
         try { 	
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
 
             
             String sql = "INSERT INTO WARNINGS (USER,REASON,DATE) " +
@@ -93,7 +83,7 @@ public class warnCMD implements AdminCMD{
             return;
         }
 
-        MessageChannel log = ctx.getGuild().getTextChannelById(data.modlog);
+        MessageChannel log = ctx.getGuild().getTextChannelById(Data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(ctx.getAuthor().getAsTag() + " (" + ctx.getAuthor().getId() + ")", ctx.getAuthor().getAvatarUrl(), ctx.getAuthor().getAvatarUrl());
@@ -109,7 +99,7 @@ public class warnCMD implements AdminCMD{
 
         warned.getUser().openPrivateChannel().complete().sendMessage(eb.build()).queue();
         
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
 
     }
 

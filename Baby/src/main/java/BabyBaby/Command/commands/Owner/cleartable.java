@@ -7,7 +7,7 @@ import java.sql.Statement;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -25,7 +25,7 @@ public class cleartable implements OwnerCMD{
         MessageChannel channel = ctx.getChannel();
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
             

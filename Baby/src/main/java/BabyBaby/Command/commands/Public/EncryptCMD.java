@@ -11,25 +11,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class EncryptCMD implements PublicCMD {
 
-    @Override
-    public void handleAdmin(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
 
     @Override
     public String getName() {

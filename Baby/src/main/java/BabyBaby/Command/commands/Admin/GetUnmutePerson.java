@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -22,7 +22,7 @@ public class GetUnmutePerson implements Runnable {
 
     public void run() {	
 
-        Role muteR = guild.getRoleById(data.stfuID);
+        Role muteR = guild.getRoleById(Data.stfuID);
 
         guild.removeRoleFromMember(guild.getMember(reminder), muteR).queue();
 
@@ -31,7 +31,7 @@ public class GetUnmutePerson implements Runnable {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USERID = ? AND GUILDID = ?;");
             stmt.setString(1, reminder.getId());
@@ -44,7 +44,7 @@ public class GetUnmutePerson implements Runnable {
             return;
         }
         
-        MessageChannel log = guild.getTextChannelById(data.modlog);
+        MessageChannel log = guild.getTextChannelById(Data.modlog);
 
         User bot = guild.getMemberById("781949572103536650").getUser();
 

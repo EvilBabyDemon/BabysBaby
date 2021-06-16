@@ -12,7 +12,7 @@ import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.GetUnmute;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 
 import javax.annotation.Nonnull;
 
@@ -46,7 +46,7 @@ public class StartupListener extends ListenerAdapter{
                 ResultSet rs;
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     
                     stmt = c.createStatement();
 
@@ -76,7 +76,7 @@ public class StartupListener extends ListenerAdapter{
 
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     
                     stmt = c.createStatement();
 
@@ -115,14 +115,14 @@ public class StartupListener extends ListenerAdapter{
                 Statement stmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     stmt = c.createStatement();
                     rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES;");
 
                     while(rs.next()){
                         String id = rs.getString("ID");
-                        data.emoteassign.put(rs.getString("EMOTE"), id);
-                        data.roles.add(id);
+                        Data.emoteassign.put(rs.getString("EMOTE"), id);
+                        Data.roles.add(id);
                     }
 
                     stmt.close();
@@ -143,18 +143,18 @@ public class StartupListener extends ListenerAdapter{
                 Statement stmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     stmt = c.createStatement();
                     rs = stmt.executeQuery("SELECT * FROM MSGS;");
                     while(rs.next()){
                         String id = rs.getString("MSGID");
-                        data.msgid.add(id);
+                        Data.msgid.add(id);
                         String cat = rs.getString("CATEGORY");
-                        ArrayList<String> temp = data.catToMsg.getOrDefault(cat, new ArrayList<String>());
+                        ArrayList<String> temp = Data.catToMsg.getOrDefault(cat, new ArrayList<String>());
                         temp.add(id);
-                        data.catToMsg.put(cat, temp);
+                        Data.catToMsg.put(cat, temp);
                         
-                        data.msgToChan.put(id, rs.getString("CHANNELID"));
+                        Data.msgToChan.put(id, rs.getString("CHANNELID"));
                     }
                     stmt.close();
                     c.close();
@@ -169,17 +169,15 @@ public class StartupListener extends ListenerAdapter{
             @Override
             public void run() {
                 Connection c = null;
-                List<Invite> inv = event.getJDA().getGuildById(data.ethid).retrieveInvites().complete();
+                List<Invite> inv = event.getJDA().getGuildById(Data.ethid).retrieveInvites().complete();
                 HashMap<String, Invite> urls = new HashMap<>();
                 for (Invite var : inv) {
                     urls.put(var.getUrl(), var);
                 }
-
-                c = null;
                 PreparedStatement pstmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     pstmt = c.prepareStatement("DELETE FROM INVITES;");
                     pstmt.execute();
                     pstmt.close();
@@ -192,7 +190,7 @@ public class StartupListener extends ListenerAdapter{
                 pstmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     for (String var : urls.keySet()) {
                         pstmt = c.prepareStatement("INSERT INTO INVITES (URL, AMOUNT) VALUES (?, ?);");
                         pstmt.setString(1, var);
@@ -212,16 +210,16 @@ public class StartupListener extends ListenerAdapter{
         threads.add(new Thread(new Runnable() {
             @Override
             public void run() {
-                AuditLogPaginationAction logs = event.getJDA().getGuildById(data.ethid).retrieveAuditLogs();
+                AuditLogPaginationAction logs = event.getJDA().getGuildById(Data.ethid).retrieveAuditLogs();
                 for (AuditLogEntry entry : logs) {
                     if(entry.getType().equals(ActionType.KICK)){
-                        data.kick = entry.getTimeCreated();
+                        Data.kick = entry.getTimeCreated();
                         break;
                     }   
                 }
                 for (AuditLogEntry entry : logs) {
                     if(entry.getType().equals(ActionType.BAN)){
-                        data.ban = entry.getTimeCreated();
+                        Data.ban = entry.getTimeCreated();
                         break;
                     }   
                 }
@@ -238,7 +236,7 @@ public class StartupListener extends ListenerAdapter{
                 Statement stmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     stmt = c.createStatement();
                     rs = stmt.executeQuery("SELECT * FROM REMINDERS;");
 
@@ -271,7 +269,7 @@ public class StartupListener extends ListenerAdapter{
                 Statement stmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     stmt = c.createStatement();
                     rs = stmt.executeQuery("SELECT * FROM ADMINMUTE;");
 
@@ -313,12 +311,12 @@ public class StartupListener extends ListenerAdapter{
                 Statement stmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     stmt = c.createStatement();
                     rs = stmt.executeQuery("SELECT MSGID FROM MSGS;");
         
                     while(rs.next()){
-                        data.msgid.add(rs.getString("MSGID"));
+                        Data.msgid.add(rs.getString("MSGID"));
                     }
                     
                     stmt.close();
@@ -339,7 +337,7 @@ public class StartupListener extends ListenerAdapter{
 
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     
                     stmt = c.createStatement();
 
@@ -353,8 +351,8 @@ public class StartupListener extends ListenerAdapter{
                         
                         GetRolesBack blindclass = new GetRolesBack(blindUser, called, rs.getString("ROLES"));
                         blindex.schedule(blindclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
-                        RemoveRoles.blind.put(called.getMember(blindUser), blindex);
-                        RemoveRoles.blindexe.put(blindex, blindclass);
+                        BlindCMD.blind.put(called.getMember(blindUser), blindex);
+                        BlindCMD.blindexe.put(blindex, blindclass);
                         
                         if(rs.getBoolean("ADMINMUTE")){
                             AdminMuteBlindCMD.userBlinded.add(called.getMember(blindUser));
@@ -388,7 +386,7 @@ public class StartupListener extends ListenerAdapter{
 
 
         try {
-            Guild eth = bot.getGuildById(data.ethid);
+            Guild eth = bot.getGuildById(Data.ethid);
 
             eth.updateCommands().complete();
 

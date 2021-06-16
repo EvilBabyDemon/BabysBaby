@@ -11,27 +11,6 @@ import BabyBaby.ColouredStrings.StandardHelpEmbed ;
 
 public class DecryptCMD implements PublicCMD {
 
-
-    @Override
-    public void handleAdmin(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    } 
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
     @Override
     public String getName() {
         return "decrypt";

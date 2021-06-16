@@ -8,7 +8,7 @@ import java.util.List;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -16,26 +16,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
 public class SieveCMD implements PublicCMD {
-
-    @Override
-    public void handleAdmin(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
 
     @Override
     public String getName() {
@@ -57,7 +37,7 @@ public class SieveCMD implements PublicCMD {
         HashSet<Member> counter = new HashSet<>();
 
         List<Member> tmp = ctx.getGuild().getMembers();
-        if(cmd[0].equals(data.ethid)){
+        if(cmd[0].equals(Data.ethid)){
             for (Member var : tmp) {
                 counter.add(var);
             }

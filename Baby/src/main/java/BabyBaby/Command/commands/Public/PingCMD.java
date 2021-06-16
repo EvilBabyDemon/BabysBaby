@@ -2,7 +2,7 @@ package BabyBaby.Command.commands.Public;
 
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import BabyBaby.Command.CommandContext;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -33,7 +33,7 @@ public class PingCMD implements PublicCMD {
         );
         */
         MessageChannel channel = ctx.getChannel();
-		ctx.getMessage().addReaction(data.check).complete();
+		ctx.getMessage().addReaction(Data.check).complete();
         String ping = "<:pinged:747783377322508290> Ping!";
         long time = System.currentTimeMillis();
         channel.sendMessage(ping).queue(response -> {
@@ -46,29 +46,9 @@ public class PingCMD implements PublicCMD {
     public String getName() {
         return "ping";
     }
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        this.handlePublic(ctx);
-    }
-
+    
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "A really simple ping command.");
-    }
-
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
-    public void handleAdmin(CommandContext ctx) {
-        this.handlePublic(ctx);
     }
 }

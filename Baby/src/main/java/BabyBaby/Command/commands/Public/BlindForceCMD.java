@@ -7,10 +7,10 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.GetRolesBack;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.*;
 
-public class RemoveRolesForce implements PublicCMD{
+public class BlindForceCMD implements PublicCMD{
     public static HashSet<GetRolesBack> force = new HashSet<>();
 
 
@@ -41,10 +41,10 @@ public class RemoveRolesForce implements PublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(data.ethid))
+        if(!ctx.getGuild().getId().equals(Data.ethid))
         return;
 
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
 
         List<String> cmds = ctx.getArgs();
 
@@ -58,7 +58,7 @@ public class RemoveRolesForce implements PublicCMD{
             unit = cmds.get(1);
 
 
-        new RemoveRoles().roleRemoval(cmds.get(0), ctx.getMember(), ctx.getGuild(), unit, true, ctx.getChannel());
+        new BlindCMD().roleRemoval(cmds.get(0), ctx.getMember(), ctx.getGuild(), unit, true, ctx.getChannel());
 
     }
 

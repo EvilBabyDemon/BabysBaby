@@ -14,9 +14,9 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.Command.commands.Public.RemoveRoles;
+import BabyBaby.Command.commands.Public.BlindCMD;
 import BabyBaby.data.GetRolesBack;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
@@ -28,18 +28,6 @@ import net.dv8tion.jda.api.entities.Role;
 public class AdminMuteBlindCMD implements AdminCMD{
     public static HashSet<Member> userBlinded = new HashSet<>();
 
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-       handleAdmin(ctx);
-        
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
-
     @Override
     public String getName() {
         return "muteblind";
@@ -47,7 +35,7 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
     @Override
     public void handleAdmin(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(data.ethid)){
+        if(!ctx.getGuild().getId().equals(Data.ethid)){
             return;
         }
 
@@ -129,7 +117,7 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
 
 
-        MessageChannel log = ctx.getGuild().getTextChannelById(data.modlog);
+        MessageChannel log = ctx.getGuild().getTextChannelById(Data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(ctx.getAuthor().getAsTag() + " (" + ctx.getAuthor().getId() + ")", ctx.getAuthor().getAvatarUrl(), ctx.getAuthor().getAvatarUrl());
@@ -146,7 +134,7 @@ public class AdminMuteBlindCMD implements AdminCMD{
         
         long timesql = 0;
         
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
 
 
         
@@ -161,7 +149,7 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
+                c = DriverManager.getConnection(Data.db);
     
                 stmt = c.prepareStatement("SELECT * FROM ROLEREMOVAL WHERE USERID=? AND GUILDID=?;");
                 stmt.setString(1, blinded.getId());
@@ -180,14 +168,14 @@ public class AdminMuteBlindCMD implements AdminCMD{
             }
 
             if(timeold!=0){
-                ScheduledExecutorService tmp = RemoveRoles.blind.get(blinded);
-                RemoveRoles.blindexe.remove(tmp);
+                ScheduledExecutorService tmp = BlindCMD.blind.get(blinded);
+                BlindCMD.blindexe.remove(tmp);
                 try {
                     tmp.shutdown();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                RemoveRoles.blind.remove(blinded);
+                BlindCMD.blind.remove(blinded);
             }
 
 
@@ -199,17 +187,17 @@ public class AdminMuteBlindCMD implements AdminCMD{
                 blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
     
                 blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
-                RemoveRoles.blind.put(blinded, blind);
-                RemoveRoles.blindexe.put(blind, scheduledclass);
+                BlindCMD.blind.put(blinded, blind);
+                BlindCMD.blindexe.put(blind, scheduledclass);
     
             } else {
-                RemoveRoles.blind.put(blinded, null);
+                BlindCMD.blind.put(blinded, null);
             }
 
 
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
+                c = DriverManager.getConnection(Data.db);
     
                 stmt = c.prepareStatement("REPLACE INTO ROLEREMOVAL (MUTETIME) VALUES (?) WHERE USERID=? AND GUILDID=?;");
                 stmt.setString(2, blinded.getId());
@@ -251,8 +239,8 @@ public class AdminMuteBlindCMD implements AdminCMD{
             userBlinded.add(ctx.getGuild().getMemberById(person));
 
             blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
-            RemoveRoles.blind.put(blinded, blind);
-            RemoveRoles.blindexe.put(blind, scheduledclass);
+            BlindCMD.blind.put(blinded, blind);
+            BlindCMD.blindexe.put(blind, scheduledclass);
 
         } else {
             userBlinded.add(ctx.getGuild().getMemberById(person));
@@ -264,7 +252,7 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
 
             stmt = c.prepareStatement("INSERT INTO ROLEREMOVAL (USERID, GUILDID, MUTETIME, ROLES, ADMINMUTE) VALUES (?, ?, ?, ?, ?);");
             stmt.setString(1, blinded.getId());

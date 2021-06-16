@@ -4,10 +4,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /*
@@ -23,14 +20,14 @@ import java.awt.Color;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-public class testCMD implements OwnerCMD{
+public class TestCMD implements OwnerCMD{
 
     @Override
     public String getName() {
@@ -45,7 +42,7 @@ public class testCMD implements OwnerCMD{
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.createStatement();
 
@@ -76,7 +73,7 @@ public class testCMD implements OwnerCMD{
         
 
         Message msg = adder.complete();
-        data.buttonid.add(msg.getId());
+        Data.buttonid.add(msg.getId());
         msg.editMessage("newContent").setActionRow(Button.success("role", "yay")).completeAfter(10, TimeUnit.SECONDS);
 
 

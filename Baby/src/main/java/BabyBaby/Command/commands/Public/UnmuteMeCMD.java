@@ -11,33 +11,13 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.GetUnmute;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
 public class UnmuteMeCMD implements PublicCMD {
-
-    @Override
-    public void handleAdmin(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
 
     @Override
     public String getName() {
@@ -121,7 +101,7 @@ public class UnmuteMeCMD implements PublicCMD {
         PreparedStatement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("DELETE FROM USERS WHERE ID = ? AND GUILDID = ?;");
             stmt.setString(1, muted.getId());

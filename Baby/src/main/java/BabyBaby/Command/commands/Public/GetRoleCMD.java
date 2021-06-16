@@ -5,25 +5,31 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-public class GetRole implements PublicCMD{
+public class GetRoleCMD implements PublicCMD{
 
     @Override
     public void handleAdmin(CommandContext ctx) {
@@ -53,7 +59,7 @@ public class GetRole implements PublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(data.ethid))
+        if(!ctx.getGuild().getId().equals(Data.ethid))
             return;
 
         MessageChannel channel = ctx.getChannel();
@@ -68,7 +74,7 @@ public class GetRole implements PublicCMD{
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.createStatement();
 
@@ -88,7 +94,7 @@ public class GetRole implements PublicCMD{
 
         if(cmds.size() != 0){
 
-            HashMap<String, String> emoterolelist = data.emoteassign;
+            HashMap<String, String> emoterolelist = Data.emoteassign;
             HashMap<String, Object> namerole = new HashMap<>();
             for (String var : emoterolelist.keySet()) {
                 Role tmp = ctx.getGuild().getRoleById(emoterolelist.get(var));
@@ -168,7 +174,7 @@ public class GetRole implements PublicCMD{
             HashMap<Role, Object[]> sorting = new HashMap<>();
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
+                c = DriverManager.getConnection(Data.db);
                 
                 stmt = c.createStatement();
 
@@ -244,13 +250,39 @@ public class GetRole implements PublicCMD{
                
             }
 
-            Message msgs = channel.sendMessage(eb.build()).complete();                
-            data.msgid.add(msgs.getId());
+                     
+            ArrayList<Button> butt = new ArrayList<>();
             for (String var : temp) {
                 if(var == null || var.length() == 0)
                         continue;
-                channel.addReactionById(msgs.getId(), var).queue();
+                String emote = var;
+                boolean gemo = false;
+                if((gemo=emote.contains(":"))){
+                    emote = emote.split(":")[2];
+                }
+                
+                try{
+                    butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
+                } catch (Exception e){
+                    ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                }
             }
+
+            MessageAction msgAct = channel.sendMessage(eb.build());
+            
+            LinkedList<ActionRow> acR = new LinkedList<>();
+            for (int i = 0; i < butt.size(); i +=5) {
+                ArrayList<Button> row = new ArrayList<>();
+                for (int j = 0; j < 5 && j+i < butt.size(); j++) {
+                    row.add(butt.get(i+j));
+                }
+                acR.add(ActionRow.of(row));
+            }
+            msgAct.setActionRows(acR);
+            Message msgs = msgAct.complete();
+            Data.msgid.add(msgs.getId());
+            msgs.delete().queueAfter(90, TimeUnit.SECONDS);
+
         }
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
     }
@@ -369,8 +401,8 @@ public class GetRole implements PublicCMD{
         List<Role> autroles = ctx.getMember().getRoles();
         
         if(autroles.contains(role)){
-            if(role.getId().equals(data.ethexternal)){
-                Role student = ctx.getGuild().getRoleById(data.ethstudent);
+            if(role.getId().equals(Data.ethexternal)){
+                Role student = ctx.getGuild().getRoleById(Data.ethstudent);
                 if(autroles.contains(student)){
                     ctx.getGuild().addRoleToMember(ctx.getMember(), student).complete();
                     ctx.getGuild().removeRoleFromMember(ctx.getMember(), role).complete();
@@ -378,8 +410,8 @@ public class GetRole implements PublicCMD{
                 } else{
                     channel.sendMessage("You need at least either the Student or External Role").queue();
                 }
-            } else if(role.getId().equals(data.ethstudent)){
-                Role external = ctx.getGuild().getRoleById(data.ethexternal);
+            } else if(role.getId().equals(Data.ethstudent)){
+                Role external = ctx.getGuild().getRoleById(Data.ethexternal);
                 if(autroles.contains(external)){
                     ctx.getGuild().addRoleToMember(ctx.getMember(), external).complete();
                     ctx.getGuild().removeRoleFromMember(ctx.getMember(), role).complete();
@@ -392,13 +424,13 @@ public class GetRole implements PublicCMD{
                 channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
             }
         } else {
-            if(role.getId().equals(data.ethexternal)){
-                Role student = ctx.getGuild().getRoleById(data.ethstudent);
+            if(role.getId().equals(Data.ethexternal)){
+                Role student = ctx.getGuild().getRoleById(Data.ethstudent);
                 ctx.getGuild().addRoleToMember(ctx.getMember(), role).complete();
                 ctx.getGuild().removeRoleFromMember(ctx.getMember(), student).complete();
                 channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + student.getName()).complete();
-            } else if(role.getId().equals(data.ethstudent)){
-                Role external = ctx.getGuild().getRoleById(data.ethexternal);
+            } else if(role.getId().equals(Data.ethstudent)){
+                Role external = ctx.getGuild().getRoleById(Data.ethexternal);
                 ctx.getGuild().addRoleToMember(ctx.getMember(), role).complete();
                 ctx.getGuild().removeRoleFromMember(ctx.getMember(), external).complete();  
                 channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + external.getName()).complete();  
@@ -423,7 +455,7 @@ public class GetRole implements PublicCMD{
         HashMap<Role, Object[]> sorting = new HashMap<>();
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("SELECT * FROM ASSIGNROLES WHERE categories=?;");
             stmt.setString(1, cat);
@@ -469,12 +501,12 @@ public class GetRole implements PublicCMD{
         eb.setFooter("Click on the Emotes to assign yourself Roles.");
         
         Message msgs = channel.sendMessage(eb.build()).complete();                
-        data.msgid.add(msgs.getId());
+        Data.msgid.add(msgs.getId());
         for (String var : emotes) {
             if(var == null || var.length() == 0)
                     continue;
             channel.addReactionById(msgs.getId(), var).queue();
         }
-        data.msgid.add((msgs.getId()));
+        Data.msgid.add((msgs.getId()));
     }
 }

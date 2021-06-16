@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -21,33 +21,13 @@ public class BlindGroupCMD implements PublicCMD {
     public static ScheduledExecutorService skedula = Executors.newScheduledThreadPool(20);
 
     @Override
-    public void handleAdmin(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
     public String getName() {
         return "groupblind";
     }
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(data.ethid))
+        if(!ctx.getGuild().getId().equals(Data.ethid))
             return;
 
 
@@ -64,7 +44,7 @@ public class BlindGroupCMD implements PublicCMD {
         sw: switch (cmd) {
             case "create": case "c":
                 createGroup(ctx);
-                ctx.getMessage().addReaction(data.check).queue();
+                ctx.getMessage().addReaction(Data.check).queue();
             break;
             case "join": case "j":
                 int group;
@@ -88,7 +68,7 @@ public class BlindGroupCMD implements PublicCMD {
                 }
                 groups.get(group).add(ctx.getAuthor().getId());    
             
-                ctx.getMessage().addReaction(data.check).queue();   
+                ctx.getMessage().addReaction(Data.check).queue();   
             break;
             case "leave": case "l":
                 for (int ids : groups.keySet()) {
@@ -98,7 +78,7 @@ public class BlindGroupCMD implements PublicCMD {
                         break;
                     }
                 }
-                ctx.getMessage().addReaction(data.check).queue();
+                ctx.getMessage().addReaction(Data.check).queue();
             break;
             case "groups": case "g":            
                 EmbedBuilder eb = new EmbedBuilder();
@@ -125,7 +105,7 @@ public class BlindGroupCMD implements PublicCMD {
             default:
                 String pre = ctx.getMessage().getContentRaw().split(" ")[0];
                 ctx.getChannel().sendMessage(getPublicHelp(pre.substring(0, pre.length() - getName().length()))).queue();
-                ctx.getMessage().addReaction(data.check).queue();
+                ctx.getMessage().addReaction(Data.check).queue();
             break;
         }
         
@@ -140,7 +120,7 @@ public class BlindGroupCMD implements PublicCMD {
         embed.setDescription("Make a group to be blinded together!");
         embed.addField("", "This works on the principle of working/learning 45 minutes and having a break for 15 minutes. "+
         "You can set the specific time you want to learn and have break yourself and that will happen repeatedly in a cycle. "+
-        "People then can join you and be blinded together. You can always unblind yourself with +" + new UnblindCMD().getName() + " The unit is minutes.", false);
+        "People then can join you and be blinded together. You can always unblind yourself with +" + new UnBlindCMD().getName() + " The unit is minutes.", false);
 
         // general use
         embed.addField("", new ColouredStringAsciiDoc()

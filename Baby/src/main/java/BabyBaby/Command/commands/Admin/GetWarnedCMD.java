@@ -9,22 +9,12 @@ import java.util.HashSet;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class getWarned implements AdminCMD {
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-        handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
+public class GetWarnedCMD implements AdminCMD {
 
     @Override
     public String getName() {
@@ -41,7 +31,7 @@ public class getWarned implements AdminCMD {
 
         try { 	
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
 
             stmt = c.createStatement();
             String sql = "SELECT USER FROM WARNINGS;";
@@ -79,7 +69,7 @@ public class getWarned implements AdminCMD {
 
         channel.sendMessage(eb.build()).queue();
 
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
     }
 
     @Override

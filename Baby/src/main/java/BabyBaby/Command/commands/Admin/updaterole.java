@@ -9,21 +9,11 @@ import java.util.List;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class updaterole implements AdminCMD {
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-       handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
 
     @Override
     public String getName() {
@@ -63,7 +53,7 @@ public class updaterole implements AdminCMD {
             case "emote":
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     update = update.replace("<", "");
                     update = update.replace(">", "");
                     stmt = c.createStatement();
@@ -77,14 +67,14 @@ public class updaterole implements AdminCMD {
                     return;
                 }
                 String oldemo = "";
-                for (String var : data.emoteassign.keySet()) {
-                    if(data.emoteassign.get(var).equals(id)){
+                for (String var : Data.emoteassign.keySet()) {
+                    if(Data.emoteassign.get(var).equals(id)){
                         oldemo = var;
                         break;
                     }
                 }
-                data.emoteassign.remove(oldemo);
-                data.emoteassign.put(update, id);
+                Data.emoteassign.remove(oldemo);
+                Data.emoteassign.put(update, id);
 
 
                 break;
@@ -93,7 +83,7 @@ public class updaterole implements AdminCMD {
                 
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
                     
                     stmt = c.createStatement(); 
                     String sql = "UPDATE ASSIGNROLES SET ID = " + update + " where ID=" + id + ";";
@@ -105,8 +95,8 @@ public class updaterole implements AdminCMD {
                     channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                     return;
                 }
-                data.roles.remove(update);
-                data.roles.add(id);
+                Data.roles.remove(update);
+                Data.roles.add(id);
 
 
                 break;
@@ -115,7 +105,7 @@ public class updaterole implements AdminCMD {
                 
                 try {
                     Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(data.db);
+                    c = DriverManager.getConnection(Data.db);
             
                     stmt = c.createStatement();
                     String sql = "UPDATE ASSIGNROLES SET categories = '" + update + "' where ID=" + id + ";";
@@ -130,11 +120,11 @@ public class updaterole implements AdminCMD {
                 
                 break;
             default:
-                ctx.getMessage().addReaction(data.xmark).queue();
+                ctx.getMessage().addReaction(Data.xmark).queue();
                 return;
         }	
     
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
         
     }
 

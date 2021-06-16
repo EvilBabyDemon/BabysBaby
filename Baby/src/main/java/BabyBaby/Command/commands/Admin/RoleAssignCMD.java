@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
@@ -40,7 +40,7 @@ public class RoleAssignCMD implements AdminCMD {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.createStatement();
 
@@ -73,7 +73,7 @@ public class RoleAssignCMD implements AdminCMD {
             HashMap<Role, Object[]> sorting = new HashMap<>();
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
+                c = DriverManager.getConnection(Data.db);
                 
                 stmt = c.createStatement();
 
@@ -155,19 +155,19 @@ public class RoleAssignCMD implements AdminCMD {
             }
             msgAct.setActionRows(acR);
             Message msgs = msgAct.complete();
-            data.msgid.add(msgs.getId());
+            Data.msgid.add(msgs.getId());
 
-            ArrayList<String> templist = data.catToMsg.getOrDefault(categ.get(k), new ArrayList<String>());
+            ArrayList<String> templist = Data.catToMsg.getOrDefault(categ.get(k), new ArrayList<String>());
             templist.add(msgs.getId());
-            data.catToMsg.put(categ.get(k), templist);
+            Data.catToMsg.put(categ.get(k), templist);
             
-            data.msgToChan.put(msgs.getId(), msgs.getChannel().getId());
+            Data.msgToChan.put(msgs.getId(), msgs.getChannel().getId());
             
             c = null;
             PreparedStatement pstmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
+                c = DriverManager.getConnection(Data.db);
                 pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
                 pstmt.setString(1, ctx.getGuild().getId());
                 pstmt.setString(2, ctx.getChannel().getId());
@@ -191,16 +191,6 @@ public class RoleAssignCMD implements AdminCMD {
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Command to see all roles with each category as an own embed. For RoleAssign Channels.");
-    }
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-       handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
     }
 
     @Override

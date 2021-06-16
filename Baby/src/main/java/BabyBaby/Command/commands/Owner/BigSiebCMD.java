@@ -8,7 +8,7 @@ import java.util.List;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -39,7 +39,7 @@ public class BigSiebCMD implements OwnerCMD{
 
         List<Member> tmp = ctx.getGuild().getMembers();
         
-        if(cmd[0].equals(data.ethid)){
+        if(cmd[0].equals(Data.ethid)){
             for (Member var : tmp) {
                 counter.add(var);
             }
@@ -206,7 +206,7 @@ public class BigSiebCMD implements OwnerCMD{
         }
         editor.delete().queue();
 
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
         
         while(alleb.size()>10){
             MessageAction embeds = ctx.getChannel().sendMessage(alleb.remove().build());

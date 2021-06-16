@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.concurrent.ScheduledExecutorService;
 
 import BabyBaby.Command.commands.Admin.AdminMuteBlindCMD;
-import BabyBaby.Command.commands.Public.RemoveRoles;
-import BabyBaby.Command.commands.Public.RemoveRolesForce;
+import BabyBaby.Command.commands.Public.BlindCMD;
+import BabyBaby.Command.commands.Public.BlindForceCMD;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -51,17 +51,17 @@ public class GetRolesBack implements Runnable {
         guild.modifyMemberRoles(mem, addRole, delRole).complete();
         
 
-        ScheduledExecutorService blindex = RemoveRoles.blind.get(mem);
+        ScheduledExecutorService blindex = BlindCMD.blind.get(mem);
         
-        RemoveRolesForce.force.remove(RemoveRoles.blindexe.get(blindex));
+        BlindForceCMD.force.remove(BlindCMD.blindexe.get(blindex));
 
-        RemoveRoles.blindexe.remove(blindex);
-        RemoveRoles.blind.remove(mem);
+        BlindCMD.blindexe.remove(blindex);
+        BlindCMD.blind.remove(mem);
 
 
         if(AdminMuteBlindCMD.userBlinded.contains(mem)){
 
-            MessageChannel log = guild.getTextChannelById(data.modlog);
+            MessageChannel log = guild.getTextChannelById(Data.modlog);
             
             EmbedBuilder eb = new EmbedBuilder();
             eb.setAuthor(guild.getSelfMember().getUser().getAsTag() + " (" + guild.getSelfMember().getId() + ")", guild.getSelfMember().getUser().getAvatarUrl(), guild.getSelfMember().getUser().getAvatarUrl());
@@ -81,7 +81,7 @@ public class GetRolesBack implements Runnable {
         PreparedStatement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("DELETE FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
             stmt.setString(1, blind.getId());

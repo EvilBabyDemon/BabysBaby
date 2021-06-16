@@ -20,7 +20,7 @@ import java.io.IOException;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 
@@ -29,26 +29,11 @@ public class PlaceGifCMD implements PublicCMD {
     static boolean doing;
 
     @Override
-    public void handleAdmin(CommandContext ctx) {
-        handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getAdminHelp(String prefix) {
-        return getPublicHelp(prefix);
-    }
-
-    @Override
     public void handleOwner(CommandContext ctx) {
         List<String> cmds = ctx.getArgs();
         if(Boolean.parseBoolean(cmds.get(0)))
-            inp = new File(data.PLACE + cmds.get(1)  + ".txt");       
+            inp = new File(Data.PLACE + cmds.get(1)  + ".txt");       
         handlePublic(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
     }
 
     @Override
@@ -74,7 +59,7 @@ public class PlaceGifCMD implements PublicCMD {
             }
         }
 
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
 
         try {
             doing = true;
@@ -103,7 +88,7 @@ public class PlaceGifCMD implements PublicCMD {
                 return;
             }
 
-            ImageOutputStream output = new FileImageOutputStream(new File(data.PLACE + ctx.getAuthor().getId() + ".gif"));
+            ImageOutputStream output = new FileImageOutputStream(new File(Data.PLACE + ctx.getAuthor().getId() + ".gif"));
             GifSequenceWriter writer = new GifSequenceWriter(output, BufferedImage.TYPE_INT_ARGB, 50, true);
 
             int perc = Math.max((int) (allcmds.size()*0.012), 1500);
@@ -131,7 +116,7 @@ public class PlaceGifCMD implements PublicCMD {
                 inp.delete();
             doing = false;
         }
-        File gif = new File(data.PLACE + ctx.getAuthor().getId() + ".gif");
+        File gif = new File(Data.PLACE + ctx.getAuthor().getId() + ".gif");
         ctx.getChannel().sendMessage(ctx.getAuthor().getAsMention()).queue();
         ctx.getChannel().sendFile(gif).complete();
         gif.delete();

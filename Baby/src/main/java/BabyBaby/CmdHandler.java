@@ -4,7 +4,7 @@ import BabyBaby.Command.*;
 import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Owner.*;
 import BabyBaby.Command.commands.Public.*;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -29,12 +29,12 @@ public class CmdHandler {
 
         // adding commands visible to @everyone
         addPublicCommand(new PingCMD());
-        addPublicCommand(new allroles());
+        addPublicCommand(new AllRolesCMD());
         addPublicCommand(new DecryptCMD());
         addPublicCommand(new DuckyCMD());
 
         addPublicCommand(new EncryptCMD());
-        addPublicCommand(new GetRole());
+        addPublicCommand(new GetRoleCMD());
 
         addPublicCommand(new LearningCMD());
         addPublicCommand(new MuteCMD());
@@ -44,31 +44,31 @@ public class CmdHandler {
         addPublicCommand(new RockPaperCMD());
         //addPublicCommand(new RoleMuteCMD());
         addPublicCommand(new SieveCMD());
-        addPublicCommand(new source());
+        addPublicCommand(new SourceCMD());
         addPublicCommand(new SuggestionCMD());
         addPublicCommand(new UnmuteMeCMD());
         addPublicCommand(new PollCMD());
         addPublicCommand(new PlaceGifCMD());
         //addPublicCommand(new WallpaperCMD());
         addPublicCommand(new BotsOnlineCMD());
-        addPublicCommand(new RemoveRoles());
-        addPublicCommand(new UnblindCMD());
+        addPublicCommand(new BlindCMD());
+        addPublicCommand(new UnBlindCMD());
         addPublicCommand(new FlashedCMD());
-        addPublicCommand(new RemoveRolesForce());
+        addPublicCommand(new BlindForceCMD());
         addPublicCommand(new TillBlindCMD());
         addPublicCommand(new EmoteQueryCMD());
         addPublicCommand(new BlindGroupCMD());
 
         // adding commands visible to @admin
         addAdminCommand(new addrole());
-        addAdminCommand(new delrole());
+        addAdminCommand(new DelRoleCMD());
         addAdminCommand(new roleid());
         addAdminCommand(new updaterole());
         addAdminCommand(new whois());
         addAdminCommand(new RoleAssignCMD());
         addAdminCommand(new warnCMD());
-        addAdminCommand(new getWarned());
-        addAdminCommand(new GetWarningsFromUser());
+        addAdminCommand(new GetWarnedCMD());
+        addAdminCommand(new GetWarningsFromUserCMD());
         addAdminCommand(new MutePersonCMD());
         addAdminCommand(new UnmutePersonCMD());
         addAdminCommand(new EditAssignCMD());
@@ -88,20 +88,19 @@ public class CmdHandler {
         addOwnerCommand(new PlebHelpCMD());
         //addOwnerCommand(new RoleCMD());
         addOwnerCommand(new SayCMD());
-        addOwnerCommand(new sendollie());
+        addOwnerCommand(new SendUserCMD());
         addOwnerCommand(new SetButtonCMD());
-        addOwnerCommand(new setPrefix());
+        addOwnerCommand(new SetPrefixCMD());
         addOwnerCommand(new PlaceSorter());
         addOwnerCommand(new tick());
         addOwnerCommand(new ucheck());
-        addOwnerCommand(new whereami());
-        addOwnerCommand(new testCMD());
+        addOwnerCommand(new WhereamiCMD());
+        addOwnerCommand(new TestCMD());
         addOwnerCommand(new toMultipixelCMD());
         addOwnerCommand(new stopdraw());
         addOwnerCommand(new SayMultiCMD());
         addOwnerCommand(new BigSiebCMD());
         addOwnerCommand(new BubbleSortCMD());
-        addOwnerCommand(new PlaceTravelingSalesmanColour());
         addOwnerCommand(new RoleChangeCMD());
         addOwnerCommand(new TurnCMDsOff());
         addOwnerCommand(new ChangeLogCMD());
@@ -177,7 +176,7 @@ public class CmdHandler {
                             try {
                             publicCommand.handlePublic(ctx);
                             } catch(Exception e){
-                                ctx.getMessage().addReaction(data.xmark).queue();
+                                ctx.getMessage().addReaction(Data.xmark).queue();
                                 System.out.println(event.getMessage().getContentRaw());
                                 e.printStackTrace();
                             }
@@ -195,7 +194,7 @@ public class CmdHandler {
                             try {
                                 adminCommand.handleAdmin(ctx);
                             } catch(Exception e){
-                                ctx.getMessage().addReaction(data.xmark).queue();
+                                ctx.getMessage().addReaction(Data.xmark).queue();
                                 System.out.println(event.getMessage().getContentRaw());
                                 e.printStackTrace();
                             }
@@ -215,7 +214,7 @@ public class CmdHandler {
                                 ownerCommand.handleOwner(ctx);
                                 System.out.println(System.currentTimeMillis()-time);
                             } catch(Exception e){
-                                ctx.getMessage().addReaction(data.xmark).queue();
+                                ctx.getMessage().addReaction(Data.xmark).queue();
                                 System.out.println(event.getMessage().getContentRaw());
                                 e.printStackTrace();
                             }    
@@ -239,7 +238,7 @@ public class CmdHandler {
         String cmdName = split[0].toLowerCase();
         
         UnmuteMeCMD cmd = new UnmuteMeCMD();
-        UnblindCMD cmd1 = new UnblindCMD();
+        UnBlindCMD cmd1 = new UnBlindCMD();
         TillBlindCMD cmd2 = new TillBlindCMD();
 
         if(cmdName.equals(cmd.getName())){

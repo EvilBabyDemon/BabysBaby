@@ -9,21 +9,13 @@ import java.util.List;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class addrole implements AdminCMD {
 
-    @Override
-    public void handleOwner(CommandContext ctx) {
-       handleAdmin(ctx);
-    }
 
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
 
     @Override
     public String getName() {
@@ -59,7 +51,7 @@ public class addrole implements AdminCMD {
 
         try { 	
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
 
             stmt = c.createStatement();
             String sql = "INSERT INTO ASSIGNROLES (ID,CATEGORIES,EMOTE) " +
@@ -73,7 +65,7 @@ public class addrole implements AdminCMD {
             return;
         }
 
-        data.emoteassign.put(emote, id);
+        Data.emoteassign.put(emote, id);
 
         ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
         

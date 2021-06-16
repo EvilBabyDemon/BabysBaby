@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class data {
+public class Data {
     public static boolean antibamboozle = true;
     //TODO Remove msgid and check on msgToChan
     public static HashSet<String> msgid = new HashSet<>();
@@ -31,9 +31,11 @@ public class data {
     public static boolean elthision = false;
     public static boolean marc = false;
     public static HashSet<String> buttonid = new HashSet<>();
+    public static HashSet<String> stats = new HashSet<>();
+    
 
     //Filepaths
-    public static final String TOKEN = "token.txt";
+    public static final String TOKEN = "Baby//.gitignore//token.txt";
     public static final String SUGGESTION = "suggestions.txt";
     public static final String PLACE = "place/";
 }

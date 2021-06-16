@@ -22,7 +22,7 @@ import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Bot.*;
 //import BabyBaby.Command.commands.Bot.drawwithFerris;
 import BabyBaby.Command.commands.Public.*;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -54,18 +54,18 @@ public class BabyListener extends ListenerAdapter {
     // Role Removal
     @Override
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
-        if(!event.getGuild().getId().equals(data.ethid))
+        if(!event.getGuild().getId().equals(Data.ethid))
             return;
 
         
         List<Role> removed = event.getRoles();
-        if(!removed.contains(event.getGuild().getRoleById(data.stfuID))){
-            if(!removed.contains(event.getGuild().getRoleById(data.blindID))){
+        if(!removed.contains(event.getGuild().getRoleById(Data.stfuID))){
+            if(!removed.contains(event.getGuild().getRoleById(Data.blindID))){
                 return;
             }
 
 
-            if(!RemoveRoles.blind.containsKey(event.getMember())){
+            if(!BlindCMD.blind.containsKey(event.getMember())){
                 return;
             }
 
@@ -88,7 +88,7 @@ public class BabyListener extends ListenerAdapter {
             PreparedStatement stmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
+                c = DriverManager.getConnection(Data.db);
                 
                 stmt = c.prepareStatement("SELECT ROLES FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
                 stmt.setString(1, blinded.getId());
@@ -129,13 +129,13 @@ public class BabyListener extends ListenerAdapter {
             
             
             
-            if(RemoveRoles.blind.get(blinded)!=null){
-                ScheduledExecutorService blind = RemoveRoles.blind.get(blinded);
-                RemoveRolesForce.force.remove(RemoveRoles.blindexe.get(blind));
-                RemoveRoles.blindexe.remove(blind);
+            if(BlindCMD.blind.get(blinded)!=null){
+                ScheduledExecutorService blind = BlindCMD.blind.get(blinded);
+                BlindForceCMD.force.remove(BlindCMD.blindexe.get(blind));
+                BlindCMD.blindexe.remove(blind);
                 blind.shutdownNow();
             }
-            RemoveRoles.blind.remove(blinded);
+            BlindCMD.blind.remove(blinded);
 
             //remove from a group
             String id = event.getMember().getId();
@@ -150,7 +150,7 @@ public class BabyListener extends ListenerAdapter {
         
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
+                c = DriverManager.getConnection(Data.db);
                 
                 stmt = c.prepareStatement("DELETE FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
                 stmt.setString(1, blinded.getId());
@@ -164,7 +164,7 @@ public class BabyListener extends ListenerAdapter {
             }
 
             if(AdminMuteBlindCMD.userBlinded.contains(blinded)){
-                MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+                MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
         
                 EmbedBuilder eb = new EmbedBuilder();
                 eb.setAuthor("Unmute through Role removal.");
@@ -188,7 +188,7 @@ public class BabyListener extends ListenerAdapter {
             PreparedStatement stmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(data.db);
+                c = DriverManager.getConnection(Data.db);
                 
                 stmt = c.prepareStatement("DELETE FROM USERS WHERE ID = ? AND GUILDID = ?;");
                 stmt.setString(1, event.getUser().getId());
@@ -205,7 +205,7 @@ public class BabyListener extends ListenerAdapter {
         if(!MutePersonCMD.userMuted.containsKey(event.getMember()))
             return;
         
-        MessageChannel log = event.getGuild().getTextChannelById(data.modlog);
+        MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor("Unmute through Role removal.");
@@ -218,7 +218,7 @@ public class BabyListener extends ListenerAdapter {
         log.sendMessage(eb.build()).queue();
 
 
-        Role muteR = event.getGuild().getRoleById(data.stfuID);
+        Role muteR = event.getGuild().getRoleById(Data.stfuID);
 
         event.getGuild().removeRoleFromMember(warned, muteR).queue();
 
@@ -227,7 +227,7 @@ public class BabyListener extends ListenerAdapter {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USERID = ? AND GUILDID = ?;");
             stmt.setString(1, event.getMember().getId());
@@ -285,12 +285,12 @@ public class BabyListener extends ListenerAdapter {
             return;
         //This should be switched with a HashMap instead of a HashSet such that other servers could also at least technically use it.
 
-        if(!event.getGuild().getId().equals(data.ethid))
+        if(!event.getGuild().getId().equals(Data.ethid))
             return;
 
         
 
-        if(data.msgid.contains(event.getMessageId())){
+        if(Data.msgid.contains(event.getMessageId())){
             String emote = "";
             try{
                 emote += (event.getReactionEmote().getEmote().isAnimated() ? "a" : "") +":"+ event.getReactionEmote().getAsReactionCode(); 
@@ -300,8 +300,8 @@ public class BabyListener extends ListenerAdapter {
             }
 
 
-            if(data.emoteassign.containsKey(emote)){
-                Role assign = event.getGuild().getRoleById(data.emoteassign.get(emote));
+            if(Data.emoteassign.containsKey(emote)){
+                Role assign = event.getGuild().getRoleById(Data.emoteassign.get(emote));
                 if(event instanceof GuildMessageReactionAddEvent) {
                     //767315361443741717 External
                     //747786383317532823 Student
@@ -348,7 +348,7 @@ public class BabyListener extends ListenerAdapter {
 
     @Override
     public void onButtonClick(ButtonClickEvent event) {
-        if (data.buttonid.contains(event.getMessageId()) || data.msgid.contains(event.getMessageId())) {
+        if (Data.buttonid.contains(event.getMessageId()) || Data.msgid.contains(event.getMessageId())) {
             
             
             InteractionHook msgHook = null;
@@ -360,11 +360,11 @@ public class BabyListener extends ListenerAdapter {
                 failed = true;
             }
             
-            if(data.emoteassign.containsKey(event.getComponentId())){
+            if(Data.emoteassign.containsKey(event.getComponentId())){
                 
                 Member mem = event.getMember();
                 Guild guild = event.getGuild();
-                Role chnge = guild.getRoleById(data.emoteassign.get(event.getComponentId()));
+                Role chnge = guild.getRoleById(Data.emoteassign.get(event.getComponentId()));
 
                 if(mem.getRoles().contains(chnge)){
                     String fail = "Removed the role ";
@@ -413,10 +413,10 @@ public class BabyListener extends ListenerAdapter {
         } else if(cmd.equals("blind")){
             String unit = (event.getOption("unit")!=null) ? event.getOption("unit").getAsString() : null;
             boolean force = (event.getOption("force")!=null) ? event.getOption("force").getAsBoolean() : false;
-            new RemoveRoles().roleRemoval(event.getOption("time").getAsString(), event.getMember(), event.getGuild(), unit, force, event.getChannel());
+            new BlindCMD().roleRemoval(event.getOption("time").getAsString(), event.getMember(), event.getGuild(), unit, force, event.getChannel());
         } else if(cmd.equals("role")){
             Role role = event.getOption("role").getAsRole();
-            if(!data.roles.contains(role.getId()) && !event.getMember().getId().equals(data.myselfID)){
+            if(!Data.roles.contains(role.getId()) && !event.getMember().getId().equals(Data.myselfID)){
                 String nope = "I can't give you that role.";
                 if(failed){
                     event.getUser().openPrivateChannel().complete().sendMessage(nope).complete();
@@ -476,7 +476,7 @@ public class BabyListener extends ListenerAdapter {
             if(content.startsWith("PIXELVERIFY") && content.split(" ")[3].equals("SUCCESS")){
                 clock.verify(event);
             }
-        } else if(user.getId().equals("778731540359675904") && data.antibamboozle){
+        } else if(user.getId().equals("778731540359675904") && Data.antibamboozle){
             String content = event.getMessage().getContentRaw();
             if (content.equals("Press the button to claim the points.")) {
                 button.tap(event);

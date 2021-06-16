@@ -30,7 +30,7 @@ public class GetUnmute implements Runnable {
         PreparedStatement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.prepareStatement("DELETE FROM USERS WHERE ID = ? AND GUILDID = ?;");
             stmt.setString(1, muted.getId());

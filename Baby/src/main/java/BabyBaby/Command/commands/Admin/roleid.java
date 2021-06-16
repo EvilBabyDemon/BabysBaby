@@ -8,21 +8,11 @@ import java.sql.Statement;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class roleid implements AdminCMD {
-
-    @Override
-    public void handleOwner(CommandContext ctx) {
-       handleAdmin(ctx);
-    }
-
-    @Override
-    public MessageEmbed getOwnerHelp(String prefix) {
-        return getAdminHelp(prefix);
-    }
 
     @Override
     public String getName() {
@@ -36,7 +26,7 @@ public class roleid implements AdminCMD {
         MessageChannel channel = ctx.getChannel();
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(data.db);
+            c = DriverManager.getConnection(Data.db);
             
             stmt = c.createStatement();
 

@@ -6,7 +6,7 @@ import BabyBaby.CmdHandler;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class TurnCMDsOff implements OwnerCMD{
@@ -34,7 +34,7 @@ public class TurnCMDsOff implements OwnerCMD{
             }
             ctx.getChannel().sendMessage(output).queue();
         } catch (IOException e) {
-            ctx.getMessage().addReaction(data.xmark).queue();
+            ctx.getMessage().addReaction(Data.xmark).queue();
             e.printStackTrace();
         }
 

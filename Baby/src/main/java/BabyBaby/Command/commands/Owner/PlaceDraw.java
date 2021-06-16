@@ -8,7 +8,7 @@ import java.util.Scanner;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.data;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -40,18 +40,18 @@ public class PlaceDraw implements OwnerCMD {
         
 
         try {
-            Scanner s = new Scanner(new File(data.PLACE + file + ".txt"));
+            Scanner s = new Scanner(new File(Data.PLACE + file + ".txt"));
             while(s.hasNextLine()){
                 printer.add(s.nextLine());
             }
         } catch (Exception e){
-            ctx.getMessage().addReaction(data.xmark);
+            ctx.getMessage().addReaction(Data.xmark);
             e.printStackTrace();
             return;
         }
         channel = ctx.getGuild().getTextChannelById("819966095070330950");
 
-        ctx.getMessage().addReaction(data.check).queue();
+        ctx.getMessage().addReaction(Data.check).queue();
         on = false;
         drawing();
 
