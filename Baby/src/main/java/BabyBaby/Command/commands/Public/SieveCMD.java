@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
-public class sieb implements PublicCMD {
+public class SieveCMD implements PublicCMD {
 
     @Override
     public void handleAdmin(CommandContext ctx) {
@@ -39,7 +39,7 @@ public class sieb implements PublicCMD {
 
     @Override
     public String getName() {
-        return "sieb";
+        return "sieve";
     }
 
     @Override

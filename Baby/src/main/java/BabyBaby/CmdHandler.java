@@ -43,7 +43,7 @@ public class CmdHandler {
         addPublicCommand(new ReminderCMD());
         addPublicCommand(new RockPaperCMD());
         //addPublicCommand(new RoleMuteCMD());
-        addPublicCommand(new sieb());
+        addPublicCommand(new SieveCMD());
         addPublicCommand(new source());
         addPublicCommand(new SuggestionCMD());
         addPublicCommand(new UnmuteMeCMD());
