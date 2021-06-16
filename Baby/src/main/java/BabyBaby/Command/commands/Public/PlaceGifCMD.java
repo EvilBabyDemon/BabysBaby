@@ -62,12 +62,15 @@ public class PlaceGifCMD implements PublicCMD {
             ctx.getChannel().sendMessage("Wait till someone else is done").queue();
             return;
         }
+        boolean outsider = false;
         if(inp==null){
             try {
                 Attachment placefile = ctx.getMessage().getAttachments().get(0);
                 inp = placefile.downloadToFile().join();
+                outsider = true;
             } catch (Exception e) {
                 ctx.getChannel().sendMessage("You probably didn't include the file").queue(); 
+                return;
             }
         }
 
@@ -124,7 +127,8 @@ public class PlaceGifCMD implements PublicCMD {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            inp = null;
+            if(outsider)
+                inp.delete();
             doing = false;
         }
         File gif = new File(data.PLACE + ctx.getAuthor().getId() + ".gif");
