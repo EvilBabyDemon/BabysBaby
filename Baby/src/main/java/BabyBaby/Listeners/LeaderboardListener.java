@@ -3,6 +3,7 @@ package BabyBaby.Listeners;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Role;
@@ -19,11 +20,14 @@ public class LeaderboardListener extends ListenerAdapter{
             return;
         
         Role blind = event.getGuild().getRoleById(Data.blindID);
-        if(event.getRoles().contains(blind))
+        if(!event.getRoles().contains(blind))
             return;
-        
+
         Connection c = null;
         PreparedStatement pstmt = null;
+
+        c = null;
+        pstmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
@@ -46,22 +50,15 @@ public class LeaderboardListener extends ListenerAdapter{
     //Role Removal for Stats
     @Override
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
-        if(!event.getGuild().getId().equals(Data.ethid))
+        if(!event.getGuild().getId().equals(Data.ethid) || !event.getRoles().contains(event.getGuild().getRoleById(Data.blindID)) || !Data.stats.contains(event.getUser().getId()))
             return;
-        
-        Role blind = event.getGuild().getRoleById(Data.blindID);
-        if(!event.getRoles().contains(blind))
-            return;
-
-        if(!Data.stats.contains(event.getUser().getId()))
-            return;
-
+    
         Connection c = null;
         PreparedStatement pstmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            pstmt = c.prepareStatement("UPDATE STATS RANK = RANK + (? - TIME) WHERE ID=?;");
+            pstmt = c.prepareStatement("UPDATE STATS SET RANK = Case When RANK Is Null THEN 0 ELSE RANK END + (? - TIME) WHERE ID=?;");
             pstmt.setLong(1, System.currentTimeMillis());
             pstmt.setString(2, event.getUser().getId());
             pstmt.execute();
@@ -70,7 +67,6 @@ public class LeaderboardListener extends ListenerAdapter{
         } catch ( Exception e ) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
         }
-
         Data.stats.remove(event.getUser().getId());
 
     }
