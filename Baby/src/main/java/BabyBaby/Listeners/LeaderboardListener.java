@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class Leaderboard extends ListenerAdapter{
+public class LeaderboardListener extends ListenerAdapter{
     
     //Role Add for Stats
     @Override
