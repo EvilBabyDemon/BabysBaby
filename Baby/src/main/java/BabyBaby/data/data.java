@@ -35,7 +35,7 @@ public class Data {
     
 
     //Filepaths
-    public static final String TOKEN = "Baby//.gitignore//token.txt";
+    public static final String TOKEN = "token.txt";
     public static final String SUGGESTION = "suggestions.txt";
     public static final String PLACE = "place/";
 }
