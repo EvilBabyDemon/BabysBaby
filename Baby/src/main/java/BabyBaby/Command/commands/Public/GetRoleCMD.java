@@ -281,7 +281,11 @@ public class GetRoleCMD implements PublicCMD{
             msgAct.setActionRows(acR);
             Message msgs = msgAct.complete();
             Data.msgid.add(msgs.getId());
-            msgs.delete().queueAfter(90, TimeUnit.SECONDS);
+            try {
+                msgs.delete().queueAfter(90, TimeUnit.SECONDS);    
+            } catch (Exception e) {
+            }
+            
 
         }
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
