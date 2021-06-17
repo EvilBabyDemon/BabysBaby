@@ -22,22 +22,23 @@ public class Leaderboard extends ListenerAdapter{
         if(event.getRoles().contains(blind))
             return;
         
-            Connection c = null;
-            PreparedStatement pstmt = null;
-            try {
-                Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(Data.db);
-                pstmt = c.prepareStatement("INSERT OR REPLACE INTO STATS (ID, TIME) VALUES (?, ?);");
-                pstmt.setString(1, event.getUser().getId());
-                pstmt.setString(3, System.currentTimeMillis() + "");
-                
-                pstmt.execute();
-                pstmt.close();
-                c.close();
-            } catch ( Exception e ) {
-                System.out.println(e.getClass().getName() + ": " + e.getMessage());
-            }
+        Connection c = null;
+        PreparedStatement pstmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(Data.db);
+            pstmt = c.prepareStatement("INSERT OR REPLACE INTO STATS (ID, TIME) VALUES (?, ?);");
+            pstmt.setString(1, event.getUser().getId());
+            pstmt.setString(2, System.currentTimeMillis() + "");
+            
+            pstmt.execute();
+            pstmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+        }
 
+        Data.stats.add(event.getUser().getId());
         
     }
 
@@ -55,14 +56,14 @@ public class Leaderboard extends ListenerAdapter{
         if(!Data.stats.contains(event.getUser().getId()))
             return;
 
-
         Connection c = null;
         PreparedStatement pstmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            pstmt = c.prepareStatement("UPDATE STATS RANK = RANK + (? - TIME);");
+            pstmt = c.prepareStatement("UPDATE STATS RANK = RANK + (? - TIME) WHERE ID=?;");
             pstmt.setLong(1, System.currentTimeMillis());
+            pstmt.setString(2, event.getUser().getId());
             pstmt.execute();
             pstmt.close();
             c.close();
@@ -70,7 +71,7 @@ public class Leaderboard extends ListenerAdapter{
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
         }
 
-        
+        Data.stats.remove(event.getUser().getId());
 
     }
 
