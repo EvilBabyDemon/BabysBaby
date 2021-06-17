@@ -3,7 +3,6 @@ package BabyBaby.Listeners;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Role;
