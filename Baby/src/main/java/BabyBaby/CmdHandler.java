@@ -259,17 +259,7 @@ public class CmdHandler {
                 return cmd;
             }
         }
-        for (AdminCMD cmd : adminCommands) {
-            if (cmd.getName().equals(searchLower) || cmd.getAliases().contains(searchLower)) {
-                return cmd;
-            }
-        }
-        for (PublicCMD cmd : publicCommands) {
-            if (cmd.getName().equals(searchLower) || cmd.getAliases().contains(searchLower)) {
-                return cmd;
-            }
-        }
-        return null;
+        return searchAdminCommand(search);
     }
 
     public AdminCMD searchAdminCommand(String search) {
@@ -280,12 +270,7 @@ public class CmdHandler {
                 return cmd;
             }
         }
-        for (PublicCMD cmd : publicCommands) {
-            if (cmd.getName().equals(searchLower) || cmd.getAliases().contains(searchLower)) {
-                return cmd;
-            }
-        }
-        return null;
+        return searchPublicCommand(search);
     }
 
     public PublicCMD searchPublicCommand(String search) {
@@ -296,7 +281,6 @@ public class CmdHandler {
                 return cmd;
             }
         }
-
         return null;
     }
 
