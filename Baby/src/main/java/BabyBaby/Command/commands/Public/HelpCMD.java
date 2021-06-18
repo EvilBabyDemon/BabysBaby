@@ -47,29 +47,14 @@ public class HelpCMD implements PublicCMD {
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        MessageChannel channel = ctx.getChannel();
+        TextChannel channel = ctx.getChannel();
         List<String> args = ctx.getArgs();
 
         String prefix = getPrefix(ctx.getGuild().getId());
 
         // no search text given -> general help
         if (args == null || args.isEmpty()) {
-            EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
-
-            embed.setTitle("BabysBaby");
-            embed.setDescription("Significant changes: " + sigchange);
-
-            String publicstr = ""; 
-            List<PublicCMD> publiclist = manager.getPublicCommands();
-            publiclist.sort(compPub);
-            for (PublicCMD var : publiclist) {
-                publicstr += prefix + var.getName() +  "\n";
-            }
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicstr).build(), true);
-
-           
-            embed.setFooter("With most CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
-            channel.sendMessage(embed.build()).queue();
+            generalHelp(manager, prefix, 0, channel);
             return;
         }
 
@@ -97,31 +82,7 @@ public class HelpCMD implements PublicCMD {
 
         // no search text given -> general help
         if (args == null || args.isEmpty()) {
-
-            EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
-
-            embed.setTitle("BabysBaby");
-            embed.setDescription("Significant changes: " + sigchange);
-            String publicstr = ""; 
-            List<PublicCMD> publiclist = manager.getPublicCommands();
-            publiclist.sort(compPub);
-
-            for (PublicCMD var : publiclist) {
-                publicstr += prefix + var.getName() +  "\n";
-            }
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicstr).build(), true);
-
-            String admin = ""; 
-            List<AdminCMD> adminlist = manager.getAdminCommands();
-            adminlist.sort(compAdm);
-
-            for (AdminCMD var : adminlist) {
-                admin += prefix + var.getName() +  "\n";
-            }
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Admin CMD").addDiff(admin).build(), true);
-           
-            embed.setFooter("With most CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
-            channel.sendMessage(embed.build()).queue();
+            generalHelp(manager, prefix, 1, channel);
             return;
         }
 
@@ -146,38 +107,7 @@ public class HelpCMD implements PublicCMD {
 
         // no search text given -> general help
         if (args == null || args.isEmpty()) {
-            EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
-
-            embed.setTitle("BabysBaby");
-            embed.setDescription("Significant changes: " + sigchange);
-            String publicstr = ""; 
-            List<PublicCMD> publiclist = manager.getPublicCommands();
-            publiclist.sort(compPub);
-
-            for (PublicCMD var : publiclist) {
-                publicstr += prefix + var.getName() +  "\n";
-            }
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicstr).build(), true);
-
-            String admin = ""; 
-            List<AdminCMD> adminlist = manager.getAdminCommands();
-            adminlist.sort(compAdm);
-
-            for (AdminCMD var : adminlist) {
-                admin += prefix + var.getName() +  "\n";
-            }
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Admin CMD").addDiff(admin).build(), true);
-
-            String ownerstr = ""; 
-            List<OwnerCMD> ownerlist = manager.getOwnerCommands();
-            ownerlist.sort(compOwn);
-            for (OwnerCMD var : ownerlist) {
-                ownerstr += prefix + var.getName() +  "\n";
-            }
-            
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Owner CMD").addDiff(ownerstr).build(), true);
-            embed.setFooter("With most CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
-            channel.sendMessage(embed.build()).queue();
+            generalHelp(manager, prefix, 2, channel);
             return;
         }
 
@@ -275,4 +205,52 @@ public class HelpCMD implements PublicCMD {
             }
         return prefix;
     }
+
+    private String publicCMDs (CmdHandler manager, String prefix){
+        String publicstr = ""; 
+        List<PublicCMD> publiclist = manager.getPublicCommands();
+        publiclist.sort(compPub);
+        for (PublicCMD publicCMD : publiclist) {
+            publicstr += prefix + publicCMD.getName() +  "\n";
+        }
+        return publicstr;
+    }
+    private String adminCMDs (CmdHandler manager, String prefix){
+        String admin = ""; 
+        List<AdminCMD> adminlist = manager.getAdminCommands();
+        adminlist.sort(compAdm);
+        for (AdminCMD var : adminlist) {
+            admin += prefix + var.getName() +  "\n";
+        }
+        return admin;
+    }
+
+    private String ownerCMDs (CmdHandler manager, String prefix){
+        String ownerstr = ""; 
+        List<OwnerCMD> ownerlist = manager.getOwnerCommands();
+        ownerlist.sort(compOwn);
+        for (OwnerCMD var : ownerlist) {
+            ownerstr += prefix + var.getName() +  "\n";
+        }
+        return ownerstr;
+    }
+
+    private void generalHelp(CmdHandler manager, String prefix, int rank, TextChannel channel){
+        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+
+        embed.setTitle("BabysBaby");
+        embed.setDescription("Significant changes: " + sigchange);
+
+        embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicCMDs(manager, prefix)).build(), true);
+        
+        if(rank>0)
+            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Admin CMD").addDiff(adminCMDs(manager, prefix)).build(), true);
+        
+        if(rank>1)
+            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Owner CMD").addDiff(ownerCMDs(manager, prefix)).build(), true);
+
+        embed.setFooter("With most CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
+        channel.sendMessage(embed.build()).queue();
+    }
+
 }
