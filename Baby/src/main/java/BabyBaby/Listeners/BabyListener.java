@@ -361,29 +361,8 @@ public class BabyListener extends ListenerAdapter {
             }
             
             if(Data.emoteassign.containsKey(event.getComponentId())){
-                
-                Member mem = event.getMember();
-                Guild guild = event.getGuild();
-                Role chnge = guild.getRoleById(Data.emoteassign.get(event.getComponentId()));
-
-                if(mem.getRoles().contains(chnge)){
-                    String fail = "Removed the role ";
-                    if(failed){
-                        event.getUser().openPrivateChannel().complete().sendMessage(fail + chnge.getName()).queue();
-                    } else {
-                        msgHook.editOriginal(fail + chnge.getAsMention()).queue();
-                    }
-                    guild.removeRoleFromMember(mem, chnge).complete();
-                } else {
-                    String succes = "Added the role ";
-                    if(failed){
-                        event.getUser().openPrivateChannel().complete().sendMessage(succes + chnge.getName()).queue();
-                    } else {
-                        msgHook.editOriginal(succes + chnge.getAsMention()).queue();
-                    }
-                    guild.addRoleToMember(mem, chnge).complete();
-                }
-                return;
+                Role role = event.getGuild().getRoleById(Data.emoteassign.get(event.getComponentId()));
+                roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
             }
             
         }
@@ -425,30 +404,41 @@ public class BabyListener extends ListenerAdapter {
                 }
                 return;
             }
-            List<Role> memRole = event.getMember().getRoles();
-            if(memRole.contains(role)){
-                event.getGuild().removeRoleFromMember(event.getMember(), role).complete();
-                String remove = "I removed ";
+            roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
+        }            
+    }
+    // Giving/Removing roles from an Interaction
+    private void roleGiving (Member member, Guild guild, boolean failed, Role role,  InteractionHook msgHook){
+        List<Role> memRole = member.getRoles();
+        Role student = guild.getRoleById(Data.ethstudent);
+        Role external = guild.getRoleById(Data.ethexternal);
+        if(memRole.contains(role)){
+            if((role.equals(student) && !memRole.contains(external)) || (role.equals(external) && !memRole.contains(student))){
+                String oneneeded = "You need at least  ";
                 if(failed){
-                    event.getUser().openPrivateChannel().complete().sendMessage(remove + role.getName() + " from you.").complete();
+                    member.getUser().openPrivateChannel().complete().sendMessage(oneneeded + student.getName() + " or " + external.getName()).complete();
                 } else {
-                    msgHook.editOriginal(remove + role.getAsMention() + " from you.").queue();   
+                    msgHook.editOriginal(oneneeded + student.getAsMention() + " or " + external.getAsMention()).queue();   
                 }
+                return;
+            }
+            guild.removeRoleFromMember(member, role).complete();
+            String remove = "I removed ";
+            if(failed){
+                member.getUser().openPrivateChannel().complete().sendMessage(remove + role.getName() + " from you.").complete();
             } else {
-                event.getGuild().addRoleToMember(event.getMember(), role).complete();
-                String added = "I gave you ";
-                if(failed){
-                    event.getUser().openPrivateChannel().complete().sendMessage(added + role.getName() + ".").complete();
-                } else {
-                    msgHook.editOriginal(added + role.getAsMention() + ".").queue();   
-                }
+                msgHook.editOriginal(remove + role.getAsMention() + " from you.").queue();   
+            }
+        } else {
+            guild.addRoleToMember(member, role).complete();
+            String added = "I gave you ";
+            if(failed){
+                member.getUser().openPrivateChannel().complete().sendMessage(added + role.getName() + ".").complete();
+            } else {
+                msgHook.editOriginal(added + role.getAsMention() + ".").queue();   
             }
         }
-
-
-            
     }
-
 
      
     //User Typing
