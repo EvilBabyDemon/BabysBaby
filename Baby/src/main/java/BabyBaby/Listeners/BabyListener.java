@@ -435,7 +435,7 @@ public class BabyListener extends ListenerAdapter {
             if(failed){
                 member.getUser().openPrivateChannel().complete().sendMessage(added + role.getName() + ".").complete();
             } else {
-                msgHook.editOriginal(added + role.getAsMention() + ".").queue();   
+                msgHook.editOriginal(added + role.getAsMention() + ".").queue();
             }
         }
     }
