@@ -353,6 +353,7 @@ public class StartupListener extends ListenerAdapter{
                         blindex.schedule(blindclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
                         BlindCMD.blind.put(called.getMember(blindUser), blindex);
                         BlindCMD.blindexe.put(blindex, blindclass);
+                        Data.stats.add(blindUser.getId());
                         
                         if(rs.getBoolean("ADMINMUTE")){
                             AdminMuteBlindCMD.userBlinded.add(called.getMember(blindUser));
