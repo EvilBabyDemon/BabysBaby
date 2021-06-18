@@ -57,10 +57,9 @@ public class BlindStatsCMD implements PublicCMD {
             c = DriverManager.getConnection(Data.db);
             pstmt = c.prepareStatement("SELECT RANK FROM STATS WHERE ID=?;");
             pstmt.setString(1, ctx.getMember().getId());
-
-            ResultSet rs = pstmt.executeQuery();
             try {
-                rank = rs.getLong("RANK");    
+                ResultSet rs = pstmt.executeQuery();
+                rank = rs.getLong("RANK");
             } catch (Exception e) {
                 System.out.println("This user has no stats.");
                 e.printStackTrace();
@@ -71,7 +70,7 @@ public class BlindStatsCMD implements PublicCMD {
         } catch ( Exception e ) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        ctx.getChannel().sendMessage("Your rank is: " + (rank/60000)).queue();
+        ctx.getChannel().sendMessage("Your points are: " + (rank/60000)).queue();
     }
 
     private void leaderboard(CommandContext ctx){
@@ -81,7 +80,7 @@ public class BlindStatsCMD implements PublicCMD {
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            pstmt = c.prepareStatement("SELECT * FROM STATS WHERE RANK=NULL;");
+            pstmt = c.prepareStatement("SELECT * FROM STATS WHERE RANK is not NULL;");
             
             ResultSet rs = pstmt.executeQuery();
 
@@ -109,8 +108,8 @@ public class BlindStatsCMD implements PublicCMD {
         String lb = "";
         Guild guild = ctx.getGuild();
         for (int i = 0; i < 10 && 0 < users.size(); i++) {
-            Object[] obj = users.remove(0);
-            lb += guild.getMemberById(obj[0]+"").getAsMention() + " : " + ((long) obj[0]/60000);
+            Object[] obj = users.get(i);
+            lb += guild.getMemberById(obj[0]+"").getAsMention() + " : " + ((long) obj[1]/60000) + "\n";
         }
 
         EmbedBuilder eb = new EmbedBuilder();
