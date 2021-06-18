@@ -27,6 +27,8 @@ public class CmdHandler {
 
     public CmdHandler(JDA bot) throws IOException {
 
+        
+
         // adding commands visible to @everyone
         addPublicCommand(new PingCMD());
         addPublicCommand(new AllRolesCMD());
@@ -49,7 +51,6 @@ public class CmdHandler {
         addPublicCommand(new UnmuteMeCMD());
         addPublicCommand(new PollCMD());
         addPublicCommand(new PlaceGifCMD());
-        //addPublicCommand(new WallpaperCMD());
         addPublicCommand(new BotsOnlineCMD());
         addPublicCommand(new BlindCMD());
         addPublicCommand(new UnBlindCMD());
@@ -58,6 +59,7 @@ public class CmdHandler {
         addPublicCommand(new TillBlindCMD());
         addPublicCommand(new EmoteQueryCMD());
         addPublicCommand(new BlindGroupCMD());
+        addPublicCommand(new BlindStatsCMD());
 
         // adding commands visible to @admin
         addAdminCommand(new addrole());
@@ -86,7 +88,6 @@ public class CmdHandler {
         addOwnerCommand(new operationcheck());
         addOwnerCommand(new operationsecret());
         addOwnerCommand(new PlebHelpCMD());
-        //addOwnerCommand(new RoleCMD());
         addOwnerCommand(new SayCMD());
         addOwnerCommand(new SendUserCMD());
         addOwnerCommand(new SetButtonCMD());
@@ -99,7 +100,7 @@ public class CmdHandler {
         addOwnerCommand(new toMultipixelCMD());
         addOwnerCommand(new stopdraw());
         addOwnerCommand(new SayMultiCMD());
-        addOwnerCommand(new BigSiebCMD());
+        addOwnerCommand(new BigSieveCMD());
         addOwnerCommand(new BubbleSortCMD());
         addOwnerCommand(new RoleChangeCMD());
         addOwnerCommand(new TurnCMDsOff());
@@ -108,7 +109,6 @@ public class CmdHandler {
         
         
         addPublicCommand(new HelpCMD(this));
-        //addPublicCommand(new EasterEggCMD());
 
     }
 
@@ -283,7 +283,7 @@ public class CmdHandler {
         }
         return null;
     }
-
+ 
 
 
     public List<PublicCMD> getPublicCommands() {
