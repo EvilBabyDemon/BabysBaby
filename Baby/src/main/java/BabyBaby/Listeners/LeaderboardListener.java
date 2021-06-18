@@ -27,9 +27,13 @@ public class LeaderboardListener extends ListenerAdapter{
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            pstmt = c.prepareStatement("INSERT OR REPLACE INTO STATS (ID, TIME) VALUES (?, ?);");
+            pstmt = c.prepareStatement("INSERT INTO STATS (ID, RANK, TIME) VALUES (?, ?, ?) on conflict (ID) DO UPDATE SET TIME=?;");
+
+            // "INSERT OR REPLACE INTO STATS (ID, TIME) VALUES (?, ?);"
             pstmt.setString(1, event.getUser().getId());
-            pstmt.setString(2, System.currentTimeMillis() + "");
+            pstmt.setString(2, "0");
+            pstmt.setString(3, System.currentTimeMillis() + "");
+            pstmt.setString(4, System.currentTimeMillis() + "");
             
             pstmt.execute();
             pstmt.close();
