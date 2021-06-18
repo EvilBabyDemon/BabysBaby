@@ -24,9 +24,6 @@ public class LeaderboardListener extends ListenerAdapter{
 
         Connection c = null;
         PreparedStatement pstmt = null;
-
-        c = null;
-        pstmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
