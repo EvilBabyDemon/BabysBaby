@@ -107,7 +107,7 @@ public class BlindStatsCMD implements PublicCMD {
 
         String lb = "";
         Guild guild = ctx.getGuild();
-        for (int i = 0; i < 10 && 0 < users.size(); i++) {
+        for (int i = 0; i < 10 && i < users.size(); i++) {
             Object[] obj = users.get(i);
             lb += guild.getMemberById(obj[0]+"").getAsMention() + " : " + ((long) obj[1]/60000) + "\n";
         }
