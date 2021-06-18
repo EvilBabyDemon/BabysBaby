@@ -5,6 +5,9 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
+
 import javax.security.auth.login.LoginException;
 
 import BabyBaby.Listeners.BabyListener;
@@ -46,6 +49,8 @@ public class Baby {
                 GatewayIntent.GUILD_PRESENCES,
                 GatewayIntent.GUILD_VOICE_STATES);
             builder.setChunkingFilter(ChunkingFilter.ALL);
+            builder.enableCache(CacheFlag.ONLINE_STATUS, CacheFlag.CLIENT_STATUS);
+            builder.setMemberCachePolicy(MemberCachePolicy.ALL);
             
             JDA jda = builder.build();
             jda.addEventListener(new StartupListener(jda), new BabyListener(jda), new ModerationListener(), new LeaderboardListener());
