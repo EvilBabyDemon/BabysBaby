@@ -44,7 +44,6 @@ public class ModerationListener extends ListenerAdapter{
         }
     }
 
-
     //Member Join
     @Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
@@ -64,7 +63,9 @@ public class ModerationListener extends ListenerAdapter{
         for (Invite var : inv) {
             urls.put(var.getUrl(), var);
         }
-
+        
+        
+        
         String url = "";
         int amount = 0;
         boolean found = false;
@@ -72,6 +73,13 @@ public class ModerationListener extends ListenerAdapter{
         Connection c = null;
         Statement stmt = null;
 		
+        MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
+
+        if(event.getUser().isBot()){
+            memberJoinModLog("Admin (Bot addition)", event.getUser(), log, url, "NaN", 1);
+            return;
+        }
+
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
@@ -102,50 +110,23 @@ public class ModerationListener extends ListenerAdapter{
             return;
         }
 
-        if(!found && !event.getUser().isBot()){
-            event.getGuild().getTextChannelById("747768907992924192").sendMessage("Smth went wrong with the invite link stuff. Couldnt find the invite link... <@!223932775474921472>").queue();
+        if(!found){
+            try {        
+                VanityInvite vanity = event.getGuild().retrieveVanityInvite().complete();
+                memberJoinModLog("Admin (Vanity URL)", event.getUser(), log, vanity.getUrl(), "NaN", vanity.getUses());
+            } catch (Exception e) {
+                event.getGuild().getTextChannelById("747768907992924192").sendMessage("Smth went wrong with the invite link stuff. Couldnt find the invite link... <@!223932775474921472>").queue();
+            }
             return;
         }
-
+        
         String inviter =  (urls.get(url)==null) ? "bot?" : urls.get(url).getInviter() == null ? urls.get(url).getInviter().getAsMention() : "vanity?" ;
 
         DateTimeFormatter linkcreate = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
-        DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
-        OffsetDateTime created = event.getUser().getTimeCreated();
-        OffsetDateTime now = OffsetDateTime.now();
-        int day = now.getDayOfYear() - created.getDayOfYear();
-        day = (day<0)? 365+day:day;
-        int year =  now.getYear() - created.getYear() + ((now.getDayOfYear()<created.getDayOfYear())?-1:0);
-
-        String multyear = ((year + Math.round(day/365.0)) == 1) ? " year ago" : " years ago";
-        String multday = (day== 1) ? " day ago" : " days ago";
-        String actualtime = (year >0) ?  (year + Math.round(day/365.0)) + multyear : day + multday;
-
+        String timecreate = urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate);
         
-        String acccrea = "Account created at: **" + event.getUser().getTimeCreated().format(createtime) + "** `(" + actualtime + ")`"; 
-		
-        String timecreate = "NaN";
+        memberJoinModLog(inviter, event.getUser(), log, url, timecreate, urls.get(url).getUses());
 
-        if(urls.get(url) != null) {
-            timecreate = urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate);
-        }
-
-        String desc = "User that joined " + event.getUser().getAsMention() +  "\n" +
-                        "Used Link: " + url + "\n Creator: " + inviter + "\n" +
-                        "Uses: " + ++amount + "\n"+
-                        "Invite created at: " + timecreate + "\n" +
-                        acccrea;
-
-        MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
-
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
-        eb.setColor(1);
-        eb.setThumbnail(event.getUser().getAvatarUrl());
-        eb.setDescription(desc);
-        
-
-        log.sendMessage("cache reload").complete().editMessage(inviter + event.getUser().getAsMention()).complete().editMessage(eb.build()).complete();
 
         if(urls.get(url) != null) {
             PreparedStatement pstmt = null;
@@ -167,6 +148,40 @@ public class ModerationListener extends ListenerAdapter{
             }
         }
 	}
+
+
+    private void memberJoinModLog (String inviter, User joined, MessageChannel log, String url, String invCreate, int uses){
+        
+        DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
+        OffsetDateTime created = joined.getTimeCreated();
+        OffsetDateTime now = OffsetDateTime.now();
+        int day = now.getDayOfYear() - created.getDayOfYear();
+        day = (day<0)? 365+day:day;
+        int year =  now.getYear() - created.getYear() + ((now.getDayOfYear()<created.getDayOfYear())?-1:0);
+
+        String multyear = ((year + Math.round(day/365.0)) == 1) ? " year ago" : " years ago";
+        String multday = (day== 1) ? " day ago" : " days ago";
+        String actualtime = (year >0) ?  (year + Math.round(day/365.0)) + multyear : day + multday;
+
+        
+        String acccrea = "Account created at: **" + joined.getTimeCreated().format(createtime) + "** `(" + actualtime + ")`"; 
+		
+
+        String desc = "User that joined " + joined.getAsMention() +  "\n" +
+                        "Used Link: " + url + "\n Creator: " + inviter + "\n" +
+                        "Uses: " + uses + "\n"+
+                        "Invite created at: " + invCreate + "\n" +
+                        acccrea;
+
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor(joined.getAsTag() + " (" + joined.getId() + ")", joined.getAvatarUrl(), joined.getAvatarUrl());
+        eb.setColor(1);
+        eb.setThumbnail(joined.getAvatarUrl());
+        eb.setDescription(desc);
+
+        log.sendMessage("cache reload").complete().editMessage(inviter + joined.getAsMention()).complete().editMessage(eb.build()).complete();
+
+    }
 
     //Channel Create
     @Override
