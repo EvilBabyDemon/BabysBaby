@@ -119,13 +119,11 @@ public class ModerationListener extends ListenerAdapter{
             }
             return;
         }
-        
-        String inviter =  (urls.get(url)==null) ? "bot?" : urls.get(url).getInviter() == null ? urls.get(url).getInviter().getAsMention() : "vanity?" ;
 
         DateTimeFormatter linkcreate = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
         String timecreate = urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate);
         
-        memberJoinModLog(inviter, event.getUser(), log, url, timecreate, urls.get(url).getUses());
+        memberJoinModLog(urls.get(url).getInviter().getAsMention(), event.getUser(), log, url, timecreate, urls.get(url).getUses());
 
 
         if(urls.get(url) != null) {
