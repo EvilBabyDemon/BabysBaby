@@ -170,10 +170,10 @@ public class StartupListener extends ListenerAdapter{
             public void run() {
                 Connection c = null;
                 List<Invite> inv = event.getJDA().getGuildById(Data.ethid).retrieveInvites().complete();
-                HashMap<String, Invite> urls = new HashMap<>();
-                for (Invite var : inv) {
-                    urls.put(var.getUrl(), var);
-                }
+                
+
+                //urls.put(vanity.getUrl(), value)
+                
                 PreparedStatement pstmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
@@ -191,10 +191,10 @@ public class StartupListener extends ListenerAdapter{
                 try {
                     Class.forName("org.sqlite.JDBC");
                     c = DriverManager.getConnection(Data.db);
-                    for (String var : urls.keySet()) {
+                    for (Invite invite : inv) {
                         pstmt = c.prepareStatement("INSERT INTO INVITES (URL, AMOUNT) VALUES (?, ?);");
-                        pstmt.setString(1, var);
-                        pstmt.setInt(2, urls.get(var).getUses());
+                        pstmt.setString(1, invite.getUrl());
+                        pstmt.setInt(2, invite.getUses());
                         pstmt.executeUpdate();
                         pstmt.close();
                     }
@@ -480,5 +480,7 @@ public class StartupListener extends ListenerAdapter{
         }
         
     }
+
+
 
 }
