@@ -28,10 +28,14 @@ public class Data {
     public static final String dcvd = "306523617188118528";
     public static final String ethstudent = "747786383317532823";
     public static final String ethexternal = "767315361443741717";
+    public static final String ETH_NEWCOMERS_CH_ID = "767315361443741717";
     public static boolean elthision = false;
     public static boolean marc = false;
     public static HashSet<String> buttonid = new HashSet<>();
     public static HashSet<String> stats = new HashSet<>();
+    public static int mydel;
+    public static int otherdel;
+    
     
 
     //Filepaths

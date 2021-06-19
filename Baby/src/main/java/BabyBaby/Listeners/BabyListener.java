@@ -25,6 +25,7 @@ import BabyBaby.Command.commands.Public.*;
 import BabyBaby.data.Data;
 
 import javax.annotation.Nonnull;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
@@ -452,6 +453,18 @@ public class BabyListener extends ListenerAdapter {
     //Message Received
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+
+        /*
+        //For later use when we start with confirmation
+        if(event.getChannel().getId().equals(Data.ETH_NEWCOMERS_CH_ID)){
+            try{
+                event.getMessage().delete().complete();
+                Data.mydel++;
+            } catch (Exception e){
+                Data.otherdel++;
+            }
+        }
+        */
 
         User user = event.getAuthor();
         
