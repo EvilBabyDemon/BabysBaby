@@ -51,19 +51,19 @@ public class BlindGroupCMD implements PublicCMD {
                 try {
                     group = Integer.parseInt(ctx.getArgs().get(1));
                 } catch (Exception e) {
-                    ctx.getChannel().sendMessage("This is not a number! Pls give a number to join the respective group!").queue();
+                    ctx.getChannel().sendMessage("This is not a number! Pls give a number to join the respective group!").complete().delete().queueAfter(30, TimeUnit.SECONDS);
                     break;
                 }
                 for (int ids : groups.keySet()) {
                     ArrayList<String> var = groups.get(ids);
                     if(var.contains(id)){
-                        ctx.getChannel().sendMessage("You are still in a group. Pls leave that one first.").queue();
+                        ctx.getChannel().sendMessage("You are still in a group. Pls leave that one first.").complete().delete().queueAfter(30, TimeUnit.SECONDS);
                         break sw;
                     }
                 }
                 
                 if(!groups.containsKey(group)){
-                    ctx.getChannel().sendMessage("This group does not exist!").queue();
+                    ctx.getChannel().sendMessage("This group does not exist!").complete().delete().queueAfter(30, TimeUnit.SECONDS);
                     break;
                 }
                 groups.get(group).add(ctx.getAuthor().getId());    
@@ -100,11 +100,11 @@ public class BlindGroupCMD implements PublicCMD {
                 String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname() : ctx.getMember().getEffectiveName();
                 eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
 
-                ctx.getChannel().sendMessage(eb.build()).queue();
+                ctx.getChannel().sendMessage(eb.build()).complete().delete().queueAfter(60, TimeUnit.SECONDS);;
             break;
             default:
                 String pre = ctx.getMessage().getContentRaw().split(" ")[0];
-                ctx.getChannel().sendMessage(getPublicHelp(pre.substring(0, pre.length() - getName().length()))).queue();
+                ctx.getChannel().sendMessage(getPublicHelp(pre.substring(0, pre.length() - getName().length()))).complete().delete().queueAfter(60, TimeUnit.SECONDS);;
                 ctx.getMessage().addReaction(Data.check).queue();
             break;
         }
@@ -143,12 +143,12 @@ public class BlindGroupCMD implements PublicCMD {
             blind = Integer.parseInt(cmds.get(1));
             breaks = Integer.parseInt(cmds.get(2));
         } catch (Exception e) {
-            ctx.getChannel().sendMessage("The command is" + getName() + " create <blind time> <break time>").queue();
+            ctx.getChannel().sendMessage("The command is" + getName() + " create <blind time> <break time>").complete().delete().queueAfter(30, TimeUnit.SECONDS);
             return;
         }
 
         if(breaks<1 || blind < 1){
-            ctx.getChannel().sendMessage("Pls use numbers above 0.").queue();
+            ctx.getChannel().sendMessage("Pls use numbers above 0.").complete().delete().queueAfter(30, TimeUnit.SECONDS);
             return;
         }
 
@@ -167,7 +167,7 @@ public class BlindGroupCMD implements PublicCMD {
         
         GroupBlindEx creat = new GroupBlindEx(id, ctx.getGuild(), true, breaks, blind, 0);
         times.put(id, new int[] {blind, breaks});
-        ctx.getChannel().sendMessage("You joined Group : " + id + " The learning is " + blind + " the break time is " + breaks + " minutes long. You will get blinded in 5 minutes from now!").complete();
+        ctx.getChannel().sendMessage("You joined Group : " + id + " The learning is " + blind + " the break time is " + breaks + " minutes long. You will get blinded in 5 minutes from now!").complete().delete().queueAfter(180, TimeUnit.SECONDS);
         try {
             int x = Integer.parseInt(cmds.get(3));
             if(x<0 || x> 1000)

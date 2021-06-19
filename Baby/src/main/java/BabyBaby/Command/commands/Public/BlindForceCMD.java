@@ -2,6 +2,7 @@ package BabyBaby.Command.commands.Public;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
@@ -59,6 +60,7 @@ public class BlindForceCMD implements PublicCMD{
 
 
         new BlindCMD().roleRemoval(cmds.get(0), ctx.getMember(), ctx.getGuild(), unit, true, ctx.getChannel());
+        ctx.getMessage().delete().queueAfter(30, TimeUnit.SECONDS);
 
     }
 

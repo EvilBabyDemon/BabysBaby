@@ -62,7 +62,7 @@ public class BlindCMD implements PublicCMD{
         
 
         roleRemoval(amount, ctx.getMember(), ctx.getGuild(), unit, false, ctx.getChannel());
-
+        ctx.getMessage().delete().queueAfter(30, TimeUnit.SECONDS);
     }
 
 
@@ -100,12 +100,12 @@ public class BlindCMD implements PublicCMD{
                 time = Double.parseDouble(number);
         }
         } catch (NumberFormatException e){
-            channel.sendMessage("You probably forgot the space between the time and unit, if not use numbers pls!").queue();
+            channel.sendMessage("You probably forgot the space between the time and unit, if not use numbers pls!").complete().delete().queueAfter(30, TimeUnit.SECONDS);
             return;
         }
 
         if(time <= 0){
-            channel.sendMessage("Use positive numbers thx!").queue();
+            channel.sendMessage("Use positive numbers thx!").complete().delete().queueAfter(30, TimeUnit.SECONDS);
             return;
         }			
 
@@ -151,7 +151,7 @@ public class BlindCMD implements PublicCMD{
             for (GuildChannel var2 : gchan) {
                 if(var.hasAccess(var2)){
                     if(var.getPosition()>=highestbot.getPosition()){
-                        channel.sendMessage("Sry you have a higher Role than this bot with viewing permissions. Can't take your roles away").queue();
+                        channel.sendMessage("Sry you have a higher Role than this bot with viewing permissions. Can't take your roles away").complete().delete().queueAfter(30, TimeUnit.SECONDS);
                         return;
                     }
                     permrole.add(var);
@@ -165,7 +165,7 @@ public class BlindCMD implements PublicCMD{
         for (int ids : BlindGroupCMD.groups.keySet()) {
             ArrayList<String> var = BlindGroupCMD.groups.get(ids);
             if(var.contains(id)){
-                channel.sendMessage("You are still in a group. Pls leave that one first.").queue();
+                channel.sendMessage("You are still in a group. Pls leave that one first.").complete().delete().queueAfter(30, TimeUnit.SECONDS);
                 return;
             }
         }
@@ -220,7 +220,8 @@ public class BlindCMD implements PublicCMD{
         } else {
             msg += " Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnBlindCMD().getName() + "\"";
         }
-        channel.sendMessage(mem.getAsMention() + msg).queue();
+        channel.sendMessage(mem.getAsMention() + msg).complete().delete().queueAfter(30, TimeUnit.SECONDS);
+
         
         LinkedList<Role> addrole = new LinkedList<>();
         try {
@@ -235,6 +236,7 @@ public class BlindCMD implements PublicCMD{
         } catch (Exception e) {
             System.out.println("Author didn't allow private message.");
         }
+        
     } 
 
 
