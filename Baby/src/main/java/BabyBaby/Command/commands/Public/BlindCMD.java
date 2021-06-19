@@ -120,6 +120,15 @@ public class BlindCMD implements PublicCMD{
             if (unit.startsWith("h")){
                 sunit = "hours";
                 rounder = (long) (time*3600);
+            } else if (unit.equals("ms")) {
+                sunit = "milliseconds";
+                rounder = (long) (time/1000);
+            } else if (unit.equals("ns")) {
+                sunit = "nanoseconds";
+                rounder = (long) (time/1_000_000_000);
+            } else if (unit.equals("ps")) {
+                sunit = "picoseconds";
+                rounder = (long) (time/1_000_000_000_000L);
             } else if(unit.startsWith("m")){
                 sunit = "minutes";
                 rounder = (long) (time*60);
