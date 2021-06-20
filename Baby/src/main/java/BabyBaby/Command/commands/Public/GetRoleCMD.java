@@ -16,11 +16,13 @@ import java.util.stream.Collectors;
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
+import BabyBaby.Listeners.BabyListener;
 import BabyBaby.data.Data;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -401,45 +403,57 @@ public class GetRoleCMD implements PublicCMD{
         //767315361443741717 External data.ethexternal
         //747786383317532823 Student data.ethstudent
         MessageChannel channel = ctx.getChannel();
-
-        List<Role> autroles = ctx.getMember().getRoles();
+        Member member = ctx.getMember();
+        List<Role> autroles = member.getRoles();
         
         if(autroles.contains(role)){
+            //external
             if(role.getId().equals(Data.ethexternal)){
                 Role student = ctx.getGuild().getRoleById(Data.ethstudent);
                 if(autroles.contains(student)){
-                    ctx.getGuild().addRoleToMember(ctx.getMember(), student).complete();
-                    ctx.getGuild().removeRoleFromMember(ctx.getMember(), role).complete();
+                    ctx.getGuild().addRoleToMember(member, student).complete();
+                    ctx.getGuild().removeRoleFromMember(member, role).complete();
                     channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
                 } else{
                     channel.sendMessage("You need at least either the Student or External Role").queue();
                 }
+            //student
             } else if(role.getId().equals(Data.ethstudent)){
                 Role external = ctx.getGuild().getRoleById(Data.ethexternal);
+                
+                if(BabyListener.verifiedUser(member.getId())){
+                    String doverify = "You have to get verified to get the role ";
+                    String suffix = ". You can do that here: https://dauth.spclr.ch/";
+                    member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
+                    return;
+                }
+
+
                 if(autroles.contains(external)){
-                    ctx.getGuild().addRoleToMember(ctx.getMember(), external).complete();
-                    ctx.getGuild().removeRoleFromMember(ctx.getMember(), role).complete();
+                    ctx.getGuild().addRoleToMember(member, external).complete();
+                    ctx.getGuild().removeRoleFromMember(member, role).complete();
                     channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
                 } else{
                     channel.sendMessage("You need at least either the Student or External Role").queue();
                 }
             } else {
-                ctx.getGuild().removeRoleFromMember(ctx.getMember(), role).complete();
+                ctx.getGuild().removeRoleFromMember(member, role).complete();
                 channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
             }
+        //smth else
         } else {
             if(role.getId().equals(Data.ethexternal)){
                 Role student = ctx.getGuild().getRoleById(Data.ethstudent);
-                ctx.getGuild().addRoleToMember(ctx.getMember(), role).complete();
-                ctx.getGuild().removeRoleFromMember(ctx.getMember(), student).complete();
+                ctx.getGuild().addRoleToMember(member, role).complete();
+                ctx.getGuild().removeRoleFromMember(member, student).complete();
                 channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + student.getName()).complete();
             } else if(role.getId().equals(Data.ethstudent)){
                 Role external = ctx.getGuild().getRoleById(Data.ethexternal);
-                ctx.getGuild().addRoleToMember(ctx.getMember(), role).complete();
-                ctx.getGuild().removeRoleFromMember(ctx.getMember(), external).complete();  
+                ctx.getGuild().addRoleToMember(member, role).complete();
+                ctx.getGuild().removeRoleFromMember(member, external).complete();  
                 channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + external.getName()).complete();  
             } else {
-                ctx.getGuild().addRoleToMember(ctx.getMember(), role).complete();
+                ctx.getGuild().addRoleToMember(member, role).complete();
                 channel.sendMessage("Gave you the Role " + role.getName() + ".").complete();
             }
         }

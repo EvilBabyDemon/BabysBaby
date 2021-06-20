@@ -431,13 +431,76 @@ public class BabyListener extends ListenerAdapter {
                 msgHook.editOriginal(remove + role.getAsMention() + " from you.").queue();   
             }
         } else {
-            guild.addRoleToMember(member, role).complete();
-            String added = "I gave you ";
-            if(failed){
-                member.getUser().openPrivateChannel().complete().sendMessage(added + role.getName() + ".").complete();
+            if(role.equals(student)){
+                
+                if(!verifiedUser(member.getId())){
+                    String doverify = "You have to get verified to get the role ";
+                    String suffix = ". You can do that here: https://dauth.spclr.ch/";
+                    if(failed){
+                        member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
+                    } else {
+                        msgHook.editOriginal(doverify + role.getAsMention() + suffix).queue();
+                    }
+                    return;
+                }
+                
+                notBoth(role, external, guild, member, memRole, failed, msgHook);
+
+
+            } else if (role.equals(external)){
+                notBoth(role, student, guild, member, memRole, failed, msgHook);
             } else {
-                msgHook.editOriginal(added + role.getAsMention() + ".").queue();
-            }
+                guild.addRoleToMember(member, role).complete();
+                String added = "I gave you ";
+                if(failed){
+                    member.getUser().openPrivateChannel().complete().sendMessage(added + role.getName() + ".").complete();
+                } else {
+                    msgHook.editOriginal(added + role.getAsMention() + ".").queue();
+                }
+            }            
+        }
+    }
+
+    public static boolean verifiedUser(String id){
+        boolean verified = false;
+        Connection c = null;
+        PreparedStatement pstmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(Data.db);
+            
+            pstmt = c.prepareStatement("SELECT ID FROM VERIFIED WHERE ID=?;");
+            pstmt.setString(1, id);
+            verified = pstmt.execute();
+            pstmt.close();
+            
+            c.close();
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            return false;
+        }
+        return verified;
+    }
+
+    private void notBoth(Role change, Role other, Guild guild, Member member, List<Role> memRole, boolean failed, InteractionHook msgHook){
+        guild.addRoleToMember(member, change).complete();
+
+        String added = "I gave you ";
+        String suffix = "";
+        boolean rem = false; 
+
+        if(memRole.contains(other)){
+            guild.removeRoleFromMember(member, other).complete();
+            suffix = " and removed ";
+            rem = true;
+        }
+
+        if(failed){
+            if(rem) suffix += other.getName();
+            member.getUser().openPrivateChannel().complete().sendMessage(added + change.getName() + suffix + ".").complete();
+        } else {
+            if(rem) suffix += other.getAsMention();
+            msgHook.editOriginal(added + change.getAsMention() +  suffix + ".").queue();
         }
     }
 
@@ -454,9 +517,9 @@ public class BabyListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
 
-        /*
+        
         //For later use when we start with confirmation
-        if(event.getChannel().getId().equals(Data.ETH_NEWCOMERS_CH_ID)){
+        if(event.getChannel().getId().equals(Data.ETH_NEWCOMERS_CH_ID) && !event.getAuthor().isBot()){
             try{
                 event.getMessage().delete().complete();
                 Data.mydel++;
@@ -464,7 +527,7 @@ public class BabyListener extends ListenerAdapter {
                 Data.otherdel++;
             }
         }
-        */
+        
 
         User user = event.getAuthor();
         
