@@ -70,8 +70,7 @@ public class ModerationListener extends ListenerAdapter{
         int amount = 0;
         boolean found = false;
 
-        Connection c = null;
-        Statement stmt = null;
+        
 		
         MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
@@ -80,6 +79,8 @@ public class ModerationListener extends ListenerAdapter{
             return;
         }
 
+        Connection c = null;
+        Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
@@ -181,6 +182,36 @@ public class ModerationListener extends ListenerAdapter{
 
     }
 
+
+    @Override
+    public void onGuildMemberRoleAdd (GuildMemberRoleAddEvent event){
+        if(!event.getGuild().getId().equals(Data.ethid))
+            return;
+
+        Role student = event.getGuild().getRoleById(Data.ethstudent);
+
+        if(!event.getRoles().contains(student))
+            return;
+
+        Connection c = null;
+        PreparedStatement pstmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(Data.db);
+            
+            pstmt = c.prepareStatement("INSERT OR IGNORE INTO VERIFIED (ID) VALUES (?);");
+            pstmt.setString(1, event.getUser().getId());
+            pstmt.execute();
+            
+            pstmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            return;
+        }
+        
+    }
+
     //Channel Create
     @Override
     public void onTextChannelCreate(TextChannelCreateEvent event) {
@@ -193,6 +224,7 @@ public class ModerationListener extends ListenerAdapter{
         test.putPermissionOverride(permHolder, null, deny).queue();
     }
 
+    //Voice Channel Create
     @Override
     public void onVoiceChannelCreate(VoiceChannelCreateEvent event) {
         if(!event.getGuild().getId().equals(Data.ethid))
