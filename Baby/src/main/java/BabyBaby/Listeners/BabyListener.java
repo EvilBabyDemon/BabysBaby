@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 
 public class BabyListener extends ListenerAdapter {
@@ -435,7 +436,7 @@ public class BabyListener extends ListenerAdapter {
                 
                 if(!verifiedUser(member.getId())){
                     String doverify = "You have to get verified to get the role ";
-                    String suffix = ". You can do that here: https://dauth.spclr.ch/";
+                    String suffix = ". You can do that here: https://dauth.spclr.ch/ and write the token to <@306523617188118528>";
                     if(failed){
                         member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
                     } else {
@@ -471,12 +472,14 @@ public class BabyListener extends ListenerAdapter {
             
             pstmt = c.prepareStatement("SELECT ID FROM VERIFIED WHERE ID=?;");
             pstmt.setString(1, id);
-            verified = pstmt.execute();
+            try {
+                ResultSet  rs = pstmt.executeQuery();
+                verified = rs.getString("ID").equals(id);   
+            } catch (Exception e) {
+            }
             pstmt.close();
-            
             c.close();
         } catch ( Exception e ) {
-            System.out.println(e.getClass().getName() + ": " + e.getMessage());
             return false;
         }
         return verified;
@@ -518,14 +521,10 @@ public class BabyListener extends ListenerAdapter {
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
 
         
-        //For later use when we start with confirmation
+        //Delete every msg in #newcomers
         if(event.getChannel().getId().equals(Data.ETH_NEWCOMERS_CH_ID) && !event.getAuthor().isBot()){
-            try{
-                event.getMessage().delete().complete();
-                Data.mydel++;
-            } catch (Exception e){
-                Data.otherdel++;
-            }
+            event.getMessage().delete().queue(Void -> Data.mydel++, Throwable -> Data.otherdel++);
+            return;
         }
         
 
