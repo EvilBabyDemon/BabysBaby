@@ -43,10 +43,7 @@ public class BlindCMD implements PublicCMD{
         }
 
         String unit = null;
-        String amount;
-        
-        
-        amount = cmds.get(0);        
+        String amount = cmds.get(0);        
         if(cmds.size()>1){
             unit = cmds.get(1);
         } else {
