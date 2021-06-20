@@ -105,6 +105,7 @@ public class CmdHandler {
         addOwnerCommand(new RoleChangeCMD());
         addOwnerCommand(new TurnCMDsOff());
         addOwnerCommand(new ChangeLogCMD());
+        addOwnerCommand(new SpeedCMD());
         
         
         
