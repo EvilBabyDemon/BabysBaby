@@ -130,10 +130,10 @@ public class BlindCMD implements PublicCMD{
         }
 
         if(rounder <= 29){
-            channel.sendMessage("Use numbers above 29 seconds pls! (As it takes a while to remove and add roles.)").queue();
+            channel.sendMessage("Use values of at least 30 seconds please!").queue();
             return;
         } else if(force && rounder > 43200){
-            channel.sendMessage("Your value has to be below 12 hours (43200 seconds).").queue();
+            channel.sendMessage("Your value has to be below 12 hours / 720 minutes (default unit) / 43200 seconds.").queue();
             return;
         }
 
