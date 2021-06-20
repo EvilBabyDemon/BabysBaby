@@ -17,7 +17,12 @@ public class SpeedCMD implements OwnerCMD{
     @Override
     public void handleOwner(CommandContext ctx) {
         long all = Data.otherdel+Data.mydel;
-        ctx.getChannel().sendMessage("All deletes: " + all  + " Others: " + Data.otherdel + " Mine: " + Data.mydel + "\n" + (Data.mydel/all) + "%" ).queue();
+        double per = 0;
+        try {
+            per = Data.mydel/(all + 0.0);
+        } catch (Exception e) {
+        }
+        ctx.getChannel().sendMessage("All deletes: " + all  + " Others: " + Data.otherdel + " Mine: " + Data.mydel + "\n" + per + "%" ).queue();
     }
 
     @Override
