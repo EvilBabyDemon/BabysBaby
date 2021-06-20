@@ -159,7 +159,6 @@ public class GetRoleCMD implements PublicCMD{
                     gibRole(ctx, (Role) smallest.get(0)[1]);
                 else
                     sendEmbed(ctx, (String) smallest.get(0)[1]);
-                //channel.sendMessage("" + (int) smallest.get(0)[0]).queue();
                 return;
             }
         }
@@ -405,9 +404,9 @@ public class GetRoleCMD implements PublicCMD{
         MessageChannel channel = ctx.getChannel();
         Member member = ctx.getMember();
         List<Role> autroles = member.getRoles();
-        
+        //Removing Role
         if(autroles.contains(role)){
-            //external
+            //External
             if(role.getId().equals(Data.ethexternal)){
                 Role student = ctx.getGuild().getRoleById(Data.ethstudent);
                 if(autroles.contains(student)){
@@ -417,18 +416,10 @@ public class GetRoleCMD implements PublicCMD{
                 } else{
                     channel.sendMessage("You need at least either the Student or External Role").queue();
                 }
-            //student
+            //Student
             } else if(role.getId().equals(Data.ethstudent)){
                 Role external = ctx.getGuild().getRoleById(Data.ethexternal);
                 
-                if(BabyListener.verifiedUser(member.getId())){
-                    String doverify = "You have to get verified to get the role ";
-                    String suffix = ". You can do that here: https://dauth.spclr.ch/";
-                    member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
-                    return;
-                }
-
-
                 if(autroles.contains(external)){
                     ctx.getGuild().addRoleToMember(member, external).complete();
                     ctx.getGuild().removeRoleFromMember(member, role).complete();
@@ -436,22 +427,35 @@ public class GetRoleCMD implements PublicCMD{
                 } else{
                     channel.sendMessage("You need at least either the Student or External Role").queue();
                 }
+            //Smth else
             } else {
                 ctx.getGuild().removeRoleFromMember(member, role).complete();
                 channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
             }
-        //smth else
+
+        //Adding Role
         } else {
+            //External
             if(role.getId().equals(Data.ethexternal)){
                 Role student = ctx.getGuild().getRoleById(Data.ethstudent);
                 ctx.getGuild().addRoleToMember(member, role).complete();
                 ctx.getGuild().removeRoleFromMember(member, student).complete();
                 channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + student.getName()).complete();
+            //Student
             } else if(role.getId().equals(Data.ethstudent)){
+
+                if(BabyListener.verifiedUser(member.getId())){
+                    String doverify = "You have to get verified to get the role ";
+                    String suffix = ". You can do that here: https://dauth.spclr.ch/ and write the token to <@306523617188118528>";
+                    member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
+                    return;
+                }
+
                 Role external = ctx.getGuild().getRoleById(Data.ethexternal);
                 ctx.getGuild().addRoleToMember(member, role).complete();
                 ctx.getGuild().removeRoleFromMember(member, external).complete();  
                 channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + external.getName()).complete();  
+            //Smth else
             } else {
                 ctx.getGuild().addRoleToMember(member, role).complete();
                 channel.sendMessage("Gave you the Role " + role.getName() + ".").complete();
