@@ -13,6 +13,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.GetRolesBack;
+import BabyBaby.data.Helper;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.*;
 
@@ -47,14 +48,9 @@ public class BlindCMD implements PublicCMD{
         if(cmds.size()>1){
             unit = cmds.get(1);
         } else {
-            String s = cmds.get(0);
-            for(int i = 0; i < s.length(); i++) {
-                if (Character.isLetter(s.charAt(i))) {
-                amount = s.substring(0, i);
-                unit = s.substring(i, i+1);
-                break;
-                }
-            }
+            String[] retrieveStr = Helper.splitUnitAndTime(cmds.get(0));
+            unit = retrieveStr[0];
+            amount = retrieveStr[1];
         }
         
 
@@ -84,7 +80,6 @@ public class BlindCMD implements PublicCMD{
         
 
         double time;
-        String sunit;
         User blindUser = mem.getUser();
         ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
         
@@ -107,45 +102,9 @@ public class BlindCMD implements PublicCMD{
         }			
 
         
-        long rounder = 0;
-        
-        if(unit == null) {
-            sunit = "minutes";
-            rounder = (long) (time*60);
-        } else {
-            unit = unit.toLowerCase();
-            if (unit.startsWith("h")){
-                sunit = "hours";
-                rounder = (long) (time*3600);
-            } else if (unit.equals("ms")) {
-                sunit = "milliseconds";
-                rounder = (long) (time/1000);
-            } else if (unit.equals("μs")) {
-                sunit = "microseconds";
-                rounder = (long) (time/1_000_000);
-            } else if (unit.equals("ns")) {
-                sunit = "nanoseconds";
-                rounder = (long) (time/1_000_000_000);
-            } else if (unit.equals("ps")) {
-                sunit = "picoseconds";
-                rounder = (long) (time/1_000_000_000_000L);
-            } else if (unit.startsWith("w")) {
-                sunit = "weeks";
-                rounder = (long) (time*7*24*3600);
-            } else if (unit.startsWith("y")) {
-                sunit = "years";
-                rounder = (long) (time*365*24*3600);
-            } else if(unit.startsWith("m")){
-                sunit = "minutes";
-                rounder = (long) (time*60);
-            } else if(unit.startsWith("d")){
-                sunit = "days";
-                rounder = (long) (time*24*3600);
-            } else {
-                sunit = "seconds";
-                rounder = (long) (time);
-            }
-        }
+        Object[] retrieverObj = Helper.getUnits(unit, time);
+        String strUnit = ""+retrieverObj[0];
+        long rounder = (long) retrieverObj[0];
 
         if(rounder <= 29){
             channel.sendMessage("Use values of at least 30 seconds please!").queue();
@@ -228,7 +187,7 @@ public class BlindCMD implements PublicCMD{
         blind.put(mem, mute);
         blindexe.put(mute, scheduledclass);
 
-        String msg = " got blinded for ~" + time + " " + sunit + ".";
+        String msg = " got blinded for ~" + time + " " + strUnit + ".";
         if(force){
             BlindForceCMD.force.add(scheduledclass);
             msg +=  " **Wait out the timer!!!** And hopefully you are productive!";

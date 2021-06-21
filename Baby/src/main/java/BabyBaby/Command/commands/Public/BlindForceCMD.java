@@ -8,6 +8,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.GetRolesBack;
+import BabyBaby.data.Helper;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.*;
 
@@ -59,14 +60,9 @@ public class BlindForceCMD implements PublicCMD{
         if(cmds.size()>1){
             unit = cmds.get(1);
         } else {
-            String s = cmds.get(0);
-            for(int i = 0; i < s.length(); i++) {
-                if (Character.isLetter(s.charAt(i))) {
-                amount = s.substring(0, i);
-                unit = s.substring(i, i+1);
-                break;
-                }
-            }
+            String[] retrieveStr = Helper.splitUnitAndTime(cmds.get(0));
+            unit = retrieveStr[0];
+            amount = retrieveStr[1];
         }
         
 

@@ -13,6 +13,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.GetUnmute;
+import BabyBaby.data.Helper;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -45,10 +46,18 @@ public class MuteCMD implements PublicCMD {
         Guild called = ctx.getGuild();
 
         List<String> cmds = ctx.getArgs();
-        String number = cmds.get(0);
 		
+        String unit = null;
+        String number = cmds.get(0);        
+        if(cmds.size()>1){
+            unit = cmds.get(1);
+        } else {
+            String[] retrieveStr = Helper.splitUnitAndTime(cmds.get(0));
+            unit = retrieveStr[0];
+            number = retrieveStr[1];
+        }
+
         double time;
-        String sunit;
         User muteUser = ctx.getAuthor(); 
         ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
         
@@ -58,13 +67,13 @@ public class MuteCMD implements PublicCMD {
         }
 
         try{
-        if(number.length() > 18 || Double.parseDouble(number) > Integer.MAX_VALUE){
-            time=Integer.MAX_VALUE;
-        } else {
-                time = Double.parseDouble(number);
-        }
+            if(number.length() > 18 || Double.parseDouble(number) > Integer.MAX_VALUE){
+                time=Integer.MAX_VALUE;
+            } else {
+                    time = Double.parseDouble(number);
+            }
         } catch (NumberFormatException e){
-            channel.sendMessage("You probably forgot the space between the time and unit, if not use numbers pls!").queue();
+            channel.sendMessage("Those are not numbers.").queue();
             return;
         }
 
@@ -77,31 +86,13 @@ public class MuteCMD implements PublicCMD {
         List<Role> stfuroles = called.getRolesByName("STFU", true); 
         Role muteR = stfuroles.get(0);
 
-        long rounder = 0;
-        
-        if(cmds.size() < 2) {
-            sunit = "minutes";
-            rounder = (long) (time*60);
-        } else {
-            String timeunit = cmds.get(1);
-            timeunit = timeunit.toLowerCase();
-            if (timeunit.startsWith("h")){
-                sunit = "hours";
-                rounder = (long) (time*3600);
-            } else if(timeunit.startsWith("m")){
-                sunit = "minutes";
-                rounder = (long) (time*60);
-            } else if(timeunit.startsWith("d")){
-                sunit = "days";
-                rounder = (long) (time*24*3600);
-            } else {
-                sunit = "seconds";
-                rounder = (long) (time);
-            }
-        }
+
+        Object[] retrieverObj = Helper.getUnits(unit, time);
+        String strUnit = ""+retrieverObj[0];
+        long rounder = (long) retrieverObj[0];
 
         if(rounder <= 0){
-            channel.sendMessage("Use numbers above 1 second pls!").queue();
+            channel.sendMessage("Use numbers above 0 seconds pls!").queue();
             return;
         }
 
@@ -137,7 +128,7 @@ public class MuteCMD implements PublicCMD {
         variables.put(mute, scheduledclass);
 
         called.addRoleToMember(ctx.getMember(), muteR).queue();
-        channel.sendMessage("You got muted for ~" + time + " " + sunit + ". Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnmuteMeCMD().getName() + "\"").queue();
+        channel.sendMessage("You got muted for ~" + time + " " + strUnit + ". Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnmuteMeCMD().getName() + "\"").queue();
 
     }
 

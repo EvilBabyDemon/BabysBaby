@@ -13,6 +13,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
+import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -46,24 +47,26 @@ public class ReminderCMD implements PublicCMD {
             return;
         }
 
-        String number = cmds.get(0);
+        String unit = null;
+        String number = cmds.get(0);        
+        if(cmds.size()>1){
+            unit = cmds.get(1);
+        } else {
+            String[] retrieveStr = Helper.splitUnitAndTime(cmds.get(0));
+            unit = retrieveStr[0];
+            number = retrieveStr[1];
+        }
 		
         double time;
-        String sunit;
         
-        if(cmds.size() == 0){
-            channel.sendMessage("Something went wrong please get my help page with (prefix)help " + getName()).queue();
-            return;
-        }
-
         try{
-        if(number.length() > 18 || Double.parseDouble(number) > Integer.MAX_VALUE){
-            time=Integer.MAX_VALUE;
-        } else {
-                time = Double.parseDouble(number);
-        }
+            if(number.length() > 18 || Double.parseDouble(number) > Integer.MAX_VALUE){
+                time=Integer.MAX_VALUE;
+            } else {
+                    time = Double.parseDouble(number);
+            }
         } catch (NumberFormatException e){
-            channel.sendMessage("You probably forgot the space between the time and unit, if not use numbers pls!").queue();
+            channel.sendMessage("Those are not numbers.").queue();
             return;
         }
 
@@ -72,24 +75,9 @@ public class ReminderCMD implements PublicCMD {
             return;
         }			
 
-        long rounder = 0;
-        
-        
-        String timeunit = cmds.get(1);
-        timeunit = timeunit.toLowerCase();
-        if (timeunit.startsWith("h")){
-            sunit = "hours";
-            rounder = (long) (time*3600);
-        } else if(timeunit.startsWith("m")){
-            sunit = "minutes";
-            rounder = (long) (time*60);
-        } else if(timeunit.startsWith("d")){
-            sunit = "days";
-            rounder = (long) (time*3600*24);
-        } else {
-            sunit = "seconds";
-            rounder = (long) (time);
-        }
+        Object[] retrieverObj = Helper.getUnits(unit, time);
+        String strUnit = ""+retrieverObj[0];
+        long rounder = (long) retrieverObj[0];
         
 
         if(rounder <= 0){
@@ -143,7 +131,7 @@ public class ReminderCMD implements PublicCMD {
         ScheduledExecutorService remind = Executors.newScheduledThreadPool(1);
         remind.schedule(new GetReminder(ctx.getAuthor(), ctx.getGuild(), message, ctx.getChannel().getId(), "pkey"), rounder , TimeUnit.SECONDS);
 
-        channel.sendMessage(ctx.getAuthor().getAsMention() + " You will get Reminded in ~" + time + " " + sunit + ".").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+        channel.sendMessage(ctx.getAuthor().getAsMention() + " You will get Reminded in ~" + time + " " + strUnit + ".").complete().delete().queueAfter(10, TimeUnit.SECONDS);
 
 
     }
