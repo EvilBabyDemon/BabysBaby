@@ -77,11 +77,11 @@ public class ReminderCMD implements PublicCMD {
 
         Object[] retrieverObj = Helper.getUnits(unit, time);
         String strUnit = ""+retrieverObj[0];
-        long rounder = (long) retrieverObj[0];
+        long rounder = (long) retrieverObj[1];
         
 
         if(rounder <= 0){
-            channel.sendMessage("Use numbers above 1 second pls!").queue();
+            channel.sendMessage("Use numbers above 0 second pls!").queue();
             return;
         }
 
@@ -138,7 +138,7 @@ public class ReminderCMD implements PublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<time> <Unit (s,m,h or d)> [Your Text could be written here]", "Command to remind you.");
+        return StandardHelp.Help(prefix, getName(), "<time> <Unit> [Your Text could be written here]", "Command to remind you.");
     }
     
 }

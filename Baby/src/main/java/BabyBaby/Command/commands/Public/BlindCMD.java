@@ -104,7 +104,7 @@ public class BlindCMD implements PublicCMD{
         
         Object[] retrieverObj = Helper.getUnits(unit, time);
         String strUnit = ""+retrieverObj[0];
-        long rounder = (long) retrieverObj[0];
+        long rounder = (long) retrieverObj[1];
 
         if(rounder <= 29){
             channel.sendMessage("Use values of at least 30 seconds please!").queue();

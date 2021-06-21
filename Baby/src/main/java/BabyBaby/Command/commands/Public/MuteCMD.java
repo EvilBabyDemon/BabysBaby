@@ -89,7 +89,7 @@ public class MuteCMD implements PublicCMD {
 
         Object[] retrieverObj = Helper.getUnits(unit, time);
         String strUnit = ""+retrieverObj[0];
-        long rounder = (long) retrieverObj[0];
+        long rounder = (long) retrieverObj[1];
 
         if(rounder <= 0){
             channel.sendMessage("Use numbers above 0 seconds pls!").queue();
