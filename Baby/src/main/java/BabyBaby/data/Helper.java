@@ -46,14 +46,14 @@ public class Helper {
     }
 
     public static String[] splitUnitAndTime (String str){
-        String unit = "";
-        String amount = "";        
+        String unit = null;
+        String amount = str;  
         
         for(int i = 0; i < str.length(); i++) {
             if (Character.isLetter(str.charAt(i))) {
-            amount = str.substring(0, i);
-            unit = str.substring(i, i+1);
-            break;
+                amount = str.substring(0, i);
+                unit = str.substring(i, i+1);
+                break;
             }
         }
     

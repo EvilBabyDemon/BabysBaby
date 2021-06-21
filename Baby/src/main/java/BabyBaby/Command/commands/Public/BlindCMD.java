@@ -86,11 +86,11 @@ public class BlindCMD implements PublicCMD{
         
 
         try{
-        if(number.length() > 18 || Double.parseDouble(number) > Integer.MAX_VALUE){
-            time=Integer.MAX_VALUE;
-        } else {
+            if(number.length() > 18 || Double.parseDouble(number) > Integer.MAX_VALUE){
+                time=Integer.MAX_VALUE;
+            } else {
                 time = Double.parseDouble(number);
-        }
+            }
         } catch (NumberFormatException e){
             channel.sendMessage("You probably forgot the space between the time and unit, if not use numbers pls!").complete().delete().queueAfter(30, TimeUnit.SECONDS);
             return;
