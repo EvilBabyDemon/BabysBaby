@@ -108,9 +108,9 @@ public class BabyListener extends ListenerAdapter {
             LinkedList<Role> addRole = new LinkedList<>();
             LinkedList<Role> delRole = new LinkedList<>();
 
-            for (String var : roles.split(" ")) {
+            for (String roleID : roles.split(" ")) {
                 try {
-                    addRole.add(blindServ.getRoleById(var));
+                    addRole.add(blindServ.getRoleById(roleID));
                 } catch (Exception e) {
                     System.out.println("Role doesnt exist anymore");
                 }
@@ -141,9 +141,9 @@ public class BabyListener extends ListenerAdapter {
             //remove from a group
             String id = event.getMember().getId();
             for (int ids : BlindGroupCMD.groups.keySet()) {
-                ArrayList<String> var = BlindGroupCMD.groups.get(ids);
-                if(var.contains(id)){
-                    var.remove(id);
+                ArrayList<String> groupList = BlindGroupCMD.groups.get(ids);
+                if(groupList.contains(id)){
+                    groupList.remove(id);
                     break;
                 }
             }

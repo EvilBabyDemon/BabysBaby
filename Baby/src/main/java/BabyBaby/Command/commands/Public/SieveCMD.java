@@ -29,8 +29,8 @@ public class SieveCMD implements PublicCMD {
         String[] cmd = new String [cmds.size()];
 
         int dooku = 0;
-        for (String var : cmds) {
-            cmd[dooku] = var;
+        for (String arg : cmds) {
+            cmd[dooku] = arg;
             dooku++;
         }
 
@@ -38,14 +38,14 @@ public class SieveCMD implements PublicCMD {
 
         List<Member> tmp = ctx.getGuild().getMembers();
         if(cmd[0].equals(Data.ethid)){
-            for (Member var : tmp) {
-                counter.add(var);
+            for (Member member : tmp) {
+                counter.add(member);
             }
         } else {
             Role role1 = ctx.getGuild().getRoleById(cmd[0]);
-            for (Member var : tmp) {
-                if(var.getRoles().contains(role1))
-                    counter.add(var);
+            for (Member member : tmp) {
+                if(member.getRoles().contains(role1))
+                    counter.add(member);
             }
         }   
 
@@ -54,24 +54,24 @@ public class SieveCMD implements PublicCMD {
             switch (cmd[i]){
                 case "!":
                     List<Member> removerMembers = ctx.getGuild().getMembersWithRoles(role);
-                    for (Member var : removerMembers) {
-                        if(counter.contains(var)){
-                            counter.remove(var);
+                    for (Member member : removerMembers) {
+                        if(counter.contains(member)){
+                            counter.remove(member);
                         }
                     }
                     break;
                 case "&":
                     LinkedList<Member> save = new LinkedList<>();
-                    for (Member var : counter) {
-                        if(!var.getRoles().contains(role))
-                            save.add(var);
+                    for (Member member : counter) {
+                        if(!member.getRoles().contains(role))
+                            save.add(member);
                     }
                     counter.removeAll(save);
                     break;
                 case "|":
                     List<Member> adderMem = ctx.getGuild().getMembersWithRoles(role);
-                    for (Member var : adderMem) 
-                        counter.add(var);
+                    for (Member member : adderMem) 
+                        counter.add(member);
                     break;
             }
         }
@@ -85,8 +85,8 @@ public class SieveCMD implements PublicCMD {
         sorted.sort(idcomp);
 
         String mention = "";
-        for (Member var : sorted) {
-            mention += var.getAsMention() + "\n";
+        for (Member member : sorted) {
+            mention += member.getAsMention() + "\n";
         }
         String cmdrole = "";
         for(int i = 0; i < cmd.length; i ++){

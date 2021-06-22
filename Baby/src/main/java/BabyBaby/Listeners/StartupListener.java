@@ -375,9 +375,9 @@ public class StartupListener extends ListenerAdapter{
         }));
         threads.getLast().start();
 
-        for (Thread var : threads) {
+        for (Thread thread : threads) {
             try{
-                var.join();
+                thread.join();
             } catch (Exception e){
                 e.printStackTrace();
             }

@@ -60,8 +60,8 @@ public class ModerationListener extends ListenerAdapter{
         
         List<Invite> inv = event.getGuild().retrieveInvites().complete();
         HashMap<String, Invite> urls = new HashMap<>();
-        for (Invite var : inv) {
-            urls.put(var.getUrl(), var);
+        for (Invite invite : inv) {
+            urls.put(invite.getUrl(), invite);
         }
         
         
