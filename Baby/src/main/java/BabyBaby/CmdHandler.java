@@ -64,11 +64,11 @@ public class CmdHandler {
         // adding commands visible to @admin
         addAdminCommand(new addrole());
         addAdminCommand(new DelRoleCMD());
-        addAdminCommand(new roleid());
-        addAdminCommand(new updaterole());
-        addAdminCommand(new whois());
+        addAdminCommand(new RoleIdCMD());
+        addAdminCommand(new UpdateRoleCMD());
+        addAdminCommand(new WhoisCMD());
         addAdminCommand(new RoleAssignCMD());
-        addAdminCommand(new warnCMD());
+        addAdminCommand(new WarnCMD());
         addAdminCommand(new GetWarnedCMD());
         addAdminCommand(new GetWarningsFromUserCMD());
         addAdminCommand(new MutePersonCMD());
