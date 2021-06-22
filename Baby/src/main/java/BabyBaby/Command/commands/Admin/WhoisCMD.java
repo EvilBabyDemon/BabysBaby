@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
-public class whois implements AdminCMD{
+public class WhoisCMD implements AdminCMD{
 
     @Override
     public String getName() {
