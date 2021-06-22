@@ -43,8 +43,8 @@ public class AdminMuteBlindCMD implements AdminCMD{
         
         LinkedList<String> cmds = new LinkedList<>();
 
-        for (String var : ctx.getArgs()) {
-            cmds.add(var);
+        for (String arg : ctx.getArgs()) {
+            cmds.add(arg);
         }
         
 
@@ -81,9 +81,9 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
         LinkedList<GuildChannel> gchan = new LinkedList<>();
 
-        for (GuildChannel var : ctx.getGuild().getChannels()) {
-            if(!var.getId().equals("769261792491995176") && !var.getId().equals("815881148307210260") && var.getParent() != null){
-                gchan.add(var);
+        for (GuildChannel guildChannel : ctx.getGuild().getChannels()) {
+            if(!guildChannel.getId().equals("769261792491995176") && !guildChannel.getId().equals("815881148307210260") && guildChannel.getParent() != null){
+                gchan.add(guildChannel);
             }
         }
 
@@ -96,19 +96,19 @@ public class AdminMuteBlindCMD implements AdminCMD{
         Guild called = ctx.getGuild();
 
         Role highestbot = null;
-        for (Role var : ctx.getSelfMember().getRoles()) {
-            highestbot = var;
+        for (Role role : ctx.getSelfMember().getRoles()) {
+            highestbot = role;
             break;
         }
 
-        for (Role var : begone) {
-            for (GuildChannel var2 : gchan) {
-                if(var.hasAccess(var2)){
-                    if(var.getPosition()>highestbot.getPosition()){
+        for (Role role : begone) {
+            for (GuildChannel guildChannel : gchan) {
+                if(role.hasAccess(guildChannel)){
+                    if(role.getPosition()>highestbot.getPosition()){
                         channel.sendMessage("Sry you have a higher Role than this bot with viewing permissions. Can't take your roles away").queue();
                         return;
                     }
-                    permrole.add(var);
+                    permrole.add(role);
                     break;
                 }
             }
@@ -220,15 +220,10 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
         userBlinded.add(blinded);
 
-
-
         
-        for (Role var : permrole) {
-            role += var.getId() + " ";
+        for (Role roleID : permrole) {
+            role += roleID.getId() + " ";
         }
-
-        
-        
 
         
         if(time != 0){

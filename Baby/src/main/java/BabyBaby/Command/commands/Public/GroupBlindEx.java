@@ -51,9 +51,9 @@ public class GroupBlindEx implements Runnable {
                 return;
             }
 
-            for (GuildChannel var : guild.getChannels()) {
-                if(!var.getId().equals("769261792491995176") && !var.getId().equals("815881148307210260") && var.getParent() != null){
-                    gchan.add(var);
+            for (GuildChannel channels : guild.getChannels()) {
+                if(!channels.getId().equals("769261792491995176") && !channels.getId().equals("815881148307210260") && channels.getParent() != null){
+                    gchan.add(channels);
                 }
             }
 
@@ -66,14 +66,14 @@ public class GroupBlindEx implements Runnable {
 
                     PrivateChannel priv = blinded.getUser().openPrivateChannel().complete();
 
-                    for (Role var : begone) {
-                        for (GuildChannel var2 : gchan) {
-                            if(var.hasAccess(var2)){
-                                if(var.getPosition()>=highestbot.getPosition()){
+                    for (Role role : begone) {
+                        for (GuildChannel channels : gchan) {
+                            if(role.hasAccess(channels)){
+                                if(role.getPosition()>=highestbot.getPosition()){
                                     priv.sendMessage("Sry you have a higher Role than this bot with viewing permissions. Can't take your roles away").queue();
                                     continue main;
                                 }
-                                permrole.add(var);
+                                permrole.add(role);
                                 break;
                             }
                         }
@@ -88,8 +88,8 @@ public class GroupBlindEx implements Runnable {
                         Class.forName("org.sqlite.JDBC");
                         c = DriverManager.getConnection(Data.db);
                         
-                        for (Role var : permrole) {
-                            role += var.getId() + " ";
+                        for (Role roleToStr : permrole) {
+                            role += roleToStr.getId() + " ";
                         }
 
                         stmt = c.prepareStatement("INSERT INTO ROLEREMOVAL (USERID, GUILDID, MUTETIME, ROLES, ADMINMUTE) VALUES (?, ?, ?, ?, ?);");
@@ -169,9 +169,9 @@ public class GroupBlindEx implements Runnable {
                 LinkedList<Role> addRole = new LinkedList<>();
                 LinkedList<Role> delRole = new LinkedList<>();
 
-                for (String var : roles.split(" ")) {
+                for (String roleID : roles.split(" ")) {
                     try {
-                        addRole.add(guild.getRoleById(var));
+                        addRole.add(guild.getRoleById(roleID));
                     } catch (Exception e) {
                         System.out.println("Role doesnt exist anymore");
                     }
