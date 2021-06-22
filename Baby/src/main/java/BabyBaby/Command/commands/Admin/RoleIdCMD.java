@@ -12,7 +12,7 @@ import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class roleid implements AdminCMD {
+public class RoleIdCMD implements AdminCMD {
 
     @Override
     public String getName() {

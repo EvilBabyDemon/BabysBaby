@@ -13,7 +13,7 @@ import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class updaterole implements AdminCMD {
+public class UpdateRoleCMD implements AdminCMD {
 
     @Override
     public String getName() {
