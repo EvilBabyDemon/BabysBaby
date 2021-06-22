@@ -13,7 +13,7 @@ import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class addrole implements AdminCMD {
+public class AddRoleCMD implements AdminCMD {
 
 
 
@@ -24,10 +24,9 @@ public class addrole implements AdminCMD {
 
     @Override
     public void handleAdmin(CommandContext ctx) {
-        List<String> cmds2 = ctx.getArgs();
         LinkedList<String> cmds = new LinkedList<>();
-        for (String var : cmds2) {
-            cmds.add(var);
+        for (String arg : ctx.getArgs()) {
+            cmds.add(arg);
         }
 
 
@@ -42,8 +41,8 @@ public class addrole implements AdminCMD {
         if(cmds.size() == 0){
             categ = "Other";
         } else {
-            for (String var : cmds) {
-                categ += var + " "; 
+            for (String strCateg : cmds) {
+                strCateg += strCateg + " "; 
             }
             categ = categ.substring(0, categ.length()-1);
         }
