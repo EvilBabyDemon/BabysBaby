@@ -98,12 +98,12 @@ public class GetRoleCMD implements PublicCMD{
 
             HashMap<String, String> emoterolelist = Data.emoteassign;
             HashMap<String, Object> namerole = new HashMap<>();
-            for (String var : emoterolelist.keySet()) {
-                Role tmp = ctx.getGuild().getRoleById(emoterolelist.get(var));
+            for (String roleID : emoterolelist.keySet()) {
+                Role tmp = ctx.getGuild().getRoleById(emoterolelist.get(roleID));
                 namerole.put(tmp.getName().toLowerCase(), tmp);
             }
-            for (String var : cats) {
-                namerole.put(var.toLowerCase(), var);
+            for (String strCats : cats) {
+                namerole.put(strCats.toLowerCase(), strCats);
             }
 
 
@@ -133,13 +133,13 @@ public class GetRoleCMD implements PublicCMD{
             
             smallest.add(minedit.remove(0));
             int smallestint = (int) smallest.get(0)[0];
-            for (Object[] var : minedit) {
-                int x = (int) var[0];
+            for (Object[] minEditObj : minedit) {
+                int x = (int) minEditObj[0];
                 if(smallestint == x){
-                    smallest.add(var);
+                    smallest.add(minEditObj);
                 } else if(smallestint > x){
                     smallest = new LinkedList<>();
-                    smallest.add(var);
+                    smallest.add(minEditObj);
                     smallestint = x;
                 }
             }
@@ -171,7 +171,7 @@ public class GetRoleCMD implements PublicCMD{
         LinkedList<String> categ = new LinkedList<>();
         LinkedList<String> roles = new LinkedList<>();
 
-        for (String var : cats) {
+        for (String strCats : cats) {
             HashMap<Role, Object[]> sorting = new HashMap<>();
             try {
                 Class.forName("org.sqlite.JDBC");
@@ -180,7 +180,7 @@ public class GetRoleCMD implements PublicCMD{
                 stmt = c.createStatement();
 
                 Guild called = ctx.getGuild();
-                rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + var + "';");
+                rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + strCats + "';");
                 while ( rs.next() ) {
                     String rcat = rs.getString("ID");
                     String emote = rs.getString("EMOTE");
@@ -211,7 +211,7 @@ public class GetRoleCMD implements PublicCMD{
             }
 
             emotes.add(tempo);
-            categ.add(var);
+            categ.add(strCats);
             roles.add(msg);
             msg = "";
         }
@@ -240,11 +240,11 @@ public class GetRoleCMD implements PublicCMD{
         emb.add(embeds(tmp, ctx));
         int max = 0;
         for (EmbedBuilder eb : emb) {
-            LinkedList<String> temp = new LinkedList<>();
+            LinkedList<String> emoList = new LinkedList<>();
             max = emotewhen.remove(0)-max;
             for (int i = 0; i < max; i++) {
                 try {
-                    temp.addAll(emotes.remove(0));
+                    emoList.addAll(emotes.remove(0));
                 } catch (Exception e) {
                     break;
                 }
@@ -253,17 +253,17 @@ public class GetRoleCMD implements PublicCMD{
 
                      
             ArrayList<Button> butt = new ArrayList<>();
-            for (String var : temp) {
-                if(var == null || var.length() == 0)
+            for (String emoID : emoList) {
+                if(emoID == null || emoID.length() == 0)
                         continue;
-                String emote = var;
+                String emote = emoID;
                 boolean gemo = false;
                 if((gemo=emote.contains(":"))){
                     emote = emote.split(":")[2];
                 }
                 
                 try{
-                    butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
+                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
                 } catch (Exception e){
                     ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
@@ -286,8 +286,6 @@ public class GetRoleCMD implements PublicCMD{
                 msgs.delete().queueAfter(90, TimeUnit.SECONDS);    
             } catch (Exception e) {
             }
-            
-
         }
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
     }
@@ -325,8 +323,8 @@ public class GetRoleCMD implements PublicCMD{
         eb.setTitle("Roles you can assign yourself", null);
         eb.setColor(1);
 
-        for (String var : fields.keySet()) {
-            eb.addField(var, fields.get(var), true); 
+        for (String field : fields.keySet()) {
+            eb.addField(field, fields.get(field), true); 
         }
 
         String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
@@ -340,9 +338,9 @@ public class GetRoleCMD implements PublicCMD{
         LinkedList<Object[]> res = new LinkedList<>();
         while(sorting.size()!=0){
             Role highest = null;
-            for (Role var : sorting.keySet()) {
-                if(highest == null || var.getPosition() > highest.getPosition()){
-                    highest = var;
+            for (Role role : sorting.keySet()) {
+                if(highest == null || role.getPosition() > highest.getPosition()){
+                    highest = role;
                 }
             }
             res.add(sorting.get(highest));
@@ -522,13 +520,37 @@ public class GetRoleCMD implements PublicCMD{
         
         eb.setFooter("Click on the Emotes to assign yourself Roles.");
         
-        Message msgs = channel.sendMessage(eb.build()).complete();                
-        Data.msgid.add(msgs.getId());
-        for (String var : emotes) {
-            if(var == null || var.length() == 0)
+
+        ArrayList<Button> butt = new ArrayList<>();
+        for (String emoID : emotes) {
+            if(emoID == null || emoID.length() == 0)
                     continue;
-            channel.addReactionById(msgs.getId(), var).queue();
+            String emote = emoID;
+            boolean gemo = false;
+            if((gemo=emote.contains(":"))){
+                emote = emote.split(":")[2];
+            }
+            
+            try{
+                butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
+            } catch (Exception e){
+                ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+            }
         }
-        Data.msgid.add((msgs.getId()));
+
+        MessageAction msgAct = channel.sendMessage(eb.build());
+        
+        LinkedList<ActionRow> acR = new LinkedList<>();
+        for (int i = 0; i < butt.size(); i +=5) {
+            ArrayList<Button> row = new ArrayList<>();
+            for (int j = 0; j < 5 && j+i < butt.size(); j++) {
+                row.add(butt.get(i+j));
+            }
+            acR.add(ActionRow.of(row));
+        }
+
+        msgAct.setActionRows(acR);
+
+        Data.msgid.add(msgAct.complete().getId());
     }
 }
