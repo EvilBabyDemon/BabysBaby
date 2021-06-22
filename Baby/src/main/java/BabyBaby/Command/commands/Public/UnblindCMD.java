@@ -60,9 +60,9 @@ public class UnBlindCMD implements PublicCMD {
         boolean group = false;
         //remove from a group
         for (int ids : BlindGroupCMD.groups.keySet()) {
-            ArrayList<String> var = BlindGroupCMD.groups.get(ids);
-            if(var.contains(authorID)){
-                var.remove(authorID);
+            ArrayList<String> groupList = BlindGroupCMD.groups.get(ids);
+            if(groupList.contains(authorID)){
+                groupList.remove(authorID);
                 group = true;
                 break;
             }
@@ -70,38 +70,38 @@ public class UnBlindCMD implements PublicCMD {
         
 
         if(!group){
-            LinkedList<GetRolesBack> vars = new LinkedList<>();        
+            LinkedList<GetRolesBack> classList = new LinkedList<>();        
             
-            for (Member var : BlindCMD.blind.keySet()) {
-                if(var.getId().equals(authorID)){
-                    vars.add(BlindCMD.blindexe.get(BlindCMD.blind.get(var)));
+            for (Member member : BlindCMD.blind.keySet()) {
+                if(member.getId().equals(authorID)){
+                    classList.add(BlindCMD.blindexe.get(BlindCMD.blind.get(member)));
                 }
             }
             GetRolesBack blindclass = null;
             if(cmds.size() == 0){
-                switch(vars.size()){
+                switch(classList.size()){
                     case 0:
                         author.openPrivateChannel().queue(privchannel -> {
                             privchannel.sendMessage("You were never blinded. Or at least not by this bot. If you were pls report this problem to Lukas.").queue();
                         });
                         return;
                     case 1:
-                        blindclass = vars.get(0);
+                        blindclass = classList.get(0);
                         break;
                     default:
                         author.openPrivateChannel().queue(privchannel -> {
                             privchannel.sendMessage("Pls use +" + getName() + " <key> as there are multiple servers you are blinded on. These are the keys:").queue();
-                            for (GetRolesBack var : vars) {
-                                privchannel.sendMessage("Key: " + var.guild.getId() + " " + var.guild.getName()).queue();
+                            for (GetRolesBack classRoles : classList) {
+                                privchannel.sendMessage("Key: " + classRoles.guild.getId() + " " + classRoles.guild.getName()).queue();
                             }
                             //TO DO FIX FOR multiple server
                         });
                         return;
                 }
             } else {
-                for (GetRolesBack var : vars) {
-                    if(var.guild.getId().equals(cmds.get(0))){
-                        blindclass = var;
+                for (GetRolesBack classRole : classList) {
+                    if(classRole.guild.getId().equals(cmds.get(0))){
+                        blindclass = classRole;
                         break;
                     }
                 }
@@ -161,9 +161,9 @@ public class UnBlindCMD implements PublicCMD {
         LinkedList<Role> addRole = new LinkedList<>();
         LinkedList<Role> delRole = new LinkedList<>();
 
-        for (String var : roles.split(" ")) {
+        for (String roleID : roles.split(" ")) {
             try {
-                addRole.add(blindServ.getRoleById(var));
+                addRole.add(blindServ.getRoleById(roleID));
             } catch (Exception e) {
                 System.out.println("Role doesnt exist anymore");
             }

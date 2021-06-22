@@ -82,7 +82,7 @@ public class EditAssignCMD implements AdminCMD{
         ArrayList<String> categ = new ArrayList<>();
         LinkedList<String> roles = new LinkedList<>();
         
-        for (String var : cats) {
+        for (String strCateg : cats) {
             HashMap<Role, Object[]> sorting = new HashMap<>();
             try {
                 Class.forName("org.sqlite.JDBC");
@@ -91,7 +91,7 @@ public class EditAssignCMD implements AdminCMD{
                 stmt = c.createStatement();
 
                 Guild called = ctx.getGuild();
-                rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + var + "';");
+                rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + strCateg + "';");
                 while ( rs.next() ) {
                     String rcat = rs.getString("ID");
                     String emote = rs.getString("EMOTE");
@@ -122,7 +122,7 @@ public class EditAssignCMD implements AdminCMD{
             }
 
             emotes.add(tempo);
-            categ.add(var);
+            categ.add(strCateg);
             roles.add(msg);
             msg = "";
         }
@@ -136,22 +136,22 @@ public class EditAssignCMD implements AdminCMD{
 
         for (int k = 0; k < emb.size(); k++) {
             EmbedBuilder eb = emb.get(k);
-            LinkedList<String> temp = new LinkedList<>();
-            temp.addAll(emotes.remove(0));
+            LinkedList<String> tempEmo = new LinkedList<>();
+            tempEmo.addAll(emotes.remove(0));
 
             
             ArrayList<Button> butt = new ArrayList<>();
-            for (String var : temp) {
-                if(var == null || var.length() == 0)
+            for (String emoID : tempEmo) {
+                if(emoID == null || emoID.length() == 0)
                         continue;
-                String emote = var;
+                String emote = emoID;
                 boolean gemo = false;
                 if((gemo=emote.contains(":"))){
                     emote = emote.split(":")[2];
                 }
                 
                 try{
-                    butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
+                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
                 } catch (Exception e){
                     ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
@@ -219,14 +219,14 @@ public class EditAssignCMD implements AdminCMD{
 
 
         
-        for (String var : remover) {
+        for (String oldMsgID : remover) {
             c = null;
             PreparedStatement pstmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
                 pstmt = c.prepareStatement("DELETE FROM MSGS WHERE MSGID = ?;");
-                pstmt.setString(1, var);
+                pstmt.setString(1, oldMsgID);
                 pstmt.executeUpdate();
                 pstmt.close();
                 c.close();
@@ -234,9 +234,9 @@ public class EditAssignCMD implements AdminCMD{
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 e.printStackTrace(); 
             }
-            Data.msgid.remove(var);
+            Data.msgid.remove(oldMsgID);
             
-            Data.msgToChan.remove(var);
+            Data.msgToChan.remove(oldMsgID);
         }
 
         ctx.getMessage().delete().queue();
@@ -265,9 +265,9 @@ public class EditAssignCMD implements AdminCMD{
         LinkedList<Object[]> res = new LinkedList<>();
         while(sorting.size()!=0){
             Role highest = null;
-            for (Role var : sorting.keySet()) {
-                if(highest == null || var.getPosition() > highest.getPosition()){
-                    highest = var;
+            for (Role role : sorting.keySet()) {
+                if(highest == null || role.getPosition() > highest.getPosition()){
+                    highest = role;
                 }
             }
             res.add(sorting.get(highest));
@@ -277,8 +277,8 @@ public class EditAssignCMD implements AdminCMD{
     }
 
     public boolean cont (List<String> c, String s){
-        for (String var : c) {
-            if(var.contains(s)){
+        for (String str : c) {
+            if(str.contains(s)){
                 return true;
             }
         }

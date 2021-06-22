@@ -23,13 +23,13 @@ public class BotsOnlineCMD implements PublicCMD{
     public void handlePublic(CommandContext ctx) {
         ArrayList<Member> online = new ArrayList<>();
         ArrayList<Member> offline = new ArrayList<>();        
-        for (Member var : ctx.getGuild().getMembers()) {
-            if(var.getUser().isBot()){
-                OnlineStatus stat = var.getOnlineStatus();
+        for (Member member : ctx.getGuild().getMembers()) {
+            if(member.getUser().isBot()){
+                OnlineStatus stat = member.getOnlineStatus();
                 if(stat.equals(OnlineStatus.OFFLINE)){
-                    offline.add(var);
+                    offline.add(member);
                 } else{
-                    online.add(var);
+                    online.add(member);
                 }
             }        
         }
@@ -38,14 +38,14 @@ public class BotsOnlineCMD implements PublicCMD{
         String off = "";
         String pingstr = "";
 
-        for (Member var : online) {
-            on += var.getAsMention() + "\n";
-            pingstr += var.getAsMention() + " ";
+        for (Member onMember : online) {
+            on += onMember.getAsMention() + "\n";
+            pingstr += onMember.getAsMention() + " ";
         }
 
-        for (Member var : offline) {
-            off += var.getAsMention() + "\n";
-            pingstr += var.getAsMention() + " ";
+        for (Member offMember : offline) {
+            off += offMember.getAsMention() + "\n";
+            pingstr += offMember.getAsMention() + " ";
         }
 
         Message ping =  ctx.getChannel().sendMessage("wait").complete();

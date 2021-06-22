@@ -129,10 +129,10 @@ public class SieveCMD implements PublicCMD {
 
 
         Message editor = ctx.getChannel().sendMessage("wait a sec").complete();
-        for (String var : cacherefresh) {
-            if(var == null || var.length()==0)
+        for (String pings : cacherefresh) {
+            if(pings == null || pings.length()==0)
                 continue;
-            editor.editMessage(var + " ").complete();
+            editor.editMessage(pings + " ").complete();
         }
         editor.delete().queue();
 
