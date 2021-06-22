@@ -69,7 +69,7 @@ public class RoleAssignCMD implements AdminCMD {
         ArrayList<String> categ = new ArrayList<>();
         LinkedList<String> roles = new LinkedList<>();
 
-        for (String var : cats) {
+        for (String strCats : cats) {
             HashMap<Role, Object[]> sorting = new HashMap<>();
             try {
                 Class.forName("org.sqlite.JDBC");
@@ -78,7 +78,7 @@ public class RoleAssignCMD implements AdminCMD {
                 stmt = c.createStatement();
 
                 Guild called = ctx.getGuild();
-                rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + var + "';");
+                rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + strCats + "';");
                 while ( rs.next() ) {
                     String rcat = rs.getString("ID");
                     String emote = rs.getString("EMOTE");
@@ -109,7 +109,7 @@ public class RoleAssignCMD implements AdminCMD {
             }
 
             emotes.add(tempo);
-            categ.add(var);
+            categ.add(strCats);
             roles.add(msg);
             msg = "";
         }
@@ -122,22 +122,22 @@ public class RoleAssignCMD implements AdminCMD {
         }
         for (int k = 0; k < emb.size(); k++) {
             EmbedBuilder eb = emb.get(k);
-            LinkedList<String> temp = new LinkedList<>();
-            temp.addAll(emotes.remove(0));
+            LinkedList<String> emoList = new LinkedList<>();
+            emoList.addAll(emotes.remove(0));
 
             
             ArrayList<Button> butt = new ArrayList<>();
-            for (String var : temp) {
-                if(var == null || var.length() == 0)
+            for (String emoID : emoList) {
+                if(emoID == null || emoID.length() == 0)
                         continue;
-                String emote = var;
+                String emote = emoID;
                 boolean gemo = false;
                 if((gemo=emote.contains(":"))){
                     emote = emote.split(":")[2];
                 }
                 
                 try{
-                    butt.add(Button.primary(var, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
+                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
                 } catch (Exception e){
                     ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
@@ -216,9 +216,9 @@ public class RoleAssignCMD implements AdminCMD {
         LinkedList<Object[]> res = new LinkedList<>();
         while(sorting.size()!=0){
             Role highest = null;
-            for (Role var : sorting.keySet()) {
-                if(highest == null || var.getPosition() > highest.getPosition()){
-                    highest = var;
+            for (Role role : sorting.keySet()) {
+                if(highest == null || role.getPosition() > highest.getPosition()){
+                    highest = role;
                 }
             }
             res.add(sorting.get(highest));

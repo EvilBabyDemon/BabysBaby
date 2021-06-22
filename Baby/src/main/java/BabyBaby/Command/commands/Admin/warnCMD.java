@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class warnCMD implements AdminCMD{
+public class WarnCMD implements AdminCMD{
 
     @Override
     public String getName() {

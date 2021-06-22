@@ -22,17 +22,17 @@ public class ChangeLogCMD implements OwnerCMD {
 
         LinkedList<Emote> emo = new LinkedList<>();
         
-        for (String var : ctx.getArgs()) {
-            emo.add(ctx.getGuild().getEmotesByName(var, true).get(0));
+        for (String arg : ctx.getArgs()) {
+            emo.add(ctx.getGuild().getEmotesByName(arg, true).get(0));
         }
 
-        for (Emote var : emo) {
-            result += var.getAsMention() + " ";
+        for (Emote emote : emo) {
+            result += emote.getAsMention() + " ";
         }
         Message tmp = ctx.getChannel().sendMessage(result).complete();
 
-        for (Emote var : emo) {
-            tmp.addReaction(var).complete();
+        for (Emote emote : emo) {
+            tmp.addReaction(emote).complete();
         }
     }
 

@@ -21,14 +21,14 @@ public class EmoteQueryCMD implements PublicCMD{
         List<Emote> emo = ctx.getGuild().getEmotes();
         String ids = "";
         if(ctx.getArgs().size()>0 && ctx.getArgs().get(0).startsWith("a")){
-            for (Emote var : emo) {
-                if(var.isAnimated())
-                    ids += "\"" +var.getId() + "\",";
+            for (Emote emote : emo) {
+                if(emote.isAnimated())
+                    ids += "\"" +emote.getId() + "\",";
             }
         } else {
-            for (Emote var : emo) {
-                if(!var.isAnimated())
-                    ids += "\"" +var.getId() + "\",";
+            for (Emote emote : emo) {
+                if(!emote.isAnimated())
+                    ids += "\"" +emote.getId() + "\",";
             }
         }
         ids = ids.substring(0, ids.length()-1);

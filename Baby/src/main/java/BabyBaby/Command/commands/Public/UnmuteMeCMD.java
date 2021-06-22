@@ -50,39 +50,39 @@ public class UnmuteMeCMD implements PublicCMD {
             return;
         }
 
-        LinkedList<GetUnmute> vars = new LinkedList<>();        
+        LinkedList<GetUnmute> classList = new LinkedList<>();        
 
         String authorID = author.getId();
-        for (Member var : MuteCMD.userMuted.keySet()) {
-            if(var.getId().equals(authorID)){
-                vars.add(MuteCMD.variables.get(MuteCMD.userMuted.get(var)));
+        for (Member member : MuteCMD.userMuted.keySet()) {
+            if(member.getId().equals(authorID)){
+                classList.add(MuteCMD.variables.get(MuteCMD.userMuted.get(member)));
             }
         }
         GetUnmute muteclass = null;
         if(cmds.size() == 0){
-            switch(vars.size()){
+            switch(classList.size()){
                 case 0:
                     author.openPrivateChannel().queue(privchannel -> {
                         privchannel.sendMessage("You were never muted. Or at least not by this bot. If you were pls report this problem to Lukas.").queue();
                     });
                     return;
                 case 1:
-                    muteclass = vars.get(0);
+                    muteclass = classList.get(0);
                     break;
                 default:
                     author.openPrivateChannel().queue(privchannel -> {
                         privchannel.sendMessage("Pls use +" + getName()  + " <key> as there are multiple servers you are muted on. These are the keys:").queue();
-                        for (GetUnmute var : vars) {
-                            privchannel.sendMessage("Key: " + var.guild.getId() + " " + var.guild.getName()).queue();
+                        for (GetUnmute classUnmute : classList) {
+                            privchannel.sendMessage("Key: " + classUnmute.guild.getId() + " " + classUnmute.guild.getName()).queue();
                         }
                         //TO DO FIX FOR multiple server
                     });
                     return;
             }
         } else {
-            for (GetUnmute var : vars) {
-                if(var.guild.getId().equals(cmds.get(0))){
-                    muteclass = var;
+            for (GetUnmute classUnmute : classList) {
+                if(classUnmute.guild.getId().equals(cmds.get(0))){
+                    muteclass = classUnmute;
                     break;
                 }
             }

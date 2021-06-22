@@ -67,9 +67,9 @@ public class BlindCMD implements PublicCMD{
         LinkedList<GuildChannel> gchan = new LinkedList<>();
         Role everyone = guild.getRoleById(guild.getId());
         
-        for (GuildChannel var : guild.getChannels()) {
-            if(!everyone.hasAccess(var)){
-                gchan.add(var);
+        for (GuildChannel guildChannel : guild.getChannels()) {
+            if(!everyone.hasAccess(guildChannel)){
+                gchan.add(guildChannel);
             }
         }
 
@@ -121,14 +121,14 @@ public class BlindCMD implements PublicCMD{
         Role highestbot = guild.getSelfMember().getRoles().get(0);
 
         //check if there is a role that is higher than a bot but also can see a channel
-        for (Role var : begone) {
-            for (GuildChannel var2 : gchan) {
-                if(var.hasAccess(var2)){
-                    if(var.getPosition()>=highestbot.getPosition()){
+        for (Role role : begone) {
+            for (GuildChannel guildChannel : gchan) {
+                if(role.hasAccess(guildChannel)){
+                    if(role.getPosition()>=highestbot.getPosition()){
                         channel.sendMessage("Sry you have a higher Role than this bot with viewing permissions. Can't take your roles away").complete().delete().queueAfter(30, TimeUnit.SECONDS);
                         return;
                     }
-                    permrole.add(var);
+                    permrole.add(role);
                     break;
                 }
             }
@@ -137,8 +137,8 @@ public class BlindCMD implements PublicCMD{
         //Check if already in a group
         String id = mem.getId();
         for (int ids : BlindGroupCMD.groups.keySet()) {
-            ArrayList<String> var = BlindGroupCMD.groups.get(ids);
-            if(var.contains(id)){
+            ArrayList<String> classList = BlindGroupCMD.groups.get(ids);
+            if(classList.contains(id)){
                 channel.sendMessage("You are still in a group. Pls leave that one first.").complete().delete().queueAfter(30, TimeUnit.SECONDS);
                 return;
             }
@@ -156,8 +156,8 @@ public class BlindCMD implements PublicCMD{
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
             
-            for (Role var : permrole) {
-                role += var.getId() + " ";
+            for (Role roleToStr : permrole) {
+                role += roleToStr.getId() + " ";
             }
 
             stmt = c.prepareStatement("INSERT INTO ROLEREMOVAL (USERID, GUILDID, MUTETIME, ROLES, ADMINMUTE) VALUES (?, ?, ?, ?, ?);");
