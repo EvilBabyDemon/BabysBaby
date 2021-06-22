@@ -62,7 +62,7 @@ public class CmdHandler {
         addPublicCommand(new BlindStatsCMD());
 
         // adding commands visible to @admin
-        addAdminCommand(new addrole());
+        addAdminCommand(new AddRoleCMD());
         addAdminCommand(new DelRoleCMD());
         addAdminCommand(new RoleIdCMD());
         addAdminCommand(new UpdateRoleCMD());

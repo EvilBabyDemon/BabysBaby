@@ -46,16 +46,16 @@ public class WhoisCMD implements AdminCMD{
 			
 			LinkedList<Role> allroles = new LinkedList<>();
 			
-			for (Role var : allrolesList) {
-				allroles.add(var);
+			for (Role role : allrolesList) {
+				allroles.add(role);
 			}
 			allroles.add(ctx.getGuild().getRoleById(ctx.getGuild().getId()));
 			Role highest = allroles.peek();
 			Role hoisted = null;
 			
-			for (Role var : allroles) {
-				if(var.isHoisted()){
-					hoisted = var;
+			for (Role role : allroles) {
+				if(role.isHoisted()){
+					hoisted = role;
 					break;
 				}
 			}
