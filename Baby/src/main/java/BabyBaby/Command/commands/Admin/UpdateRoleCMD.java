@@ -22,22 +22,21 @@ public class UpdateRoleCMD implements AdminCMD {
 
     @Override
     public void handleAdmin(CommandContext ctx) {
-        List<String> cmds2 = ctx.getArgs();
         MessageChannel channel = ctx.getChannel();
         Connection c = null;
         Statement stmt = null;
 
         LinkedList<String> cmds = new LinkedList<>();
 
-        for (String var : cmds2) {
-            cmds.add(var);
+        for (String arg : ctx.getArgs()) {
+            cmds.add(arg);
         }
 
         String casing = cmds.remove(0);
         String id = cmds.remove(0);
         String update = "";
-        for (String var : cmds) {
-            update += var + " "; 
+        for (String roleID : cmds) {
+            update += roleID + " "; 
         }
         
 
@@ -67,9 +66,9 @@ public class UpdateRoleCMD implements AdminCMD {
                     return;
                 }
                 String oldemo = "";
-                for (String var : Data.emoteassign.keySet()) {
-                    if(Data.emoteassign.get(var).equals(id)){
-                        oldemo = var;
+                for (String emoteID : Data.emoteassign.keySet()) {
+                    if(Data.emoteassign.get(emoteID).equals(id)){
+                        oldemo = emoteID;
                         break;
                     }
                 }
