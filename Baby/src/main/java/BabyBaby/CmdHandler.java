@@ -171,19 +171,19 @@ public class CmdHandler {
             case 0:
                 PublicCMD publicCommand = searchPublicCommand(cmdName);
                 if (publicCommand != null && !offCMD.contains(publicCommand.getName())) {
-                    runCMD(publicCommand, ctx);
+                    runCMD(publicCommand, ctx, permissionLevel);
                 }
                 break;
             case 1:
                 AdminCMD adminCommand = searchAdminCommand(cmdName);
                 if (adminCommand != null && !offCMD.contains(adminCommand.getName())) {
-                    runCMD(adminCommand, ctx);
+                    runCMD(adminCommand, ctx, permissionLevel);
                 }
                 break;
             case 2:
                 OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
                 if (ownerCommand != null && !offCMD.contains(ownerCommand.getName())) {
-                    runCMD(ownerCommand, ctx);
+                    runCMD(ownerCommand, ctx, permissionLevel);
                 }
                 break;
         }
@@ -257,25 +257,29 @@ public class CmdHandler {
     }
 
 
-    private void runCMD (Command cmd, CommandContext ctx){
+    private void runCMD (Command cmd, CommandContext ctx, int permissionLevel){
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    if(cmd instanceof PublicCMD){
-                        ((PublicCMD) cmd).handlePublic(ctx);
-                    } else if (cmd instanceof AdminCMD) {
-                        ((AdminCMD) cmd).handleAdmin(ctx);
-                    } else {
-                        long time = System.currentTimeMillis();
-                        ((OwnerCMD) cmd).handleOwner(ctx);
-                        System.out.println(System.currentTimeMillis()-time);
+                    switch(permissionLevel){
+                        case 0:
+                            ((PublicCMD) cmd).handlePublic(ctx);
+                            break;
+                        case 1:
+                            ((AdminCMD) cmd).handleAdmin(ctx);
+                            break;
+                        case 2:
+                            long time = System.currentTimeMillis();
+                            ((OwnerCMD) cmd).handleOwner(ctx);
+                            System.out.println(System.currentTimeMillis()-time);
+                            break;
                     }
                 } catch(Exception e){
                     ctx.getMessage().addReaction(Data.xmark).queue();
                     System.out.println(ctx.getMessage().getContentRaw());
                     e.printStackTrace();
-                }    
+                }
             }
         });
         thread.start();
