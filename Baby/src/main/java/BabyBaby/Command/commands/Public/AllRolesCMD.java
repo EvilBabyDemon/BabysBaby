@@ -18,11 +18,11 @@ public class AllRolesCMD implements PublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        List<Role> tmp = ctx.getGuild().getRoles();
+        List<Role> roleList = ctx.getGuild().getRoles();
 
         String mention = "";
-        for (Role var : tmp) {
-            mention += var.getAsMention() + " (" + var.getId() + ") \n";
+        for (Role role : roleList) {
+            mention += role.getAsMention() + " (" + role.getId() + ") \n";
         }
         /*
         if(mention.length() <= 2000){

@@ -23,12 +23,12 @@ public class PollCMD implements PublicCMD{
 		
 		LinkedList<String> cmds = new LinkedList<>();
 		String temp = "";
-		for (String var : ctx.getArgs()) {
-			if(var.endsWith("\"")){
-				cmds.add(temp + var);
+		for (String arg : ctx.getArgs()) {
+			if(arg.endsWith("\"")){
+				cmds.add(temp + arg);
 				temp = "";
 			}	else{
-				temp += var + " ";
+				temp += arg + " ";
 			}
 		}
 
