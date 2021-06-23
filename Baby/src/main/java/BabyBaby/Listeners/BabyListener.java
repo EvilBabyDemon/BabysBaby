@@ -385,9 +385,8 @@ public class BabyListener extends ListenerAdapter {
         }
         if(event.getUser().isBot())
             return;
-
-        String cmd = event.getName();
         
+        String cmd = event.getName();
         if(cmd.equals("poll")){
             new PollCMD().slashCommand(event);
         } else if(cmd.equals("blind")){
