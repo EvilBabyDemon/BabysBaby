@@ -34,8 +34,8 @@ public class PlaceDraw implements OwnerCMD {
         printer = new ArrayList<>(); 
 
         allemo = new ArrayList<>(); 
-        for (Emote var : ctx.getGuild().getEmotes()) {
-            allemo.add(var);
+        for (Emote emote : ctx.getGuild().getEmotes()) {
+            allemo.add(emote);
         }
         
 
