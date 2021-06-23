@@ -30,8 +30,8 @@ public class KickCMD implements AdminCMD{
             return;
         }
 
-        for (String var : ctx.getArgs()) {
-            cmds.add(var);
+        for (String arg : ctx.getArgs()) {
+            cmds.add(arg);
         }
 
         String person = cmds.remove(0);

@@ -52,11 +52,11 @@ public class GetWarnedCMD implements AdminCMD {
 
         String all = "";
         if(UserIds.size() != 0){
-            for (String var : UserIds){
+            for (String userID : UserIds){
                 try {
-                    all += ctx.getGuild().getMemberById(var).getAsMention() + "\n";    
+                    all += ctx.getGuild().getMemberById(userID).getAsMention() + "\n";    
                 } catch (Exception e) {
-                    all += var + "\n";
+                    all += userID + "\n";
                 }
                 
             }

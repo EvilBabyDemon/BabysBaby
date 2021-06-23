@@ -27,8 +27,8 @@ public class WarnCMD implements AdminCMD{
         LinkedList<String> cmds = new LinkedList<>();
         MessageChannel channel = ctx.getChannel();
 
-        for (String var : ctx.getArgs()) {
-            cmds.add(var);
+        for (String arg : ctx.getArgs()) {
+            cmds.add(arg);
         }
 
         String person = cmds.remove(0);

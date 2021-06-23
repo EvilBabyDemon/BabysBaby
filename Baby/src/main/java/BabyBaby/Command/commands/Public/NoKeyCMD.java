@@ -1,6 +1,5 @@
 package BabyBaby.Command.commands.Public;
 
-import java.util.List;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
@@ -20,16 +19,16 @@ public class NoKeyCMD implements PublicCMD {
     public void handlePublic(CommandContext ctx) {
         
         MessageChannel channel = ctx.getChannel();
-        //Message message = ctx.getMessage();
-        List<String> args = ctx.getArgs();
-        int x = Integer.parseInt(args.remove(0));
 		String content = "";
-
-        for (String var : args) {
-            content += var + " ";
+        boolean first = true;
+        int x = 0;
+        for (String arg : ctx.getArgs()) {
+            if(first)
+                x = Integer.parseInt(arg);
+            else
+                content += arg + " ";
         }
 
-        //message.addReaction(check).queue();
         channel.sendMessage(VWA_MainEntschluesseln.Viginere(content, x)).queue();
 
     }

@@ -28,8 +28,8 @@ public class DecryptCMD implements PublicCMD {
 
         List<String> args = ctx.getArgs();
 
-        for (String var : args) {
-            content += var + " ";
+        for (String arg : args) {
+            content += arg + " ";
         }
         
 

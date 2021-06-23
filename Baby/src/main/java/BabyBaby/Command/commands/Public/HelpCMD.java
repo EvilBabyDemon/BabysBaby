@@ -219,8 +219,8 @@ public class HelpCMD implements PublicCMD {
         String admin = ""; 
         List<AdminCMD> adminlist = manager.getAdminCommands();
         adminlist.sort(compAdm);
-        for (AdminCMD var : adminlist) {
-            admin += prefix + var.getName() +  "\n";
+        for (AdminCMD adminCMD : adminlist) {
+            admin += prefix + adminCMD.getName() +  "\n";
         }
         return admin;
     }
@@ -229,8 +229,8 @@ public class HelpCMD implements PublicCMD {
         String ownerstr = ""; 
         List<OwnerCMD> ownerlist = manager.getOwnerCommands();
         ownerlist.sort(compOwn);
-        for (OwnerCMD var : ownerlist) {
-            ownerstr += prefix + var.getName() +  "\n";
+        for (OwnerCMD ownerCMD : ownerlist) {
+            ownerstr += prefix + ownerCMD.getName() +  "\n";
         }
         return ownerstr;
     }

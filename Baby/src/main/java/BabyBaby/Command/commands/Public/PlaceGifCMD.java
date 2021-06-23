@@ -93,8 +93,8 @@ public class PlaceGifCMD implements PublicCMD {
 
             int perc = Math.max((int) (allcmds.size()*0.012), 1500);
 
-            for (String var : allcmds) {
-                String[] s = var.split(" ");
+            for (String lines : allcmds) {
+                String[] s = lines.split(" ");
                 try {
                     img.setRGB(Integer.parseInt(s[2]), Integer.parseInt(s[3]), Color.decode(s[4]).getRGB());
                 } catch (Exception e) {

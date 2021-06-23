@@ -34,9 +34,9 @@ public class DelRoleCMD implements AdminCMD {
             return;
         }
         Data.roles.remove(cmds.get(0));
-        for (String var : Data.emoteassign.keySet()) {
-            if(Data.emoteassign.get(var).equals(cmds.get(0))){
-                Data.emoteassign.remove(var);
+        for (String emoteID : Data.emoteassign.keySet()) {
+            if(Data.emoteassign.get(emoteID).equals(cmds.get(0))){
+                Data.emoteassign.remove(emoteID);
                 break;
             }
         }

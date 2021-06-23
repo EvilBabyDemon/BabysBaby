@@ -215,16 +215,10 @@ public class BigSieveCMD implements OwnerCMD{
             }
             embeds.queue();
         }
-
-
-
         
-        for (EmbedBuilder var : alleb) {
-            ctx.getChannel().sendMessage(var.build()).queue();
+        for (EmbedBuilder eb : alleb) {
+            ctx.getChannel().sendMessage(eb.build()).queue();
         }
-        
-
-       
     }
 
     @Override

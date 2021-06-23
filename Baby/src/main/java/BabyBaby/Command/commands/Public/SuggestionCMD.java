@@ -26,8 +26,8 @@ public class SuggestionCMD implements PublicCMD {
         String content = "";
         
         List<String> args = ctx.getArgs();
-        for (String var : args) {
-            content += var + " ";
+        for (String arg : args) {
+            content += arg + " ";
         }
 
         content = ctx.getAuthor().getAsTag() + " " + content;

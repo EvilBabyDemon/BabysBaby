@@ -25,8 +25,8 @@ public class SayMultiCMD implements OwnerCMD {
         List<String> args = ctx.getArgs();
         LinkedList<String> cmds = new LinkedList<>();
 
-        for (String var : args) {
-            cmds.add(var);
+        for (String arg : args) {
+            cmds.add(arg);
         }
 
         int x = Integer.parseInt(cmds.get(0));
