@@ -34,9 +34,9 @@ public class GetRolesBack implements Runnable {
         LinkedList<Role> addRole = new LinkedList<>();
         LinkedList<Role> delRole = new LinkedList<>();
 
-        for (String var : roles.split(" ")) {
+        for (String roleID : roles.split(" ")) {
             try {
-                addRole.add(guild.getRoleById(var));
+                addRole.add(guild.getRoleById(roleID));
             } catch (Exception e) {
                 System.out.println("Role doesnt exist anymore");
             }
