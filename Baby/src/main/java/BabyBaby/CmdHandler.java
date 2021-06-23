@@ -171,57 +171,19 @@ public class CmdHandler {
             case 0:
                 PublicCMD publicCommand = searchPublicCommand(cmdName);
                 if (publicCommand != null && !offCMD.contains(publicCommand.getName())) {
-                    Thread cmd = new Thread(new Runnable() {
-                        @Override
-                        public void run() {  
-                            try {
-                            publicCommand.handlePublic(ctx);
-                            } catch(Exception e){
-                                ctx.getMessage().addReaction(Data.xmark).queue();
-                                System.out.println(event.getMessage().getContentRaw());
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    cmd.start();
+                    runCMD(publicCommand, ctx);
                 }
                 break;
             case 1:
                 AdminCMD adminCommand = searchAdminCommand(cmdName);
                 if (adminCommand != null && !offCMD.contains(adminCommand.getName())) {
-                    Thread cmd = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                adminCommand.handleAdmin(ctx);
-                            } catch(Exception e){
-                                ctx.getMessage().addReaction(Data.xmark).queue();
-                                System.out.println(event.getMessage().getContentRaw());
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    cmd.start();
+                    runCMD(adminCommand, ctx);
                 }
                 break;
             case 2:
                 OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
                 if (ownerCommand != null && !offCMD.contains(ownerCommand.getName())) {
-                    Thread cmd = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                long time = System.currentTimeMillis();
-                                ownerCommand.handleOwner(ctx);
-                                System.out.println(System.currentTimeMillis()-time);
-                            } catch(Exception e){
-                                ctx.getMessage().addReaction(Data.xmark).queue();
-                                System.out.println(event.getMessage().getContentRaw());
-                                e.printStackTrace();
-                            }    
-                        }
-                    });
-                    cmd.start();
+                    runCMD(ownerCommand, ctx);
                 }
                 break;
         }
@@ -253,10 +215,8 @@ public class CmdHandler {
     }
 
     public OwnerCMD searchOwnerCommand(String search) {
-        String searchLower = search.toLowerCase();
-
         for (OwnerCMD cmd : ownerCommands) {
-            if (cmd.getName().equals(searchLower) || cmd.getAliases().contains(searchLower)) {
+            if (cmd.getName().equals(search) || cmd.getAliases().contains(search)) {
                 return cmd;
             }
         }
@@ -264,10 +224,9 @@ public class CmdHandler {
     }
 
     public AdminCMD searchAdminCommand(String search) {
-        String searchLower = search.toLowerCase();
 
         for (AdminCMD cmd : adminCommands) {
-            if (cmd.getName().equals(searchLower) || cmd.getAliases().contains(searchLower)) {
+            if (cmd.getName().equals(search) || cmd.getAliases().contains(search)) {
                 return cmd;
             }
         }
@@ -275,10 +234,8 @@ public class CmdHandler {
     }
 
     public PublicCMD searchPublicCommand(String search) {
-        String searchLower = search.toLowerCase();
-
         for (PublicCMD cmd : publicCommands) {
-            if (cmd.getName().equals(searchLower) || cmd.getAliases().contains(searchLower)) {
+            if (cmd.getName().equals(search) || cmd.getAliases().contains(search)) {
                 return cmd;
             }
         }
@@ -298,4 +255,30 @@ public class CmdHandler {
     public List<OwnerCMD> getOwnerCommands() {
         return ownerCommands;
     }
+
+
+    private void runCMD (Command cmd, CommandContext ctx){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(cmd instanceof PublicCMD){
+                        ((PublicCMD) cmd).handlePublic(ctx);
+                    } else if (cmd instanceof AdminCMD) {
+                        ((AdminCMD) cmd).handleAdmin(ctx);
+                    } else {
+                        long time = System.currentTimeMillis();
+                        ((OwnerCMD) cmd).handleOwner(ctx);
+                        System.out.println(System.currentTimeMillis()-time);
+                    }
+                } catch(Exception e){
+                    ctx.getMessage().addReaction(Data.xmark).queue();
+                    System.out.println(ctx.getMessage().getContentRaw());
+                    e.printStackTrace();
+                }    
+            }
+        });
+        thread.start();
+    }
+
 }
