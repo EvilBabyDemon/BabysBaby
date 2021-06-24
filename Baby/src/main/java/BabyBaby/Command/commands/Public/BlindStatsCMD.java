@@ -118,7 +118,7 @@ public class BlindStatsCMD implements PublicCMD {
         eb.setTitle("Leaderboard for blind and forceblind");
         eb.setDescription(lb);
     
-        ctx.getChannel().sendMessage(eb.build()).queue();
+        ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
     }
     
 }

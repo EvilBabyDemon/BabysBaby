@@ -77,7 +77,7 @@ public class TillBlindCMD implements PublicCMD {
             eb.setFooter("Summoned by: " + author.getAsTag(), author.getAvatarUrl());
 
         try {
-            author.openPrivateChannel().complete().sendMessage(eb.build()).queue();
+            author.openPrivateChannel().complete().sendMessageEmbeds(eb.build()).queue();
         } catch (Exception e) {
             System.out.println("Author didn't allow private message.");
         }

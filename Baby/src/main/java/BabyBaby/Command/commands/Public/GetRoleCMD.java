@@ -269,7 +269,7 @@ public class GetRoleCMD implements PublicCMD{
                 }
             }
 
-            MessageAction msgAct = channel.sendMessage(eb.build());
+            MessageAction msgAct = channel.sendMessageEmbeds(eb.build());
             
             LinkedList<ActionRow> acR = new LinkedList<>();
             for (int i = 0; i < butt.size(); i +=5) {
@@ -538,7 +538,7 @@ public class GetRoleCMD implements PublicCMD{
             }
         }
 
-        MessageAction msgAct = channel.sendMessage(eb.build());
+        MessageAction msgAct = channel.sendMessageEmbeds(eb.build());
         
         LinkedList<ActionRow> acR = new LinkedList<>();
         for (int i = 0; i < butt.size(); i +=5) {

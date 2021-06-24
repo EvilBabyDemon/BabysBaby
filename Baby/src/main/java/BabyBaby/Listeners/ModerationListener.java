@@ -178,7 +178,7 @@ public class ModerationListener extends ListenerAdapter{
         eb.setThumbnail(joined.getAvatarUrl());
         eb.setDescription(desc);
 
-        log.sendMessage("cache reload").complete().editMessage(inviter + joined.getAsMention()).complete().editMessage(eb.build()).complete();
+        log.sendMessage("cache reload").complete().editMessage(inviter + joined.getAsMention()).complete().editMessageEmbeds(eb.build()).complete();
 
     }
 
@@ -271,7 +271,7 @@ public class ModerationListener extends ListenerAdapter{
 
                     eb.setDescription(":warning: **Kicked** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + entry.getReason());
 
-                    log.sendMessage(eb.build()).queue();
+                    log.sendMessageEmbeds(eb.build()).queue();
 
                 }
                 break;
@@ -296,7 +296,7 @@ public class ModerationListener extends ListenerAdapter{
                     log.sendMessage("cache reload").complete().editMessage(warned.getAsMention() + " " + entry.getUser().getAsMention()).complete().delete().complete();
 
                     
-                    log.sendMessage(eb.build()).queue();
+                    log.sendMessageEmbeds(eb.build()).queue();
 
                 }
                 break;

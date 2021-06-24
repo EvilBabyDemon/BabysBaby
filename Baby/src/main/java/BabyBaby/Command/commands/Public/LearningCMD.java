@@ -74,7 +74,7 @@ public class LearningCMD implements PublicCMD {
             // eb.addBlankField(false);
             eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
 
-        channel.sendMessage(eb.build()).queue();
+        channel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override

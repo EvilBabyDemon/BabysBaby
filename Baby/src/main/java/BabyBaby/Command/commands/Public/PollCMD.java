@@ -71,7 +71,7 @@ public class PollCMD implements PublicCMD{
                 : ctx.getMember().getEffectiveName();
 		eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
 
-		Message built = ctx.getChannel().sendMessage(eb.build()).complete();
+		Message built = ctx.getChannel().sendMessageEmbeds(eb.build()).complete();
 		for (int i = 0; i < amount; i++) {
 			built.addReaction(emot[i]).queue();
 		}
@@ -122,7 +122,7 @@ public class PollCMD implements PublicCMD{
                 : event.getMember().getEffectiveName();
         eb.setFooter("Summoned by: " + nickname, event.getMember().getUser().getAvatarUrl());
 
-        Message built = event.getChannel().sendMessage(eb.build()).complete();
+        Message built = event.getChannel().sendMessageEmbeds(eb.build()).complete();
         for (int i = 0; i < amount; i++) {
             built.addReaction(emot[i]).queue();
         }

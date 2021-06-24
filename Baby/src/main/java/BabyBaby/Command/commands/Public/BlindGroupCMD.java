@@ -100,11 +100,11 @@ public class BlindGroupCMD implements PublicCMD {
                 String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname() : ctx.getMember().getEffectiveName();
                 eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
 
-                ctx.getChannel().sendMessage(eb.build()).complete().delete().queueAfter(60, TimeUnit.SECONDS);;
+                ctx.getChannel().sendMessageEmbeds(eb.build()).complete().delete().queueAfter(60, TimeUnit.SECONDS);;
             break;
             default:
                 String pre = ctx.getMessage().getContentRaw().split(" ")[0];
-                ctx.getChannel().sendMessage(getPublicHelp(pre.substring(0, pre.length() - getName().length()))).complete().delete().queueAfter(60, TimeUnit.SECONDS);;
+                ctx.getChannel().sendMessageEmbeds(getPublicHelp(pre.substring(0, pre.length() - getName().length()))).complete().delete().queueAfter(60, TimeUnit.SECONDS);;
                 ctx.getMessage().addReaction(Data.check).queue();
             break;
         }

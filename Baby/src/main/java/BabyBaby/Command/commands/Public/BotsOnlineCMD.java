@@ -60,7 +60,7 @@ public class BotsOnlineCMD implements PublicCMD{
         String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
                 : ctx.getMember().getEffectiveName();
         eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
-        ctx.getChannel().sendMessage(eb.build()).complete();
+        ctx.getChannel().sendMessageEmbeds(eb.build()).complete();
     }
 
     @Override

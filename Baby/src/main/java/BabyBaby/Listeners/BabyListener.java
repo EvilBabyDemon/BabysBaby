@@ -175,7 +175,7 @@ public class BabyListener extends ListenerAdapter {
 
                 eb.setDescription(":loud_sound: **Unblinded ** " + blinded.getAsMention() + "(" + blinded.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** Manually unblinded with Role Removal.");
                 
-                log.sendMessage(eb.build()).queue();
+                log.sendMessageEmbeds(eb.build()).queue();
                 AdminMuteBlindCMD.userBlinded.remove(blinded);
             }
             
@@ -216,7 +216,7 @@ public class BabyListener extends ListenerAdapter {
 
         eb.setDescription(":loud_sound: **Unmuted ** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** Manually unmuted with Role Removal.");
 
-        log.sendMessage(eb.build()).queue();
+        log.sendMessageEmbeds(eb.build()).queue();
 
 
         Role muteR = event.getGuild().getRoleById(Data.stfuID);

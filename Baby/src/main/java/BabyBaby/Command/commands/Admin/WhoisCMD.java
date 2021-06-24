@@ -104,7 +104,7 @@ public class WhoisCMD implements AdminCMD{
 			eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
 			eb.setThumbnail(stalking.getUser().getAvatarUrl());
 
-			channel.sendMessage(eb.build()).queue();
+			channel.sendMessageEmbeds(eb.build()).queue();
         
     }
 

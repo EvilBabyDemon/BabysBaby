@@ -70,7 +70,7 @@ public class GetRolesBack implements Runnable {
 
             eb.setDescription(":warning: **Muteblind** " + " stopped for " + mem.getAsMention() + "(" + mem.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + "Time ran out");
 
-            log.sendMessage(eb.build()).queue();
+            log.sendMessageEmbeds(eb.build()).queue();
 
             AdminMuteBlindCMD.userBlinded.remove(mem);
         }

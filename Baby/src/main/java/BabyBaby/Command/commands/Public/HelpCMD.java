@@ -70,7 +70,7 @@ public class HelpCMD implements PublicCMD {
         // command does exits -> command specific help
         MessageEmbed help = cmd.getPublicHelp(prefix);
         if (help != null) {
-            channel.sendMessage(help).queue();
+            channel.sendMessageEmbeds(help).queue();
         }
     }
 
@@ -96,7 +96,7 @@ public class HelpCMD implements PublicCMD {
             return;
         }
         // command does exits -> command specific help
-        channel.sendMessage(cmd.getAdminHelp(prefix)).queue();
+        channel.sendMessageEmbeds(cmd.getAdminHelp(prefix)).queue();
     }
 
     @Override
@@ -121,7 +121,7 @@ public class HelpCMD implements PublicCMD {
             return;
         }
         // command does exits -> command specific help
-        channel.sendMessage(cmd.getOwnerHelp(prefix)).queue();
+        channel.sendMessageEmbeds(cmd.getOwnerHelp(prefix)).queue();
     }
 
     @Override
@@ -168,7 +168,7 @@ public class HelpCMD implements PublicCMD {
     }
 
     void commandNotFound(MessageChannel channel, String search, String prefix) {
-        channel.sendMessage(
+        channel.sendMessageEmbeds(
                 EmbedUtils.getDefaultEmbed()
                         .setTitle("Error: Command `" + search + "` not found")
                         .setDescription(new ColouredStringAsciiDoc()
@@ -250,7 +250,7 @@ public class HelpCMD implements PublicCMD {
             embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Owner CMD").addDiff(ownerCMDs(manager, prefix)).build(), true);
 
         embed.setFooter("With most CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
-        channel.sendMessage(embed.build()).queue();
+        channel.sendMessageEmbeds(embed.build()).queue();
     }
 
 }

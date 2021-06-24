@@ -73,7 +73,7 @@ public class FlashedCMD implements PublicCMD {
             // eb.addBlankField(false);
             eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
         channel.sendMessage("cache refresh").complete().editMessage("a " + cache).complete().delete().queue();
-        channel.sendMessage(eb.build()).queue();
+        channel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override

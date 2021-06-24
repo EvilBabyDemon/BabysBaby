@@ -63,7 +63,7 @@ public class UnmutePersonCMD implements AdminCMD {
 
         eb.setDescription(":loud_sound: **Unmuted for** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** Manually unmuted with CMD");
 
-        log.sendMessage(eb.build()).queue();
+        log.sendMessageEmbeds(eb.build()).queue();
 
         //ctx.getChannel().sendMessage(eb.build()).queue();
 

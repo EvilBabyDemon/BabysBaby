@@ -136,8 +136,7 @@ public class SieveCMD implements PublicCMD {
         }
         editor.delete().queue();
 
-        ctx.getChannel().sendMessage(eb.build()).queue();
-
+        ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
         ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
 
     }   

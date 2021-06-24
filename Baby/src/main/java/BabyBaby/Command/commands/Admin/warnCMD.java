@@ -93,11 +93,11 @@ public class WarnCMD implements AdminCMD{
 
         eb.setDescription(":warning: **Warned** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
 
-        log.sendMessage(eb.build()).queue();
+        log.sendMessageEmbeds(eb.build()).queue();
 
-        ctx.getChannel().sendMessage(eb.build()).queue();
+        ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
 
-        warned.getUser().openPrivateChannel().complete().sendMessage(eb.build()).queue();
+        warned.getUser().openPrivateChannel().complete().sendMessageEmbeds(eb.build()).queue();
         
         ctx.getMessage().addReaction(Data.check).queue();
 
