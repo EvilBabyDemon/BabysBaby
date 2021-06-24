@@ -49,7 +49,8 @@ public class BigSieveCMD implements OwnerCMD{
                 if(member.getRoles().contains(role1))
                     counter.add(member);
             }
-        }   
+        }
+
         for(int i = 1; i < cmd.length-1; i +=2){
             Role role = ctx.getGuild().getRoleById(cmd[i+1]);
             switch (cmd[i]){
@@ -133,9 +134,7 @@ public class BigSieveCMD implements OwnerCMD{
             cacherefresh.add(firstmention);
             first.addField(""+dooku, firstmention, true);
             
-
             alleb.add(first);
-
 
             int dookueb = 2;
             while(mention.length()>5990){
