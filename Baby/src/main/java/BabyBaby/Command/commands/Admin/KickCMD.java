@@ -71,7 +71,7 @@ public class KickCMD implements AdminCMD{
         eb.setThumbnail(ctx.getAuthor().getAvatarUrl());
         Member warned = ctx.getMember();
         eb.setDescription(":warning: **Kicked** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
-        channel.sendMessage(eb.build()).queue();
+        channel.sendMessageEmbeds(eb.build()).queue();
         
     }
 

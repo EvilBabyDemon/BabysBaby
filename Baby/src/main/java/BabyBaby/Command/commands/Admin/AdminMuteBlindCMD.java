@@ -127,9 +127,9 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
         eb.setDescription(":warning: **Muteblinded for** " + (time==0? "Infinite" : time) + " minutes " + blinded.getAsMention() + "(" + blinded.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
 
-        log.sendMessage(eb.build()).queue();
+        log.sendMessageEmbeds(eb.build()).queue();
 
-        ctx.getChannel().sendMessage(eb.build()).queue();
+        ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
 
         
         long timesql = 0;

@@ -169,7 +169,7 @@ public class EditAssignCMD implements AdminCMD{
             MessageAction msgAct;
 
             if(!Data.catToMsg.containsKey(categ.get(k))){
-                msgAct = channel.sendMessage(eb.build());
+                msgAct = channel.sendMessageEmbeds(eb.build());
                 msgAct.setActionRows(acR);
                 Message msgs = msgAct.complete();
                 Data.msgid.add(msgs.getId());
@@ -205,7 +205,7 @@ public class EditAssignCMD implements AdminCMD{
                 TextChannel chan = ctx.getGuild().getTextChannelById(Data.msgToChan.get(msgid));
                 try {
                     Message sent = chan.retrieveMessageById(msgid).complete();
-                    msgAct = sent.editMessage(eb.build());
+                    msgAct = sent.editMessageEmbeds(eb.build());
                 } catch (Exception e) {
                     remover.add(msgid);
                     continue;

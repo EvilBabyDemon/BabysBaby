@@ -74,7 +74,7 @@ public class GetWarningsFromUserCMD implements AdminCMD{
                 : ctx.getMember().getEffectiveName();
         eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
 
-        channel.sendMessage(eb.build()).queue();
+        channel.sendMessageEmbeds(eb.build()).queue();
 
         ctx.getMessage().addReaction(Data.check).queue();
     }

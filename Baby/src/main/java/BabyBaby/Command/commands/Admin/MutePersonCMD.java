@@ -81,9 +81,9 @@ public class MutePersonCMD implements AdminCMD {
 
         eb.setDescription(":warning: **Muted for** " + (time==0? "Infinite" : time) + " minutes " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
 
-        log.sendMessage(eb.build()).queue();
+        log.sendMessageEmbeds(eb.build()).queue();
 
-        ctx.getChannel().sendMessage(eb.build()).queue();
+        ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
 
         Role muteR = ctx.getGuild().getRoleById(Data.stfuID);
 

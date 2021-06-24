@@ -72,7 +72,7 @@ public class BanCMD implements AdminCMD{
         eb.setThumbnail(ctx.getAuthor().getAvatarUrl());
         Member warned = ctx.getMember();
         eb.setDescription(":warning: **Banned** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
-        channel.sendMessage(eb.build()).queue();
+        channel.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override

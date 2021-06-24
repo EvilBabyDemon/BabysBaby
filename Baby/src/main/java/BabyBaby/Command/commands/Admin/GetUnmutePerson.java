@@ -55,7 +55,7 @@ public class GetUnmutePerson implements Runnable {
 
         eb.setDescription(":loud_sound: **Unmuted ** " + reminder.getAsMention() + "(" + reminder.getAsTag() +")"+ " \n :page_facing_up: **Reason:** Mute Duration Expired");
 
-        log.sendMessage(eb.build()).queue();
+        log.sendMessageEmbeds(eb.build()).queue();
 
         if(MutePersonCMD.userMuted.get(guild.getMember(reminder))==null){
             MutePersonCMD.userMuted.remove(guild.getMember(reminder));
