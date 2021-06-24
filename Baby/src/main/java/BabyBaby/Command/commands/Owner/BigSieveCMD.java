@@ -9,6 +9,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
+import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -96,10 +97,6 @@ public class BigSieveCMD implements OwnerCMD{
                 cmdrole += cmd[i] + " ";
         }
 
-
-        String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
-                : ctx.getMember().getEffectiveName();
-
         LinkedList <String> cacherefresh = new LinkedList<>();
 
         LinkedList<EmbedBuilder> alleb = new LinkedList<>();
@@ -111,25 +108,18 @@ public class BigSieveCMD implements OwnerCMD{
             eb.setColor(1);
             dooku = 0;
             while(mention.length() > 1024){
-                String submention = mention.substring(0, 1024);
-                String[] part = submention.split("\n");
-                submention = mention.substring(0, 1024 - part[part.length-1].length() -1 );
-                eb.addField(""+ dooku, submention, true);
-                mention = mention.substring(submention.length());
-                dooku++;
-                cacherefresh.add(submention);
+                mention = Helper.addFieldSieve(eb, cacherefresh, dooku++, mention);
             }
             cacherefresh.add(mention);
             eb.addField(""+dooku, mention, true);
             
-            eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
             alleb.add(eb);
         } else {
 
             int embsize = 5800 - ((cmdrole.length()>1024) ? 1024 : cmdrole.length());
             String firstmention = mention.substring(0, embsize);
             String[] firstpart = firstmention.split("\n");
-            firstmention = firstmention.substring(0, embsize - firstpart[firstpart.length-1].length());
+            firstmention = firstmention.substring(0, embsize - firstpart[firstpart.length-1].length()-1);
             mention = mention.substring(firstmention.length());
 
             EmbedBuilder first = new EmbedBuilder();
@@ -138,18 +128,11 @@ public class BigSieveCMD implements OwnerCMD{
             first.setColor(1);
             dooku = 0;
             while(firstmention.length() > 1024){
-                String submention = firstmention.substring(0, 1024);
-                String[] part = submention.split("\n");
-                submention = firstmention.substring(0, 1024 - part[part.length-1].length() - 1);
-                first.addField(""+ dooku, submention, true);
-                firstmention = firstmention.substring(submention.length());
-                dooku++;
-                cacherefresh.add(submention);
+                firstmention = Helper.addFieldSieve(first, cacherefresh, dooku++, firstmention);
             }
             cacherefresh.add(firstmention);
             first.addField(""+dooku, firstmention, true);
             
-            first.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
 
             alleb.add(first);
 
@@ -158,7 +141,7 @@ public class BigSieveCMD implements OwnerCMD{
             while(mention.length()>5990){
                 String embmention = mention.substring(0, 5990);
                 String[] embpart = embmention.split("\n");
-                embmention = embmention.substring(0, 5990 - embpart[embpart.length-1].length() - 1);
+                embmention = embmention.substring(0, 5990 - embpart[embpart.length-1].length()-1);
                 mention = mention.substring(embmention.length());
 
                 EmbedBuilder eb = new EmbedBuilder();
@@ -166,13 +149,7 @@ public class BigSieveCMD implements OwnerCMD{
                 eb.setColor(1);
                 dooku = 0;
                 while(embmention.length() > 1024){
-                    String submention = embmention.substring(0, 1024);
-                    String[] part = submention.split("\n");
-                    submention = embmention.substring(0, 1024 - part[part.length-1].length());
-                    embmention = embmention.substring(submention.length());
-                    eb.addField(""+ dooku, submention, true);
-                    dooku++;
-                    cacherefresh.add(submention);
+                    embmention = Helper.addFieldSieve(eb, cacherefresh, dooku++, embmention);
                 }
                 cacherefresh.add(embmention);
                 eb.addField(""+dooku, embmention, true);
@@ -184,13 +161,7 @@ public class BigSieveCMD implements OwnerCMD{
             eb.setColor(1);
             dooku = 0;
             while(mention.length() > 1024){
-                String submention = mention.substring(0, 1024);
-                String[] part = submention.split("\n");
-                submention = mention.substring(0, 1024 - part[part.length-1].length() - 1);
-                eb.addField(""+ dooku, submention, true);
-                mention = mention.substring(submention.length());
-                dooku++;
-                cacherefresh.add(submention);
+                mention = Helper.addFieldSieve(eb, cacherefresh, dooku++, mention);
             }
             cacherefresh.add(mention);
             eb.addField(""+dooku, mention, true);
@@ -207,23 +178,13 @@ public class BigSieveCMD implements OwnerCMD{
 
         ctx.getMessage().addReaction(Data.check).queue();
         
-        while(alleb.size()>10){
-            LinkedList<MessageEmbed> tempEBList = new LinkedList<>();
-            for (int i = 0; i < 10; i++) {
-                tempEBList.add(alleb.remove().build());
-            }
-            ctx.getChannel().sendMessageEmbeds(tempEBList).queue();
-        }
-        LinkedList<MessageEmbed> tempEBList = new LinkedList<>();
         for (EmbedBuilder eb : alleb) {
-            tempEBList.add(eb.build());
+            ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
         }
-        ctx.getChannel().sendMessageEmbeds(tempEBList).queue();
     }
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<roleID> {<!/&/|> <roleID>}", "Command to find out who has the Role AmongUs but also the Anime role for example.");
     }
-    
 }

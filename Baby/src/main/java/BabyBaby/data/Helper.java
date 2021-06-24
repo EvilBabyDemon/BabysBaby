@@ -1,5 +1,9 @@
 package BabyBaby.data;
 
+import java.util.LinkedList;
+
+import net.dv8tion.jda.api.EmbedBuilder;
+
 public class Helper {
     public static Object[] getUnits(String unit, double time){
         //default minutes
@@ -62,6 +66,19 @@ public class Helper {
         }
     
         return new String[]{unit, amount};
+    }
+
+    public static String addFieldSieve (EmbedBuilder eb, LinkedList<String> cacherefresh, int dooku, String mention){
+        
+        String submention = mention.substring(0, 1024);
+        String[] part = submention.split("\n");
+        submention = mention.substring(0, 1024 - part[part.length-1].length() - 1);
+        eb.addField(""+ dooku, submention, true);
+        mention = mention.substring(submention.length());
+        dooku++;
+        cacherefresh.add(submention);
+        
+        return mention;
     }
 
 }

@@ -9,6 +9,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
+import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -110,13 +111,7 @@ public class SieveCMD implements PublicCMD {
         if(mention.length() <= 6000 - ((cmdrole.length()>1024) ? 1024 : cmdrole.length())){
             dooku = 0;
             while(mention.length() > 1024){
-                String submention = mention.substring(0, 1024);
-                String[] part = submention.split("\n");
-                submention = mention.substring(0, 1024 - part[part.length-1].length() - 1);
-                eb.addField(""+ dooku, submention, true);
-                mention = mention.substring(submention.length());
-                dooku++;
-                cacherefresh.add(submention);
+                mention = Helper.addFieldSieve(eb, cacherefresh, dooku++, mention);
             }
             cacherefresh.add(mention);
             eb.addField(""+dooku, mention, true);
