@@ -209,16 +209,17 @@ public class BigSieveCMD implements OwnerCMD{
         ctx.getMessage().addReaction(Data.check).queue();
         
         while(alleb.size()>10){
-            MessageAction embeds = ctx.getChannel().sendMessage(alleb.remove().build());
+            LinkedList<MessageEmbed> tempEBList = new LinkedList<>();
             for (int i = 0; i < 10; i++) {
-                embeds.embed(alleb.remove().build());
+                tempEBList.add(alleb.remove().build());
             }
-            embeds.queue();
+            ctx.getChannel().sendMessageEmbeds(tempEBList).queue();
         }
-        
+        LinkedList<MessageEmbed> tempEBList = new LinkedList<>();
         for (EmbedBuilder eb : alleb) {
-            ctx.getChannel().sendMessage(eb.build()).queue();
+            tempEBList.add(eb.build());
         }
+        ctx.getChannel().sendMessageEmbeds(tempEBList).queue();
     }
 
     @Override
