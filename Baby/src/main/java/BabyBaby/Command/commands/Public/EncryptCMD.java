@@ -1,5 +1,6 @@
 package BabyBaby.Command.commands.Public;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import BabyBaby.ColouredStrings.StandardHelpEmbed;
@@ -22,7 +23,10 @@ public class EncryptCMD implements PublicCMD {
         
         MessageChannel channel = ctx.getChannel();
 
-        List<String> args = ctx.getArgs();
+        /*  we need to load the list into a new Linked List
+            because ctx.getArgs() returns a fixed size list
+            which we can't remove args from */
+        List<String> args = new LinkedList<>(ctx.getArgs());
 
         String key = args.remove(0);
         String content = String.join(" ", args);  // joins the list properly
