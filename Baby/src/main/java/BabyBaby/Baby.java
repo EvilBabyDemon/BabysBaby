@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.util.Scanner;
 
 
-
-
 public class Baby {
 	
     public static void main(String[] args) throws IOException  {

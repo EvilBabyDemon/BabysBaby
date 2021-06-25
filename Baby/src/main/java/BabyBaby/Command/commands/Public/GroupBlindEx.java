@@ -78,7 +78,7 @@ public class GroupBlindEx implements Runnable {
                             }
                         }
                     }
-
+                    
 
                     Connection c = null;
                     PreparedStatement stmt = null;
