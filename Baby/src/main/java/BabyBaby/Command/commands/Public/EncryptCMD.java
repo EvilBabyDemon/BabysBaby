@@ -25,11 +25,7 @@ public class EncryptCMD implements PublicCMD {
         List<String> args = ctx.getArgs();
 
         String key = args.remove(0);
-        String content = "";
-
-        for (String arg : args) {
-            content = arg + " ";
-        }
+        String content = String.join(" ", args);  // joins the list properly
         
         /*if (cryptdeleter)
             channel.deleteMessageById(message.getId()).queue();
