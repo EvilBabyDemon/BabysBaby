@@ -126,8 +126,6 @@ public class PollCMD implements PublicCMD{
         for (int i = 0; i < amount; i++) {
             built.addReaction(emot[i]).queue();
         }
-
-        event.reply("message").setEphemeral(true).complete();
 	}
     
 }
