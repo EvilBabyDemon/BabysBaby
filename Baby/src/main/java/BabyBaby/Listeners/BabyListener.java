@@ -402,9 +402,9 @@ public class BabyListener extends ListenerAdapter {
                 } else {
                     msgHook.editOriginal(nope).queue();   
                 }
-                return;
+            } else {
+                roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
             }
-            roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
         } else if(cmd.equals("report")){
             String issue = "Report:\n" + event.getOption("issue").getAsString();
             String member = (event.getOption("user")!=null) ? event.getOption("user").getAsMember().getAsMention() : "";
@@ -417,6 +417,13 @@ public class BabyListener extends ListenerAdapter {
                 issue = issue.substring(2000);
             }
             event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete().editMessage(issue).complete();
+
+            String acknowledged = "The issue was sent to the admin team anonymously.";
+            if(failed){
+                event.getUser().openPrivateChannel().complete().sendMessage(acknowledged).complete();
+            } else {
+                msgHook.editOriginal(acknowledged).queue();   
+            }
         }        
     }
     // Giving/Removing roles from an Interaction
