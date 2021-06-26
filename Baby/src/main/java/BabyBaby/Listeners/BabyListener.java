@@ -405,7 +405,19 @@ public class BabyListener extends ListenerAdapter {
                 return;
             }
             roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
-        }            
+        } else if(cmd.equals("report")){
+            String issue = "Report:\n" + event.getOption("issue").getAsString();
+            String member = (event.getOption("user")!=null) ? event.getOption("user").getAsMember().getAsMention() : "";
+            if(!member.equals("")){
+                issue += " (Accused user: " +member + ")"; 
+            }
+            
+            while(issue.length()>2000){
+                event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete().editMessage(issue.substring(0, 2000)).complete();
+                issue = issue.substring(2000);
+            }
+            event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete().editMessage(issue).complete();
+        }        
     }
     // Giving/Removing roles from an Interaction
     private void roleGiving (Member member, Guild guild, boolean failed, Role role,  InteractionHook msgHook){

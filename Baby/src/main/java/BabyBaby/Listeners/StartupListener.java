@@ -392,6 +392,8 @@ public class StartupListener extends ListenerAdapter{
             eth.updateCommands().complete();
 
             ArrayList<CommandData> slashcmds = new ArrayList<>();
+
+            //poll slash cmd
             CommandData poll = new CommandData("poll", "A cmd to create a simple Poll.");
             poll.addOption(OptionType.STRING, "title", "This is the Title of your poll.", true);
             
@@ -404,7 +406,7 @@ public class StartupListener extends ListenerAdapter{
             slashcmds.add(poll);
             eth.upsertCommand(poll).complete();
 
-
+            //blind slash cmd
             CommandData blind = new CommandData("blind", "A command to blind yourself. Do not use this cmd if you dont know what it does.");
                         
             blind.addOption(OptionType.INTEGER, "time", "Length of the blind.", true);
@@ -415,13 +417,24 @@ public class StartupListener extends ListenerAdapter{
             eth.upsertCommand(blind).complete();
 
 
-
+            //role slash cmd
             CommandData role = new CommandData("role", "A command to get/remove a role.");
                         
             role.addOption(OptionType.ROLE, "role", "The Role you want to have or get removed.", true);
             slashcmds.add(role);
             
             eth.upsertCommand(role).complete();
+
+
+            //report slash cmd
+            CommandData report = new CommandData("report", "A command to report something anon.");
+                        
+            report.addOption(OptionType.USER, "user", "If you want to report a User. This can be left empty.", false);
+            report.addOption(OptionType.STRING, "issue", "The isssue you have.", true);
+
+            slashcmds.add(report);
+            
+            eth.upsertCommand(report).complete();
 
             /*
             try {
