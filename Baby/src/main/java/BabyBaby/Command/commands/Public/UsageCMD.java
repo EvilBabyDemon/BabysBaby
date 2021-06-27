@@ -1,5 +1,6 @@
 package BabyBaby.Command.commands.Public;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,7 +44,7 @@ public class UsageCMD implements PublicCMD {
         }
 
         String content = String.join("\n", top10Array);
-
+        eb.setColor(Color.GREEN);
         eb.addField("Most used Commands", content, true);
         
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
