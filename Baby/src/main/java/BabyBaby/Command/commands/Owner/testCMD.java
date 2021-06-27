@@ -1,6 +1,7 @@
 package BabyBaby.Command.commands.Owner;
 
 
+
 /*
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +69,6 @@ public class TestCMD implements OwnerCMD{
         eb.setDescription((desc.equals("")?"None":desc));
 
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
-        
 
     }   
 
