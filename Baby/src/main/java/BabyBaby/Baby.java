@@ -18,6 +18,7 @@ import BabyBaby.data.Data;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.util.Scanner;
 
 
@@ -52,7 +53,9 @@ public class Baby {
             
             JDA jda = builder.build();
             jda.addEventListener(new StartupListener(jda), new BabyListener(jda), new ModerationListener(), new LeaderboardListener());
-            //jda.addEventListener(new MyListener());
+
+            Data.startUp = OffsetDateTime.now();
+            
             jda.getPresence().setActivity(Activity.listening(" +help [cmd]"));
         } catch (LoginException e) {
             e.printStackTrace();

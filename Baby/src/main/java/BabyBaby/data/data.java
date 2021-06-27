@@ -36,6 +36,10 @@ public class Data {
     public static HashSet<String> stats = new HashSet<>();
     public static int mydel = 0;
     public static int otherdel = 0;
+    public static HashMap<String, Integer> cmdUses = new HashMap<>();
+    public static HashSet<String> users = new HashSet<>();
+    public static OffsetDateTime startUp;
+    
     
     
 
