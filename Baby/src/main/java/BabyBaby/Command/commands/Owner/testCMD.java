@@ -1,8 +1,5 @@
 package BabyBaby.Command.commands.Owner;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.util.LinkedList;
+
 
 /*
 import java.io.File;
@@ -17,10 +14,8 @@ import java.awt.Color;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.data.Data;
-import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.Role;
 
 public class TestCMD implements OwnerCMD{
 
@@ -31,7 +26,7 @@ public class TestCMD implements OwnerCMD{
 
     @Override
     public void handleOwner(CommandContext ctx) {
-        
+        /*
         LinkedList<Member> allmem = new LinkedList<>(); 
         
         Role student = ctx.getGuild().getRoleById(Data.ethstudent);
@@ -58,6 +53,23 @@ public class TestCMD implements OwnerCMD{
             return;
         }
         ctx.getMessage().reply("Done!").complete();
+        */
+        String desc = "";
+        EmbedBuilder eb = new EmbedBuilder();
+        
+        
+        eb.setTitle("Pruneable Members");
+        
+        for (int i = 1; i < 30; i+=2) {
+            desc += i + " Days: " + ctx.getGuild().retrievePrunableMemberCount(i).complete() + "\n"; 
+        }
+        
+
+        eb.setDescription((desc.equals("")?"None":desc));
+
+        ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
+        
+
     }   
 
     @Override
