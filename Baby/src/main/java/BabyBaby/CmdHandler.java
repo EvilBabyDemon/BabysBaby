@@ -60,6 +60,7 @@ public class CmdHandler {
         addPublicCommand(new EmoteQueryCMD());
         addPublicCommand(new BlindGroupCMD());
         addPublicCommand(new BlindStatsCMD());
+        addPublicCommand(new UsageCMD());
 
         // adding commands visible to @admin
         addAdminCommand(new AddRoleCMD());
@@ -275,6 +276,7 @@ public class CmdHandler {
                             System.out.println(System.currentTimeMillis()-time);
                             break;
                     }
+
                 } catch(Exception e){
                     ctx.getMessage().addReaction(Data.xmark).queue();
                     System.out.println(ctx.getMessage().getContentRaw());
@@ -283,6 +285,9 @@ public class CmdHandler {
             }
         });
         thread.start();
+        Data.cmdUses.putIfAbsent(cmd.getName(), 0);
+        Data.cmdUses.computeIfPresent(cmd.getName(), (name, x) -> ++x);
+        Data.users.add(ctx.getAuthor().getId());
     }
 
 }
