@@ -14,7 +14,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 public class HelpCMD implements PublicCMD {
@@ -206,15 +209,6 @@ public class HelpCMD implements PublicCMD {
         return prefix;
     }
 
-    private String publicCMDs (CmdHandler manager, String prefix){
-        String publicstr = ""; 
-        List<PublicCMD> publiclist = manager.getPublicCommands();
-        publiclist.sort(compPub);
-        for (PublicCMD publicCMD : publiclist) {
-            publicstr += prefix + publicCMD.getName() +  "\n";
-        }
-        return publicstr;
-    }
     private String adminCMDs (CmdHandler manager, String prefix){
         String admin = ""; 
         List<AdminCMD> adminlist = manager.getAdminCommands();
@@ -235,13 +229,51 @@ public class HelpCMD implements PublicCMD {
         return ownerstr;
     }
 
+    private void publicCMDsordered (CmdHandler manager, String prefix, EmbedBuilder eb){
+        
+        ArrayList<PublicCMD> publiclist = new ArrayList<>(manager.getPublicCommands());
+        publiclist.sort(compPub);
+        ArrayList<HashSet<String>> groups = new ArrayList<>();
+        groups.add(new HashSet<>(Arrays.asList("blind", "flashed", "forceblind", "groupblind", "learning", "muteme", "stats", "till", "unmuteme", "unblind")));
+        groups.add(new HashSet<>(Arrays.asList("poll", "role", "remind")));
+        groups.add(new HashSet<>(Arrays.asList("crypt", "decrypt", "nokey")));
+        groups.add(new HashSet<>(Arrays.asList("ping", "help", "source", "suggestion", "usage")));
+        
+        String[] cmdString = new String[5];
+        for (int i = 0; i < 5; i++) {
+            cmdString[i] = "";
+        }
+
+        cmds: for (int i = 0; i < publiclist.size(); i++) {
+            String str = publiclist.get(i).getName();
+            for (int j = 0; j < groups.size(); j++) {
+                if(groups.get(j).contains(str)){
+                    cmdString[j] += prefix + publiclist.remove(i--).getName() +"\n";
+                    continue cmds;
+                }
+            }
+            cmdString[4] += prefix + publiclist.remove(i--).getName() +"\n";
+        }
+        String[] titles = {"Anti-Procrastinator", "Useful", "Cypher", "Bot Info", "Other"};
+
+        for (int i = 0; i < 5; i++) {
+            eb.addField("", new ColouredStringAsciiDoc().addBlueAboveEq(titles[i]).addDiff(cmdString[i]).build(), true);
+        }
+        
+    }
+
     private void generalHelp(CmdHandler manager, String prefix, int rank, TextChannel channel){
         EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
 
         embed.setTitle("BabysBaby");
         embed.setDescription("Significant changes: " + sigchange);
 
-        embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicCMDs(manager, prefix)).build(), true);
+        embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").build(), false);
+        publicCMDsordered(manager, prefix, embed);
+
+        //embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicCMDs(manager, prefix)).build(), true);
+
+
         
         if(rank>0)
             embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Admin CMD").addDiff(adminCMDs(manager, prefix)).build(), true);
@@ -249,7 +281,7 @@ public class HelpCMD implements PublicCMD {
         if(rank>1)
             embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Owner CMD").addDiff(ownerCMDs(manager, prefix)).build(), true);
 
-        embed.setFooter("With most CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
+        embed.setFooter("With all CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
         channel.sendMessageEmbeds(embed.build()).queue();
     }
 
