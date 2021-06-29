@@ -23,10 +23,7 @@ public class AddRoleCMD implements AdminCMD {
 
     @Override
     public void handleAdmin(CommandContext ctx) {
-        LinkedList<String> cmds = new LinkedList<>();
-        for (String arg : ctx.getArgs()) {
-            cmds.add(arg);
-        }
+        LinkedList<String> cmds = new LinkedList<>(ctx.getArgs());
 
 
         String id = cmds.remove(0);
@@ -41,7 +38,7 @@ public class AddRoleCMD implements AdminCMD {
             categ = "Other";
         } else {
             for (String strCateg : cmds) {
-                strCateg += strCateg + " "; 
+                categ += strCateg + " "; 
             }
             categ = categ.substring(0, categ.length()-1);
         }
