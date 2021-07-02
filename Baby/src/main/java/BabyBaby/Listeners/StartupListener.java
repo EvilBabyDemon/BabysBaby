@@ -427,9 +427,9 @@ public class StartupListener extends ListenerAdapter{
 
 
             //report slash cmd
-            CommandData report = new CommandData("report", "A command to report something anon.");
+            CommandData report = new CommandData("report", "A command to report a incident to Staff anonymously.");
             
-            report.addOption(OptionType.STRING, "issue", "The isssue you have.", true);
+            report.addOption(OptionType.STRING, "issue", "The isssue you have or the incident that occured.", true);
             report.addOption(OptionType.USER, "user", "If you want to report a User. This can be left empty.", false);
             
 
