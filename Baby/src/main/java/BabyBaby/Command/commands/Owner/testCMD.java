@@ -15,8 +15,12 @@ import java.awt.Color;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
+import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu.Builder;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 public class TestCMD implements OwnerCMD{
 
@@ -55,6 +59,7 @@ public class TestCMD implements OwnerCMD{
         }
         ctx.getMessage().reply("Done!").complete();
         */
+        /*
         String desc = "";
         EmbedBuilder eb = new EmbedBuilder();
         
@@ -69,7 +74,25 @@ public class TestCMD implements OwnerCMD{
         eb.setDescription((desc.equals("")?"None":desc));
 
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
+        */
+        
+        //System.out.println(ctx.getChannel().retrieveMessageById(ctx.getArgs().get(0)).complete().getStickers().get(0).getAssetUrl());
 
+        MessageAction msg = ctx.getChannel().sendMessage("test");
+
+        SelectionMenu menu = SelectionMenu.create("menu:class")
+            .setPlaceholder("Choose your class") // shows the placeholder indicating what this menu is for
+            .setRequiredRange(1, 2) // only one can be selected
+            .addOption("mage-arcane", "Arcane Mage")
+            .addOption("mage-fire", "Fire Mage")
+            .addOption("mage-frost", "Frost Mage")
+            .build();
+
+        Builder test = SelectionMenu.create("test");
+        test.addOption("Test", "tester", "This is the Description", Emoji.fromEmote(ctx.getGuild().getEmotes().get(0)));
+
+        msg.setActionRows(ActionRow.of(menu), ActionRow.of(test.build()));
+        msg.queue();
     }   
 
     @Override
