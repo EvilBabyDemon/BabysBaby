@@ -76,7 +76,7 @@ public class TestCMD implements OwnerCMD{
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
         */
         
-        //System.out.println(ctx.getChannel().retrieveMessageById(ctx.getArgs().get(0)).complete().getStickers().get(0).getAssetUrl());
+        //System.out.println(ctx.getChannel().retrieveMessageById(ctx.getArgs().get(0)).complete().getContentRaw());
 
         MessageAction msg = ctx.getChannel().sendMessage("test");
 
@@ -90,7 +90,7 @@ public class TestCMD implements OwnerCMD{
 
         Builder test = SelectionMenu.create("test");
         test.addOption("Test", "tester", "This is the Description", Emoji.fromEmote(ctx.getGuild().getEmotes().get(0)));
-
+        
         msg.setActionRows(ActionRow.of(menu), ActionRow.of(test.build()));
         msg.queue();
     }   
