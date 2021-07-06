@@ -19,6 +19,7 @@ public class Data {
     public static final String modlog = "774322031688679454";
     public static final String adminlog = "774322847812157450";
     public static final String ADMIN_BOT_ID = "747768907992924192";
+    public static final String MODERATOR_ID = "815932497920917514";
     public static final String ethid = "747752542741725244";
     public static final String spam = "768600365602963496";
     public static final String stfuID = "765542118701400134";
@@ -34,6 +35,7 @@ public class Data {
     public static boolean marc = false;
     public static HashSet<String> buttonid = new HashSet<>();
     public static HashSet<String> stats = new HashSet<>();
+    public static HashSet<String> forcestats = new HashSet<>();
     public static int mydel = 0;
     public static int otherdel = 0;
     public static HashMap<String, Integer> cmdUses = new HashMap<>();
