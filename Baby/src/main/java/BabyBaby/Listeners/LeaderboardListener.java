@@ -58,9 +58,10 @@ public class LeaderboardListener extends ListenerAdapter{
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            pstmt = c.prepareStatement("UPDATE STATS SET RANK = Case When RANK Is Null THEN 0 ELSE RANK END + (? - TIME) WHERE ID=?;");
+            pstmt = c.prepareStatement("UPDATE STATS SET RANK = Case When RANK Is Null THEN 0 ELSE RANK END + ((? - TIME) * ?) WHERE ID=?;");
             pstmt.setLong(1, System.currentTimeMillis());
-            pstmt.setString(2, event.getUser().getId());
+            pstmt.setInt(2, (Data.forcestats.contains(event.getUser().getId())?2:1));
+            pstmt.setString(3, event.getUser().getId());
             pstmt.execute();
             pstmt.close();
             c.close();

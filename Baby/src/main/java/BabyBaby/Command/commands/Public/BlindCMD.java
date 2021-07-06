@@ -191,6 +191,7 @@ public class BlindCMD implements PublicCMD{
         if(force){
             BlindForceCMD.force.add(scheduledclass);
             msg +=  " **Wait out the timer!!!** And hopefully you are productive!";
+            Data.forcestats.add(mem.getId());
         } else {
             msg += " Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnBlindCMD().getName() + "\"";
         }
