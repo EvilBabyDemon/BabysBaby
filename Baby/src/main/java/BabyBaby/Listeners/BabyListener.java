@@ -546,7 +546,7 @@ public class BabyListener extends ListenerAdapter {
         
 
         User user = event.getAuthor();
-        
+        /*
         if(user.getId().equals("781949572103536650")){
             String prefixstr = prefix.get(event.getGuild().getId());
             String content = event.getMessage().getContentRaw();
@@ -558,12 +558,16 @@ public class BabyListener extends ListenerAdapter {
             if(content.startsWith("PIXELVERIFY") && content.split(" ")[3].equals("SUCCESS")){
                 clock.verify(event);
             }
-        } else if(user.getId().equals("778731540359675904") && Data.antibamboozle){
+        } else */
+
+
+        if(user.getId().equals("778731540359675904") && Data.antibamboozle){
             String content = event.getMessage().getContentRaw();
             if (content.equals("Press the button to claim the points.")) {
                 button.tap(event);
             }
-        } /*else if(user.getId().equals("590453186922545152") || user.getId().equals("223932775474921472")){
+        }
+        /*else if(user.getId().equals("590453186922545152") || user.getId().equals("223932775474921472")){
             String content = event.getMessage().getContentRaw();
             if(content.contains("781949572103536650")){
                 new drawwithFerris().drawing(event);
