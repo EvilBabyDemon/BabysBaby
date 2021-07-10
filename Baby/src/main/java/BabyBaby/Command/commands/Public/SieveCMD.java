@@ -5,11 +5,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
-import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
+import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -138,7 +139,20 @@ public class SieveCMD implements PublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<roleID> {<!/&/|> <roleID>}", "Command to find out who has the Role AmongUs but also the Anime role for example.");
+        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+
+        embed.setTitle("Help page of: `" + getName() +"`");
+        embed.setDescription("Command to find out who has the Role AmongUs but also the Anime role for example. Get all role id's with " + prefix + "allroles");
+
+        // general use
+        embed.addField("", new ColouredStringAsciiDoc()
+                .addBlueAboveEq("general use")
+                .addNormal(prefix + getName() + " " + "<roleID> {<!/&/|> <roleID>}")
+                .addBlueAboveEq("Example Italian ! Swiss-German & German")
+                .addNormal(prefix + getName() + " 747792281855197285 ! 747791537089544283 & 747791435570610256")
+                .build(), false);
+
+        return embed.build();
     }
     
 }
