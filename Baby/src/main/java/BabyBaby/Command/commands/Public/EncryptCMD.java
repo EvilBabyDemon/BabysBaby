@@ -7,6 +7,7 @@ import BabyBaby.ColouredStrings.StandardHelpEmbed;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import CryptPart.VWA_Verschluesseln;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -36,7 +37,11 @@ public class EncryptCMD implements PublicCMD {
         else
             message.addReaction(check).queue();
         */
-        channel.sendMessage(VWA_Verschluesseln.encrypter(content, key)).queue();
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Encrypted text with key: " + key);
+        eb.setDescription(VWA_Verschluesseln.encrypter(content, key));
+
+        channel.sendMessageEmbeds(eb.build()).queue();
 
     }
 

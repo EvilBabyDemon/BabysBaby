@@ -1,10 +1,12 @@
 package BabyBaby.Command.commands.Public;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import CryptPart.KeyDecrypt;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import BabyBaby.ColouredStrings.StandardHelpEmbed ;
@@ -22,33 +24,25 @@ public class DecryptCMD implements PublicCMD {
 
 
         MessageChannel channel = ctx.getChannel();
-        //Message message = ctx.getMessage();
 
-        String content = "";
+        /*  we need to load the list into a new Linked List
+            because ctx.getArgs() returns a fixed size list
+            which we can't remove args from */
+        List<String> args = new LinkedList<>(ctx.getArgs());
 
-        List<String> args = ctx.getArgs();
-
-        for (String arg : args) {
-            content += arg + " ";
-        }
-        
-
-        int i = 0;
-        for (; i < content.length(); i++) {
-            if (content.charAt(i) == ' ') {
-                break;
-            }
-        }
-
-        String key = content.substring(0, i);
-        content = content.substring(i + 1);
+        String key = args.remove(0);
+        String content = String.join(" ", args);  // joins the list properly
 
         /*if (cryptdeleter)
             channel.deleteMessageById(message.getId()).queue();
         else
             message.addReaction(check).queue();
         */
-        channel.sendMessage(KeyDecrypt.decrypter(content, key)).queue();
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Decrypted text with key: " + key);
+        eb.setDescription(KeyDecrypt.decrypter(content, key));
+
+        channel.sendMessageEmbeds(eb.build()).queue();
 
 
     }
