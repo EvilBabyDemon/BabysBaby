@@ -111,6 +111,7 @@ public class PlaceGifCMD implements PublicCMD {
             output.close();
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         } finally {
             if(outsider)
                 inp.delete();
