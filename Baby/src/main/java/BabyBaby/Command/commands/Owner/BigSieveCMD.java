@@ -168,13 +168,14 @@ public class BigSieveCMD implements OwnerCMD{
         }
         
         Message editor = ctx.getChannel().sendMessage("wait a sec").complete();
+        
         for (String pings : cacherefresh) {
             if(pings == null || pings.length()==0)
                 continue;
             editor.editMessage(pings + " ").complete();
         }
         editor.delete().queue();
-
+        
         ctx.getMessage().addReaction(Data.check).queue();
         
         for (EmbedBuilder eb : alleb) {
