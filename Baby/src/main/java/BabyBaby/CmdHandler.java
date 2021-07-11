@@ -101,7 +101,7 @@ public class CmdHandler {
         //addOwnerCommand(new toMultipixelCMD());
         addOwnerCommand(new stopdraw());
         addOwnerCommand(new SayMultiCMD());
-        addOwnerCommand(new BigSieveCMD());
+        //addOwnerCommand(new BigSieveCMD());
         addOwnerCommand(new BubbleSortCMD());
         //addOwnerCommand(new RoleChangeCMD());
         addOwnerCommand(new TurnCMDsOff());
