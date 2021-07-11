@@ -129,7 +129,7 @@ public class ReminderCMD implements PublicCMD {
             return;
         }
         ScheduledExecutorService remind = Executors.newScheduledThreadPool(1);
-        remind.schedule(new GetReminder(ctx.getAuthor(), ctx.getGuild(), message, ctx.getChannel().getId(), "pkey"), rounder , TimeUnit.SECONDS);
+        remind.schedule(new GetReminder(ctx.getAuthor(), ctx.getGuild(), message, ctx.getChannel().getId(), pk), rounder , TimeUnit.SECONDS);
 
         channel.sendMessage(ctx.getAuthor().getAsMention() + " You will get Reminded in ~" + time + " " + strUnit + ".").complete().delete().queueAfter(10, TimeUnit.SECONDS);
 
