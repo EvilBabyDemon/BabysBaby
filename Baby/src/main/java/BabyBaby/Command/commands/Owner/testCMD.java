@@ -2,6 +2,8 @@ package BabyBaby.Command.commands.Owner;
 
 
 
+import java.util.LinkedList;
+
 /*
 import java.io.File;
 import java.io.IOException;
@@ -80,18 +82,20 @@ public class TestCMD implements OwnerCMD{
 
         MessageAction msg = ctx.getChannel().sendMessage("test");
 
-        SelectionMenu menu = SelectionMenu.create("menu:class")
-            .setPlaceholder("Choose your class") // shows the placeholder indicating what this menu is for
-            .setRequiredRange(1, 2) // only one can be selected
-            .addOption("mage-arcane", "Arcane Mage")
-            .addOption("mage-fire", "Fire Mage")
-            .addOption("mage-frost", "Frost Mage")
-            .build();
-
-        Builder test = SelectionMenu.create("test");
-        test.addOption("Test", "tester", "This is the Description", Emoji.fromEmote(ctx.getGuild().getEmotes().get(0)));
+        Builder menu = SelectionMenu.create("menu:class");
+        menu.setPlaceholder("Choose your number");
         
-        msg.setActionRows(ActionRow.of(menu), ActionRow.of(test.build()));
+        
+        for (int i = 0; i < 20; i++) {
+            menu.addOption("Selection " + i, ""+i);
+        }
+        LinkedList<ActionRow> tmp = new LinkedList<>();
+        
+        for (int i = 0; i < 5; i++) {
+            tmp.add(ActionRow.of(menu.build()));
+        }
+        
+        msg.setActionRows(tmp);
         msg.queue();
     }   
 
