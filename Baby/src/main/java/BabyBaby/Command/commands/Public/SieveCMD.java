@@ -219,10 +219,10 @@ public class SieveCMD implements PublicCMD {
             first.addField(""+dooku, firstmention, true);
             
             alleb.add(first);
-
+            
             if(pleb){
                 first.setFooter("Summoned by: " + nickname + ". Not shown members: " + mention.split("\n").length, ctx.getAuthor().getAvatarUrl());
-            } else{ 
+            } else{
                 int dookueb = 2;
                 while(mention.length()>5990){
                     String embmention = mention.substring(0, 5990);
