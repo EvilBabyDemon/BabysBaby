@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.audit.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.*;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.*;
@@ -347,6 +348,7 @@ public class BabyListener extends ListenerAdapter {
         }
     }
 
+    //ButtonEvent
     @Override
     public void onButtonClick(ButtonClickEvent event) {
         if (Data.buttonid.contains(event.getMessageId()) || Data.msgid.contains(event.getMessageId())) {
@@ -369,12 +371,34 @@ public class BabyListener extends ListenerAdapter {
         }
     }
 
+    //SelectionMenu
+    @Override
+    public void onSelectionMenu(SelectionMenuEvent event) {
+        InteractionHook msgHook = null;
+        boolean failed = false;
+        try {
+            //event.editComponents(ActionRow.of(event.getSelectionMenu()), ActionRow.of(event.getSelectionMenu())).queue();
+            
+            msgHook = event.deferReply(true).complete();
+        } catch (Exception e) {
+            System.out.println("Why so slow :/");
+            failed = true;
+        }
+        if(event.getUser().isBot())
+            return;
+        
+        if(event.getSelectionMenu().getId().equals("menu:class")){
+            if(!failed){
+                msgHook.editOriginal("You have selected " + event.getSelectedOptions().size()).queue();
+            }
+        }
+
+    }
+
     
     //Slash Commands
     @Override
     public void onSlashCommand (SlashCommandEvent event) {
-        if(!slash.contains(event.getName()))
-            return;
         InteractionHook msgHook = null;
         boolean failed = false;
         try {
