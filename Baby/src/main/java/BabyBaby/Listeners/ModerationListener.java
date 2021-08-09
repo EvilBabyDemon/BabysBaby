@@ -96,6 +96,7 @@ public class ModerationListener extends ListenerAdapter{
                 try{
                     Invite temp = urls.get(url);
                     if(temp.getUses() > amount){
+                        amount = temp.getUses();
                         found = true;
                         break;
                     }
