@@ -32,7 +32,7 @@ public class ModerationListener extends ListenerAdapter{
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
             
-            stmt = c.prepareStatement("INSERT INTO INVITES (URL, AMOUNT) VALUES (?, 0) ;");
+            stmt = c.prepareStatement("INSERT INTO INVITES (URL, AMOUNT) VALUES (?, 0);");
             stmt.setString(1, event.getUrl());
             stmt.executeUpdate();
             
@@ -186,7 +186,7 @@ public class ModerationListener extends ListenerAdapter{
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
             
-            pstmt = c.prepareStatement("INSERT INTO INVITED VALUES (INVITED, URL, INVITEE) (?, ?, ?);");
+            pstmt = c.prepareStatement("INSERT INTO INVITED (INVITED, URL, INVITEE) VALUES (?, ?, ?);");
             pstmt.setString(1, joined.getId());
             pstmt.setString(2, url);
             pstmt.setString(3, invitee);
