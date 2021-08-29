@@ -50,12 +50,11 @@ public class ModerationListener extends ListenerAdapter{
 		if(!event.getGuild().getId().equals(Data.ethid))
             return;
 
-        OffsetDateTime time = event.getUser().getTimeCreated();
-		String username = event.getUser().getName().toLowerCase();
-
-		if(username.contains("lengler") || username.contains("welzl")){
-			event.getGuild().getTextChannelById("747754931905364000").sendMessage("<@&773908766973624340> Account with Prof name joined. Time of creation of the account:" + time).queue();
-		}
+        //OffsetDateTime time = event.getUser().getTimeCreated();
+		//String username = event.getUser().getName().toLowerCase();
+		//if(username.contains("lengler") || username.contains("welzl")){
+		//	event.getGuild().getTextChannelById("747754931905364000").sendMessage("<@&773908766973624340> Account with Prof name joined. Time of creation of the account:" + time).queue();
+		//}
 
         
         List<Invite> inv = event.getGuild().retrieveInvites().complete();
@@ -75,7 +74,7 @@ public class ModerationListener extends ListenerAdapter{
         MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
         if(event.getUser().isBot()){
-            memberJoinModLog("Admin (Bot addition)", event.getUser(), log, url, "NaN", 1);
+            memberJoinModLog("Admin (Bot addition)", event.getUser(), log, url, "NaN", 1, "bot");
             return;
         }
 
@@ -115,7 +114,7 @@ public class ModerationListener extends ListenerAdapter{
         if(!found){
             try {        
                 VanityInvite vanity = event.getGuild().retrieveVanityInvite().complete();
-                memberJoinModLog("Admin (Vanity URL)", event.getUser(), log, vanity.getUrl(), "NaN", vanity.getUses());
+                memberJoinModLog("Admin (Vanity URL)", event.getUser(), log, vanity.getUrl(), "NaN", vanity.getUses(), "vanity");
             } catch (Exception e) {
                 event.getGuild().getTextChannelById("747768907992924192").sendMessage("Smth went wrong with the invite link stuff. Couldnt find the invite link... <@!223932775474921472>").queue();
             }
@@ -125,7 +124,7 @@ public class ModerationListener extends ListenerAdapter{
         DateTimeFormatter linkcreate = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
         String timecreate = urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate);
         
-        memberJoinModLog(urls.get(url).getInviter().getAsMention(), event.getUser(), log, url, timecreate, urls.get(url).getUses());
+        memberJoinModLog(urls.get(url).getInviter().getAsMention(), event.getUser(), log, url, timecreate, urls.get(url).getUses(), urls.get(url).getInviter().getId());
 
 
         if(urls.get(url) != null) {
@@ -150,7 +149,7 @@ public class ModerationListener extends ListenerAdapter{
 	}
 
 
-    private void memberJoinModLog (String inviter, User joined, MessageChannel log, String url, String invCreate, int uses){
+    private void memberJoinModLog (String inviter, User joined, MessageChannel log, String url, String invCreate, int uses, String invitee){
         
         DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
         OffsetDateTime created = joined.getTimeCreated();
@@ -180,6 +179,26 @@ public class ModerationListener extends ListenerAdapter{
         eb.setDescription(desc);
 
         log.sendMessage("cache reload").complete().editMessage(inviter + joined.getAsMention()).complete().editMessageEmbeds(eb.build()).complete();
+        
+        Connection c = null;
+        PreparedStatement pstmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(Data.db);
+            
+            pstmt = c.prepareStatement("INSERT INTO INVITED VALUES (INVITED, URL, INVITEE) (?, ?, ?);");
+            pstmt.setString(1, joined.getId());
+            pstmt.setString(2, url);
+            pstmt.setString(3, invitee);
+            pstmt.executeUpdate();
+            
+            pstmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+
 
     }
 
