@@ -99,7 +99,8 @@ public class BlindStatsCMD implements PublicCMD {
         Comparator<Object[]> objComp = new Comparator<Object[]>(){
             @Override
             public int compare(Object[] o1, Object[] o2) {
-                return (int) ((long) o2[1] - (long) o1[1]);
+                long comp = ((long) o2[1] - (long) o1[1]);
+                return (comp >= 0) ? (comp > 0) ? 1 : 0 : -1;
             }  
         };
 
