@@ -61,7 +61,7 @@ public class AddRoleCMD implements AdminCMD {
         }
 
         Data.emoteassign.put(emote, id);
-
+        Data.roles.add(id);
         ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
         
     }
