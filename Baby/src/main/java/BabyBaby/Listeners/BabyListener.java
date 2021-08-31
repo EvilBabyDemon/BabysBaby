@@ -460,7 +460,9 @@ public class BabyListener extends ListenerAdapter {
             } else {
                 msgHook.editOriginal(acknowledged).queue();   
             }
-        }        
+        } else if(cmd.equals("study")){
+            
+        }
     }
     // Giving/Removing roles from an Interaction
     private void roleGiving (Member member, Guild guild, boolean failed, Role role,  InteractionHook msgHook){

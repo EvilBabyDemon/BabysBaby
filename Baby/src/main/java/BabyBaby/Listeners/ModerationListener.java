@@ -151,6 +151,11 @@ public class ModerationListener extends ListenerAdapter{
 
     private void memberJoinModLog (String inviter, User joined, MessageChannel log, String url, String invCreate, int uses, String invitee){
         
+        if(invitee.equals("vanity") || invitee.equals("187822944326647808")){
+            Data.newErstie.add(joined.getId());
+        }
+
+
         DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
         OffsetDateTime created = joined.getTimeCreated();
         OffsetDateTime now = OffsetDateTime.now();
@@ -209,6 +214,13 @@ public class ModerationListener extends ListenerAdapter{
             return;
 
         Role student = event.getGuild().getRoleById(Data.ethstudent);
+        Role external = event.getGuild().getRoleById(Data.ethexternal);
+        
+
+        if(Data.automaticRoleAddThingy && Data.newErstie.contains(event.getUser().getId()) && (event.getRoles().contains(student) || event.getRoles().contains(external))){
+            event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("881654299267059774")).complete();
+            event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("773543051011555398")).complete();
+        }
 
         if(!event.getRoles().contains(student))
             return;

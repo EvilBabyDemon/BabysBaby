@@ -42,6 +42,8 @@ public class Data {
     public static HashMap<String, Integer> cmdUses = new HashMap<>();
     public static HashSet<String> users = new HashSet<>();
     public static OffsetDateTime startUp;
+    public static HashSet<String> newErstie = new HashSet<>();
+    public static boolean automaticRoleAddThingy = false;
     
     
     
