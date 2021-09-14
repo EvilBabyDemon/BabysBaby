@@ -218,9 +218,9 @@ public class ModerationListener extends ListenerAdapter{
         if(!event.getGuild().getId().equals(Data.ethid))
             return;
         ChannelManager newChann = new ChannelManagerImpl(event.getChannel());
-        newChann.putPermissionOverride(event.getGuild().getRoleById(Data.stfuID), null, Arrays.asList(Permission.MESSAGE_WRITE)).queue();
-        newChann.putPermissionOverride(event.getGuild().getRoleById(Data.MODERATOR_ID), Arrays.asList(Permission.VIEW_CHANNEL), null).queue();
-    }
+        newChann.putPermissionOverride(event.getGuild().getRoleById(Data.MODERATOR_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
+        newChann.and(newChann.putPermissionOverride(event.getGuild().getRoleById(Data.stfuID), null, Arrays.asList(Permission.MESSAGE_WRITE))).queue();
+        }
 
     //Voice Channel Create
     @Override

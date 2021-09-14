@@ -21,13 +21,13 @@ public class PollCMD implements PublicCMD{
 	@Override
 	public void handlePublic(CommandContext ctx) {
 		
-		LinkedList<String> cmds = new LinkedList<>();
+		LinkedList<String> cmds = new LinkedList<>(); 
 		String temp = "";
 		for (String arg : ctx.getArgs()) {
-			if(arg.endsWith("\"")){
+			if (arg.endsWith("\"")) {
 				cmds.add(temp + arg);
 				temp = "";
-			}	else{
+			} else {
 				temp += arg + " ";
 			}
 		}
