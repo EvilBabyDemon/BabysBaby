@@ -1,5 +1,7 @@
 package BabyBaby.Command.commands.Public;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -57,6 +59,36 @@ public class SieveCMD implements PublicCMD {
         List<Member> allMem = ctx.getGuild().getMembers();
         if(cmd[0].equals(Data.ethid)){
             counter = new HashSet<>(allMem);
+        } else if (cmd[0].length() == 8) {
+            
+            try {
+                Integer.parseInt(cmd[0]);
+            } catch (Exception e) {
+                ctx.getChannel().sendMessage("This is not a date.").queue();
+                return;
+            }
+
+            DateTimeFormatter dtf;
+
+            if(Integer.parseInt(cmd[0].substring(2,4))>12){
+                //YYYYMMDD
+                dtf = DateTimeFormatter.ofPattern("yyyyMMDD");
+            } else {
+                //DDMMYYYY
+                dtf = DateTimeFormatter.ofPattern("DDMMyyyy");
+            }
+
+            OffsetDateTime offDateTime = OffsetDateTime.parse(cmd[0], dtf);
+            LinkedList<Member> temp = new LinkedList<>();
+
+            for (Member mem : allMem) {
+                if(mem.getTimeJoined().compareTo(offDateTime)<0){
+                    temp.add(mem);
+                }
+            }
+
+            allMem.removeAll(temp);
+            
         } else {
             Role role = null;
             GuildChannel channel = null;
