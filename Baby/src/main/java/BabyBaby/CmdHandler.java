@@ -262,6 +262,13 @@ public class CmdHandler {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
+
+                //check if blinded and then just ignore cmd
+                if(ctx.getGuild().getId().equals(Data.ethid) && ctx.getMember().getRoles().contains(ctx.getGuild().getRoleById(Data.blindID))){
+                    ctx.getAuthor().openPrivateChannel().complete().sendMessage("Unblind yourself and don't try to cheat!").queue();
+                    return;
+                }
+
                 try {
                     switch(permissionLevel){
                         case 0:

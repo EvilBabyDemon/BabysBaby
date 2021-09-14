@@ -410,6 +410,18 @@ public class BabyListener extends ListenerAdapter {
         if(event.getUser().isBot())
             return;
         
+        //check if blinded and then just ignore cmd
+        if(event.getGuild().getId().equals(Data.ethid) && event.getMember().getRoles().contains(event.getGuild().getRoleById(Data.blindID))){
+            String cheater = "Unblind yourself and don't try to cheat!";
+            if(failed){
+                event.getUser().openPrivateChannel().complete().sendMessage(cheater).complete();
+            } else {
+                msgHook.editOriginal(cheater).queue();   
+            }
+            return;
+        }
+
+
         String cmd = event.getName();
         if(cmd.equals("poll")){
             new PollCMD().slashCommand(event);
@@ -448,7 +460,9 @@ public class BabyListener extends ListenerAdapter {
             } else {
                 msgHook.editOriginal(acknowledged).queue();   
             }
-        }        
+        } else if(cmd.equals("study")){
+            
+        }
     }
     // Giving/Removing roles from an Interaction
     private void roleGiving (Member member, Guild guild, boolean failed, Role role,  InteractionHook msgHook){

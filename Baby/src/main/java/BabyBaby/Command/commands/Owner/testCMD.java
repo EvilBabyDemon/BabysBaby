@@ -17,7 +17,8 @@ import java.awt.Color;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import net.dv8tion.jda.api.entities.Emoji;
+import BabyBaby.data.Data;
+//import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
@@ -79,7 +80,7 @@ public class TestCMD implements OwnerCMD{
         */
         
         //System.out.println(ctx.getChannel().retrieveMessageById(ctx.getArgs().get(0)).complete().getContentRaw());
-
+        /*
         MessageAction msg = ctx.getChannel().sendMessage("test");
 
         Builder menu = SelectionMenu.create("menu:class");
@@ -97,6 +98,8 @@ public class TestCMD implements OwnerCMD{
         
         msg.setActionRows(tmp);
         msg.queue();
+        */
+        Data.automaticRoleAddThingy = !Data.automaticRoleAddThingy;
     }   
 
     @Override

@@ -442,7 +442,7 @@ public class GetRoleCMD implements PublicCMD{
             //Student
             } else if(role.getId().equals(Data.ethstudent)){
 
-                if(BabyListener.verifiedUser(member.getId())){
+                if(!BabyListener.verifiedUser(member.getId())){
                     String doverify = "You have to get verified to get the role ";
                     String suffix = ". You can do that here: https://dauth.spclr.ch/ and write the token to <@306523617188118528>";
                     member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
