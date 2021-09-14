@@ -1,5 +1,9 @@
 package BabyBaby.Command.commands.Admin;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
@@ -8,6 +12,7 @@ import java.util.List;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -88,7 +93,33 @@ public class WhoisCMD implements AdminCMD{
 			
 			String addchecks = "Created as: **a " + ((stalking.getUser().isBot()) ? "bot" : "user") + " account** \n Created at: **" + stalking.getUser().getTimeCreated().format(createtime) + "** `(" + actualtime + ")`"; 
 			
-			
+			String invitee = "NaN";
+
+			Connection c = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName("org.sqlite.JDBC");
+				c = DriverManager.getConnection(Data.db);
+				
+				pstmt = c.prepareStatement("SELECT INVITEE FROM INVITES WHERE INVITED = ?;");
+				pstmt.setString(1, stalking.getId());
+				ResultSet rs = pstmt.executeQuery();
+				
+				invitee = rs.getString("INVITEE");
+
+				pstmt.close();
+				c.close();
+			} catch ( Exception e ) {
+				System.out.println(e.getClass().getName() + ": " + e.getMessage());
+				e.printStackTrace();
+			}
+			//Not sure atm if this throws an error when empty
+
+
+			try {
+				invitee = ctx.getGuild().getMemberById(invitee).getAsMention(); 
+			} catch (Exception e) {
+			}
 			
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("@" + stalking.getUser().getAsTag() + " (" + stalking.getId() + ")");
@@ -96,6 +127,7 @@ public class WhoisCMD implements AdminCMD{
 			
 			eb.addField("Nickname", "`" + ((stalking.getNickname() != null) ? stalking.getNickname() : stalking.getEffectiveName()) + "` " + stalking.getAsMention(), false);
 			eb.addField("Joined at", "`" + stalking.getTimeJoined().toLocalDateTime().format(jointime) + "`", false);
+			eb.addField("Invited by", "`" + invitee + "`", false);
 			eb.addField("Highest Role", highest.getAsMention(), true);
 			eb.addField("Hoisted Role",(hoisted != null) ? hoisted.getAsMention(): "`Unhoisted`", true);
 			eb.addField("Roles obtained (" + (1+allrolesList.size()) + ")" , rolementions, false);
