@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.events.guild.member.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.ChannelManager;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
-import net.dv8tion.jda.internal.managers.ChannelManagerImpl;
 
 import BabyBaby.data.Data;
 
@@ -249,7 +248,7 @@ public class ModerationListener extends ListenerAdapter{
     public void onTextChannelCreate(TextChannelCreateEvent event) {
         if(!event.getGuild().getId().equals(Data.ethid))
             return;
-        ChannelManager newChann = event.getChannel().getManager();  
+        ChannelManager newChann = event.getChannel().getManager();
         newChann.putPermissionOverride(event.getGuild().getRoleById(Data.stfuID), null, Arrays.asList(Permission.MESSAGE_WRITE));
         newChann.putPermissionOverride(event.getGuild().getRoleById(Data.MODERATOR_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
         newChann.putPermissionOverride(event.getGuild().getRoleById(Data.SERVERBOT_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
@@ -271,11 +270,14 @@ public class ModerationListener extends ListenerAdapter{
             }
         }
         
-        ChannelManager channelMan = new ChannelManagerImpl(event.getChannel());
+        ChannelManager channelMan = event.getChannel().getManager();
         Collection<Permission> deny = new LinkedList<>();
-        deny.add(Permission.VOICE_SPEAK );
-		IPermissionHolder permHolder = event.getGuild().getRoleById(Data.stfuID);
-        channelMan.putPermissionOverride(permHolder, null, deny).queue();
+        deny.add(Permission.VOICE_SPEAK);
+		IPermissionHolder permHolderSTFU = event.getGuild().getRoleById(Data.stfuID);
+        channelMan.putPermissionOverride(permHolderSTFU, null, deny);
+        channelMan.putPermissionOverride(event.getGuild().getRoleById(Data.MODERATOR_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
+        channelMan.putPermissionOverride(event.getGuild().getRoleById(Data.SERVERBOT_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
+        channelMan.queue();
     }
 
     
