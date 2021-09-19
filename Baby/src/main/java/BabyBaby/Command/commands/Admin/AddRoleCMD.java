@@ -2,7 +2,7 @@ package BabyBaby.Command.commands.Admin;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.LinkedList;
 
 import BabyBaby.Command.AdminCMD;
@@ -28,11 +28,12 @@ public class AddRoleCMD implements AdminCMD {
 
         String id = cmds.remove(0);
         String emote = cmds.remove(0);
-        emote = emote.replace("<", "");
-        emote = emote.replace(">", "");
+
+        if(emote.contains("<")){
+            emote = emote.split(":")[2];
+            emote.replace(">", "");
+        }
         MessageChannel channel = ctx.getChannel();
-        Connection c = null;
-        Statement stmt = null;
         String categ = "";
         if(cmds.size() == 0){
             categ = "Other";
@@ -44,16 +45,21 @@ public class AddRoleCMD implements AdminCMD {
         }
         
 
+        Connection c = null;
+        PreparedStatement pstmt = null;
         try { 	
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
 
-            stmt = c.createStatement();
-            String sql = "INSERT INTO ASSIGNROLES (ID,CATEGORIES,EMOTE) " +
-                            "VALUES (" + id + ", '" + categ + "', '" + emote + "');"; 
-            stmt.executeUpdate(sql);
+            
+            String sql = "INSERT INTO ASSIGNROLES (ID,CATEGORIES,EMOTE) VALUES (?, ?, ?);"; 
+            pstmt = c.prepareStatement(sql);
+            pstmt.setLong(1, Long.parseLong(id));
+            pstmt.setString(2, categ);
+            pstmt.setString(3, emote);
+            pstmt.executeUpdate();
 
-            stmt.close();
+            pstmt.close();
             c.close();
         } catch ( Exception e ) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
@@ -62,7 +68,7 @@ public class AddRoleCMD implements AdminCMD {
 
         Data.emoteassign.put(emote, id);
         Data.roles.add(id);
-        ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
+        ctx.getMessage().addReaction(Data.check).queue();
         
     }
 

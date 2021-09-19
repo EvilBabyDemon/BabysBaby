@@ -1,5 +1,6 @@
 package BabyBaby.Command.commands.Public;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -32,6 +33,7 @@ import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 public class GetRoleCMD implements PublicCMD{
+    boolean flipflop = false;
 
     @Override
     public void handleAdmin(CommandContext ctx) {
@@ -183,15 +185,20 @@ public class GetRoleCMD implements PublicCMD{
                 rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + strCats + "';");
                 while ( rs.next() ) {
                     String rcat = rs.getString("ID");
-                    String emote = rs.getString("EMOTE");
-                    String orig = emote;
+                    String emoteStr = rs.getString("EMOTE");
+                    String orig = emoteStr;
 
-                    if(emote == null || emote.length() == 0){
-                        emote = "";
-                    } else {
-                        emote = emote.contains(":") ? "<" + emote + ">" : emote;
+                    try {
+                        Long.parseLong(emoteStr);
+                        try {
+                            emoteStr = ctx.getJDA().getEmoteById(emoteStr).getAsMention();   
+                        } catch (Exception e) {
+                            emoteStr = "ERROR";
+                        }
+                    } catch (Exception e) {
                     }
-                    msg = emote + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
+                    
+                    msg = emoteStr + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
                     sorting.put(called.getRoleById(rcat), new Object[] {orig, msg});
                 }
                 rs.close();
@@ -234,7 +241,7 @@ public class GetRoleCMD implements PublicCMD{
             tmp.put(categ.get(i), roles.get(i));
         }
 
-
+        
 
         emotewhen.add(categ.size());
         emb.add(embeds(tmp, ctx));
@@ -254,18 +261,17 @@ public class GetRoleCMD implements PublicCMD{
                      
             ArrayList<Button> butt = new ArrayList<>();
             for (String emoID : emoList) {
-                if(emoID == null || emoID.length() == 0)
-                        continue;
-                String emote = emoID;
                 boolean gemo = false;
-                if((gemo=emote.contains(":"))){
-                    emote = emote.split(":")[2];
+                try {
+                    Long.parseLong(emoID);
+                    gemo = true;
+                } catch (Exception e) {
                 }
                 
                 try{
-                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
+                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
                 } catch (Exception e){
-                    ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                    ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
@@ -321,7 +327,14 @@ public class GetRoleCMD implements PublicCMD{
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Roles you can assign yourself", null);
-        eb.setColor(1);
+
+        if(flipflop){
+            eb.setColor(Color.BLACK);
+        } else {
+            eb.setColor(Color.WHITE);
+        }
+        flipflop = !flipflop;
+
 
         for (String field : fields.keySet()) {
             eb.addField(field, fields.get(field), true); 

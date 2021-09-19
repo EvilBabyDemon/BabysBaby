@@ -94,15 +94,22 @@ public class EditAssignCMD implements AdminCMD{
                 rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + strCateg + "';");
                 while ( rs.next() ) {
                     String rcat = rs.getString("ID");
-                    String emote = rs.getString("EMOTE");
-                    String orig = emote;
+                    String emoteStr = rs.getString("EMOTE");
+                    String orig = emoteStr;
 
-                    if(emote == null || emote.length() == 0){
-                        emote = "";
-                    } else {
-                        emote = emote.contains(":") ? "<" + emote + ">" : emote;
+
+                    try {
+                        Long.parseLong(emoteStr);
+                        try {
+                            emoteStr = ctx.getJDA().getEmoteById(emoteStr).getAsMention();   
+                        } catch (Exception e) {
+                            emoteStr = "ERROR";
+                        }
+                    } catch (Exception e) {
                     }
-                    msg = emote + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
+
+
+                    msg = emoteStr + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
                     sorting.put(called.getRoleById(rcat), new Object[] {orig, msg});
                 }
                 rs.close();
@@ -142,20 +149,23 @@ public class EditAssignCMD implements AdminCMD{
             
             ArrayList<Button> butt = new ArrayList<>();
             for (String emoID : tempEmo) {
-                if(emoID == null || emoID.length() == 0)
-                        continue;
-                String emote = emoID;
+                
                 boolean gemo = false;
-                if((gemo=emote.contains(":"))){
-                    emote = emote.split(":")[2];
+                
+                try {
+                    Long.parseLong(emoID);
+                    gemo = true;
+                } catch (Exception e) {
                 }
                 
                 try{
-                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
+                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
                 } catch (Exception e){
-                    ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                    ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
+
+            
 
             LinkedList<ActionRow> acR = new LinkedList<>();
             for (int i = 0; i < butt.size(); i +=5) {
