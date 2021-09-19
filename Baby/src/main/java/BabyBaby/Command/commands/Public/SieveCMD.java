@@ -57,7 +57,47 @@ public class SieveCMD implements PublicCMD {
         HashSet<Member> counter = new HashSet<>();
 
         List<Member> allMem = ctx.getGuild().getMembers();
-        if(cmd[0].equals(Data.ethid)){
+
+        boolean userID = false;
+        
+        
+
+
+        try {
+            ctx.getGuild().getMemberById(cmd[0]);
+            userID = true;
+        } catch (Exception e) {
+        }
+
+        // to get the amount of users in each Role channels
+        if(cmd[0].equalsIgnoreCase("roles") && ctx.getGuild().getId().equals(Data.ethid)){
+            
+            List<GuildChannel> channels =  ctx.getGuild().getCategoryById("818089330282463262").getChannels();
+            
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setTitle("Role Channels");
+            
+
+            String desc = "";
+
+            for (GuildChannel gchan : channels) {
+                int count = 0;
+                for (Member mem : allMem) {
+                    if(mem.hasAccess(gchan) && !mem.getUser().isBot())
+                        count++;
+                }
+                desc += gchan.getAsMention() + " : " + count + "\n";
+            }
+            
+            eb.setDescription(desc);
+            String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
+                : ctx.getMember().getEffectiveName();
+            eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
+
+            return;
+        }
+
+        if(cmd[0].equals(ctx.getGuild().getId())){
             counter = new HashSet<>(allMem);
         } else if (cmd[0].length() == 8) {
             
@@ -79,16 +119,23 @@ public class SieveCMD implements PublicCMD {
             }
 
             OffsetDateTime offDateTime = OffsetDateTime.parse(cmd[0], dtf);
-            LinkedList<Member> temp = new LinkedList<>();
 
             for (Member mem : allMem) {
                 if(mem.getTimeJoined().compareTo(offDateTime)<0){
-                    temp.add(mem);
+                    counter.add(mem);
                 }
             }
-
-            allMem.removeAll(temp);
             
+        } else if(userID) {
+            Member victim = ctx.getGuild().getMemberById(cmd[0]);
+            List<Role> victimList = victim.getRoles();
+
+            for (Member member : allMem) {
+                if(victimList.equals(member.getRoles())){
+                    counter.add(member);
+                }
+            }
+        
         } else {
             Role role = null;
             GuildChannel channel = null;
