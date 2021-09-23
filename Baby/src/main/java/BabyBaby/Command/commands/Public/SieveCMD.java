@@ -1,7 +1,7 @@
 package BabyBaby.Command.commands.Public;
 
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -60,14 +60,8 @@ public class SieveCMD implements PublicCMD {
 
         boolean userID = false;
         
-        
-
-
-        try {
-            ctx.getGuild().getMemberById(cmd[0]);
+        if(ctx.getGuild().getMemberById(cmd[0]) != null) 
             userID = true;
-        } catch (Exception e) {
-        }
 
         // to get the amount of users in each Role channels
         if(cmd[0].equalsIgnoreCase("roles") && ctx.getGuild().getId().equals(Data.ethid)){
@@ -108,23 +102,30 @@ public class SieveCMD implements PublicCMD {
                 return;
             }
 
-            DateTimeFormatter dtf;
+            String year;
+            String month;
+            String day;
 
             if(Integer.parseInt(cmd[0].substring(2,4))>12){
                 //YYYYMMDD
-                dtf = DateTimeFormatter.ofPattern("yyyyMMDD");
+                year = cmd[0].substring(0, 4);
+                month = cmd[0].substring(4, 6);
+                day = cmd[0].substring(6, 8);
+                
             } else {
                 //DDMMYYYY
-                dtf = DateTimeFormatter.ofPattern("DDMMyyyy");
+                day = cmd[0].substring(0, 2);
+                month = cmd[0].substring(2, 4);
+                year = cmd[0].substring(4, 8);
             }
-
-            OffsetDateTime offDateTime = OffsetDateTime.parse(cmd[0], dtf);
-
+            //OffsetDateTime.parse(cmd[0], dtf);
+            OffsetDateTime offDateTime = OffsetDateTime.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), 0, 0, 0, 0, ZoneOffset.UTC);
             for (Member mem : allMem) {
-                if(mem.getTimeJoined().compareTo(offDateTime)<0){
+                if(offDateTime.isBefore(mem.getTimeJoined())){
                     counter.add(mem);
                 }
             }
+            
             
         } else if(userID) {
             Member victim = ctx.getGuild().getMemberById(cmd[0]);
@@ -165,7 +166,7 @@ public class SieveCMD implements PublicCMD {
                         counter.add(member);
                 }
             }
-        }   
+        }
 
         for(int i = 1; i < cmd.length-1; i +=2){
             Role role = null;
@@ -251,10 +252,19 @@ public class SieveCMD implements PublicCMD {
         }
         String cmdrole = "";
         for(int i = 0; i < cmd.length; i ++){
-            if(i%2==0)
-                cmdrole += (ctx.getGuild().getRoleById(cmd[i])!= null) ? ctx.getGuild().getRoleById(cmd[i]).getAsMention() : ctx.getGuild().getGuildChannelById(cmd[i]).getAsMention() + " ";
-            else
+            if(i%2==0){
+                if(ctx.getGuild().getRoleById(cmd[i]) != null){
+                    cmdrole += ctx.getGuild().getRoleById(cmd[i]).getAsMention();
+                } else if(ctx.getGuild().getGuildChannelById(cmd[i]) != null){
+                    cmdrole += ctx.getGuild().getGuildChannelById(cmd[i]).getAsMention();
+                } else if(ctx.getGuild().getMemberById(cmd[i]) != null){
+                    cmdrole += ctx.getGuild().getMemberById(cmd[i]).getAsMention();
+                } else {
+                    cmdrole += cmd[i];
+                }
+            } else {
                 cmdrole += cmd[i] + " ";
+            }
         }
 
 

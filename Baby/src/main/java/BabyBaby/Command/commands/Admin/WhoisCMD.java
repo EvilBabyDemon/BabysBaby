@@ -101,15 +101,17 @@ public class WhoisCMD implements AdminCMD{
 				Class.forName("org.sqlite.JDBC");
 				c = DriverManager.getConnection(Data.db);
 				
-				pstmt = c.prepareStatement("SELECT INVITEE FROM INVITES WHERE INVITED = ?;");
-				pstmt.setString(1, stalking.getId());
+				pstmt = c.prepareStatement("SELECT INVITEE FROM INVITED WHERE INVITED = ?;");
+				pstmt.setString(1, stalking.getId());	
 				ResultSet rs = pstmt.executeQuery();
 				
-				invitee = rs.getString("INVITEE");
-
+				if(rs.next()){
+					invitee = rs.getString("INVITEE");
+				}
+				
 				pstmt.close();
 				c.close();
-			} catch ( Exception e ) {
+			} catch ( Exception e ) {	
 				System.out.println(e.getClass().getName() + ": " + e.getMessage());
 				e.printStackTrace();
 			}
@@ -127,7 +129,7 @@ public class WhoisCMD implements AdminCMD{
 			
 			eb.addField("Nickname", "`" + ((stalking.getNickname() != null) ? stalking.getNickname() : stalking.getEffectiveName()) + "` " + stalking.getAsMention(), false);
 			eb.addField("Joined at", "`" + stalking.getTimeJoined().toLocalDateTime().format(jointime) + "`", false);
-			eb.addField("Invited by", "`" + invitee + "`", false);
+			eb.addField("Invited by", invitee, false);
 			eb.addField("Highest Role", highest.getAsMention(), true);
 			eb.addField("Hoisted Role",(hoisted != null) ? hoisted.getAsMention(): "`Unhoisted`", true);
 			eb.addField("Roles obtained (" + (1+allrolesList.size()) + ")" , rolementions, false);

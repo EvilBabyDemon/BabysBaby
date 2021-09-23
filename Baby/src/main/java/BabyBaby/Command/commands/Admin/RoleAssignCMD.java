@@ -84,11 +84,16 @@ public class RoleAssignCMD implements AdminCMD {
                     String emote = rs.getString("EMOTE");
                     String orig = emote;
 
-                    if(emote == null || emote.length() == 0){
-                        emote = "";
-                    } else {
-                        emote = emote.contains(":") ? "<" + emote + ">" : emote;
+                    try {
+                        Long.parseLong(emote);
+                        try {
+                            emote = ctx.getJDA().getEmoteById(emote).getAsMention();   
+                        } catch (Exception e) {
+                            emote = "ERROR";
+                        }
+                    } catch (Exception e) {
                     }
+
                     msg = emote + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
                     sorting.put(called.getRoleById(rcat), new Object[] {orig, msg});
                 }
@@ -128,18 +133,18 @@ public class RoleAssignCMD implements AdminCMD {
             
             ArrayList<Button> butt = new ArrayList<>();
             for (String emoID : emoList) {
-                if(emoID == null || emoID.length() == 0)
-                        continue;
-                String emote = emoID;
                 boolean gemo = false;
-                if((gemo=emote.contains(":"))){
-                    emote = emote.split(":")[2];
+                
+                try {
+                    Long.parseLong(emoID);
+                    gemo = true;
+                } catch (Exception e) {
                 }
                 
                 try{
-                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
+                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
                 } catch (Exception e){
-                    ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                    ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 

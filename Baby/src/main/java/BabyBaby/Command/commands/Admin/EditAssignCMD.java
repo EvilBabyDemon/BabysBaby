@@ -159,7 +159,7 @@ public class EditAssignCMD implements AdminCMD{
                 }
                 
                 try{
-                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
+                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
                 } catch (Exception e){
                     ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
