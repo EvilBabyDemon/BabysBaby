@@ -19,6 +19,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
 import BabyBaby.Listeners.BabyListener;
 import BabyBaby.data.Data;
+import BabyBaby.data.Helper;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
@@ -112,7 +113,7 @@ public class GetRoleCMD implements PublicCMD{
             String msg = ctx.getMessage().getContentRaw();
             msg = msg.substring(1 + getName().length() + 1);
             msg.toLowerCase();
-            if(msg.length() > 50){
+            if(msg.length() > 100){
                 channel.sendMessage("I think you are using this command wrong...").queue();
                 return;
             }
@@ -129,7 +130,7 @@ public class GetRoleCMD implements PublicCMD{
 
             String finalorso = msg;
             
-            List<Object[]> minedit = namerole.keySet().parallelStream().map(role -> new Object[] {minDistance(finalorso, role), namerole.get(role)}).collect(Collectors.toList());
+            List<Object[]> minedit = namerole.keySet().parallelStream().map(role -> new Object[] {Helper.minDistance(finalorso, role), namerole.get(role)}).collect(Collectors.toList());
 
             LinkedList<Object[]> smallest = new LinkedList<Object[]>();    
             
@@ -360,52 +361,6 @@ public class GetRoleCMD implements PublicCMD{
             sorting.remove(highest);
         }
         return res;
-    }
-
-    public int minDistance(String word1, String word2) {
-        int len1 = word1.length();
-        int len2 = word2.length();
-        word1 = word1.toLowerCase();
-        word2 = word2.toLowerCase();
-        // len1+1, len2+1, because finally return dp[len1][len2]
-        int[][] dp = new int[len1 + 1][len2 + 1];
-     
-        for (int i = 0; i <= len1; i++) {
-            dp[i][0] = i;
-        }
-     
-        for (int j = 0; j <= len2; j++) {
-            dp[0][j] = j;
-        }
-     
-        //iterate though, and check last char
-        for (int i = 0; i < len1; i++) {
-            char c1 = word1.charAt(i);
-            int minimal = 100;
-            for (int j = 0; j < len2; j++) {
-                char c2 = word2.charAt(j);
-     
-                //if last two chars equal
-                if (c1 == c2) {
-                    //update dp value for +1 length
-                    dp[i + 1][j + 1] = dp[i][j];
-                } else {
-                    int replace = dp[i][j] + 1;
-                    int insert = dp[i][j + 1] + 1;
-                    int delete = dp[i + 1][j] + 1;
-                    
-                    int min = replace > insert ? insert : replace;
-                    min = delete > min ? min : delete;
-                    dp[i + 1][j + 1] = min;
-                }
-                if(minimal>dp[i + 1][j + 1])
-                    minimal = dp[i + 1][j + 1];
-            }
-            if(minimal >= (2 + Math.min(len1, len2)/5*2))
-                return 100;
-        }
-        
-        return (dp[len1][len2]<(2 + Math.min(len1, len2)/5*2)? dp[len1][len2]:100);
     }
 
 
