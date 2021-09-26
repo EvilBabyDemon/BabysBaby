@@ -261,13 +261,12 @@ public class ModerationListener extends ListenerAdapter{
         if(!event.getGuild().getId().equals(Data.ethid))
             return;
         AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
+        logs.type(ActionType.CHANNEL_CREATE);
         for (AuditLogEntry entry : logs) {
-            if(entry.getType().equals(ActionType.CHANNEL_CREATE)){
-                if(entry.getUser().getId().equals(Data.dcvd))
-                    return;
-                else
-                    break;
-            }
+            if(entry.getUser().getId().equals(Data.dcvd))
+                return;
+            else
+                break;
         }
         
         ChannelManager channelMan = event.getChannel().getManager();
