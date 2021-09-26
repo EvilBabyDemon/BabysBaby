@@ -3,6 +3,10 @@ package BabyBaby.Command.commands.Owner;
 
 
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /*
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +21,12 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
+import BabyBaby.data.Helper;
+import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogEntry;
 //import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 /*
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
@@ -100,6 +108,42 @@ public class TestCMD implements OwnerCMD{
         msg.queue();
         */
         Data.automaticRoleAddThingy = !Data.automaticRoleAddThingy;
+
+        AuditLogPaginationAction logs = ctx.getGuild().retrieveAuditLogs();
+        //logs.type()
+        
+
+        String finalorso = ctx.getArgs().get(0);
+        List<Object[]> minedit = List.of(ActionType.values()).parallelStream().map(actionType -> new Object[] {Helper.minDistance(finalorso, actionType.name()), actionType}).collect(Collectors.toList());
+        
+        LinkedList<Object[]> smallest = new LinkedList<Object[]>();    
+        
+        smallest.add(minedit.remove(0));
+        int smallestint = (int) smallest.get(0)[0];
+        for (Object[] minEditObj : minedit) {
+            int x = (int) minEditObj[0];
+            if(smallestint == x){
+                smallest.add(minEditObj);
+            } else if(smallestint > x){
+                smallest = new LinkedList<>();
+                smallest.add(minEditObj);
+                smallestint = x;
+            }
+        }
+
+        logs.type((ActionType) smallest.get(0)[1]);
+        String msg = "";
+        for (AuditLogEntry entry : logs) {
+            String time = "" + entry.getTimeCreated().toEpochSecond();
+            String user = entry.getUser().getAsMention();
+            String changes = entry.getChanges().values().stream().map(change -> change.getOldValue() + " " + change.getNewValue()).collect(Collectors.joining("\n"));
+            msg += user + " <t:" + time + ">" + "\n" + changes + "\n";
+            entry.getOptions().values().stream().map(option -> option.getClass() + " " + option).collect(Collectors.joining(" "));
+            
+        }
+        
+        ctx.getChannel().sendMessage("give me a sec").complete().editMessage("AuditLog: " + msg).complete();
+
     }   
 
     @Override
