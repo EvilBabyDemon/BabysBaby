@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 */
+import java.io.File;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.OwnerCMD;
 import BabyBaby.Command.StandardHelp;
@@ -24,8 +25,13 @@ import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
+import net.dv8tion.jda.api.entities.Icon;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 //import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.requests.restaction.RoleAction;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 /*
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -107,11 +113,65 @@ public class TestCMD implements OwnerCMD{
         msg.setActionRows(tmp);
         msg.queue();
         */
+
+        if(ctx.getArgs().size() == 2 && ctx.getArgs().get(0).equalsIgnoreCase("emote")) {
+            
+            Role rolesArr[] = new Role[ctx.getArgs().size()-2];
+            
+            for (int i = 0; i < rolesArr.length; i++) {
+                rolesArr[i] = ctx.getGuild().getRoleById(ctx.getArgs().get(i));
+            }
+            
+            try {
+                ctx.getGuild().createEmote(ctx.getArgs().get(1), Icon.from(ctx.getMessage().getAttachments().get(0).downloadToFile().join()), rolesArr).complete();
+            } catch (Exception e) {
+                ctx.getChannel().sendMessage("File not found \n" + e).complete();
+            }
+            return;
+        }
+
+        if(ctx.getArgs().size() == 1 && ctx.getArgs().get(0).equalsIgnoreCase("student")) {
+            List<Member> allMem = ctx.getGuild().getMembers();
+            
+            
+            LinkedList<String> pings = new LinkedList<>();
+            String tempSmall = "";
+
+            for (Member mem : allMem) {
+                if(mem.getRoles().size() != 1 || !mem.getRoles().get(0).getId().equals("747786383317532823")){
+                    continue;
+                }
+
+                if(tempSmall.length() + mem.getAsMention().length() < 1999){
+                    tempSmall += mem.getAsMention() + " ";
+                } else {
+                    pings.add(tempSmall);
+                    tempSmall = mem.getAsMention() + " "; 
+                }
+            }
+            pings.add(tempSmall);
+
+            for (String ping : pings) {
+               ctx.getChannel().sendMessage(ping).complete().delete().complete();
+            }
+            return;
+        }
+        
+
         Data.automaticRoleAddThingy = !Data.automaticRoleAddThingy;
 
         AuditLogPaginationAction logs = ctx.getGuild().retrieveAuditLogs();
         //logs.type()
         
+        if(ctx.getArgs().size() == 0){
+            String output = "";
+            for (ActionType actType : ActionType.values()) {
+                output += actType.name() + " ";
+            }
+            ctx.getChannel().sendMessage(output).complete();
+            return;
+        }
+
 
         String finalorso = ctx.getArgs().get(0);
         List<Object[]> minedit = List.of(ActionType.values()).parallelStream().map(actionType -> new Object[] {Helper.minDistance(finalorso, actionType.name()), actionType}).collect(Collectors.toList());
@@ -142,7 +202,7 @@ public class TestCMD implements OwnerCMD{
             
         }
         
-        ctx.getChannel().sendMessage("give me a sec").complete().editMessage("AuditLog: " + msg).complete();
+        ctx.getChannel().sendMessage("give me a sec").complete().editMessage("AuditLog: " + (msg.length()>1980 ? msg.substring(0, 1980) : msg)).complete();
 
     }   
 
