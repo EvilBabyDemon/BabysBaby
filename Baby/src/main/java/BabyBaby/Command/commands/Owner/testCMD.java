@@ -111,12 +111,12 @@ public class TestCMD implements OwnerCMD{
         msg.queue();
         */
 
-        if(ctx.getArgs().size() == 2 && ctx.getArgs().get(0).equalsIgnoreCase("emote")) {
+        if(ctx.getArgs().get(0).equalsIgnoreCase("emote")) {
             
             Role rolesArr[] = new Role[ctx.getArgs().size()-2];
             
-            for (int i = 0; i < rolesArr.length; i++) {
-                rolesArr[i] = ctx.getGuild().getRoleById(ctx.getArgs().get(i));
+            for (int i = 2; i < ctx.getArgs().size(); i++) {
+                rolesArr[i-2] = ctx.getGuild().getRoleById(ctx.getArgs().get(i));
             }
             
             try {
@@ -127,7 +127,7 @@ public class TestCMD implements OwnerCMD{
             return;
         }
 
-        if(ctx.getArgs().size() == 1 && ctx.getArgs().get(0).equalsIgnoreCase("student")) {
+        if(ctx.getArgs().size() == 2 && ctx.getArgs().get(0).equalsIgnoreCase("student") && ctx.getArgs().get(1).equalsIgnoreCase("yes")) {
             List<Member> allMem = ctx.getGuild().getMembers();
             
             
