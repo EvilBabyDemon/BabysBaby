@@ -47,6 +47,8 @@ public class UsageCMD implements PublicCMD {
         eb.setColor(Color.GREEN);
         eb.addField("Most used Commands", content, true);
         
+        eb.addField("Button and Slash Commands", "Count: " + Data.slashAndButton, true);
+        
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
         ctx.getMessage().addReaction(Data.check).queue();
     }

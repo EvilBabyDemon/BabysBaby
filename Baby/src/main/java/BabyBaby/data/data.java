@@ -44,6 +44,7 @@ public class Data {
     public static OffsetDateTime startUp;
     public static HashSet<String> newErstie = new HashSet<>();
     public static boolean automaticRoleAddThingy = false;
+    public static int slashAndButton = 0;
     
     
     

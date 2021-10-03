@@ -363,6 +363,10 @@ public class BabyListener extends ListenerAdapter {
                 failed = true;
             }
             
+            //tracking usage
+            Data.slashAndButton++;
+            Data.users.add(event.getUser().getId());
+
             if(Data.emoteassign.containsKey(event.getComponentId())){
                 Role role = event.getGuild().getRoleById(Data.emoteassign.get(event.getComponentId()));
                 roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
@@ -371,6 +375,7 @@ public class BabyListener extends ListenerAdapter {
             
         }
     }
+
 
     //SelectionMenu
     @Override
@@ -422,6 +427,9 @@ public class BabyListener extends ListenerAdapter {
             return;
         }
 
+        //tracking usage
+        Data.slashAndButton++;
+        Data.users.add(event.getUser().getId());
 
         String cmd = event.getName();
         if(cmd.equals("poll")){
