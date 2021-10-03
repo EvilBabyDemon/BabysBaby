@@ -49,16 +49,20 @@ public class ReminderCMD implements PublicCMD {
 
         String unit = null;
         String number = cmds.get(0);        
-        if(cmds.size()>1){
+        String[] retrieveStr = Helper.splitUnitAndTime(cmds.get(0));
+        unit = retrieveStr[0];
+        number = retrieveStr[1];
+
+        boolean extraUnit = false;
+        if(unit == null){
             unit = cmds.get(1);
-        } else {
-            String[] retrieveStr = Helper.splitUnitAndTime(cmds.get(0));
-            unit = retrieveStr[0];
-            number = retrieveStr[1];
+            extraUnit = true;
         }
 		
         double time;
         
+
+
         try{
             if(number.length() > 18 || Double.parseDouble(number) > Integer.MAX_VALUE){
                 time=Integer.MAX_VALUE;
@@ -87,7 +91,7 @@ public class ReminderCMD implements PublicCMD {
 
         String message = ctx.getMessage().getContentRaw();
         try{
-        message = message.substring(1 + getName().length() + 1 + cmds.get(0).length() + 1 + cmds.get(1).length() + 1);
+        message = message.substring(1 + getName().length() + 1 + cmds.get(0).length() + 1 + (extraUnit ? cmds.get(1).length() + 1 : 0));
         } catch (Exception e){
             message = "Just a Reminder. Didn't specify about what.";
         }
