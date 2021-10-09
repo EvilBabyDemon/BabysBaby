@@ -266,9 +266,11 @@ public class HelpCMD implements PublicCMD {
         EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
 
         embed.setTitle("BabysBaby");
-        embed.setDescription("Significant changes: " + sigchange);
-
-        embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").build(), false);
+        
+        //Old useless stuff
+        //embed.setDescription("Significant changes: " + sigchange);
+        //embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").build(), false);
+        
         publicCMDsordered(manager, prefix, embed);
 
         //embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicCMDs(manager, prefix)).build(), true);
