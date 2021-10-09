@@ -55,18 +55,27 @@ public class BlindForceCMD implements PublicCMD{
             return;
         }
 
+        boolean semester = false;
+        int add = 0;
+        try {
+            semester = Boolean.parseBoolean(cmds.get(0));
+            add = 1;
+        } catch (Exception e) {
+        }
+
         String unit = null;
-        String amount = cmds.get(0);        
-        if(cmds.size()>1){
-            unit = cmds.get(1);
+        String amount = cmds.get(0+add);        
+        if(cmds.size()>1+add){
+            unit = cmds.get(1+add);
         } else {
-            String[] retrieveStr = Helper.splitUnitAndTime(cmds.get(0));
+            String[] retrieveStr = Helper.splitUnitAndTime(cmds.get(0+add));
             unit = retrieveStr[0];
             amount = retrieveStr[1];
         }
+
         
 
-        new BlindCMD().roleRemoval(amount, ctx.getMember(), ctx.getGuild(), unit, true, ctx.getChannel());
+        new BlindCMD().roleRemoval(amount, ctx.getMember(), ctx.getGuild(), unit, true, ctx.getChannel(), semester);
         ctx.getMessage().delete().queueAfter(30, TimeUnit.SECONDS);
 
     }

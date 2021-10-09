@@ -412,6 +412,7 @@ public class StartupListener extends ListenerAdapter{
             blind.addOption(OptionType.INTEGER, "time", "Length of the blind.", true);
             blind.addOption(OptionType.STRING, "unit", "Default is minutes. Seconds, minutes, hours, days.");
             blind.addOption(OptionType.BOOLEAN, "force", "If forceblind or not. Default is false");
+            blind.addOption(OptionType.BOOLEAN, "semester", "You will keep your Subject Channels. Default is false");
             slashcmds.add(blind);
             
             eth.upsertCommand(blind).complete();

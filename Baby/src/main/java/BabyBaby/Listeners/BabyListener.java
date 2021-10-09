@@ -437,7 +437,8 @@ public class BabyListener extends ListenerAdapter {
         } else if(cmd.equals("blind")){
             String unit = (event.getOption("unit")!=null) ? event.getOption("unit").getAsString() : null;
             boolean force = (event.getOption("force")!=null) ? event.getOption("force").getAsBoolean() : false;
-            new BlindCMD().roleRemoval(event.getOption("time").getAsString(), event.getMember(), event.getGuild(), unit, force, event.getChannel());
+            boolean semester = (event.getOption("semester")!=null) ? event.getOption("semester").getAsBoolean() : false;
+            new BlindCMD().roleRemoval(event.getOption("time").getAsString(), event.getMember(), event.getGuild(), unit, force, event.getChannel(), semester);
         } else if(cmd.equals("role")){
             Role role = event.getOption("role").getAsRole();
             if(!Data.roles.contains(role.getId()) && !event.getMember().getId().equals(Data.myselfID)){
