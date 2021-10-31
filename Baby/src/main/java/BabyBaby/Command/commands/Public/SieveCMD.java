@@ -59,12 +59,14 @@ public class SieveCMD implements PublicCMD {
         List<Member> allMem = ctx.getGuild().getMembers();
 
         boolean userID = false;
-        
-        if(ctx.getGuild().getMemberById(cmd[0]) != null) 
+        try {
+            if(ctx.getGuild().getMemberById(cmd[0]) != null) 
             userID = true;
+        } catch (Exception e) {
+        }
 
         // to get the amount of users in each Role channels
-        if(cmd[0].equalsIgnoreCase("roles") && ctx.getGuild().getId().equals(Data.ethid)){
+        if(cmd[0].equalsIgnoreCase("roles") && ctx.getGuild().getId().equals(Data.ethid)){  
             
             List<GuildChannel> channels =  ctx.getGuild().getCategoryById("818089330282463262").getChannels();
             
@@ -87,7 +89,7 @@ public class SieveCMD implements PublicCMD {
             String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
                 : ctx.getMember().getEffectiveName();
             eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
-
+            ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
             return;
         }
 
