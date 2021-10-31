@@ -25,7 +25,7 @@ public class BanCMD implements AdminCMD{
 
         
         if(!ctx.getMember().hasPermission(Permission.BAN_MEMBERS)){
-            ctx.getChannel().sendMessage("Missing Permissions.").complete();
+            channel.sendMessage("Missing Permissions.").complete();
             return;
         }
 
@@ -49,13 +49,13 @@ public class BanCMD implements AdminCMD{
         try {
             bad = ctx.getGuild().getMemberById(person);
         } catch (Exception e) {
-            ctx.getChannel().sendMessage("This is no Member").complete();
+            channel.sendMessage("This is no Member").complete();
             return;
         }
         
 
         if(bad.getRoles().get(0).getPosition() >= ctx.getMember().getRoles().get(0).getPosition()){
-            ctx.getChannel().sendMessage("Can't ban someone with a higher or same role.").complete();
+            channel.sendMessage("Can't ban someone with a higher or same role.").complete();
             return;
         }
                 
