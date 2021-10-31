@@ -44,13 +44,9 @@ public class BlindCMD implements PublicCMD{
         }
 
         boolean semester = false;
-        int add = 0;
-        try {
-            semester = Boolean.parseBoolean(cmds.get(0));
-            add = 1;
-        } catch (Exception e) {
-        }
-
+        semester = Boolean.parseBoolean(cmds.get(0));
+        
+        int add = (semester?1:0);
         String unit = null;
         String amount = cmds.get(0+add);        
         if(cmds.size()>1+add){
@@ -137,7 +133,7 @@ public class BlindCMD implements PublicCMD{
         //check if there is a role that is higher than a bot but also can see a channel
         for (Role role : begone) {
             String roleName = role.getName().toLowerCase();
-            if(roleName.contains(". semester") || roleName.contains("all semesters")){
+            if(semester && (roleName.contains(". semester") || roleName.contains("all semesters"))){
                 continue;
             }
             for (GuildChannel guildChannel : gchan) {
@@ -236,7 +232,7 @@ public class BlindCMD implements PublicCMD{
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<time> [unit] (Default is minutes)", "This removes all your roles and you won't see the server for that time but its still work in progress.");
+        return StandardHelp.Help(prefix, getName(), "[true] <time> [unit] (Default is minutes)", "This removes all your roles and you won't see the server for that time. The boolean `true` can be used if one wants to see Subject channels.");
     }
     
 }

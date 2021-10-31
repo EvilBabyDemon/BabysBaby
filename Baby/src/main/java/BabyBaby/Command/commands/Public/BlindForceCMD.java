@@ -56,13 +56,9 @@ public class BlindForceCMD implements PublicCMD{
         }
 
         boolean semester = false;
-        int add = 0;
-        try {
-            semester = Boolean.parseBoolean(cmds.get(0));
-            add = 1;
-        } catch (Exception e) {
-        }
-
+        
+        semester = Boolean.parseBoolean(cmds.get(0));
+        int add = (semester?1:0);
         String unit = null;
         String amount = cmds.get(0+add);        
         if(cmds.size()>1+add){
@@ -82,7 +78,7 @@ public class BlindForceCMD implements PublicCMD{
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<time> [unit] (Default is minutes)", "This removes all your roles and you won't see the server for that time and **there is no way to manually unblind yourself earlier**.");
+        return StandardHelp.Help(prefix, getName(), "[true] <time> [unit] (Default is minutes)", "This removes all your roles and you won't see the server for that time and **there is no way to manually unblind yourself earlier**. The boolean `true` can be used if one wants to see Subject channels.");
     }
     
 }
