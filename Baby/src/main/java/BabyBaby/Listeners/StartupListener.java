@@ -407,12 +407,12 @@ public class StartupListener extends ListenerAdapter{
             eth.upsertCommand(poll).complete();
 
             //blind slash cmd
-            CommandData blind = new CommandData("blind", "A command to blind yourself. Do not use this cmd if you dont know what it does.");
+            CommandData blind = new CommandData("blind", "A command to blind yourself. Do not use this cmd if you don't know what it does.");
                         
             blind.addOption(OptionType.INTEGER, "time", "Length of the blind.", true);
             blind.addOption(OptionType.STRING, "unit", "Default is minutes. Seconds, minutes, hours, days.");
-            blind.addOption(OptionType.BOOLEAN, "force", "If forceblind or not. Default is false");
-            blind.addOption(OptionType.BOOLEAN, "semester", "You will keep your Subject Channels. Default is false");
+            blind.addOption(OptionType.BOOLEAN, "force", "If forceblind or not. Default is false.");
+            blind.addOption(OptionType.BOOLEAN, "semester", "You will keep your Subject Channels. Default is false.");
             slashcmds.add(blind);
             
             eth.upsertCommand(blind).complete();
