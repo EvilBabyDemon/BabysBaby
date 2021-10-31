@@ -39,7 +39,6 @@ public class FlashedCMD implements PublicCMD {
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            c.setAutoCommit(true);
             
             stmt = c.createStatement();
 
