@@ -32,13 +32,9 @@ public class WhoisCMD implements AdminCMD{
 		Member stalking; 
 		MessageChannel channel = ctx.getChannel();
 
-		if(cmds.size() >= 1){
-			String person = cmds.get(0);
-			person = person.replaceAll("<", "");
-			person = person.replaceAll(">", "");
-			person = person.replaceAll("!", "");
-			person = person.replaceAll("@", "");
-			stalking = ctx.getGuild().getMemberById(person);
+		if(cmds.size() > 0){
+			String id = cmds.get(0).replace("<", "").replace(">", "").replace("!", "").replace("@", "");
+			stalking = ctx.getGuild().getMemberById(id);
 		} else{
 			stalking = ctx.getMember();
 		}
