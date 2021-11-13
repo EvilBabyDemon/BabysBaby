@@ -286,57 +286,50 @@ public class ModerationListener extends ListenerAdapter{
     //Member Remove
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
+
         AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
+        logs.type(ActionType.KICK);
         for (AuditLogEntry entry : logs) {
-            if(entry.getType().equals(ActionType.KICK)){
-                if(!Data.kick.equals(entry.getTimeCreated())){
+            if(Data.ban == null || Data.ban.toEpochSecond() != entry.getTimeCreated().toEpochSecond()){
 
-                    Data.kick = entry.getTimeCreated();
-                    MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
+                Data.kick = entry.getTimeCreated();
+                MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
-                    EmbedBuilder eb = new EmbedBuilder();
-                    eb.setAuthor(entry.getUser().getAsTag() + " (" + entry.getUser().getId() + ")", entry.getUser().getAvatarUrl(), entry.getUser().getAvatarUrl());
-                    eb.setColor(0);
-                    eb.setThumbnail(entry.getUser().getAvatarUrl());
-                    Member warned = event.getMember();
-                    log.sendMessage("cache reload").complete().editMessage(warned.getAsMention() + " " + entry.getUser().getAsMention()).complete().delete().complete();
-                    
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor(entry.getUser().getAsTag() + " (" + entry.getUser().getId() + ")", entry.getUser().getAvatarUrl(), entry.getUser().getAvatarUrl());
+                eb.setColor(0);
+                eb.setThumbnail(entry.getUser().getAvatarUrl());
+                Member warned = event.getMember();
 
-                    eb.setDescription(":warning: **Kicked** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + entry.getReason());
+                eb.setDescription(":warning: **Kicked** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + entry.getReason());
+                log.sendMessage("cache reload").complete().editMessage(warned.getAsMention() + " " + entry.getUser().getAsMention()).complete().delete().complete();
 
-                    log.sendMessageEmbeds(eb.build()).queue();
-
-                }
-                break;
-            }  
+                log.sendMessageEmbeds(eb.build()).queue();
+            }
+            break;
         }
         
+        logs = event.getGuild().retrieveAuditLogs();
+        logs.type(ActionType.BAN);
         for (AuditLogEntry entry : logs) {
-            if(entry.getType().equals(ActionType.BAN)){
-                if(!Data.ban.equals(entry.getTimeCreated())){
-
-                    Data.ban = entry.getTimeCreated();
-                    MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
-
-                    
-                    EmbedBuilder eb = new EmbedBuilder();
-                    eb.setAuthor(entry.getUser().getAsTag() + " (" + entry.getUser().getId() + ")", entry.getUser().getAvatarUrl(), entry.getUser().getAvatarUrl());
-                    eb.setColor(0);
-                    eb.setThumbnail(entry.getUser().getAvatarUrl());
-                    Member warned = event.getMember();
-                    
-                    eb.setDescription(":warning: **Banned** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + entry.getReason());
-                    log.sendMessage("cache reload").complete().editMessage(warned.getAsMention() + " " + entry.getUser().getAsMention()).complete().delete().complete();
-
-                    
-                    log.sendMessageEmbeds(eb.build()).queue();
-
-                }
-                break;
-            }  
+            if(Data.ban == null || Data.ban.toEpochSecond() != entry.getTimeCreated().toEpochSecond()){
+                
+                Data.ban = entry.getTimeCreated();
+                MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
+                
+                EmbedBuilder eb = new EmbedBuilder();
+                eb.setAuthor(entry.getUser().getAsTag() + " (" + entry.getUser().getId() + ")", entry.getUser().getAvatarUrl(), entry.getUser().getAvatarUrl());
+                eb.setColor(0);
+                eb.setThumbnail(entry.getUser().getAvatarUrl());
+                Member warned = event.getMember();
+                
+                eb.setDescription(":warning: **Banned** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + entry.getReason());
+                log.sendMessage("cache reload").complete().editMessage(warned.getAsMention() + " " + entry.getUser().getAsMention()).complete().delete().complete();
+                
+                log.sendMessageEmbeds(eb.build()).queue();
+            }
+            break;
         }
     }
-
-
 
 }
