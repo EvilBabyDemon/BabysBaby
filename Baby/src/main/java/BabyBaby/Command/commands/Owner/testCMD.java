@@ -111,6 +111,7 @@ public class TestCMD implements OwnerCMD{
         msg.queue();
         */
 
+
         if(ctx.getArgs().get(0).equalsIgnoreCase("emote")) {
             
             Role rolesArr[] = new Role[ctx.getArgs().size()-2];
