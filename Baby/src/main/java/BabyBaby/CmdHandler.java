@@ -77,6 +77,7 @@ public class CmdHandler {
         addAdminCommand(new EditAssignCMD());
         addAdminCommand(new KickCMD());
         addAdminCommand(new BanCMD());
+        addAdminCommand(new NewRoleCMD());
         //TODO Fix that cmd
         //addAdminCommand(new AdminMuteBlindCMD());
 
