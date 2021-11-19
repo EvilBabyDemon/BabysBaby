@@ -68,7 +68,7 @@ public class GetRoleCMD implements PublicCMD{
             return;
 
         MessageChannel channel = ctx.getChannel();
-
+        ctx.getMessage().delete().queueAfter(15, TimeUnit.SECONDS);
         List<String> cmds = ctx.getArgs();
         
         Connection c = null;
@@ -92,7 +92,7 @@ public class GetRoleCMD implements PublicCMD{
             stmt.close();
             c.close();
         } catch ( Exception e ) {
-            channel.sendMessage( e.getClass().getName() + ": " + e.getMessage()).queue();
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace(); 
             return;
         }
@@ -114,7 +114,7 @@ public class GetRoleCMD implements PublicCMD{
             msg = msg.substring(1 + getName().length() + 1);
             msg.toLowerCase();
             if(msg.length() > 100){
-                channel.sendMessage("I think you are using this command wrong...").queue();
+                channel.sendMessage("I think you are using this command wrong...").complete().delete().queueAfter(10, TimeUnit.SECONDS);;
                 return;
             }
 
@@ -148,12 +148,12 @@ public class GetRoleCMD implements PublicCMD{
             }
             
             if(smallestint == 100){
-                channel.sendMessage("I don't think this role exists.").queue();
+                channel.sendMessage("I don't think this role exists.").complete().delete().queueAfter(10, TimeUnit.SECONDS);;
                 return;
             }
 
             if(smallest.size()!=1){
-                channel.sendMessage("Sorry you gotta write more precise as there is more than one Role you could have meant.").queue();
+                channel.sendMessage("Sorry you gotta write more precise as there is more than one Role you could have meant.").complete().delete().queueAfter(10, TimeUnit.SECONDS);;
                 return;
             }
 
@@ -206,7 +206,7 @@ public class GetRoleCMD implements PublicCMD{
                 stmt.close();
                 c.close();
             } catch ( Exception e ) {
-                channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+                System.out.println(e.getClass().getName() + ": " + e.getMessage()); 
                 return;
             }
 
@@ -370,6 +370,7 @@ public class GetRoleCMD implements PublicCMD{
         MessageChannel channel = ctx.getChannel();
         Member member = ctx.getMember();
         List<Role> autroles = member.getRoles();
+        Message sent;
         //Removing Role
         if(autroles.contains(role)){
             //External
@@ -378,9 +379,9 @@ public class GetRoleCMD implements PublicCMD{
                 if(autroles.contains(student)){
                     ctx.getGuild().addRoleToMember(member, student).complete();
                     ctx.getGuild().removeRoleFromMember(member, role).complete();
-                    channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
+                    sent = channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
                 } else{
-                    channel.sendMessage("You need at least either the Student or External Role").queue();
+                    sent = channel.sendMessage("You need at least either the Student or External Role").complete();
                 }
             //Student
             } else if(role.getId().equals(Data.ethstudent)){
@@ -389,14 +390,14 @@ public class GetRoleCMD implements PublicCMD{
                 if(autroles.contains(external)){
                     ctx.getGuild().addRoleToMember(member, external).complete();
                     ctx.getGuild().removeRoleFromMember(member, role).complete();
-                    channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
+                    sent = channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
                 } else{
-                    channel.sendMessage("You need at least either the Student or External Role").queue();
+                    sent = channel.sendMessage("You need at least either the Student or External Role").complete();
                 }
             //Smth else
             } else {
                 ctx.getGuild().removeRoleFromMember(member, role).complete();
-                channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
+                sent = channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
             }
 
         //Adding Role
@@ -406,7 +407,7 @@ public class GetRoleCMD implements PublicCMD{
                 Role student = ctx.getGuild().getRoleById(Data.ethstudent);
                 ctx.getGuild().addRoleToMember(member, role).complete();
                 ctx.getGuild().removeRoleFromMember(member, student).complete();
-                channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + student.getName()).complete();
+                sent = channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + student.getName()).complete();
             //Student
             } else if(role.getId().equals(Data.ethstudent)){
 
@@ -420,13 +421,14 @@ public class GetRoleCMD implements PublicCMD{
                 Role external = ctx.getGuild().getRoleById(Data.ethexternal);
                 ctx.getGuild().addRoleToMember(member, role).complete();
                 ctx.getGuild().removeRoleFromMember(member, external).complete();  
-                channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + external.getName()).complete();  
+                sent = channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + external.getName()).complete();  
             //Smth else
             } else {
                 ctx.getGuild().addRoleToMember(member, role).complete();
-                channel.sendMessage("Gave you the Role " + role.getName() + ".").complete();
+                sent = channel.sendMessage("Gave you the Role " + role.getName() + ".").complete();
             }
         }
+        sent.delete().queueAfter(10, TimeUnit.SECONDS);
     }
 
     private void sendEmbed(CommandContext ctx, String cat){
@@ -466,7 +468,7 @@ public class GetRoleCMD implements PublicCMD{
             stmt.close();
             c.close();
         } catch ( Exception e ) {
-            channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
             return;
         }
 
