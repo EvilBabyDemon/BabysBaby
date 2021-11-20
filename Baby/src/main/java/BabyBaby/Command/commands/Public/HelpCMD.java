@@ -42,6 +42,11 @@ public class HelpCMD implements PublicCMD {
         }
     };
 
+    @Override
+    public boolean getWhiteListBool(){
+        return true;
+    }
+
     private final CmdHandler manager;
 
     public HelpCMD(CmdHandler manager) {

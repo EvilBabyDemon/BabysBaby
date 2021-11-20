@@ -20,6 +20,11 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class ReminderCMD implements PublicCMD {
 
     @Override
+    public boolean getWhiteListBool(){
+        return true;
+    }
+
+    @Override
     public String getName() {
         return "remind";
     }

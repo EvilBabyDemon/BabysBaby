@@ -37,6 +37,11 @@ public class GetRoleCMD implements PublicCMD{
     boolean flipflop = false;
 
     @Override
+    public boolean getWhiteListBool(){
+        return true;
+    }
+
+    @Override
     public void handleAdmin(CommandContext ctx) {
         handlePublic(ctx);
 

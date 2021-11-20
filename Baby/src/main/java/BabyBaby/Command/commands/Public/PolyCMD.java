@@ -9,6 +9,11 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class PolyCMD implements PublicCMD{
 
     @Override
+    public boolean getWhiteListBool(){
+        return true;
+    }
+
+    @Override
     public String getName() {
         return "poly";
     }

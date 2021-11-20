@@ -12,6 +12,10 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
 public class PollCMD implements PublicCMD{
 
+	@Override
+    public boolean getWhiteListBool(){
+        return true;
+    }
 
 	@Override
 	public String getName() {

@@ -22,7 +22,10 @@ public class BlindCMD implements PublicCMD{
     public static HashMap<Member, ScheduledExecutorService> blind = new HashMap<>();
     public static HashMap<ScheduledExecutorService, GetRolesBack> blindexe = new HashMap<>();
 
-
+    @Override
+    public boolean getWhiteListBool(){
+        return true;
+    }
     
     @Override
     public String getName() {

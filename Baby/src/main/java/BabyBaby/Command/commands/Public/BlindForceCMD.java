@@ -15,6 +15,10 @@ import net.dv8tion.jda.api.entities.*;
 public class BlindForceCMD implements PublicCMD{
     public static HashSet<GetRolesBack> force = new HashSet<>();
 
+    @Override
+    public boolean getWhiteListBool(){
+        return true;
+    }
 
     @Override
     public void handleOwner(CommandContext ctx) {
