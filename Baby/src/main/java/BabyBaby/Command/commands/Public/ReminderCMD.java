@@ -137,6 +137,9 @@ public class ReminderCMD implements PublicCMD {
 
         channel.sendMessage(ctx.getAuthor().getAsMention() + " You will get Reminded in ~" + time + " " + strUnit + ".").complete().delete().queueAfter(10, TimeUnit.SECONDS);
 
+        try {
+            ctx.getMessage().delete().queueAfter(15, TimeUnit.SECONDS);
+        } catch (Exception e) {}
 
     }
 
