@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
@@ -273,7 +274,11 @@ public class CmdHandler {
                 try {
                     switch(permissionLevel){
                         case 0:
-                            ((PublicCMD) cmd).handlePublic(ctx);
+                            if(ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ethid) || ctx.getChannel().getParent() == null 
+                            || ctx.getChannel().getParent().getId().equals(Data.BOTS_BATTROYAL) || ((PublicCMD) cmd).getWhiteListBool())
+                                ((PublicCMD) cmd).handlePublic(ctx);
+                            else
+                                ctx.getChannel().sendMessage("Please use the dedicated bot channels for this command.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                             break;
                         case 1:
                             ((AdminCMD) cmd).handleAdmin(ctx);
@@ -286,9 +291,9 @@ public class CmdHandler {
                     }
 
                 } catch(Exception e){
-                    ctx.getMessage().addReaction(Data.xmark).queue();
                     System.out.println(ctx.getMessage().getContentRaw());
                     e.printStackTrace();
+                    ctx.getMessage().addReaction(Data.xmark).queue();
                 }
             }
         });
