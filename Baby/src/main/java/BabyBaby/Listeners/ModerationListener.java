@@ -290,7 +290,7 @@ public class ModerationListener extends ListenerAdapter{
         AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
         logs.type(ActionType.KICK);
         for (AuditLogEntry entry : logs) {
-            if(Data.ban == null || Data.ban.toEpochSecond() != entry.getTimeCreated().toEpochSecond()){
+            if(Data.kick == null || Data.kick.toEpochSecond() != entry.getTimeCreated().toEpochSecond()){
 
                 Data.kick = entry.getTimeCreated();
                 MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
