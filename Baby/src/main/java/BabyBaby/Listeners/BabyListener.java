@@ -351,28 +351,23 @@ public class BabyListener extends ListenerAdapter {
     //ButtonEvent
     @Override
     public void onButtonClick(ButtonClickEvent event) {
-        if (Data.buttonid.contains(event.getMessageId()) || Data.msgid.contains(event.getMessageId())) {
             
-            
-            InteractionHook msgHook = null;
-            boolean failed = false;
-            try {
-                msgHook = event.deferReply(true).complete();
-            } catch (Exception e) {
-                System.out.println("Why so slow :/");
-                failed = true;
-            }
-            
-            //tracking usage
-            Data.slashAndButton++;
-            Data.users.add(event.getUser().getId());
+        InteractionHook msgHook = null;
+        boolean failed = false;
+        try {
+            msgHook = event.deferReply(true).complete();
+        } catch (Exception e) {
+            System.out.println("Why so slow :/");
+            failed = true;
+        }
+        
+        //tracking usage
+        Data.slashAndButton++;
+        Data.users.add(event.getUser().getId());
 
-            if(Data.emoteassign.containsKey(event.getComponentId())){
-                Role role = event.getGuild().getRoleById(Data.emoteassign.get(event.getComponentId()));
-                roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
-            }
-            
-            
+        if(Data.emoteassign.containsKey(event.getComponentId())){
+            Role role = event.getGuild().getRoleById(Data.emoteassign.get(event.getComponentId()));
+            roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
         }
     }
 
