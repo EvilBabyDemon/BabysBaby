@@ -119,7 +119,7 @@ public class GetRoleCMD implements PublicCMD{
             msg = msg.substring(1 + getName().length() + 1);
             msg.toLowerCase();
             if(msg.length() > 100){
-                channel.sendMessage("I think you are using this command wrong...").complete().delete().queueAfter(10, TimeUnit.SECONDS);;
+                channel.sendMessage("I think you are using this command wrong...").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 return;
             }
 
