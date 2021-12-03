@@ -253,6 +253,8 @@ public class ModerationListener extends ListenerAdapter{
         newChann.putPermissionOverride(event.getGuild().getRoleById(Data.MODERATOR_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
         newChann.putPermissionOverride(event.getGuild().getRoleById(Data.SERVERBOT_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
         newChann.queue();
+        
+
     }
 
     //Voice Channel Create
@@ -286,11 +288,11 @@ public class ModerationListener extends ListenerAdapter{
     //Member Remove
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
-
+        
         AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
         logs.type(ActionType.KICK);
         for (AuditLogEntry entry : logs) {
-            if(Data.kick == null || Data.kick.toEpochSecond() != entry.getTimeCreated().toEpochSecond()){
+            if(Data.kick == null || !Data.kick.isEqual(entry.getTimeCreated())){
 
                 Data.kick = entry.getTimeCreated();
                 MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
@@ -312,7 +314,7 @@ public class ModerationListener extends ListenerAdapter{
         logs = event.getGuild().retrieveAuditLogs();
         logs.type(ActionType.BAN);
         for (AuditLogEntry entry : logs) {
-            if(Data.ban == null || Data.ban.toEpochSecond() != entry.getTimeCreated().toEpochSecond()){
+            if(Data.ban == null || !Data.ban.isEqual(entry.getTimeCreated())){
                 
                 Data.ban = entry.getTimeCreated();
                 MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
