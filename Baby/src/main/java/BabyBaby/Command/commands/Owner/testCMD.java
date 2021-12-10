@@ -110,7 +110,27 @@ public class TestCMD implements OwnerCMD{
         msg.setActionRows(tmp);
         msg.queue();
         */
+        if(ctx.getArgs().get(0).equalsIgnoreCase("covid")) {
+            int weekday = DayOfWeek.from(LocalDate.now()).getValue()-1;
+            if(weekday>4) {
+                weekday = 0;
+            }
+            //TODO Check for 0 in Data.covid
+            double guess[] = new double [5];
+            for(int i = 0; i < 5; i++){
+                guess[i] = (Data.covid[0][weekday] / Data.covid[1][i]) * Data.covid[0][i];  
+            }
+            String msg = "";
+            double avg = 0.0;
+            for(int i = 0; i < 5; i++){
+                msg += i + " : " + guess[i] + "\n";
+                avg += guess[i];  
+            }
+            avg /= 5;
+            msg += "Avg = " + avg;
+            ctx.getChannel().sendMessage(msg).queue();
 
+        }
 
         if(ctx.getArgs().get(0).equalsIgnoreCase("emote")) {
             
