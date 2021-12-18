@@ -438,6 +438,14 @@ public class StartupListener extends ListenerAdapter{
             
             eth.upsertCommand(report).complete();
 
+
+            //rolesleft slash cmd
+            CommandData rolesleft = new CommandData("rolesleft", "A command to see which roles you still could get.");
+            
+            slashcmds.add(rolesleft);
+            
+            eth.upsertCommand(rolesleft).complete();
+
             /*
             try {
                 CommandData test = new CommandData("test", "A command to test stuff");
