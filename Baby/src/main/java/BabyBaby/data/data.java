@@ -47,6 +47,8 @@ public class Data {
     public static boolean automaticRoleAddThingy = false;
     public static int slashAndButton = 0;
     
+    public static int[][] covid = new int [3][7];
+    
     //Filepaths
     public static final String TOKEN = "token.txt";
     public static final String SUGGESTION = "suggestions.txt";
