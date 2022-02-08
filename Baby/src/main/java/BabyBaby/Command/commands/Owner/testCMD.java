@@ -3,6 +3,8 @@ package BabyBaby.Command.commands.Owner;
 
 
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -110,6 +112,8 @@ public class TestCMD implements OwnerCMD{
         msg.setActionRows(tmp);
         msg.queue();
         */
+        //TODO Add covid stuff
+        /*
         if(ctx.getArgs().get(0).equalsIgnoreCase("covid")) {
             int weekday = DayOfWeek.from(LocalDate.now()).getValue()-1;
             if(weekday>4) {
@@ -131,6 +135,7 @@ public class TestCMD implements OwnerCMD{
             ctx.getChannel().sendMessage(msg).queue();
 
         }
+        */
 
         if(ctx.getArgs().get(0).equalsIgnoreCase("emote")) {
             
