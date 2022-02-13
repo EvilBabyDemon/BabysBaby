@@ -28,7 +28,16 @@ public class CmdHandler {
 
     public CmdHandler(JDA bot) throws IOException {
 
-        
+        //TODO Remove Mute commands (mute + learning + admin cmds)
+        //TODO add new Time out feature for admins (as slash)
+        //TODO remove emotestats cmd or at least from Help page
+        //TODO track buttons and slash cmds
+        //TODO remove leaderboard for blind
+        //TODO remove group blind
+        //TODO remove cmds which have slash cmd (poll, blind role (make that better?))
+        //TODO make remind slash cmd
+        //TODO fix kick event
+        //TODO fix errors (merge private and guild messages)
 
         // adding commands visible to @everyone
         addPublicCommand(new PingCMD());
