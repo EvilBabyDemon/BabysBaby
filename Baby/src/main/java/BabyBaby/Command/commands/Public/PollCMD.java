@@ -8,7 +8,7 @@ import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class PollCMD implements PublicCMD{
 
@@ -87,7 +87,8 @@ public class PollCMD implements PublicCMD{
 		return StandardHelp.Help(prefix, getName(), "<\"Topic\"> <\"1. option\"> <\"2. option\"> {\"even more options\"}", "Poll Command to make a Poll.");
 	}
 
-	public void slashCommand(SlashCommandEvent event){
+	
+	public void slashCommand(SlashCommandInteractionEvent event){
 		
 
         String topic = event.getOption("title").getAsString();

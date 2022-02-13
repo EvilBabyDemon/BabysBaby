@@ -5,15 +5,13 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.audit.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.*;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.*;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 
 import org.jetbrains.annotations.NotNull;
@@ -280,6 +278,7 @@ public class BabyListener extends ListenerAdapter {
     }
 
     
+    
     //Message Reaction
     @Override
     public void onGenericGuildMessageReaction(GenericGuildMessageReactionEvent event) {
@@ -304,7 +303,7 @@ public class BabyListener extends ListenerAdapter {
 
             if(Data.emoteassign.containsKey(emote)){
                 Role assign = event.getGuild().getRoleById(Data.emoteassign.get(emote));
-                if(event instanceof GuildMessageReactionAddEvent) {
+                if(event instanceof GuildMemberRoleAddEvent) {
                     //767315361443741717 External
                     //747786383317532823 Student
                     event.getGuild().addRoleToMember(event.getMember(), assign).complete();
@@ -315,7 +314,7 @@ public class BabyListener extends ListenerAdapter {
                     }
                     
                     
-                } else if (event instanceof GuildMessageReactionRemoveEvent){
+                } else if (event instanceof GuildMemberRemoveEvent){
                     //767315361443741717 External
                     //747786383317532823 Student
                     if(assign.getId().equals("747786383317532823")){
@@ -348,9 +347,10 @@ public class BabyListener extends ListenerAdapter {
         }
     }
 
+    
     //ButtonEvent
     @Override
-    public void onButtonClick(ButtonClickEvent event) {
+    public void onButtonInteraction(ButtonInteractionEvent event) {
             
         InteractionHook msgHook = null;
         boolean failed = false;
@@ -371,10 +371,10 @@ public class BabyListener extends ListenerAdapter {
         }
     }
 
-
+    
     //SelectionMenu
     @Override
-    public void onSelectionMenu(SelectionMenuEvent event) {
+    public void onSelectMenuInteraction(SelectMenuInteractionEvent event) {
         InteractionHook msgHook = null;
         boolean failed = false;
         try {
@@ -388,18 +388,18 @@ public class BabyListener extends ListenerAdapter {
         if(event.getUser().isBot())
             return;
         
-        if(event.getSelectionMenu().getId().equals("menu:class")){
+        if(event.getSelectMenu().getId().equals("menu:class")){
             if(!failed){
                 msgHook.editOriginal("You have selected " + event.getSelectedOptions().size()).queue();
             }
         }
 
     }
-
+    
     
     //Slash Commands
     @Override
-    public void onSlashCommand (SlashCommandEvent event) {
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         InteractionHook msgHook = null;
         boolean failed = false;
         try {
