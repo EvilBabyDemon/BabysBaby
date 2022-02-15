@@ -202,8 +202,6 @@ public class BabyListener extends ListenerAdapter {
             return;
         }
         
-        if(!MutePersonCMD.userMuted.containsKey(event.getMember()))
-            return;
         
         MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
         
@@ -239,20 +237,8 @@ public class BabyListener extends ListenerAdapter {
             e.printStackTrace(); 
             return;
         }
-        
-        
-
-        if(MutePersonCMD.userMuted.get(warned)==null){
-            MutePersonCMD.userMuted.remove(warned);
-        } else {
-            ScheduledExecutorService stopper = MutePersonCMD.userMuted.remove(warned);
-            stopper.shutdown();
-        }
 
     }
-
-    
-
 
     
 
