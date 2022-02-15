@@ -3,11 +3,13 @@ package BabyBaby.Listeners;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.audit.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
+import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.data.GetRolesBack;
@@ -394,7 +396,7 @@ public class StartupListener extends ListenerAdapter{
             ArrayList<CommandData> slashcmds = new ArrayList<>();
 
             //poll slash cmd
-            CommandData poll = new CommandData("poll", "A cmd to create a simple Poll.");
+            CommandDataImpl poll = new CommandDataImpl("poll", "A cmd to create a simple Poll.");
             poll.addOption(OptionType.STRING, "title", "This is the Title of your poll.", true);
             
             poll.addOption(OptionType.STRING, "option1", "This is Option " + 1, true);
@@ -407,7 +409,7 @@ public class StartupListener extends ListenerAdapter{
             eth.upsertCommand(poll).complete();
 
             //blind slash cmd
-            CommandData blind = new CommandData("blind", "A command to blind yourself. Do not use this cmd if you don't know what it does.");
+            CommandDataImpl blind = new CommandDataImpl("blind", "A command to blind yourself. Do not use this cmd if you don't know what it does.");
                         
             blind.addOption(OptionType.INTEGER, "time", "Length of the blind.", true);
             blind.addOption(OptionType.STRING, "unit", "Default is minutes. Seconds, minutes, hours, days.");
@@ -419,7 +421,7 @@ public class StartupListener extends ListenerAdapter{
 
 
             //role slash cmd
-            CommandData role = new CommandData("role", "A command to get/remove a role.");
+            CommandDataImpl role = new CommandDataImpl("role", "A command to get/remove a role.");
                         
             role.addOption(OptionType.ROLE, "role", "The Role you want to have or get removed.", true);
             slashcmds.add(role);
@@ -428,7 +430,7 @@ public class StartupListener extends ListenerAdapter{
 
 
             //report slash cmd
-            CommandData report = new CommandData("report", "A command to report a incident to Staff anonymously.");
+            CommandDataImpl report = new CommandDataImpl("report", "A command to report a incident to Staff anonymously.");
             
             report.addOption(OptionType.STRING, "issue", "The isssue you have or the incident that occured.", true);
             report.addOption(OptionType.USER, "user", "If you want to report a User. This can be left empty.", false);
@@ -440,10 +442,10 @@ public class StartupListener extends ListenerAdapter{
 
 
             //rolesleft slash cmd
-            CommandData rolesleft = new CommandData("rolesleft", "A command to see which roles you still could get.");
+            CommandDataImpl rolesleft = new CommandDataImpl("rolesleft", "A command to see which roles you still could get.");
             
             slashcmds.add(rolesleft);
-            
+
             eth.upsertCommand(rolesleft).complete();
 
             /*
