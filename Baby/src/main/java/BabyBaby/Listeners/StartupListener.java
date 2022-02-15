@@ -13,7 +13,6 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.data.GetRolesBack;
-import BabyBaby.data.GetUnmute;
 import BabyBaby.data.Data;
 
 import javax.annotation.Nonnull;
@@ -220,49 +219,6 @@ public class StartupListener extends ListenerAdapter{
             }
         }));
         threads.getLast().start();
-
-
-        //Put admin mutes in cache
-        threads.add(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ResultSet rs;
-                Connection c = null;
-                Statement stmt = null;
-                try {
-                    Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(Data.db);
-                    stmt = c.createStatement();
-                    rs = stmt.executeQuery("SELECT * FROM ADMINMUTE;");
-
-                    while(rs.next()){
-                        try{
-                            Guild muteG = event.getJDA().getGuildById(rs.getString("GUILDID"));
-                            User mutedPerson = event.getJDA().getUserById(rs.getString("USERID"));
-                            int time = rs.getInt("TIME");
-                            if(time == 0){
-                                MutePersonCMD.userMuted.put(muteG.getMember(mutedPerson), null);
-                            } else {
-                                ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
-                                mute.schedule(new GetUnmutePerson(mutedPerson, muteG), time , TimeUnit.SECONDS);
-                                MutePersonCMD.userMuted.put(muteG.getMember(mutedPerson), mute);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            System.out.println("Probably a User that left the server while being adminmuted.");
-                        } 
-                    }
-                    
-                    stmt.close();
-                    c.close();
-                } catch ( Exception e ) {
-                    e.printStackTrace(); 
-                }
-            }
-        }));
-        threads.getLast().start();
-
-
 
         //put assign message ids in cache
         threads.add(new Thread(new Runnable() {
