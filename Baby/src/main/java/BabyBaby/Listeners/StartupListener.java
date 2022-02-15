@@ -75,46 +75,6 @@ public class StartupListener extends ListenerAdapter{
                 ResultSet rs;
                 Connection c = null;
                 Statement stmt = null;
-
-                try {
-                    Class.forName("org.sqlite.JDBC");
-                    c = DriverManager.getConnection(Data.db);
-                    
-                    stmt = c.createStatement();
-
-                    rs = stmt.executeQuery("SELECT * FROM USERS");            
-                    while(rs.next()){
-                        try{
-                        Guild called = bot.getGuildById( rs.getString("GUILDUSER"));
-                        User muteUser = called.getMemberById(rs.getString("ID")).getUser();
-                        long time = Long.parseLong(rs.getString("MUTETIME"));
-                        ScheduledExecutorService mute = Executors.newScheduledThreadPool(1);
-                        List<Role> tmp = called.getRolesByName("STFU", true);
-                        Role muteR = tmp.get(0);
-                        GetUnmute muteclass = new GetUnmute(muteUser, called, muteR);
-                        mute.schedule(muteclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
-                        MuteCMD.userMuted.put(called.getMember(muteUser), mute);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                            System.out.println("Probably a User that left the server while being muted.");
-                        }
-                    }
-                    stmt.close();
-                    c.close();
-
-                } catch ( Exception e ) {
-                    e.printStackTrace(); 
-                }
-            }
-        }));
-        threads.getLast().start();
-
-        threads.add(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ResultSet rs;
-                Connection c = null;
-                Statement stmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
                     c = DriverManager.getConnection(Data.db);
@@ -447,6 +407,95 @@ public class StartupListener extends ListenerAdapter{
             slashcmds.add(rolesleft);
 
             eth.upsertCommand(rolesleft).complete();
+
+
+            //admin slash Cmds
+            CommandDataImpl admin = new CommandDataImpl("admin", "All admin commands.");
+            LinkedList<SubcommandData> subc = new LinkedList<>();
+
+            //timeout
+            SubcommandData timeout = new SubcommandData("timeout", "Cmd to timeout a user.");
+            timeout.addOption(OptionType.USER, "user", "The user to timeout.");
+            timeout.addOption(OptionType.NUMBER, "time", "The duration of the time out");
+            timeout.addOption(OptionType.STRING, "unit", "Seconds, minutes, hours, days, years");
+            timeout.addOption(OptionType.STRING, "reason", "Reason why user got a time out. User doesn't see that.", false);   
+            subc.add(timeout);
+
+            //ban
+            SubcommandData ban = new SubcommandData("ban", "Cmd to ban a user.");
+            ban.addOption(OptionType.USER, "user", "The user to ban.");
+            ban.addOption(OptionType.STRING, "reason", "Reason why user got a ban. User doesn't see that.", false);   
+            subc.add(ban);
+
+            //kick
+            SubcommandData kick = new SubcommandData("kick", "Cmd to kick a user.");
+            kick.addOption(OptionType.USER, "user", "The user to kick.");
+            kick.addOption(OptionType.STRING, "reason", "Reason why user got a kick. User doesn't see that.", false);   
+            subc.add(kick);
+
+            //warn
+            SubcommandData warn = new SubcommandData("warn", "Cmd to warn a user.");
+            warn.addOption(OptionType.USER, "user", "The user to warn.");
+            warn.addOption(OptionType.STRING, "reason", "Reason why user got a warning. User gets this message dmed.");  
+            subc.add(warn);
+
+            //warnings
+            SubcommandData warnings = new SubcommandData("warn", "Cmd to see warnings of users. If no user is provided all users with warnings are shown");
+            warnings.addOption(OptionType.USER, "user", "Warnings of user.", false);
+            warnings.addOption(OptionType.STRING, "userid", "Id of user for the case they left the server.", false);
+            subc.add(warnings);
+
+            //whois
+            SubcommandData whois = new SubcommandData("warn", "Cmd to see warnings of users. If no user is provided all users with warnings are shown");
+            whois.addOption(OptionType.USER, "user", "Warnings of user.", false);
+            whois.addOption(OptionType.STRING, "userid", "Id of user for the case you can't type their username.", false);
+            whois.addOption(OptionType.BOOLEAN, "ephemeral", "True if message should be ephemeral. Default is false", false);
+            subc.add(whois);
+
+            //rolebutton
+            SubcommandData rolebutton = new SubcommandData("rolebutton", "Cmd to send a button for a role");
+            rolebutton.addOption(OptionType.ROLE, "role", "Select assignable Role.");
+            subc.add(rolebutton);
+
+            //addrole 
+            SubcommandData addrole = new SubcommandData("addrole", "Command to add a selfassignable role.");
+            addrole.addOption(OptionType.ROLE, "role", "Select assignable Role.");
+            addrole.addOption(OptionType.STRING, "emote", "Connect emote"); //not sure if that works with emotes
+            addrole.addOption(OptionType.STRING, "category", "Add role to a category", false);
+            subc.add(addrole);
+
+            //assign
+            SubcommandData assign = new SubcommandData("assign", "Command to send message for roleassignment channel.");
+            subc.add(assign);
+            
+            //editassign
+            SubcommandData editassign = new SubcommandData("assign", "Command to update role messages.");
+            subc.add(editassign);
+
+            //delrole
+            SubcommandData delrole = new SubcommandData("delrole", "Command to remove a selfassignable role.");
+            delrole.addOption(OptionType.ROLE, "role", "Select Role to delete from Bot.");
+            subc.add(delrole);
+
+            //roleid
+            SubcommandData roleid = new SubcommandData("roleid", "Command to get all ID's of selfassignable role for the case a role is deleted before removed from the bot.");
+            subc.add(roleid);
+
+            //updaterole  
+            SubcommandData updaterole = new SubcommandData("updaterole", "Command to update a selfassignable role. If optional field is left empty, it doesn't change.");
+            updaterole.addOption(OptionType.STRING, "role", "Role id at the moment.");
+            updaterole.addOption(OptionType.ROLE, "role", "New ID/role", false);
+            updaterole.addOption(OptionType.STRING, "emote", "New emote", false); //not sure if that works with emotes
+            updaterole.addOption(OptionType.STRING, "category", "New category", false);
+            subc.add(updaterole);
+
+            admin.addSubcommands(subc); //Not sure if that works tbh and documentation is sparse
+            
+            slashcmds.add(admin);
+
+            eth.upsertCommand(admin).complete();
+
+
 
             /*
             try {
