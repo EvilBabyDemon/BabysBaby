@@ -74,15 +74,15 @@ public class BlindCMD implements PublicCMD{
         LinkedList<GuildChannel> gchan = new LinkedList<>();
         Role everyone = guild.getRoleById(guild.getId());
         
-        for (GuildChannel guildChannel : guild.getChannels()) {
-            if(semester && guildChannel.getParent() != null){
-                String catName = guildChannel.getParent().getName().toLowerCase();
+        for (TextChannel textChannel : guild.getTextChannels()) {
+            if(semester && textChannel.getParentCategory() != null){
+                String catName = textChannel.getParentCategory().getName().toLowerCase();
                 if(catName.contains("gess")){
                     continue;
                 }
             }
-            if(!everyone.hasAccess(guildChannel)){
-                gchan.add(guildChannel);
+            if(!everyone.hasAccess(textChannel)){
+                gchan.add(textChannel);
             }
         }
 
@@ -150,17 +150,6 @@ public class BlindCMD implements PublicCMD{
                 }
             }
         }
-
-        //Check if already in a group
-        String id = mem.getId();
-        for (int ids : BlindGroupCMD.groups.keySet()) {
-            ArrayList<String> classList = BlindGroupCMD.groups.get(ids);
-            if(classList.contains(id)){
-                channel.sendMessage("You are still in a group. Pls leave that one first.").complete().delete().queueAfter(30, TimeUnit.SECONDS);
-                return;
-            }
-        }
-
 
         
 

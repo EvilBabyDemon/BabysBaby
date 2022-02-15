@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 public class AdminMuteBlindCMD implements AdminCMD{
     public static HashSet<Member> userBlinded = new HashSet<>();
@@ -81,9 +82,9 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
         LinkedList<GuildChannel> gchan = new LinkedList<>();
 
-        for (GuildChannel guildChannel : ctx.getGuild().getChannels()) {
-            if(!guildChannel.getId().equals("769261792491995176") && !guildChannel.getId().equals("815881148307210260") && guildChannel.getParent() != null){
-                gchan.add(guildChannel);
+        for (TextChannel textChannel : ctx.getGuild().getTextChannels()) {
+            if(!textChannel.getId().equals("769261792491995176") && !textChannel.getId().equals("815881148307210260") && textChannel.getParentCategory() != null){
+                gchan.add(textChannel);
             }
         }
 

@@ -57,55 +57,43 @@ public class UnBlindCMD implements PublicCMD {
         */
         
         String authorID = author.getId();
-        boolean group = false;
-        //remove from a group
-        for (int ids : BlindGroupCMD.groups.keySet()) {
-            ArrayList<String> groupList = BlindGroupCMD.groups.get(ids);
-            if(groupList.contains(authorID)){
-                groupList.remove(authorID);
-                group = true;
-                break;
+
+        LinkedList<GetRolesBack> classList = new LinkedList<>();        
+        
+        for (Member member : BlindCMD.blind.keySet()) {
+            if(member.getId().equals(authorID)){
+                classList.add(BlindCMD.blindexe.get(BlindCMD.blind.get(member)));
             }
         }
-        
-
-        if(!group){
-            LinkedList<GetRolesBack> classList = new LinkedList<>();        
-            
-            for (Member member : BlindCMD.blind.keySet()) {
-                if(member.getId().equals(authorID)){
-                    classList.add(BlindCMD.blindexe.get(BlindCMD.blind.get(member)));
+        GetRolesBack blindclass = null;
+        if(cmds.size() == 0){
+            switch(classList.size()){
+                case 0:
+                    author.openPrivateChannel().queue(privchannel -> {
+                        privchannel.sendMessage("You were never blinded. Or at least not by this bot. If you were pls report this problem to Lukas.").queue();
+                    });
+                    return;
+                case 1:
+                    blindclass = classList.get(0);
+                    break;
+                default:
+                    author.openPrivateChannel().queue(privchannel -> {
+                        privchannel.sendMessage("Pls use +" + getName() + " <key> as there are multiple servers you are blinded on. These are the keys:").queue();
+                        for (GetRolesBack classRoles : classList) {
+                            privchannel.sendMessage("Key: " + classRoles.guild.getId() + " " + classRoles.guild.getName()).queue();
+                        }
+                        //TO DO FIX FOR multiple server
+                    });
+                    return;
+            }
+        } else {
+            for (GetRolesBack classRole : classList) {
+                if(classRole.guild.getId().equals(cmds.get(0))){
+                    blindclass = classRole;
+                    break;
                 }
             }
-            GetRolesBack blindclass = null;
-            if(cmds.size() == 0){
-                switch(classList.size()){
-                    case 0:
-                        author.openPrivateChannel().queue(privchannel -> {
-                            privchannel.sendMessage("You were never blinded. Or at least not by this bot. If you were pls report this problem to Lukas.").queue();
-                        });
-                        return;
-                    case 1:
-                        blindclass = classList.get(0);
-                        break;
-                    default:
-                        author.openPrivateChannel().queue(privchannel -> {
-                            privchannel.sendMessage("Pls use +" + getName() + " <key> as there are multiple servers you are blinded on. These are the keys:").queue();
-                            for (GetRolesBack classRoles : classList) {
-                                privchannel.sendMessage("Key: " + classRoles.guild.getId() + " " + classRoles.guild.getName()).queue();
-                            }
-                            //TO DO FIX FOR multiple server
-                        });
-                        return;
-                }
-            } else {
-                for (GetRolesBack classRole : classList) {
-                    if(classRole.guild.getId().equals(cmds.get(0))){
-                        blindclass = classRole;
-                        break;
-                    }
-                }
-            }
+        }
             
 
             
@@ -131,7 +119,7 @@ public class UnBlindCMD implements PublicCMD {
             BlindCMD.blindexe.remove(blind);
             blind.shutdownNow();
             BlindCMD.blind.remove(blinded);
-        }
+        
 
         String roles = "";
 
@@ -155,9 +143,6 @@ public class UnBlindCMD implements PublicCMD {
             return;
         }
         
-        Guild blindServ = author.getJDA().getGuildById(Data.ethid);
-        Member blinded = blindServ.getMember(author);
-
         LinkedList<Role> addRole = new LinkedList<>();
         LinkedList<Role> delRole = new LinkedList<>();
 
@@ -203,7 +188,7 @@ public class UnBlindCMD implements PublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "", "Command to unblind you early after using " + new MuteCMD().getName() + ".");
+        return StandardHelp.Help(prefix, getName(), "", "Command to unblind you early after using " + new BlindCMD().getName() + ".");
     }
     
     

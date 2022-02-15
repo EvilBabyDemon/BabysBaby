@@ -6,15 +6,12 @@ import BabyBaby.Command.commands.Owner.*;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-
-import org.jetbrains.annotations.NotNull;
 
 public class CmdHandler {
 
@@ -59,7 +56,6 @@ public class CmdHandler {
         addPublicCommand(new SieveCMD());
         addPublicCommand(new SourceCMD());
         addPublicCommand(new SuggestionCMD());
-        addPublicCommand(new UnmuteMeCMD());
         addPublicCommand(new PollCMD());
         addPublicCommand(new PlaceGifCMD());
         addPublicCommand(new BotsOnlineCMD());
@@ -69,7 +65,6 @@ public class CmdHandler {
         addPublicCommand(new BlindForceCMD());
         addPublicCommand(new TillBlindCMD());
         addPublicCommand(new EmoteQueryCMD());
-        addPublicCommand(new BlindGroupCMD());
         addPublicCommand(new BlindStatsCMD());
         addPublicCommand(new UsageCMD());
 
@@ -165,7 +160,7 @@ public class CmdHandler {
     }
 
 
-    public void handle(GuildMessageReceivedEvent event, String prefix) {
+    public void handle(MessageReceivedEvent event, String prefix) {
 
         String[] split = event.getMessage().getContentRaw()
                 .replaceFirst("(?i)" + Pattern.quote(prefix), "")
@@ -198,30 +193,6 @@ public class CmdHandler {
                 }
                 break;
         }
-    }
-
-
-    public void privhandle(@NotNull PrivateMessageReceivedEvent event, String prefix) {
-
-        String[] split = event.getMessage().getContentRaw()
-                .replaceFirst("(?i)" + Pattern.quote(prefix), "")
-                .split("\\s+");
-        
-        List<String> args = Arrays.asList(split).subList(1, split.length);
-        
-        String cmdName = split[0].toLowerCase();
-        
-        UnBlindCMD cmd1 = new UnBlindCMD();
-        TillBlindCMD cmd2 = new TillBlindCMD();
-
-        if(cmdName.equals(cmd.getName())){
-            cmd.privhandle(event.getAuthor(), args);
-        } else if(cmdName.equals(cmd1.getName())){
-            cmd1.privhandle(event.getAuthor(), args);
-        } else if(cmdName.equals(cmd2.getName())){
-            cmd2.privhandle(event.getAuthor(), args, event.getJDA());
-        }
-        
     }
 
     public OwnerCMD searchOwnerCommand(String search) {
