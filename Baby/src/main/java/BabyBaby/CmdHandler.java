@@ -29,6 +29,7 @@ public class CmdHandler {
     public CmdHandler(JDA bot) throws IOException {
 
         //TODO Remove Mute commands (mute + learning + admin cmds)
+            //remove SQL Table -> USERS and ADMINMUTE
         //TODO add new Time out feature for admins (as slash)
         //TODO remove emotestats cmd or at least from Help page
         //TODO track buttons and slash cmds
@@ -38,6 +39,8 @@ public class CmdHandler {
         //TODO make remind slash cmd
         //TODO fix kick event
         //TODO fix errors (merge private and guild messages)
+        // new adminSlash cmd
+            // timeout
 
         // adding commands visible to @everyone
         addPublicCommand(new PingCMD());
@@ -48,8 +51,6 @@ public class CmdHandler {
         addPublicCommand(new EncryptCMD());
         addPublicCommand(new GetRoleCMD());
 
-        addPublicCommand(new LearningCMD());
-        addPublicCommand(new MuteCMD());
         addPublicCommand(new NoKeyCMD());
         addPublicCommand(new PolyCMD());
         addPublicCommand(new ReminderCMD());
@@ -82,8 +83,6 @@ public class CmdHandler {
         addAdminCommand(new WarnCMD());
         addAdminCommand(new GetWarnedCMD());
         addAdminCommand(new GetWarningsFromUserCMD());
-        addAdminCommand(new MutePersonCMD());
-        addAdminCommand(new UnmutePersonCMD());
         addAdminCommand(new EditAssignCMD());
         addAdminCommand(new KickCMD());
         addAdminCommand(new BanCMD());
@@ -212,7 +211,6 @@ public class CmdHandler {
         
         String cmdName = split[0].toLowerCase();
         
-        UnmuteMeCMD cmd = new UnmuteMeCMD();
         UnBlindCMD cmd1 = new UnBlindCMD();
         TillBlindCMD cmd2 = new TillBlindCMD();
 
@@ -279,12 +277,12 @@ public class CmdHandler {
                     ctx.getAuthor().openPrivateChannel().complete().sendMessage("Unblind yourself and don't try to cheat!").queue();
                     return;
                 }
-
+                
                 try {
                     switch(permissionLevel){
                         case 0:
-                            if(ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ethid) || ctx.getChannel().getParent() == null 
-                            || ctx.getChannel().getParent().getId().equals(Data.BOTS_BATTROYAL) || ((PublicCMD) cmd).getWhiteListBool())
+                            if(ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ethid) || ctx.getChannel().getParentCategory() == null 
+                            || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL) || ((PublicCMD) cmd).getWhiteListBool())
                                 ((PublicCMD) cmd).handlePublic(ctx);
                             else
                                 ctx.getChannel().sendMessage("Please use the dedicated bot channels for this command.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
