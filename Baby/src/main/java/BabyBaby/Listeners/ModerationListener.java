@@ -3,12 +3,12 @@ package BabyBaby.Listeners;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.audit.*;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
-import net.dv8tion.jda.api.events.channel.voice.VoiceChannelCreateEvent;
+import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.member.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.managers.ChannelManager;
+import net.dv8tion.jda.api.managers.channel.concrete.TextChannelManager;
+import net.dv8tion.jda.api.managers.channel.concrete.VoiceChannelManager;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 
 import BabyBaby.data.Data;
@@ -22,7 +22,7 @@ public class ModerationListener extends ListenerAdapter{
     //Invite
     @Override
     public void onGuildInviteCreate(GuildInviteCreateEvent event) {
-        if(!event.getGuild().getId().equals(Data.ethid))
+        if(!event.getGuild().getId().equals(Data.ETH_ID))
             return;
         
         Connection c = null;
@@ -46,7 +46,7 @@ public class ModerationListener extends ListenerAdapter{
     //Member Join
     @Override
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-		if(!event.getGuild().getId().equals(Data.ethid))
+		if(!event.getGuild().getId().equals(Data.ETH_ID))
             return;
 
         //OffsetDateTime time = event.getUser().getTimeCreated();
@@ -209,7 +209,7 @@ public class ModerationListener extends ListenerAdapter{
 
     @Override
     public void onGuildMemberRoleAdd (GuildMemberRoleAddEvent event){
-        if(!event.getGuild().getId().equals(Data.ethid))
+        if(!event.getGuild().getId().equals(Data.ETH_ID))
             return;
 
         Role student = event.getGuild().getRoleById(Data.ethstudent);
@@ -243,42 +243,35 @@ public class ModerationListener extends ListenerAdapter{
         
     }
 
-    //Channel Create
     @Override
-    public void onTextChannelCreate(TextChannelCreateEvent event) {
-        if(!event.getGuild().getId().equals(Data.ethid))
-            return;
-        ChannelManager newChann = event.getChannel().getManager();
-        newChann.putPermissionOverride(event.getGuild().getRoleById(Data.stfuID), null, Arrays.asList(Permission.MESSAGE_WRITE));
-        newChann.putPermissionOverride(event.getGuild().getRoleById(Data.MODERATOR_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
-        newChann.putPermissionOverride(event.getGuild().getRoleById(Data.SERVERBOT_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
-        newChann.queue();
-        
-
-    }
-
-    //Voice Channel Create
-    @Override
-    public void onVoiceChannelCreate(VoiceChannelCreateEvent event) {
-        if(!event.getGuild().getId().equals(Data.ethid))
-            return;
-        AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
-        logs.type(ActionType.CHANNEL_CREATE);
-        for (AuditLogEntry entry : logs) {
-            if(entry.getUser().getId().equals(Data.dcvd))
+    public void onChannelCreate(ChannelCreateEvent event) {
+        if(!event.getGuild().getId().equals(Data.ETH_ID))
                 return;
-            else
-                break;
-        }
         
-        ChannelManager channelMan = event.getChannel().getManager();
-        Collection<Permission> deny = new LinkedList<>();
-        deny.add(Permission.VOICE_SPEAK);
-		IPermissionHolder permHolderSTFU = event.getGuild().getRoleById(Data.stfuID);
-        channelMan.putPermissionOverride(permHolderSTFU, null, deny);
-        channelMan.putPermissionOverride(event.getGuild().getRoleById(Data.MODERATOR_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
-        channelMan.putPermissionOverride(event.getGuild().getRoleById(Data.SERVERBOT_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
-        channelMan.queue();
+        //TextChannel or Category Create
+        if(event.isFromType(ChannelType.CATEGORY) || event.isFromType(ChannelType.TEXT)) {
+            TextChannelManager newChann = event.getGuild().getTextChannelById(event.getChannel().getId()).getManager();
+            newChann.putPermissionOverride(event.getGuild().getRoleById(Data.MODERATOR_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
+            newChann.putPermissionOverride(event.getGuild().getRoleById(Data.SERVERBOT_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
+            newChann.queue();
+        //VoiceChannel Create
+        } else if (event.isFromType(ChannelType.VOICE)) {
+            AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
+            logs.type(ActionType.CHANNEL_CREATE);
+            for (AuditLogEntry entry : logs) {
+                if(entry.getUser().getId().equals(Data.dcvd))
+                    return;
+                else
+                    break;
+            }
+
+            VoiceChannelManager channelMan = event.getGuild().getVoiceChannelById(event.getChannel().getId()).getManager();
+            channelMan.putPermissionOverride(event.getGuild().getRoleById(Data.MODERATOR_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
+            channelMan.putPermissionOverride(event.getGuild().getRoleById(Data.SERVERBOT_ID), Arrays.asList(Permission.VIEW_CHANNEL), null);
+            channelMan.queue();
+        } else if (event.isFromType(ChannelType.GUILD_PRIVATE_THREAD)) {
+            event.getJDA().getUserById(Data.myselfID).openPrivateChannel().complete().sendMessage(event.getChannel().getAsMention()).queue();
+        }
     }
 
     
