@@ -12,7 +12,7 @@ import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class NewRoleCMD implements AdminCMD {
 
@@ -50,6 +50,7 @@ public class NewRoleCMD implements AdminCMD {
         }
         String msgID = ctx.getChannel().sendMessage("Get " + newRole.getName() + " with this button:").setActionRow(Button.primary(emoteStr, gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoteStr)): Emoji.fromUnicode(emoteStr))).complete().getId();
         Data.buttonid.add(msgID);
+        
     }
 
     @Override

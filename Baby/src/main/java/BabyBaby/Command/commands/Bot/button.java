@@ -5,7 +5,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class button {
     public static int firstplace = 2100;
@@ -13,7 +13,7 @@ public class button {
     static boolean shut = false;
     static Guild eth;
     
-    public static void tap(GuildMessageReceivedEvent event){
+    public static void tap(MessageReceivedEvent event){
         
         if(!event.getGuild().getId().equals("747752542741725244"))  
             return;

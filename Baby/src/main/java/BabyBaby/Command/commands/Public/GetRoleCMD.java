@@ -30,7 +30,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 public class GetRoleCMD implements PublicCMD{
@@ -69,7 +69,7 @@ public class GetRoleCMD implements PublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(Data.ethid))
+        if(!ctx.getGuild().getId().equals(Data.ETH_ID))
             return;
 
         MessageChannel channel = ctx.getChannel();
@@ -264,7 +264,6 @@ public class GetRoleCMD implements PublicCMD{
                
             }
 
-                     
             ArrayList<Button> butt = new ArrayList<>();
             for (String emoID : emoList) {
                 boolean gemo = false;

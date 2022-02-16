@@ -66,7 +66,7 @@ public class SieveCMD implements PublicCMD {
         }
 
         // to get the amount of users in each Role channels
-        if(cmd[0].equalsIgnoreCase("roles") && ctx.getGuild().getId().equals(Data.ethid)){  
+        if(cmd[0].equalsIgnoreCase("roles") && ctx.getGuild().getId().equals(Data.ETH_ID)){  
             
             List<GuildChannel> channels =  ctx.getGuild().getCategoryById("818089330282463262").getChannels();
             

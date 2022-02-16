@@ -36,7 +36,7 @@ public class AdminMuteBlindCMD implements AdminCMD{
 
     @Override
     public void handleAdmin(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(Data.ethid)){
+        if(!ctx.getGuild().getId().equals(Data.ETH_ID)){
             return;
         }
 

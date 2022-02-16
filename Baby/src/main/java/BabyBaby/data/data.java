@@ -19,12 +19,13 @@ public class Data {
     public static final String modlog = "774322031688679454";
     public static final String adminlog = "774322847812157450";
     public static final String ADMIN_BOT_ID = "747768907992924192";
+    public static final String ADMIN_ID = "747753814723002500";
     public static final String MODERATOR_ID = "815932497920917514";
     public static final String SERVERBOT_ID = "750439532050251778";
-    public static final String ethid = "747752542741725244";
-    public static final String spam = "768600365602963496";
-    public static final String stfuID = "765542118701400134";
-    public static final String blindID= "844136589163626526";
+    public static final String ETH_ID = "747752542741725244";
+    public static final String SPAM_ID = "768600365602963496";
+    public static final String stfuID = "765542118701400134"; //TODO Remove
+    public static final String BLIND_ID= "844136589163626526";
     public static OffsetDateTime kick;
     public static OffsetDateTime ban;
     public static final String myselfID = "223932775474921472";
@@ -36,8 +37,6 @@ public class Data {
     public static boolean elthision = false;
     public static boolean marc = false;
     public static HashSet<String> buttonid = new HashSet<>();
-    public static HashSet<String> stats = new HashSet<>();
-    public static HashSet<String> forcestats = new HashSet<>();
     public static int mydel = 0;
     public static int otherdel = 0;
     public static HashMap<String, Integer> cmdUses = new HashMap<>();

@@ -25,7 +25,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 public class EditAssignCMD implements AdminCMD{
@@ -38,7 +38,7 @@ public class EditAssignCMD implements AdminCMD{
 
 	@Override
 	public void handleAdmin(CommandContext ctx) {
-		if(!ctx.getGuild().getId().equals(Data.ethid)){
+		if(!ctx.getGuild().getId().equals(Data.ETH_ID)){
             return;
         }
         

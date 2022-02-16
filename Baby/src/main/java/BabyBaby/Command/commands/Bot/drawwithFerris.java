@@ -3,11 +3,11 @@ package BabyBaby.Command.commands.Bot;
 import java.util.ArrayList;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class drawwithFerris {
     
-    public void drawing(GuildMessageReceivedEvent event){
+    public void drawing(MessageReceivedEvent event){
         ArrayList<String> printer = new ArrayList<>(); 
         String[] cmds = event.getMessage().getContentRaw().split("\n");
         MessageChannel channel = event.getJDA().getGuildById("747752542741725244").getTextChannelById("819966095070330950");

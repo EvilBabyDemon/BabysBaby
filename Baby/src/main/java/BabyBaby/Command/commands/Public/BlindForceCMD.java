@@ -47,7 +47,7 @@ public class BlindForceCMD implements PublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(Data.ethid))
+        if(!ctx.getGuild().getId().equals(Data.ETH_ID))
         return;
 
         ctx.getMessage().addReaction(Data.check).queue();

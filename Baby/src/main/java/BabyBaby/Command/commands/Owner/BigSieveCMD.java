@@ -39,7 +39,7 @@ public class BigSieveCMD implements OwnerCMD{
 
         List<Member> tmp = ctx.getGuild().getMembers();
         
-        if(cmd[0].equals(Data.ethid)){
+        if(cmd[0].equals(Data.ETH_ID)){
             for (Member member : tmp) {
                 counter.add(member);
             }

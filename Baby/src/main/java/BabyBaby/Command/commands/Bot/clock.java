@@ -16,7 +16,7 @@ import BabyBaby.Command.commands.Owner.clockT;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Message.Attachment;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class clock {
     public static boolean clockused;
@@ -27,7 +27,7 @@ public class clock {
     public static boolean[][] grid = new boolean[10][10];
     public static int[][] rgbs;
     
-    public static void clockTick(GuildMessageReceivedEvent event){
+    public static void clockTick(MessageReceivedEvent event){
         
         event.getMessage().addReaction("🕰️").queue();
         LocalTime myObj = LocalTime.now();
@@ -46,7 +46,7 @@ public class clock {
         
     }
 
-    public static void verify(GuildMessageReceivedEvent event){
+    public static void verify(MessageReceivedEvent event){
 
         Message message = event.getMessage(); 
         String content = message.getContentRaw();

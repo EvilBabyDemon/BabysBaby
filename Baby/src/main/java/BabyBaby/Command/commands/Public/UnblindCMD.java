@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
@@ -131,7 +130,7 @@ public class UnBlindCMD implements PublicCMD {
             
             stmt = c.prepareStatement("SELECT ROLES FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
             stmt.setString(1, authorID);
-            stmt.setString(2, Data.ethid);
+            stmt.setString(2, Data.ETH_ID);
             ResultSet rs = stmt.executeQuery();
 
             roles = rs.getString("ROLES");

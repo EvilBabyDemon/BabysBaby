@@ -3,7 +3,6 @@ package BabyBaby.Command.commands.Public;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class BlindCMD implements PublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(Data.ethid))
+        if(!ctx.getGuild().getId().equals(Data.ETH_ID))
             return;
 
         ctx.getMessage().addReaction(Data.check).queue();
@@ -197,7 +196,6 @@ public class BlindCMD implements PublicCMD{
         if(force){
             BlindForceCMD.force.add(scheduledclass);
             msg +=  " **Wait out the timer!!!** And hopefully you are productive!";
-            Data.forcestats.add(mem.getId());
         } else {
             msg += " Either wait out the timer or write me (<@781949572103536650>) in Private chat \"+" + new UnBlindCMD().getName() + "\"";
         }
