@@ -8,10 +8,10 @@ import net.dv8tion.jda.api.events.guild.member.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,14 +21,20 @@ import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Bot.*;
 //import BabyBaby.Command.commands.Bot.drawwithFerris;
 import BabyBaby.Command.commands.Public.*;
+import BabyBaby.Command.commands.Slash.AdminSlashCMD;
+import BabyBaby.Command.commands.Slash.BlindSlashCMD;
+import BabyBaby.Command.commands.Slash.PollSlashCMD;
+import BabyBaby.Command.commands.Slash.ReportSlashCMD;
+import BabyBaby.Command.commands.Slash.RoleSlashCMD;
+import BabyBaby.Command.commands.Slash.RolesleftSlashCMD;
 import BabyBaby.data.Data;
-
-import javax.annotation.Nonnull;
+import BabyBaby.data.Helper;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.regex.Pattern;
 
 
 public class BabyListener extends ListenerAdapter {
@@ -54,13 +60,13 @@ public class BabyListener extends ListenerAdapter {
     // Role Removal
     @Override
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
-        if(!event.getGuild().getId().equals(Data.ethid))
+        if(!event.getGuild().getId().equals(Data.ETH_ID))
             return;
 
         
         List<Role> removed = event.getRoles();
         if(!removed.contains(event.getGuild().getRoleById(Data.stfuID))){
-            if(!removed.contains(event.getGuild().getRoleById(Data.blindID))){
+            if(!removed.contains(event.getGuild().getRoleById(Data.BLIND_ID))){
                 return;
             }
 
@@ -119,7 +125,7 @@ public class BabyListener extends ListenerAdapter {
             
 
             try {
-                delRole.add(blindServ.getRoleById("844136589163626526"));
+                delRole.add(blindServ.getRoleById(Data.BLIND_ID));
                 blindServ.modifyMemberRoles(blinded, addRole, delRole).complete();
             } catch (Exception e) {
                 System.out.println("Role Blind doesnt exist anymore. This could be a serious issue.");
@@ -136,16 +142,6 @@ public class BabyListener extends ListenerAdapter {
                 blind.shutdownNow();
             }
             BlindCMD.blind.remove(blinded);
-
-            //remove from a group
-            String id = event.getMember().getId();
-            for (int ids : BlindGroupCMD.groups.keySet()) {
-                ArrayList<String> groupList = BlindGroupCMD.groups.get(ids);
-                if(groupList.contains(id)){
-                    groupList.remove(id);
-                    break;
-                }
-            }
 
         
             try {
@@ -239,100 +235,6 @@ public class BabyListener extends ListenerAdapter {
         }
 
     }
-
-    
-
-    
-    //Private Message
-    @Override
-    public void onPrivateMessageReceived(@NotNull PrivateMessageReceivedEvent event) {
-        
-        User user = event.getAuthor();
-
-        if (user.isBot()) {
-            return;
-        }
-
-        //main prefix is + in DM
-        String prefixstr = "+";
-        String raw = event.getMessage().getContentRaw();
-
-        // starts with prefix -> send to command handler
-        if (raw.startsWith(prefixstr)) {
-            manager.privhandle(event, prefixstr);
-        }
-    }
-
-    
-    
-    //Message Reaction
-    @Override
-    public void onGenericGuildMessageReaction(GenericGuildMessageReactionEvent event) {
-        if (event.getUser().isBot())
-            return;
-        //This should be switched with a HashMap instead of a HashSet such that other servers could also at least technically use it.
-
-        if(!event.getGuild().getId().equals(Data.ethid))
-            return;
-
-        
-
-        if(Data.msgid.contains(event.getMessageId())){
-            String emote = "";
-            try{
-                emote += (event.getReactionEmote().getEmote().isAnimated() ? "a" : "") +":"+ event.getReactionEmote().getAsReactionCode(); 
-                //event.getReactionEmote().getEmote().isAnimated()
-            } catch (Exception e) {
-                emote += event.getReactionEmote().getName();
-            }
-
-
-            if(Data.emoteassign.containsKey(emote)){
-                Role assign = event.getGuild().getRoleById(Data.emoteassign.get(emote));
-                if(event instanceof GuildMemberRoleAddEvent) {
-                    //767315361443741717 External
-                    //747786383317532823 Student
-                    event.getGuild().addRoleToMember(event.getMember(), assign).complete();
-                    if(assign.getId().equals("747786383317532823")){
-                        event.getGuild().removeRoleFromMember(event.getMember(), event.getGuild().getRoleById("767315361443741717")).complete();
-                    } else if(assign.getId().equals("767315361443741717")){
-                        event.getGuild().removeRoleFromMember(event.getMember(), event.getGuild().getRoleById("747786383317532823")).complete();
-                    }
-                    
-                    
-                } else if (event instanceof GuildMemberRemoveEvent){
-                    //767315361443741717 External
-                    //747786383317532823 Student
-                    if(assign.getId().equals("747786383317532823")){
-                        List<Role> tmp = event.getMember().getRoles();
-                        Role external = event.getGuild().getRoleById("767315361443741717");
-                        if(tmp.contains(external)){
-                            event.getGuild().addRoleToMember(event.getMember(), external).complete();
-                            event.getGuild().removeRoleFromMember(event.getMember(), assign).complete();
-                        } else{
-                            event.getUser().openPrivateChannel().complete().sendMessage("You need at least either the Student or External Role").queue();
-                        }
-                    } else if(assign.getId().equals("767315361443741717")){
-                        List<Role> tmp = event.getMember().getRoles();
-                        Role student = event.getGuild().getRoleById("747786383317532823");
-                        if(tmp.contains(student)){
-                            event.getGuild().addRoleToMember(event.getMember(), student).complete();
-                            event.getGuild().removeRoleFromMember(event.getMember(), assign).complete();
-                        } else{
-                            event.getUser().openPrivateChannel().complete().sendMessage("You need at least either the Student or External Role").queue();
-                        }
-                    } else {
-                        event.getGuild().removeRoleFromMember(event.getMember(), assign).complete();
-                    }
-                
-                } else {
-                    System.out.println("Whatever");
-                    return;
-                }
-            }
-        }
-    }
-
     
     //ButtonEvent
     @Override
@@ -353,7 +255,7 @@ public class BabyListener extends ListenerAdapter {
 
         if(Data.emoteassign.containsKey(event.getComponentId())){
             Role role = event.getGuild().getRoleById(Data.emoteassign.get(event.getComponentId()));
-            roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
+            Helper.roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
         }
     }
 
@@ -386,10 +288,10 @@ public class BabyListener extends ListenerAdapter {
     //Slash Commands
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        InteractionHook msgHook = null;
+        InteractionHook hook = null;
         boolean failed = false;
         try {
-            msgHook = event.deferReply(true).complete();
+            hook = event.deferReply(true).complete();
         } catch (Exception e) {
             System.out.println("Why so slow :/");
             failed = true;
@@ -398,12 +300,12 @@ public class BabyListener extends ListenerAdapter {
             return;
         
         //check if blinded and then just ignore cmd
-        if(event.getGuild().getId().equals(Data.ethid) && event.getMember().getRoles().contains(event.getGuild().getRoleById(Data.blindID))){
+        if(event.getGuild().getId().equals(Data.ETH_ID) && event.getMember().getRoles().contains(event.getGuild().getRoleById(Data.BLIND_ID))){
             String cheater = "Unblind yourself and don't try to cheat!";
             if(failed){
                 event.getUser().openPrivateChannel().complete().sendMessage(cheater).complete();
             } else {
-                msgHook.editOriginal(cheater).queue();   
+                hook.editOriginal(cheater).queue();   
             }
             return;
         }
@@ -414,219 +316,64 @@ public class BabyListener extends ListenerAdapter {
 
         String cmd = event.getName();
         if(cmd.equals("poll")){
-            new PollCMD().slashCommand(event);
+            new PollSlashCMD().handle(event, hook, failed);
         } else if(cmd.equals("blind")){
-            String unit = (event.getOption("unit")!=null) ? event.getOption("unit").getAsString() : null;
-            boolean force = (event.getOption("force")!=null) ? event.getOption("force").getAsBoolean() : false;
-            boolean semester = (event.getOption("semester")!=null) ? event.getOption("semester").getAsBoolean() : false;
-            new BlindCMD().roleRemoval(event.getOption("time").getAsString(), event.getMember(), event.getGuild(), unit, force, event.getChannel(), semester);
+            new BlindSlashCMD().handle(event, hook, failed);
         } else if(cmd.equals("role")){
-            Role role = event.getOption("role").getAsRole();
-            if(!Data.roles.contains(role.getId()) && !event.getMember().getId().equals(Data.myselfID)){
-                String nope = "I can't give you that role.";
-                if(failed){
-                    event.getUser().openPrivateChannel().complete().sendMessage(nope).complete();
-                } else {
-                    msgHook.editOriginal(nope).queue();   
-                }
-            } else {
-                roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
-            }
+            new RoleSlashCMD().handle(event, hook, failed);
         } else if(cmd.equals("report")){
-            String issue = "Report:\n" + event.getOption("issue").getAsString();
-            String member = (event.getOption("user")!=null) ? event.getOption("user").getAsMember().getAsMention() : "";
-            if(!member.equals("")){
-                issue += " (Accused user: " +member + ")"; 
-            }
-            
-            while(issue.length()>2000){
-                event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete().editMessage(issue.substring(0, 2000)).complete();
-                issue = issue.substring(2000);
-            }
-            event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete().editMessage(issue).complete();
-
-            String acknowledged = "The issue was sent to the admin team anonymously.";
-            if(failed){
-                event.getUser().openPrivateChannel().complete().sendMessage(acknowledged).complete();
-            } else {
-                msgHook.editOriginal(acknowledged).queue();   
-            }
+            new ReportSlashCMD().handle(event, hook, failed);
         } else if(cmd.equals("rolesleft")){
-
-            Comparator<Role> compRole = new Comparator<>(){
-                @Override
-                public int compare(Role o1, Role o2){  
-                    return o2.getPosition() - o1.getPosition();  
-                } 
-            };
-
-            //TODO add rolesleft cmd
-            Guild guild = event.getGuild();
-
-            Connection c = null;
-            PreparedStatement stmt = null;
-            ResultSet rs;
-            HashMap<String,LinkedList<Role>> roles = new HashMap<>();
-            try {
-                Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(Data.db);
-                stmt = c.prepareStatement("SELECT * FROM ASSIGNROLES;");
-                rs = stmt.executeQuery();
-                while ( rs.next() ) {
-                    String roleID = rs.getString("ID");
-                    String categ = rs.getString("categories");
-                    LinkedList<Role> ids = roles.getOrDefault(categ, new LinkedList<>());
-                    ids.add(guild.getRoleById(roleID));
-                    ids.sort(compRole);
-                    roles.put(categ, ids);
-                }
-                rs.close();
-                stmt.close();
-                c.close();
-            } catch ( Exception e ) {
-                System.out.println(e.getClass().getName() + ": " + e.getMessage());
-                return;
-            }
-
-            String message = "";
-            List<Role> user = event.getMember().getRoles();
-            for (String categ : roles.keySet()) {
-                LinkedList<Role> roleList = roles.get(categ);
-                String pings = "";
-                for (Role role : roleList) {
-                    if(!user.contains(role)){
-                        pings += role.getAsMention() + "\n";
-                    }
-                }
-                if(pings.length() > 1){
-                    message += "**" + categ + "**\n" + pings;
-                }
-            }
-            if (message.length() == 0){
-                message = "You have all roles! Maybe tone it down a bit...";
-            } else {
-                message = "These are all the roles you can get:\n" + message; 
-            }
-
-            if(failed){
-                event.getUser().openPrivateChannel().complete().sendMessage(message).complete();
-            } else {
-                msgHook.editOriginal(message).queue();
-            }
-
-        }
-    }
-    // Giving/Removing roles from an Interaction
-    private void roleGiving (Member member, Guild guild, boolean failed, Role role,  InteractionHook msgHook){
-        List<Role> memRole = member.getRoles();
-        Role student = guild.getRoleById(Data.ethstudent);
-        Role external = guild.getRoleById(Data.ethexternal);
-        if(memRole.contains(role)){
-            if((role.equals(student) && !memRole.contains(external)) || (role.equals(external) && !memRole.contains(student))){
-                String oneneeded = "You need at least  ";
-                if(failed){
-                    member.getUser().openPrivateChannel().complete().sendMessage(oneneeded + student.getName() + " or " + external.getName()).complete();
-                } else {
-                    msgHook.editOriginal(oneneeded + student.getAsMention() + " or " + external.getAsMention()).queue();   
-                }
-                return;
-            }
-            guild.removeRoleFromMember(member, role).complete();
-            String remove = "I removed ";
-            if(failed){
-                member.getUser().openPrivateChannel().complete().sendMessage(remove + role.getName() + " from you.").complete();
-            } else {
-                msgHook.editOriginal(remove + role.getAsMention() + " from you.").queue();   
-            }
-        } else {
-            if(role.equals(student)){
-                
-                if(!verifiedUser(member.getId())){
-                    String doverify = "You have to get verified to get the role ";
-                    String suffix = ". You can do that here: https://dauth.spclr.ch/ and write the token to <@306523617188118528>";
-                    if(failed){
-                        member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
-                    } else {
-                        msgHook.editOriginal(doverify + role.getAsMention() + suffix).queue();
-                    }
-                    return;
-                }
-                
-                notBoth(role, external, guild, member, memRole, failed, msgHook);
-
-
-            } else if (role.equals(external)){
-                notBoth(role, student, guild, member, memRole, failed, msgHook);
-            } else {
-                guild.addRoleToMember(member, role).complete();
-                String added = "I gave you ";
-                if(failed){
-                    member.getUser().openPrivateChannel().complete().sendMessage(added + role.getName() + ".").complete();
-                } else {
-                    msgHook.editOriginal(added + role.getAsMention() + ".").queue();
-                }
-            }            
-        }
-    }
-
-    public static boolean verifiedUser(String id){
-        boolean verified = false;
-        Connection c = null;
-        PreparedStatement pstmt = null;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(Data.db);
-            
-            pstmt = c.prepareStatement("SELECT ID FROM VERIFIED WHERE ID=?;");
-            pstmt.setString(1, id);
-            try {
-                ResultSet  rs = pstmt.executeQuery();
-                verified = rs.getString("ID").equals(id);   
-            } catch (Exception e) {
-            }
-            pstmt.close();
-            c.close();
-        } catch ( Exception e ) {
-            return false;
-        }
-        return verified;
-    }
-
-    private void notBoth(Role change, Role other, Guild guild, Member member, List<Role> memRole, boolean failed, InteractionHook msgHook){
-        guild.addRoleToMember(member, change).complete();
-
-        String added = "I gave you ";
-        String suffix = "";
-        boolean rem = false; 
-
-        if(memRole.contains(other)){
-            guild.removeRoleFromMember(member, other).complete();
-            suffix = " and removed ";
-            rem = true;
-        }
-
-        if(failed){
-            if(rem) suffix += other.getName();
-            member.getUser().openPrivateChannel().complete().sendMessage(added + change.getName() + suffix + ".").complete();
-        } else {
-            if(rem) suffix += other.getAsMention();
-            msgHook.editOriginal(added + change.getAsMention() +  suffix + ".").queue();
+            new RolesleftSlashCMD().handle(event, hook, failed);
+        } else if (cmd.equals("admin")) {
+            new AdminSlashCMD().handle(event, hook, failed);
         }
     }
 
      
     //User Typing
     @Override
-    public void onUserTyping(@Nonnull UserTypingEvent event) {
+    public void onUserTyping(UserTypingEvent event) {
         if(event.getGuild() != null && event.getMember().getId().equals("848908721900093440") && event.getChannel().getId().equals("768600365602963496")){
             event.getGuild().getTextChannelById("789509420447039510").sendMessage("<@!223932775474921472> <:uhh:816589889898414100> <#768600365602963496>").queue();
         }
     }
 
+    
+
     //Message Received
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        
+        if (!event.isFromGuild()){
+            //main prefix is + in DM
+            String prefixstr = "+";
+            String raw = event.getMessage().getContentRaw();
 
+            // starts with prefix -> send to command handler
+            if (raw.startsWith(prefixstr)) {
+                
+                String[] split = event.getMessage().getContentRaw()
+                    .replaceFirst("(?i)" + Pattern.quote(prefixstr), "")
+                    .split("\\s+");
+            
+                List<String> args = Arrays.asList(split).subList(1, split.length);
+                
+                String cmdName = split[0].toLowerCase();
+                
+                UnBlindCMD cmd1 = new UnBlindCMD();
+                TillBlindCMD cmd2 = new TillBlindCMD();
+
+                if(cmdName.equals(cmd1.getName())){
+                    cmd1.privhandle(event.getAuthor(), args);
+                } else if(cmdName.equals(cmd2.getName())){
+                    cmd2.privhandle(event.getAuthor(), args, event.getJDA());
+                }
+
+            }
+            //if private message don't go into guild code
+            return;
+        }
         
         //Delete every msg in #newcomers
         if(event.getChannel().getId().equals(Data.ETH_NEWCOMERS_CH_ID) && !event.getAuthor().isBot()){
