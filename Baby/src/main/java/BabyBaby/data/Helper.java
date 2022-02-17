@@ -1,8 +1,19 @@
 package BabyBaby.data;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 
 public class Helper {
     public static Object[] getUnits(String unit, double time){
@@ -127,5 +138,119 @@ public class Helper {
         return (dp[len1][len2]<(2 + Math.min(len1, len2)/5*2)? dp[len1][len2]:100);
     }
 
+    // Giving/Removing roles from an Interaction
+    public static void roleGiving (Member member, Guild guild, boolean failed, Role role,  InteractionHook msgHook){
+        List<Role> memRole = member.getRoles();
+        Role student = guild.getRoleById(Data.ethstudent);
+        Role external = guild.getRoleById(Data.ethexternal);
+        if(memRole.contains(role)){
+            if((role.equals(student) && !memRole.contains(external)) || (role.equals(external) && !memRole.contains(student))){
+                String oneneeded = "You need at least  ";
+                if(failed){
+                    member.getUser().openPrivateChannel().complete().sendMessage(oneneeded + student.getName() + " or " + external.getName()).complete();
+                } else {
+                    msgHook.editOriginal(oneneeded + student.getAsMention() + " or " + external.getAsMention()).queue();   
+                }
+                return;
+            }
+            guild.removeRoleFromMember(member, role).complete();
+            String remove = "I removed ";
+            if(failed){
+                member.getUser().openPrivateChannel().complete().sendMessage(remove + role.getName() + " from you.").complete();
+            } else {
+                msgHook.editOriginal(remove + role.getAsMention() + " from you.").queue();   
+            }
+        } else {
+            if(role.equals(student)){
+                
+                if(!verifiedUser(member.getId())){
+                    String doverify = "You have to get verified to get the role ";
+                    String suffix = ". You can do that here: https://dauth.spclr.ch/ and write the token to <@306523617188118528>";
+                    if(failed){
+                        member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
+                    } else {
+                        msgHook.editOriginal(doverify + role.getAsMention() + suffix).queue();
+                    }
+                    return;
+                }
+                
+                notBoth(role, external, guild, member, memRole, failed, msgHook);
 
+
+            } else if (role.equals(external)){
+                notBoth(role, student, guild, member, memRole, failed, msgHook);
+            } else {
+                guild.addRoleToMember(member, role).complete();
+                String added = "I gave you ";
+                if(failed){
+                    member.getUser().openPrivateChannel().complete().sendMessage(added + role.getName() + ".").complete();
+                } else {
+                    msgHook.editOriginal(added + role.getAsMention() + ".").queue();
+                }
+            }            
+        }
+    }
+
+    //Check if Verified
+    public static boolean verifiedUser(String id){
+        boolean verified = false;
+        Connection c = null;
+        PreparedStatement pstmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(Data.db);
+            
+            pstmt = c.prepareStatement("SELECT ID FROM VERIFIED WHERE ID=?;");
+            pstmt.setString(1, id);
+            try {
+                ResultSet  rs = pstmt.executeQuery();
+                verified = rs.getString("ID").equals(id);   
+            } catch (Exception e) {
+            }
+            pstmt.close();
+            c.close();
+        } catch ( Exception e ) {
+            return false;
+        }
+        return verified;
+    }
+
+    //Check if member has not both roles
+    private static void notBoth(Role change, Role other, Guild guild, Member member, List<Role> memRole, boolean failed, InteractionHook msgHook){
+        guild.addRoleToMember(member, change).complete();
+
+        String added = "I gave you ";
+        String suffix = "";
+        boolean rem = false; 
+
+        if(memRole.contains(other)){
+            guild.removeRoleFromMember(member, other).complete();
+            suffix = " and removed ";
+            rem = true;
+        }
+
+        if(failed){
+            if(rem) suffix += other.getName();
+            member.getUser().openPrivateChannel().complete().sendMessage(added + change.getName() + suffix + ".").complete();
+        } else {
+            if(rem) suffix += other.getAsMention();
+            msgHook.editOriginal(added + change.getAsMention() +  suffix + ".").queue();
+        }
+    }
+
+    public static void unhook(String message, boolean failed, InteractionHook hook, User user){
+        if(failed){
+            user.openPrivateChannel().complete().sendMessage(message).complete();
+        } else {
+            hook.editOriginal(message).queue();
+        }
+    }
+    
+    public static void unhook(MessageEmbed message, boolean failed, InteractionHook hook, User user){
+        if(failed){
+            user.openPrivateChannel().complete().sendMessageEmbeds(message).queue();
+        } else {
+            hook.editOriginalEmbeds(message).queue();
+        }
+    }
 }
