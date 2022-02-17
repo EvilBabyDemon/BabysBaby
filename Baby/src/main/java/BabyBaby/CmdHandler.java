@@ -28,16 +28,18 @@ public class CmdHandler {
         //TODO Remove Mute commands (mute + learning + admin cmds)
             //remove SQL Table -> USERS and ADMINMUTE
         //TODO add new Time out feature for admins (as slash)
-        //TODO remove emotestats cmd or at least from Help page
+        //|X| TODO remove emotestats cmd or at least from Help page 
         //TODO track buttons and slash cmds
-        //TODO remove leaderboard for blind
-        //TODO remove group blind
+        //|X| TODO remove leaderboard for blind
+            //Only sql table left
+        //|X| TODO remove group blind
         //TODO remove cmds which have slash cmd (poll, blind role (make that better?))
         //TODO make remind slash cmd
         //TODO fix kick event
-        //TODO fix errors (merge private and guild messages)
-        // new adminSlash cmd
+        //|X| TODO fix errors (merge private and guild messages) 
+        //TODO new adminSlash cmd
             // timeout
+        //TODO Rename Interfaces to I...
 
         // adding commands visible to @everyone
         addPublicCommand(new PingCMD());
@@ -64,7 +66,9 @@ public class CmdHandler {
         addPublicCommand(new FlashedCMD());
         addPublicCommand(new BlindForceCMD());
         addPublicCommand(new TillBlindCMD());
-        addPublicCommand(new EmoteQueryCMD());
+        
+        //at the moment completly useless
+        //addPublicCommand(new EmoteQueryCMD());
         addPublicCommand(new BlindStatsCMD());
         addPublicCommand(new UsageCMD());
 
@@ -244,7 +248,7 @@ public class CmdHandler {
             public void run() {
 
                 //check if blinded and then just ignore cmd
-                if(ctx.getGuild().getId().equals(Data.ethid) && ctx.getMember().getRoles().contains(ctx.getGuild().getRoleById(Data.blindID))){
+                if(ctx.getGuild().getId().equals(Data.ETH_ID) && ctx.getMember().getRoles().contains(ctx.getGuild().getRoleById(Data.BLIND_ID))){
                     ctx.getAuthor().openPrivateChannel().complete().sendMessage("Unblind yourself and don't try to cheat!").queue();
                     return;
                 }
@@ -252,7 +256,7 @@ public class CmdHandler {
                 try {
                     switch(permissionLevel){
                         case 0:
-                            if(ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ethid) || ctx.getChannel().getParentCategory() == null 
+                            if(ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ETH_ID) || ctx.getChannel().getParentCategory() == null 
                             || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL) || ((PublicCMD) cmd).getWhiteListBool())
                                 ((PublicCMD) cmd).handlePublic(ctx);
                             else
