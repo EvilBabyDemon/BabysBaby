@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import javax.security.auth.login.LoginException;
 
 import BabyBaby.Listeners.BabyListener;
-import BabyBaby.Listeners.LeaderboardListener;
 import BabyBaby.Listeners.ModerationListener;
 import BabyBaby.Listeners.StartupListener;
 import BabyBaby.data.Data;
@@ -52,7 +51,7 @@ public class Baby {
             builder.setMemberCachePolicy(MemberCachePolicy.ALL);
             
             JDA jda = builder.build();
-            jda.addEventListener(new StartupListener(jda), new BabyListener(jda), new ModerationListener(), new LeaderboardListener());
+            jda.addEventListener(new StartupListener(jda), new BabyListener(jda), new ModerationListener());
 
             Data.startUp = OffsetDateTime.now();
             
