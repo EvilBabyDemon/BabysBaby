@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.PublicCMD;
-import BabyBaby.Listeners.BabyListener;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
 import me.duncte123.botcommons.messaging.EmbedUtils;
