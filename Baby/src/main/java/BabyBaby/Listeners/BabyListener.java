@@ -256,6 +256,9 @@ public class BabyListener extends ListenerAdapter {
         if(Data.emoteassign.containsKey(event.getComponentId())){
             Role role = event.getGuild().getRoleById(Data.emoteassign.get(event.getComponentId()));
             Helper.roleGiving(event.getMember(), event.getGuild(), failed, role, msgHook);
+            
+            Data.cmdUses.putIfAbsent(role.getName(), 0);
+            Data.cmdUses.computeIfPresent(role.getName(), (name, x) -> ++x);
         }
     }
 
