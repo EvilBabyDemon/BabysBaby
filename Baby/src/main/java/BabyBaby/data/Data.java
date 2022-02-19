@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import BabyBaby.Command.ISlashCMD;
+
 public class Data {
     public static boolean antibamboozle = true;
     //TODO Remove msgid and check on msgToChan
@@ -45,6 +47,8 @@ public class Data {
     public static HashSet<String> newErstie = new HashSet<>();
     public static boolean automaticRoleAddThingy = false;
     public static int slashAndButton = 0;
+    public static ArrayList<ISlashCMD> slashcmds = new ArrayList<>();
+
     
     public static int[] covid = new int [21];
     
