@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 
 public class CmdHandler {
 
-    private final List<PublicCMD> publicCommands = new ArrayList<>();
-    private final List<AdminCMD> adminCommands = new ArrayList<>();
-    private final List<OwnerCMD> ownerCommands = new ArrayList<>();
+    private final List<IPublicCMD> publicCommands = new ArrayList<>();
+    private final List<IAdminCMD> adminCommands = new ArrayList<>();
+    private final List<IOwnerCMD> ownerCommands = new ArrayList<>();
 
     public static HashSet<String> offCMD = new HashSet<>();
 
@@ -25,21 +25,11 @@ public class CmdHandler {
 
     public CmdHandler(JDA bot) throws IOException {
 
-        //TODO Remove Mute commands (mute + learning + admin cmds)
-            //remove SQL Table -> USERS and ADMINMUTE
-        //TODO add new Time out feature for admins (as slash)
-        //|X| TODO remove emotestats cmd or at least from Help page 
-        //TODO track buttons and slash cmds
+        //|X| TODO Remove Mute commands (mute + learning + admin cmds)
+            // only remove SQL Table left -> USERS and ADMINMUTE
         //|X| TODO remove leaderboard for blind
-            //Only sql table left
-        //|X| TODO remove group blind
-        //TODO remove cmds which have slash cmd (poll, blind role (make that better?))
-        //TODO make remind slash cmd
-        //TODO fix kick event
-        //|X| TODO fix errors (merge private and guild messages) 
-        //TODO new adminSlash cmd
-            // timeout
-        //TODO Rename Interfaces to I...
+        //Only sql table left
+        
 
         // adding commands visible to @everyone
         addPublicCommand(new PingCMD());
@@ -52,24 +42,23 @@ public class CmdHandler {
 
         addPublicCommand(new NoKeyCMD());
         addPublicCommand(new PolyCMD());
-        addPublicCommand(new ReminderCMD());
+        //addPublicCommand(new ReminderCMD());
         addPublicCommand(new RockPaperCMD());
         //addPublicCommand(new RoleMuteCMD());
         addPublicCommand(new SieveCMD());
         addPublicCommand(new SourceCMD());
         addPublicCommand(new SuggestionCMD());
-        addPublicCommand(new PollCMD());
+        //addPublicCommand(new PollCMD());
         addPublicCommand(new PlaceGifCMD());
         addPublicCommand(new BotsOnlineCMD());
-        addPublicCommand(new BlindCMD());
+        //addPublicCommand(new BlindCMD());
         addPublicCommand(new UnBlindCMD());
         addPublicCommand(new FlashedCMD());
-        addPublicCommand(new BlindForceCMD());
+        //addPublicCommand(new BlindForceCMD());
         addPublicCommand(new TillBlindCMD());
         
         //at the moment completly useless
         //addPublicCommand(new EmoteQueryCMD());
-        addPublicCommand(new BlindStatsCMD());
         addPublicCommand(new UsageCMD());
 
         // adding commands visible to @admin
@@ -123,7 +112,7 @@ public class CmdHandler {
 
     }
 
-    private void addPublicCommand(PublicCMD cmd) {
+    private void addPublicCommand(IPublicCMD cmd) {
         //addAdminCommand(cmd); // admins can use @everyone commands as well
 
         boolean nameFound = this.publicCommands.stream().anyMatch(
@@ -137,7 +126,7 @@ public class CmdHandler {
         publicCommands.add(cmd);
     }
 
-    public void addAdminCommand(AdminCMD cmd) {
+    public void addAdminCommand(IAdminCMD cmd) {
         //addOwnerCommand(cmd); // owner can use @admin commands as well
 
         boolean nameFound = this.adminCommands.stream().anyMatch(
@@ -151,7 +140,7 @@ public class CmdHandler {
         adminCommands.add(cmd);
     }
 
-    public void addOwnerCommand(OwnerCMD cmd) {
+    public void addOwnerCommand(IOwnerCMD cmd) {
         boolean nameFound = this.ownerCommands.stream().anyMatch(
                 (it) -> it.getName().equalsIgnoreCase(cmd.getName())
         );
@@ -179,19 +168,19 @@ public class CmdHandler {
         String cmdName = split[0].toLowerCase();
         switch (permissionLevel) {
             case 0:
-                PublicCMD publicCommand = searchPublicCommand(cmdName);
+                IPublicCMD publicCommand = searchPublicCommand(cmdName);
                 if (publicCommand != null && !offCMD.contains(publicCommand.getName())) {
                     runCMD(publicCommand, ctx, permissionLevel);
                 }
                 break;
             case 1:
-                AdminCMD adminCommand = searchAdminCommand(cmdName);
+                IAdminCMD adminCommand = searchAdminCommand(cmdName);
                 if (adminCommand != null && !offCMD.contains(adminCommand.getName())) {
                     runCMD(adminCommand, ctx, permissionLevel);
                 }
                 break;
             case 2:
-                OwnerCMD ownerCommand = searchOwnerCommand(cmdName);
+                IOwnerCMD ownerCommand = searchOwnerCommand(cmdName);
                 if (ownerCommand != null && !offCMD.contains(ownerCommand.getName())) {
                     runCMD(ownerCommand, ctx, permissionLevel);
                 }
@@ -199,8 +188,8 @@ public class CmdHandler {
         }
     }
 
-    public OwnerCMD searchOwnerCommand(String search) {
-        for (OwnerCMD cmd : ownerCommands) {
+    public IOwnerCMD searchOwnerCommand(String search) {
+        for (IOwnerCMD cmd : ownerCommands) {
             if (cmd.getName().equals(search) || cmd.getAliases().contains(search)) {
                 return cmd;
             }
@@ -208,9 +197,9 @@ public class CmdHandler {
         return searchAdminCommand(search);
     }
 
-    public AdminCMD searchAdminCommand(String search) {
+    public IAdminCMD searchAdminCommand(String search) {
 
-        for (AdminCMD cmd : adminCommands) {
+        for (IAdminCMD cmd : adminCommands) {
             if (cmd.getName().equals(search) || cmd.getAliases().contains(search)) {
                 return cmd;
             }
@@ -218,8 +207,8 @@ public class CmdHandler {
         return searchPublicCommand(search);
     }
 
-    public PublicCMD searchPublicCommand(String search) {
-        for (PublicCMD cmd : publicCommands) {
+    public IPublicCMD searchPublicCommand(String search) {
+        for (IPublicCMD cmd : publicCommands) {
             if (cmd.getName().equals(search) || cmd.getAliases().contains(search)) {
                 return cmd;
             }
@@ -229,20 +218,20 @@ public class CmdHandler {
  
 
 
-    public List<PublicCMD> getPublicCommands() {
+    public List<IPublicCMD> getPublicCommands() {
         return publicCommands;
     }
 
-    public List<AdminCMD> getAdminCommands() {
+    public List<IAdminCMD> getAdminCommands() {
         return adminCommands;
     }
 
-    public List<OwnerCMD> getOwnerCommands() {
+    public List<IOwnerCMD> getOwnerCommands() {
         return ownerCommands;
     }
 
 
-    private void runCMD (Command cmd, CommandContext ctx, int permissionLevel){
+    private void runCMD (ICommand cmd, CommandContext ctx, int permissionLevel){
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -257,17 +246,17 @@ public class CmdHandler {
                     switch(permissionLevel){
                         case 0:
                             if(ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ETH_ID) || ctx.getChannel().getParentCategory() == null 
-                            || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL) || ((PublicCMD) cmd).getWhiteListBool())
-                                ((PublicCMD) cmd).handlePublic(ctx);
+                            || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL) || ((IPublicCMD) cmd).getWhiteListBool())
+                                ((IPublicCMD) cmd).handlePublic(ctx);
                             else
                                 ctx.getChannel().sendMessage("Please use the dedicated bot channels for this command.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                             break;
                         case 1:
-                            ((AdminCMD) cmd).handleAdmin(ctx);
+                            ((IAdminCMD) cmd).handleAdmin(ctx);
                             break;
                         case 2:
                             long time = System.currentTimeMillis();
-                            ((OwnerCMD) cmd).handleOwner(ctx);
+                            ((IOwnerCMD) cmd).handleOwner(ctx);
                             System.out.println(System.currentTimeMillis()-time);
                             break;
                     }
