@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import BabyBaby.Command.ISlashCMD;
+import BabyBaby.Command.commands.Admin.AdminCMDs;
 import BabyBaby.data.Data;
+import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -23,8 +25,52 @@ public class AdminSlashCMD implements ISlashCMD{
 
     @Override
     public void handle(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
-        event.getSubcommandName();
+        String sub = event.getSubcommandName();
         
+        switch (sub) {
+            case "ban": 
+                AdminCMDs.ban(event, hook, failed);
+                break;
+            case "kick": 
+                AdminCMDs.kick(event, hook, failed);
+                break;
+            case "timeout":
+                AdminCMDs.timeout(event, hook, failed);
+                break;
+            case "warnings":
+                AdminCMDs.getWarnings(event, hook, failed);
+                break;
+            case "warn":
+                AdminCMDs.warn(event, hook, failed);
+                break;
+            case "addrole":
+                AdminCMDs.addrole(event, hook, failed);
+                break;
+            case "delrole":
+                AdminCMDs.delRole(event, hook, failed);
+                break;
+            case "editassign":
+                AdminCMDs.editAssign(event, hook, failed);
+                break;
+            case "newrole":
+                AdminCMDs.newRole(event, hook, failed);
+                break;
+            case "roleassign":
+                AdminCMDs.roleAssign(event, hook, failed);
+                break;
+            case "roleid":
+                AdminCMDs.roleID(event, hook, failed);
+                break;
+            case "updaterole":
+                AdminCMDs.updateRole(event, hook, failed);
+                break;
+            case "whois":
+                AdminCMDs.whois(event, hook, failed);
+                break;
+            default:
+                Helper.unhook("Smth went really wrong. Pls tell my Owner.", failed, hook, event.getUser());
+                break;
+        }
         
 
     }
