@@ -62,6 +62,7 @@ public class CmdHandler {
         addPublicCommand(new UsageCMD());
 
         // adding commands visible to @admin
+        /* Everything slash now
         addAdminCommand(new AddRoleCMD());
         addAdminCommand(new DelRoleCMD());
         addAdminCommand(new RoleIdCMD());
@@ -75,6 +76,7 @@ public class CmdHandler {
         addAdminCommand(new KickCMD());
         addAdminCommand(new BanCMD());
         addAdminCommand(new NewRoleCMD());
+        */
         //TODO Fix that cmd
         //addAdminCommand(new AdminMuteBlindCMD());
 
