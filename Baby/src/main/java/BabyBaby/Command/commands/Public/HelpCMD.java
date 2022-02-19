@@ -41,6 +41,12 @@ public class HelpCMD implements IPublicCMD {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
+    Comparator<ISlashCMD> compSlash = new Comparator<>(){
+        @Override
+        public int compare(ISlashCMD o1, ISlashCMD o2) {
+            return o1.getName().charAt(0) - o2.getName().charAt(0);
+        }
+    };
 
     @Override
     public boolean getWhiteListBool(){
@@ -234,6 +240,15 @@ public class HelpCMD implements IPublicCMD {
         return ownerstr;
     }
 
+    private String slashCMDs () {
+        String slashstr = ""; 
+        Data.slashcmds.sort(compSlash);
+        for (ISlashCMD slashCMD : Data.slashcmds) {
+            slashstr += "/" + slashCMD.getName() +  "\n";
+        }
+        return slashstr;
+    }
+
     private void publicCMDsordered (CmdHandler manager, String prefix, EmbedBuilder eb){
         
         ArrayList<IPublicCMD> publiclist = new ArrayList<>(manager.getPublicCommands());
@@ -283,11 +298,13 @@ public class HelpCMD implements IPublicCMD {
 
         
         if(rank>0)
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Admin CMD").addDiff(adminCMDs(manager, prefix)).build(), true);
+            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Admin CMDs").addDiff(adminCMDs(manager, prefix)).build(), true);
         
         if(rank>1)
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Owner CMD").addDiff(ownerCMDs(manager, prefix)).build(), true);
+            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Owner CMDs").addDiff(ownerCMDs(manager, prefix)).build(), true);
 
+            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Slash CMDs").addDiff(slashCMDs()).build(), true);
+        
         embed.setFooter("With all CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
         channel.sendMessageEmbeds(embed.build()).queue();
     }
