@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.member.*;
+import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateTimeOutEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.channel.concrete.TextChannelManager;
 import net.dv8tion.jda.api.managers.channel.concrete.VoiceChannelManager;
@@ -48,12 +49,6 @@ public class ModerationListener extends ListenerAdapter{
 	public void onGuildMemberJoin(GuildMemberJoinEvent event) {
 		if(!event.getGuild().getId().equals(Data.ETH_ID))
             return;
-
-        //OffsetDateTime time = event.getUser().getTimeCreated();
-		//String username = event.getUser().getName().toLowerCase();
-		//if(username.contains("lengler") || username.contains("welzl")){
-		//	event.getGuild().getTextChannelById("747754931905364000").sendMessage("<@&773908766973624340> Account with Prof name joined. Time of creation of the account:" + time).queue();
-		//}
 
         
         List<Invite> inv = event.getGuild().retrieveInvites().complete();
@@ -274,19 +269,20 @@ public class ModerationListener extends ListenerAdapter{
         }
     }
 
-    
 
 
-
-    //Member Remove
+    //Member Remove for kick and ban logs
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
-        
+        if(!event.getGuild().getId().equals(Data.ETH_ID)) {
+            return;
+        }
+
         AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
         logs.type(ActionType.KICK);
         for (AuditLogEntry entry : logs) {
-            if(Data.kick == null || !Data.kick.isEqual(entry.getTimeCreated())){
-
+            if(Data.kick == null || !Data.kick.isEqual(entry.getTimeCreated()) && Data.kick.isBefore(entry.getTimeCreated())){
+                
                 Data.kick = entry.getTimeCreated();
                 MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
@@ -307,7 +303,7 @@ public class ModerationListener extends ListenerAdapter{
         logs = event.getGuild().retrieveAuditLogs();
         logs.type(ActionType.BAN);
         for (AuditLogEntry entry : logs) {
-            if(Data.ban == null || !Data.ban.isEqual(entry.getTimeCreated())){
+            if(Data.ban == null || !Data.ban.isEqual(entry.getTimeCreated()) && Data.ban.isBefore(entry.getTimeCreated())){
                 
                 Data.ban = entry.getTimeCreated();
                 MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
@@ -325,6 +321,22 @@ public class ModerationListener extends ListenerAdapter{
             }
             break;
         }
+    }
+
+    @Override
+    public void onGuildMemberUpdateTimeOut(GuildMemberUpdateTimeOutEvent event) {
+        MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
+        
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
+        eb.setColor(0);
+        eb.setThumbnail(event.getUser().getAvatarUrl());
+        Member warned = event.getMember();
+        
+        eb.setDescription(":warning: **Time out** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** ");
+        log.sendMessage("cache reload").complete().editMessage(warned.getAsMention() + " " + event.getUser().getAsMention()).complete().delete().complete();
+        
+        log.sendMessageEmbeds(eb.build()).queue();
     }
 
 }
