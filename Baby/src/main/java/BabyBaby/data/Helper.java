@@ -61,6 +61,7 @@ public class Helper {
         if(rounder > endOfTime){
             rounder = endOfTime - 100000;
         }
+        //returning Unit which was used and input in seconds
         return new Object[]{strUnit, rounder};
     }
 
