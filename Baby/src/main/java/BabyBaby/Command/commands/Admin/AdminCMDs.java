@@ -187,17 +187,18 @@ public class AdminCMDs {
             Helper.unhook("Pretty sure the time was too long.", failed, hook, event.getUser());
         }
         
-        Helper.unhook(bad.getAsMention() + "was timed out for " + time + " " + strUnit, failed, hook, event.getUser());
+        String timeMessage = bad.getAsMention() + "was timed out for " + time + " " + strUnit;
+        Helper.unhook(timeMessage, failed, hook, event.getUser());
         
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
         eb.setColor(0);
         eb.setThumbnail(event.getUser().getAvatarUrl());
         
-        eb.setDescription(":warning: **Timeout** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
+        eb.setDescription(":warning: **Timeout** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() +")"+ " \n" + 
+         " :page_facing_up: **Reason:** " + reason + "\n" + timeMessage);
         event.getChannel().sendMessageEmbeds(eb.build()).queue();
 
-        Helper.unhook("Done.", failed, hook, event.getUser());
 
     }
 
