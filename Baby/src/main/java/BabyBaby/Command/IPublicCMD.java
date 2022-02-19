@@ -2,7 +2,7 @@ package BabyBaby.Command;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public interface IPublicCMD extends AdminCMD {
+public interface IPublicCMD extends IAdminCMD {
 
     default boolean getWhiteListBool(){
         return false;

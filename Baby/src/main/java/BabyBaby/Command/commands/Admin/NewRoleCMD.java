@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import BabyBaby.Command.AdminCMD;
+import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-public class NewRoleCMD implements AdminCMD {
+public class NewRoleCMD implements IAdminCMD {
 
     @Override
     public String getName() {

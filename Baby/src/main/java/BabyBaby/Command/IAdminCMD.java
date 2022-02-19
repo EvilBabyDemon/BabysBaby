@@ -2,7 +2,7 @@ package BabyBaby.Command;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public interface AdminCMD extends IOwnerCMD {
+public interface IAdminCMD extends IOwnerCMD {
 
     default void handleOwner(CommandContext ctx){
         handleAdmin(ctx);

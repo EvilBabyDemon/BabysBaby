@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
-import BabyBaby.Command.AdminCMD;
+import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
-public class WhoisCMD implements AdminCMD{
+public class WhoisCMD implements IAdminCMD{
 
     @Override
     public String getName() {

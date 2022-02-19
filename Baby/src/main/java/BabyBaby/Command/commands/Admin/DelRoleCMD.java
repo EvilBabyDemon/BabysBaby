@@ -6,14 +6,14 @@ import java.sql.Statement;
 import java.util.List;
 
 
-import BabyBaby.Command.AdminCMD;
+import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class DelRoleCMD implements AdminCMD {
+public class DelRoleCMD implements IAdminCMD {
 
     @Override
     public String getName() {

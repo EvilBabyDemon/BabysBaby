@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
-import BabyBaby.Command.AdminCMD;
+import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SaveMSGID implements AdminCMD {
+public class SaveMSGID implements IAdminCMD {
 
 
     @Override

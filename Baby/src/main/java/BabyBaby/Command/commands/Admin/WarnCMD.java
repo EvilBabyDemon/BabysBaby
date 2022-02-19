@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
-import BabyBaby.Command.AdminCMD;
+import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class WarnCMD implements AdminCMD{
+public class WarnCMD implements IAdminCMD{
 
     @Override
     public String getName() {

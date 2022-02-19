@@ -2,7 +2,7 @@ package BabyBaby.Command.commands.Admin;
 
 import java.util.LinkedList;
 
-import BabyBaby.Command.AdminCMD;
+import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class BanCMD implements AdminCMD{
+public class BanCMD implements IAdminCMD{
 
     @Override
     public String getName() {

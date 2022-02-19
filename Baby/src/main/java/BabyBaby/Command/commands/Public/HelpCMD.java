@@ -29,9 +29,9 @@ public class HelpCMD implements IPublicCMD {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
-    Comparator<AdminCMD> compAdm = new Comparator<>(){
+    Comparator<IAdminCMD> compAdm = new Comparator<>(){
         @Override
-        public int compare(AdminCMD o1, AdminCMD o2) {
+        public int compare(IAdminCMD o1, IAdminCMD o2) {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
@@ -96,7 +96,7 @@ public class HelpCMD implements IPublicCMD {
 
         // specific help
         String search = args.get(0);
-        AdminCMD cmd = manager.searchAdminCommand(search);
+        IAdminCMD cmd = manager.searchAdminCommand(search);
 
         // command does not exist -> error message
         if (cmd == null) {
@@ -216,9 +216,9 @@ public class HelpCMD implements IPublicCMD {
 
     private String adminCMDs (CmdHandler manager, String prefix){
         String admin = ""; 
-        List<AdminCMD> adminlist = manager.getAdminCommands();
+        List<IAdminCMD> adminlist = manager.getAdminCommands();
         adminlist.sort(compAdm);
-        for (AdminCMD adminCMD : adminlist) {
+        for (IAdminCMD adminCMD : adminlist) {
             admin += prefix + adminCMD.getName() +  "\n";
         }
         return admin;

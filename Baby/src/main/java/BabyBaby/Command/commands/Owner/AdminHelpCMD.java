@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import BabyBaby.CmdHandler;
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
-import BabyBaby.Command.AdminCMD;
+import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IOwnerCMD;
 import me.duncte123.botcommons.messaging.EmbedUtils;
@@ -25,7 +25,7 @@ public class AdminHelpCMD implements IOwnerCMD {
         CmdHandler handler;
         try {
             handler = new CmdHandler(null);
-            AdminCMD cmd = handler.searchAdminCommand("help");
+            IAdminCMD cmd = handler.searchAdminCommand("help");
             cmd.handleAdmin(ctx);
         } catch (IOException e) {
             e.printStackTrace();

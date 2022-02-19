@@ -1,6 +1,6 @@
 package BabyBaby.Command.commands.Admin;
 
-import BabyBaby.Command.AdminCMD;
+import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.sql.Connection;
@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 
 
 
-public class GetWarningsFromUserCMD implements AdminCMD{
+public class GetWarningsFromUserCMD implements IAdminCMD{
 
     @Override
     public String getName() {
