@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationActi
 import org.jetbrains.annotations.NotNull;
 
 import BabyBaby.CmdHandler;
+import BabyBaby.Command.ISlashCMD;
 import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Bot.*;
 //import BabyBaby.Command.commands.Bot.drawwithFerris;
@@ -315,20 +316,28 @@ public class BabyListener extends ListenerAdapter {
         Data.users.add(event.getUser().getId());
 
         String cmd = event.getName();
+        ISlashCMD cmdClass = null;
         if(cmd.equals("poll")){
-            new PollSlashCMD().handle(event, hook, failed);
+            cmdClass = new PollSlashCMD();
         } else if(cmd.equals("blind")){
-            new BlindSlashCMD().handle(event, hook, failed);
+            cmdClass = new BlindSlashCMD();
         } else if(cmd.equals("role")){
-            new RoleSlashCMD().handle(event, hook, failed);
+            cmdClass = new RoleSlashCMD();
         } else if(cmd.equals("report")){
-            new ReportSlashCMD().handle(event, hook, failed);
+            cmdClass = new ReportSlashCMD();
         } else if(cmd.equals("rolesleft")){
-            new RolesleftSlashCMD().handle(event, hook, failed);
+            cmdClass = new RolesleftSlashCMD();
         } else if (cmd.equals("admin")) {
-            new AdminSlashCMD().handle(event, hook, failed);
+            cmdClass = new AdminSlashCMD();
+        } else {
+            Helper.unhook("Uhhh what? Please send a screenshot of this to my owner.", failed, hook, event.getUser());
+            return;
         }
-    }
+
+        cmdClass.handle(event, hook, failed);
+        Data.cmdUses.putIfAbsent(cmdClass.getName(), 0);
+        Data.cmdUses.computeIfPresent(cmdClass.getName(), (name, x) -> ++x);
+    }   
 
      
     //User Typing
