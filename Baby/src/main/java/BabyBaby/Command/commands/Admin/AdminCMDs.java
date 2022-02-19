@@ -437,7 +437,7 @@ public class AdminCMDs {
 
         String id = event.getOption("role").getAsString();
         String emote = event.getOption("emote").getAsString();
-        String categ = event.getOption("category").getAsString();
+        String categ = event.getOption("category") != null ? event.getOption("category").getAsString() : "";
 
         if(emote.contains("<")){
             emote = emote.split(":")[2];
@@ -741,6 +741,7 @@ public class AdminCMDs {
         }
         String msgID = event.getChannel().sendMessage("Get " + newRole.getName() + " with this button:").setActionRow(Button.primary(emoteStr, gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoteStr)): Emoji.fromUnicode(emoteStr))).complete().getId();
         Data.buttonid.add(msgID);
+        Helper.unhook("Done", failed, hook, event.getUser());
     }
 
     //assign
@@ -957,7 +958,6 @@ public class AdminCMDs {
     public static void roleID(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         Connection c = null;
         Statement stmt = null;
-        MessageChannel channel = event.getChannel();
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
@@ -981,7 +981,6 @@ public class AdminCMDs {
             stmt.close();
             c.close();
             Helper.unhook(result, failed, hook, event.getUser());
-            channel.sendMessage(result).queue();
          } catch ( Exception e ) {
             Helper.unhook(e.getClass().getName() + ": " + e.getMessage(), failed, hook, event.getUser());
             return;
