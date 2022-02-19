@@ -53,7 +53,8 @@ public class GetReminder implements Runnable {
         eb.setTitle("Reminder!");
         eb.setColor(0);
         eb.setDescription(text);
-
-        guild.getTextChannelById(channelID).sendMessage(reminder.getAsMention()).setEmbeds(eb.build()).queue();
+        String message = "New Reminder from " + guild.getTextChannelById(channelID) != null ? guild.getTextChannelById(channelID).getAsMention() : guild.getName() + " " + channelID + "!";
+        reminder.openPrivateChannel().complete().sendMessage(message).setEmbeds(eb.build()).queue();
+        //guild.getTextChannelById(channelID).sendMessage(reminder.getAsMention()).setEmbeds(eb.build()).queue();
     }
 }
