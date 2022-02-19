@@ -182,7 +182,7 @@ public class AdminCMDs {
         }
 
         try {
-            bad.timeoutFor(rounder, TimeUnit.MINUTES).complete();
+            bad.timeoutFor(rounder, TimeUnit.SECONDS).complete();
         } catch (Exception e) {
             Helper.unhook("Pretty sure the time was too long.", failed, hook, event.getUser());
         }
