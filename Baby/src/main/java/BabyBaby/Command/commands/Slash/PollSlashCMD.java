@@ -1,7 +1,9 @@
 package BabyBaby.Command.commands.Slash;
 
 import BabyBaby.Command.ISlashCMD;
+import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -18,6 +20,9 @@ public class PollSlashCMD implements ISlashCMD {
 
     @Override
     public void handle(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
+        if(!event.getMember().hasPermission(event.getGuildChannel(), Permission.MESSAGE_SEND)) {
+            Helper.unhook("You need write permissions here!", failed, hook, event.getUser());
+        }
         String topic = event.getOption("title").getAsString();
         
         String[] emot = {"0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣", ":keycap_ten:"};
@@ -54,9 +59,7 @@ public class PollSlashCMD implements ISlashCMD {
             built.addReaction(emot[i]).queue();
         }
 
-        if(!failed) {
-            hook.editOriginal("Done!").queue();
-        }
+        Helper.unhook("Done", failed, hook, event.getUser());
 
     }
 
