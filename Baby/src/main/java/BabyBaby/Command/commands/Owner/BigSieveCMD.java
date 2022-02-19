@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
-public class BigSieveCMD implements OwnerCMD{
+public class BigSieveCMD implements IOwnerCMD{
 
     @Override
     public String getName() {

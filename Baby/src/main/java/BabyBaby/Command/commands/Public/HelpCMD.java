@@ -20,12 +20,12 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
-public class HelpCMD implements PublicCMD {
+public class HelpCMD implements IPublicCMD {
     String sigchange = "";
 
-    Comparator<PublicCMD> compPub = new Comparator<>(){
+    Comparator<IPublicCMD> compPub = new Comparator<>(){
         @Override
-        public int compare(PublicCMD o1, PublicCMD o2) {
+        public int compare(IPublicCMD o1, IPublicCMD o2) {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
@@ -35,9 +35,9 @@ public class HelpCMD implements PublicCMD {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
-    Comparator<OwnerCMD> compOwn = new Comparator<>(){
+    Comparator<IOwnerCMD> compOwn = new Comparator<>(){
         @Override
-        public int compare(OwnerCMD o1, OwnerCMD o2) {
+        public int compare(IOwnerCMD o1, IOwnerCMD o2) {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
@@ -68,7 +68,7 @@ public class HelpCMD implements PublicCMD {
 
         // specific help
         String search = args.get(0);
-        PublicCMD cmd = manager.searchPublicCommand(search);
+        IPublicCMD cmd = manager.searchPublicCommand(search);
 
         // command does not exist -> error message
         if (cmd == null) {
@@ -121,7 +121,7 @@ public class HelpCMD implements PublicCMD {
 
         // specific help
         String search = args.get(0);
-        OwnerCMD cmd = manager.searchOwnerCommand(search);
+        IOwnerCMD cmd = manager.searchOwnerCommand(search);
 
         // command does not exist -> error message
         if (cmd == null) {
@@ -226,9 +226,9 @@ public class HelpCMD implements PublicCMD {
 
     private String ownerCMDs (CmdHandler manager, String prefix){
         String ownerstr = ""; 
-        List<OwnerCMD> ownerlist = manager.getOwnerCommands();
+        List<IOwnerCMD> ownerlist = manager.getOwnerCommands();
         ownerlist.sort(compOwn);
-        for (OwnerCMD ownerCMD : ownerlist) {
+        for (IOwnerCMD ownerCMD : ownerlist) {
             ownerstr += prefix + ownerCMD.getName() +  "\n";
         }
         return ownerstr;
@@ -236,7 +236,7 @@ public class HelpCMD implements PublicCMD {
 
     private void publicCMDsordered (CmdHandler manager, String prefix, EmbedBuilder eb){
         
-        ArrayList<PublicCMD> publiclist = new ArrayList<>(manager.getPublicCommands());
+        ArrayList<IPublicCMD> publiclist = new ArrayList<>(manager.getPublicCommands());
         publiclist.sort(compPub);
         ArrayList<HashSet<String>> groups = new ArrayList<>();
         groups.add(new HashSet<>(Arrays.asList("blind", "flashed", "forceblind", "groupblind", "learning", "muteme", "stats", "till", "unmuteme", "unblind")));

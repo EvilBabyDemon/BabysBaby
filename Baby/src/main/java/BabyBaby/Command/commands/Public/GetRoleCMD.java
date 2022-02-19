@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
 import me.duncte123.botcommons.messaging.EmbedUtils;
@@ -32,7 +32,7 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-public class GetRoleCMD implements PublicCMD{
+public class GetRoleCMD implements IPublicCMD{
     boolean flipflop = false;
 
     @Override

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
-public class TillBlindCMD implements PublicCMD {
+public class TillBlindCMD implements IPublicCMD {
 
     @Override
     public String getName() {

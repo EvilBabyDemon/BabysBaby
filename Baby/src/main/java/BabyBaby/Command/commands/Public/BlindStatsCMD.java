@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class BlindStatsCMD implements PublicCMD {
+public class BlindStatsCMD implements IPublicCMD {
 
     @Override
     public String getName() {

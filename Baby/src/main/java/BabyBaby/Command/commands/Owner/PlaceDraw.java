@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Scanner;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class PlaceDraw implements OwnerCMD {
+public class PlaceDraw implements IOwnerCMD {
     public static boolean on;
     public static int stopped;
     static ArrayList<String> printer;

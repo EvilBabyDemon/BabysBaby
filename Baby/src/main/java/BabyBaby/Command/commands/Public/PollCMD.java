@@ -3,13 +3,13 @@ package BabyBaby.Command.commands.Public;
 import java.util.LinkedList;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class PollCMD implements PublicCMD{
+public class PollCMD implements IPublicCMD{
 
 	@Override
     public boolean getWhiteListBool(){

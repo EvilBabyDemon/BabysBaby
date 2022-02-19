@@ -10,14 +10,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class ReminderCMD implements PublicCMD {
+public class ReminderCMD implements IPublicCMD {
 
     @Override
     public boolean getWhiteListBool(){

@@ -3,13 +3,13 @@ package BabyBaby.Command.commands.Public;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
-public class AllRolesCMD implements PublicCMD{
+public class AllRolesCMD implements IPublicCMD{
 
     @Override
     public String getName() {

@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.Helper;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.*;
 
-public class BlindForceCMD implements PublicCMD{
+public class BlindForceCMD implements IPublicCMD{
     public static HashSet<GetRolesBack> force = new HashSet<>();
 
     @Override

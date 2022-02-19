@@ -2,7 +2,7 @@ package BabyBaby.Command;
 
 import java.util.List;
 
-public interface Command {
+public interface ICommand {
 
     String getName();
 

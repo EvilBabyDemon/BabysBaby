@@ -1,11 +1,11 @@
 package BabyBaby.Command.commands.Owner;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class stopdraw implements OwnerCMD{
+public class stopdraw implements IOwnerCMD{
 
     @Override
     public String getName() {

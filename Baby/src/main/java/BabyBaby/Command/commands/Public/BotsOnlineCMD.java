@@ -3,7 +3,7 @@ package BabyBaby.Command.commands.Public;
 import java.util.ArrayList;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class BotsOnlineCMD implements PublicCMD{
+public class BotsOnlineCMD implements IPublicCMD{
 
 
     @Override

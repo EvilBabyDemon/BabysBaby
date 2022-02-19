@@ -3,12 +3,12 @@ package BabyBaby.Command.commands.Public;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class EmoteQueryCMD implements PublicCMD{
+public class EmoteQueryCMD implements IPublicCMD{
 
     @Override
     public String getName() {

@@ -2,12 +2,12 @@ package BabyBaby.Command.commands.Owner;
 
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SpeedCMD implements OwnerCMD{
+public class SpeedCMD implements IOwnerCMD{
 
     @Override
     public String getName() {

@@ -4,14 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import CryptPart.KeyDecrypt;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import BabyBaby.ColouredStrings.StandardHelpEmbed ;
 
-public class DecryptCMD implements PublicCMD {
+public class DecryptCMD implements IPublicCMD {
 
     @Override
     public String getName() {

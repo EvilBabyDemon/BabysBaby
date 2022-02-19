@@ -3,13 +3,13 @@ package BabyBaby.Command.commands.Owner;
 import java.util.LinkedList;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class ChangeLogCMD implements OwnerCMD {
+public class ChangeLogCMD implements IOwnerCMD {
 
     @Override
     public String getName() {

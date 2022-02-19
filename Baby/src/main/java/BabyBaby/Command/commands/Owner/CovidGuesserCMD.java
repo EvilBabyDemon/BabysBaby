@@ -3,12 +3,12 @@ package BabyBaby.Command.commands.Owner;
 import java.util.LinkedList;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class CovidGuesserCMD implements OwnerCMD {
+public class CovidGuesserCMD implements IOwnerCMD {
 
     @Override
     public String getName() {

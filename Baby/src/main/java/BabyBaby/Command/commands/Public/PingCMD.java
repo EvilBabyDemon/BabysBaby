@@ -1,13 +1,13 @@
 package BabyBaby.Command.commands.Public;
 
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import BabyBaby.Command.CommandContext;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class PingCMD implements PublicCMD {
+public class PingCMD implements IPublicCMD {
 
     @Override
     public void handlePublic(CommandContext ctx) {

@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.concurrent.*;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.Helper;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.*;
 
-public class BlindCMD implements PublicCMD{
+public class BlindCMD implements IPublicCMD{
     
     public static HashMap<Member, ScheduledExecutorService> blind = new HashMap<>();
     public static HashMap<ScheduledExecutorService, GetRolesBack> blindexe = new HashMap<>();

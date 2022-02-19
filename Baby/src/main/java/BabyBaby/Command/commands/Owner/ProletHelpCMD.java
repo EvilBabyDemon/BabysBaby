@@ -4,12 +4,12 @@ import java.io.IOException;
 
 import BabyBaby.CmdHandler;
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IOwnerCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class ProletHelpCMD implements OwnerCMD {
+public class ProletHelpCMD implements IOwnerCMD {
 
     @Override
     public String getName() {
@@ -22,7 +22,7 @@ public class ProletHelpCMD implements OwnerCMD {
         CmdHandler handler;
         try {
             handler = new CmdHandler(null);
-            PublicCMD cmd = handler.searchPublicCommand("help");
+            IPublicCMD cmd = handler.searchPublicCommand("help");
             cmd.handleAdmin(ctx);   
         } catch (IOException e) {
             e.printStackTrace();

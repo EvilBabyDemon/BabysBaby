@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SuggestionCMD implements PublicCMD {
+public class SuggestionCMD implements IPublicCMD {
 
     @Override
     public boolean getWhiteListBool(){

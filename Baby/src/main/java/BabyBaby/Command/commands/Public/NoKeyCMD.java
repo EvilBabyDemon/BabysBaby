@@ -2,14 +2,14 @@ package BabyBaby.Command.commands.Public;
 
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import CryptPart.VWA_MainEntschluesseln;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class NoKeyCMD implements PublicCMD {
+public class NoKeyCMD implements IPublicCMD {
 
     @Override
     public String getName() {

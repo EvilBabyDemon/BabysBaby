@@ -4,12 +4,12 @@ import java.io.IOException;
 
 import BabyBaby.CmdHandler;
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class TurnCMDsOff implements OwnerCMD{
+public class TurnCMDsOff implements IOwnerCMD{
 
     @Override
     public String getName() {
@@ -21,7 +21,7 @@ public class TurnCMDsOff implements OwnerCMD{
         try {
             CmdHandler tmp = new CmdHandler(ctx.getJDA());
 
-            OwnerCMD switsch = tmp.searchOwnerCommand(ctx.getArgs().get(0));
+            IOwnerCMD switsch = tmp.searchOwnerCommand(ctx.getArgs().get(0));
             String output = "Couldn't find the Command.";
             if(switsch != null){
                 if(CmdHandler.offCMD.contains(switsch.getName())){

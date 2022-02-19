@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Random;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class operationsecret implements OwnerCMD {
+public class operationsecret implements IOwnerCMD {
 
     @Override
     public String getName() {

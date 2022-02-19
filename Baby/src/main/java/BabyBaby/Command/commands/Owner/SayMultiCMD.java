@@ -4,13 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SayMultiCMD implements OwnerCMD {
+public class SayMultiCMD implements IOwnerCMD {
 
     @Override
     public String getName() {

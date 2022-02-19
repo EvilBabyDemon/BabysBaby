@@ -7,13 +7,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.Command.commands.Bot.clock;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class ucheck implements OwnerCMD{
+public class ucheck implements IOwnerCMD{
 
     @Override
     public String getName() {

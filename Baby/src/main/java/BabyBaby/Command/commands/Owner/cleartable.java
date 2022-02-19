@@ -5,13 +5,13 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class cleartable implements OwnerCMD{
+public class cleartable implements IOwnerCMD{
 
     @Override
     public String getName() {

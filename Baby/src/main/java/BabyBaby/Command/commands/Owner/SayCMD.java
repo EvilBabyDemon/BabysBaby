@@ -3,11 +3,11 @@ package BabyBaby.Command.commands.Owner;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SayCMD implements OwnerCMD {
+public class SayCMD implements IOwnerCMD {
 
     @Override
     public String getName() {

@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
 import java.awt.Color;
 */
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
@@ -36,7 +36,7 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu.Builder;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 */
-public class TestCMD implements OwnerCMD{
+public class TestCMD implements IOwnerCMD{
 
     @Override
     public String getName() {

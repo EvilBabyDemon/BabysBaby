@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.Command.commands.Admin.AdminMuteBlindCMD;
 import BabyBaby.data.GetRolesBack;
@@ -20,7 +20,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 
-public class UnBlindCMD implements PublicCMD {
+public class UnBlindCMD implements IPublicCMD {
 
 
     @Override

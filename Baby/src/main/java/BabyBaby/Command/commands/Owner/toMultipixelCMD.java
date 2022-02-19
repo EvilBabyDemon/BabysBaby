@@ -1,7 +1,7 @@
 package BabyBaby.Command.commands.Owner;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.*;
 
-public class toMultipixelCMD implements OwnerCMD{
+public class toMultipixelCMD implements IOwnerCMD{
 
     @Override
     public String getName() {

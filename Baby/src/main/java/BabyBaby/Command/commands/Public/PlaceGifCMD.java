@@ -18,13 +18,13 @@ import javax.imageio.metadata.IIOMetadataNode;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Message.Attachment;
 
-public class PlaceGifCMD implements PublicCMD {
+public class PlaceGifCMD implements IPublicCMD {
     File inp;
     static boolean doing;
 

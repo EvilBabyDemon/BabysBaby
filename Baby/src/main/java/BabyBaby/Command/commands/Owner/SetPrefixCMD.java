@@ -7,13 +7,13 @@ import java.sql.Statement;
 import java.util.List;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SetPrefixCMD implements OwnerCMD{
+public class SetPrefixCMD implements IOwnerCMD{
 
     @Override
     public String getName() {

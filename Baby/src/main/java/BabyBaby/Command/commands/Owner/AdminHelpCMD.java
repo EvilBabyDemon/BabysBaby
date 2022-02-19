@@ -6,13 +6,13 @@ import BabyBaby.CmdHandler;
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.AdminCMD;
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 
-public class AdminHelpCMD implements OwnerCMD {
+public class AdminHelpCMD implements IOwnerCMD {
 
     @Override
     public String getName() {

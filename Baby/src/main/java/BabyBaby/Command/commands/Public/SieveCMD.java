@@ -10,7 +10,7 @@ import java.util.List;
 
 import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
 import me.duncte123.botcommons.messaging.EmbedUtils;
@@ -21,7 +21,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
-public class SieveCMD implements PublicCMD {
+public class SieveCMD implements IPublicCMD {
     boolean pleb = true;
     final String NOT_ID = "You used an ID which was neither from a Role or Channel.";
 

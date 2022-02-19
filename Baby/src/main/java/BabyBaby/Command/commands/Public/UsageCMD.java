@@ -8,13 +8,13 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class UsageCMD implements PublicCMD {
+public class UsageCMD implements IPublicCMD {
 
     @Override
     public String getName() {

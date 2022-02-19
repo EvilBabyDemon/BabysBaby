@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class WhereamiCMD implements OwnerCMD {
+public class WhereamiCMD implements IOwnerCMD {
 
     @Override
     public String getName() {

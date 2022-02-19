@@ -1,12 +1,12 @@
 package BabyBaby.Command.commands.Public;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.PublicCMD;
+import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SourceCMD implements PublicCMD{
+public class SourceCMD implements IPublicCMD{
 
     @Override
     public boolean getWhiteListBool(){

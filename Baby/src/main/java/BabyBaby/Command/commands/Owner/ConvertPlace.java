@@ -11,12 +11,12 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 import BabyBaby.Command.CommandContext;
-import BabyBaby.Command.OwnerCMD;
+import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class ConvertPlace implements OwnerCMD {
+public class ConvertPlace implements IOwnerCMD {
 
     @Override
     public String getName() {
