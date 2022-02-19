@@ -48,7 +48,6 @@ public class BabyListener extends ListenerAdapter {
     public static HashMap<String, String> prefix = new HashMap<>();
     private final String ownerID = "223932775474921472";
     //private static boolean typing = true;
-    public static HashSet<String> slash = new HashSet<>(); 
 
     public BabyListener(JDA bot) throws IOException {
         this.bot = bot;
