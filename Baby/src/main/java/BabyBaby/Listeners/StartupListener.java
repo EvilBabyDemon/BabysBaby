@@ -313,7 +313,7 @@ public class StartupListener extends ListenerAdapter{
             PollSlashCMD test = new PollSlashCMD();
             test.load(test.initialise(eth), eth);
 
-            //blind slash cmd
+            //blind
             CommandDataImpl blind = new CommandDataImpl("blind", "A command to blind yourself. You won't see any channels for this time.");
                         
             blind.addOption(OptionType.NUMBER, "time", "Length of the blind.", true);
@@ -330,12 +330,13 @@ public class StartupListener extends ListenerAdapter{
                         
             remind.addOption(OptionType.NUMBER, "time", "In how many Time units do you want to get reminded?", true);
             remind.addOption(OptionType.STRING, "unit", "Default is minutes. Others are seconds, minutes, hours, days.");
+            remind.addOption(OptionType.STRING, "text", "Text which will be displayed to remind you of something.");
             
             slashcmds.add(remind);
             eth.upsertCommand(remind).complete();
 
 
-            //role slash cmd
+            //role
             CommandDataImpl role = new CommandDataImpl("role", "A command to get/remove a role.");
                         
             role.addOption(OptionType.ROLE, "role", "The Role you want to have or get removed.", true);
@@ -344,7 +345,7 @@ public class StartupListener extends ListenerAdapter{
             eth.upsertCommand(role).complete();
 
 
-            //report slash cmd
+            //report
             CommandDataImpl report = new CommandDataImpl("report", "A command to report a incident to Staff anonymously.");
             
             report.addOption(OptionType.STRING, "issue", "The isssue you have or the incident that occured.", true);
@@ -354,13 +355,13 @@ public class StartupListener extends ListenerAdapter{
             eth.upsertCommand(report).complete();
 
 
-            //rolesleft slash cmd
+            //rolesleft
             CommandDataImpl rolesleft = new CommandDataImpl("roles", "A command to see which roles you still could get.");
             slashcmds.add(rolesleft);
             eth.upsertCommand(rolesleft).complete();
 
 
-            //admin slash Cmds
+            //admin
             CommandDataImpl admin = new CommandDataImpl("admin", "All admin commands.");
             LinkedList<SubcommandData> subc = new LinkedList<>();
             
@@ -425,7 +426,8 @@ public class StartupListener extends ListenerAdapter{
 
             //delrole
             SubcommandData delrole = new SubcommandData("delrole", "Command to remove a selfassignable role.");
-            delrole.addOption(OptionType.ROLE, "role", "Select Role to delete from Bot.", true);
+            delrole.addOption(OptionType.ROLE, "role", "Select Role to delete from Bot.", false);
+            delrole.addOption(OptionType.STRING, "roleid", "Id of role for the case it was already deleted.", false);
             subc.add(delrole);
 
             //roleid
