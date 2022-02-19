@@ -333,9 +333,10 @@ public class ModerationListener extends ListenerAdapter{
         eb.setThumbnail(event.getUser().getAvatarUrl());
         Member warned = event.getMember();
         
+        long epochSeconds = event.getNewTimeOutEnd().toEpochSecond();
         eb.setDescription(":warning: **Time out** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")" +
         " \n :page_facing_up: **Reason:** " + "\n" +
-        "Timed out till: <t:" + event.getNewTimeOutEnd().toEpochSecond() * 1000 + ":F>");
+        "Timed out till: <t:" + epochSeconds * 1000 + ":F> for ");
         log.sendMessage("cache reload").complete().editMessage(warned.getAsMention() + " " + event.getUser().getAsMention()).complete().delete().complete();
         
         log.sendMessageEmbeds(eb.build()).queue();
