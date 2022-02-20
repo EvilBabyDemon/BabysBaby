@@ -90,7 +90,7 @@ public class CmdHandler {
         addOwnerCommand(new PlebHelpCMD());
         addOwnerCommand(new SayCMD());
         //addOwnerCommand(new SendUserCMD());
-        addOwnerCommand(new SetButtonCMD());
+        //addOwnerCommand(new SetButtonCMD());
         addOwnerCommand(new SetPrefixCMD());
         addOwnerCommand(new PlaceSorter());
         //addOwnerCommand(new tick());
