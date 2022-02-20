@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 
 public class HelpCMD implements IPublicCMD {
-    String sigchange = "";
 
     Comparator<IPublicCMD> compPub = new Comparator<>(){
         @Override
@@ -220,16 +219,6 @@ public class HelpCMD implements IPublicCMD {
         return prefix;
     }
 
-    private String adminCMDs (CmdHandler manager, String prefix){
-        String admin = ""; 
-        List<IAdminCMD> adminlist = manager.getAdminCommands();
-        adminlist.sort(compAdm);
-        for (IAdminCMD adminCMD : adminlist) {
-            admin += prefix + adminCMD.getName() +  "\n";
-        }
-        return admin;
-    }
-
     private String ownerCMDs (CmdHandler manager, String prefix){
         String ownerstr = ""; 
         List<IOwnerCMD> ownerlist = manager.getOwnerCommands();
@@ -287,23 +276,15 @@ public class HelpCMD implements IPublicCMD {
 
         embed.setTitle("BabysBaby");
         
-        //Old useless stuff
-        //embed.setDescription("Significant changes: " + sigchange);
-        //embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").build(), false);
-        
         publicCMDsordered(manager, prefix, embed);
 
         //embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicCMDs(manager, prefix)).build(), true);
 
-
-        
-        if(rank>0)
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Admin CMDs").addDiff(adminCMDs(manager, prefix)).build(), true);
-        
-        if(rank>1)
+        if(rank>1){
             embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Owner CMDs").addDiff(ownerCMDs(manager, prefix)).build(), true);
-
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Slash CMDs").addDiff(slashCMDs()).build(), true);
+        }
+        
+        embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Slash CMDs").addDiff(slashCMDs()).build(), true);
         
         embed.setFooter("With all CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
         channel.sendMessageEmbeds(embed.build()).queue();
