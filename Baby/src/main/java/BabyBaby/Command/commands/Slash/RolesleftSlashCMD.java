@@ -11,6 +11,7 @@ import java.util.List;
 
 import BabyBaby.Command.ISlashCMD;
 import BabyBaby.data.Data;
+import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -79,11 +80,7 @@ public class RolesleftSlashCMD implements ISlashCMD {
             message = "These are all the roles you can get:\n" + message; 
         }
 
-        if(failed){
-            event.getUser().openPrivateChannel().complete().sendMessage(message).complete();
-        } else {
-            hook.editOriginal(message).queue();
-        }
+        Helper.unhook(message, failed, hook, event.getUser());
     }
 
     @Override

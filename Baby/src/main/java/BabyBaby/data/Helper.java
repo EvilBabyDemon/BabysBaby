@@ -146,32 +146,20 @@ public class Helper {
         Role external = guild.getRoleById(Data.ethexternal);
         if(memRole.contains(role)){
             if((role.equals(student) && !memRole.contains(external)) || (role.equals(external) && !memRole.contains(student))){
-                String oneneeded = "You need at least  ";
-                if(failed){
-                    member.getUser().openPrivateChannel().complete().sendMessage(oneneeded + student.getName() + " or " + external.getName()).complete();
-                } else {
-                    msgHook.editOriginal(oneneeded + student.getAsMention() + " or " + external.getAsMention()).queue();   
-                }
+                String oneneeded = "You need at least  " + student.getAsMention() + " or " + external.getAsMention();
+                Helper.unhook(oneneeded, failed, msgHook, member.getUser());
                 return;
             }
             guild.removeRoleFromMember(member, role).complete();
-            String remove = "I removed ";
-            if(failed){
-                member.getUser().openPrivateChannel().complete().sendMessage(remove + role.getName() + " from you.").complete();
-            } else {
-                msgHook.editOriginal(remove + role.getAsMention() + " from you.").queue();   
-            }
+            String remove = "I removed " + role.getAsMention() + " from you.";
+            Helper.unhook(remove, failed, msgHook, member.getUser());
         } else {
             if(role.equals(student)){
                 
                 if(!verifiedUser(member.getId())){
                     String doverify = "You have to get verified to get the role ";
                     String suffix = ". You can do that here: https://dauth.spclr.ch/ and write the token to <@306523617188118528>";
-                    if(failed){
-                        member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
-                    } else {
-                        msgHook.editOriginal(doverify + role.getAsMention() + suffix).queue();
-                    }
+                    Helper.unhook(doverify + role.getAsMention() + suffix, failed, msgHook, member.getUser());
                     return;
                 }
                 
@@ -182,12 +170,8 @@ public class Helper {
                 notBoth(role, student, guild, member, memRole, failed, msgHook);
             } else {
                 guild.addRoleToMember(member, role).complete();
-                String added = "I gave you ";
-                if(failed){
-                    member.getUser().openPrivateChannel().complete().sendMessage(added + role.getName() + ".").complete();
-                } else {
-                    msgHook.editOriginal(added + role.getAsMention() + ".").queue();
-                }
+                String added = "I gave you " + role.getAsMention() + ".";
+                Helper.unhook(added, failed, msgHook, member.getUser());
             }            
         }
     }
@@ -230,13 +214,8 @@ public class Helper {
             rem = true;
         }
 
-        if(failed){
-            if(rem) suffix += other.getName();
-            member.getUser().openPrivateChannel().complete().sendMessage(added + change.getName() + suffix + ".").complete();
-        } else {
-            if(rem) suffix += other.getAsMention();
-            msgHook.editOriginal(added + change.getAsMention() +  suffix + ".").queue();
-        }
+        if(rem) suffix += other.getAsMention();
+        Helper.unhook(added + change.getAsMention() +  suffix + ".", failed, msgHook, member.getUser());
     }
 
     public static void unhook(String message, boolean failed, InteractionHook hook, User user){

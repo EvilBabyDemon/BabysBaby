@@ -22,11 +22,7 @@ public class RoleSlashCMD implements ISlashCMD {
         Role role = event.getOption("role").getAsRole();
         if(!Data.roles.contains(role.getId()) && !event.getMember().getId().equals(Data.myselfID)){
             String nope = "I can't give you that role.";
-            if(failed){
-                event.getUser().openPrivateChannel().complete().sendMessage(nope).complete();
-            } else {
-                hook.editOriginal(nope).queue();   
-            }
+            Helper.unhook(nope, failed, hook, event.getUser());
         } else {
             Helper.roleGiving(event.getMember(), event.getGuild(), failed, role, hook);
         }
