@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
@@ -54,7 +55,7 @@ public class AdminCMDs {
             Helper.unhook("Can't ban someone with a higher or same role.", failed, hook, event.getUser());
             return;
         }
-        String reason = event.getOption("reason") == null ? "" : event.getOption("reason").getAsString();
+        String reason = event.getOption("reason", "", OptionMapping::getAsString);
 
         if(reason==""){
             bad.ban(0).complete();
@@ -83,7 +84,7 @@ public class AdminCMDs {
 
         Member bad = event.getOption("kick").getAsMember();
 
-        String reason = event.getOption("reason") == null ? "" : event.getOption("reason").getAsString();
+        String reason = event.getOption("reason", "", OptionMapping::getAsString);
 
         if(bad.getRoles().get(0).getPosition() >= event.getMember().getRoles().get(0).getPosition()){
             Helper.unhook("Can't kick someone with a higher or same role.", failed, hook, event.getUser());
@@ -165,7 +166,7 @@ public class AdminCMDs {
         Member bad = event.getOption("user").getAsMember();
         double time = event.getOption("time").getAsDouble();
         String unit = event.getOption("unit").getAsString();
-        String reason = event.getOption("reason") != null ? event.getOption("reason").getAsString() : ""; 
+        String reason = event.getOption("reason", "", OptionMapping::getAsString); 
         
         Object[] retrieverObj = Helper.getUnits(unit, time);
         String strUnit = ""+retrieverObj[0];
@@ -437,8 +438,7 @@ public class AdminCMDs {
 
         String id = event.getOption("role").getAsString();
         String emote = event.getOption("emote").getAsString();
-        String categ = event.getOption("category") != null ? event.getOption("category").getAsString() : "";
-
+        String categ = event.getOption("category", "", OptionMapping::getAsString);
         if(emote.contains("<")){
             emote = emote.split(":")[2];
             emote.replace(">", "");
@@ -478,7 +478,8 @@ public class AdminCMDs {
     public static void getWarnings(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         MessageChannel channel = event.getChannel();
         
-        boolean ephemeral = event.getOption("ephemeral") == null ? true : event.getOption("ephemeral").getAsBoolean();
+        boolean ephemeral = event.getOption("ephemeral", true, OptionMapping::getAsBoolean);
+        
         String person = "";
 
         if(event.getOption("user") == null && event.getOption("userid") == null)  {
@@ -603,7 +604,7 @@ public class AdminCMDs {
         } else {
             stalking = event.getGuild().getMemberById(event.getOption("userid").getAsString());
         }
-        boolean ephemeral = event.getOption("ephemeral") == null ? true : event.getOption("ephemeral").getAsBoolean();
+        boolean ephemeral = event.getOption("ephemeral", true, OptionMapping::getAsBoolean);
 
 		String nickname = (event.getMember().getNickname() != null) ? event.getMember().getNickname()
 					: event.getMember().getEffectiveName();
@@ -969,7 +970,7 @@ public class AdminCMDs {
             while ( rs.next() ) {
                 String id = rs.getString("id");
 
-                String rolename = "deleted-role";
+                String rolename = "**deleted-role**";
                 try {
                     rolename = event.getGuild().getRoleById(id).getName();
                 } catch (Exception e) {

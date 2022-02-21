@@ -2,9 +2,12 @@ package BabyBaby.Command.commands.Slash;
 
 import BabyBaby.Command.ISlashCMD;
 import BabyBaby.data.Data;
+import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
@@ -18,9 +21,9 @@ public class ReportSlashCMD implements ISlashCMD {
     @Override
     public void handle(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         String issue = "Report:\n" + event.getOption("issue").getAsString();
-        String member = (event.getOption("user")!=null) ? event.getOption("user").getAsMember().getAsMention() : "";
-        if(!member.equals("")){
-            issue += " (Accused user: " +member + ")"; 
+        Member member = event.getOption("user", OptionMapping::getAsMember);
+        if(member != null){
+            issue += " (Accused user: " + member.getAsMention() + ")"; 
         }
         
         while(issue.length()>2000){
@@ -30,11 +33,7 @@ public class ReportSlashCMD implements ISlashCMD {
         event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete().editMessage(issue).complete();
 
         String acknowledged = "The issue was sent to the admin team anonymously.";
-        if(failed){
-            event.getUser().openPrivateChannel().complete().sendMessage(acknowledged).complete();
-        } else {
-            hook.editOriginal(acknowledged).queue();   
-        }
+        Helper.unhook(acknowledged, failed, hook, event.getUser());
     }
 
     @Override

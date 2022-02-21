@@ -16,6 +16,7 @@ import BabyBaby.Command.ISlashCMD;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
@@ -62,8 +63,7 @@ public class RemindSlashCMD implements ISlashCMD {
             return;
         }
 
-        String message = event.getOption("text") != null ? event.getOption("text").getAsString() :
-                         "Just a Reminder. Didn't specify about what.";
+        String message = event.getOption("text", "Just a Reminder. Didn't specify about what.", OptionMapping::getAsString);
         String pk = "";
         long timesql = System.currentTimeMillis() + rounder*1000;
 

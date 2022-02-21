@@ -5,6 +5,7 @@ import BabyBaby.Command.commands.Public.BlindCMD;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
@@ -17,10 +18,11 @@ public class BlindSlashCMD implements ISlashCMD{
 
     @Override
     public void handle(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
-        String unit = (event.getOption("unit")!=null) ? event.getOption("unit").getAsString() : null;
-        boolean force = (event.getOption("force")!=null) ? event.getOption("force").getAsBoolean() : false;
-        boolean semester = (event.getOption("semester")!=null) ? event.getOption("semester").getAsBoolean() : false;
-        new BlindCMD().roleRemoval(event.getOption("time").getAsString(), event.getMember(), event.getGuild(), unit, force, event.getChannel(), semester);
+        String unit = event.getOption("unit", OptionMapping::getAsString);
+        boolean force = event.getOption("force", false, OptionMapping::getAsBoolean);
+        boolean semester = event.getOption("semester", false, OptionMapping::getAsBoolean);
+        String time = event.getOption("time").getAsString();
+        new BlindCMD().roleRemoval(time, event.getMember(), event.getGuild(), unit, force, event.getChannel(), semester);
     }
 
     @Override
