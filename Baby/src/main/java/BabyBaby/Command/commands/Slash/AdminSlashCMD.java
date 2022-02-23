@@ -52,7 +52,7 @@ public class AdminSlashCMD implements ISlashCMD{
             case "editassign":
                 AdminCMDs.editAssign(event, hook, failed);
                 break;
-            case "newrole":
+            case "rolebutton":
                 AdminCMDs.newRole(event, hook, failed);
                 break;
             case "roleassign":
