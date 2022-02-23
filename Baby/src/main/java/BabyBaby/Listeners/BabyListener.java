@@ -319,19 +319,14 @@ public class BabyListener extends ListenerAdapter {
 
         String cmd = event.getName();
         ISlashCMD cmdClass = null;
-        if(cmd.equals("poll")){
-            cmdClass = new PollSlashCMD();
-        } else if(cmd.equals("blind")){
-            cmdClass = new BlindSlashCMD();
-        } else if(cmd.equals("role")){
-            cmdClass = new RoleSlashCMD();
-        } else if(cmd.equals("report")){
-            cmdClass = new ReportSlashCMD();
-        } else if(cmd.equals("rolesleft")){
-            cmdClass = new RolesleftSlashCMD();
-        } else if (cmd.equals("admin")) {
-            cmdClass = new AdminSlashCMD();
-        } else {
+
+        for (ISlashCMD cmdSlash : Data.slashcmds) {
+            if(cmd.equals(cmdSlash.getName())) {
+                cmdClass = cmdSlash;
+                break;
+            }
+        }
+        if(cmdClass == null) {
             Helper.unhook("Uhhh what? Please send a screenshot of this to my owner.", failed, hook, event.getUser());
             return;
         }
