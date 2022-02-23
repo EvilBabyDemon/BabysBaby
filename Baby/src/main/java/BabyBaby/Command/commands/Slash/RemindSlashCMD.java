@@ -113,6 +113,7 @@ public class RemindSlashCMD implements ISlashCMD {
                         
         remind.addOption(OptionType.NUMBER, "time", "In how many Time units do you want to get reminded?", true);
         remind.addOption(OptionType.STRING, "unit", "Default is minutes. Others are seconds, minutes, hours, days.");
+        remind.addOption(OptionType.STRING, "text", "The thing you want to get reminded about");
         
         return remind;
     }
