@@ -22,12 +22,6 @@ import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Bot.*;
 //import BabyBaby.Command.commands.Bot.drawwithFerris;
 import BabyBaby.Command.commands.Public.*;
-import BabyBaby.Command.commands.Slash.AdminSlashCMD;
-import BabyBaby.Command.commands.Slash.BlindSlashCMD;
-import BabyBaby.Command.commands.Slash.PollSlashCMD;
-import BabyBaby.Command.commands.Slash.ReportSlashCMD;
-import BabyBaby.Command.commands.Slash.RoleSlashCMD;
-import BabyBaby.Command.commands.Slash.RolesleftSlashCMD;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
 
