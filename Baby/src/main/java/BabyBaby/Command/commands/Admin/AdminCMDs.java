@@ -732,6 +732,7 @@ public class AdminCMDs {
             emoteStr = rs.getString("EMOTE");
 
         } catch (Exception e) {
+            Helper.unhook("Role not selfassignable", failed, hook, event.getUser());
             return;
         }
         boolean gemo = false;
