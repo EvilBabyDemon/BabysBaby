@@ -146,12 +146,12 @@ public class Helper {
         Role external = guild.getRoleById(Data.ethexternal);
         if(memRole.contains(role)){
             if((role.equals(student) && !memRole.contains(external)) || (role.equals(external) && !memRole.contains(student))){
-                String oneneeded = "You need at least  " + student.getAsMention() + " or " + external.getAsMention();
+                String oneneeded = "You need at least  " + student.getName() + " or " + external.getName();
                 Helper.unhook(oneneeded, failed, msgHook, member.getUser());
                 return;
             }
             guild.removeRoleFromMember(member, role).complete();
-            String remove = "I removed " + role.getAsMention() + " from you.";
+            String remove = "I removed " + role.getName() + " from you.";
             Helper.unhook(remove, failed, msgHook, member.getUser());
         } else {
             if(role.equals(student)){
@@ -159,7 +159,7 @@ public class Helper {
                 if(!verifiedUser(member.getId())){
                     String doverify = "You have to get verified to get the role ";
                     String suffix = ". You can do that here: https://dauth.spclr.ch/ and write the token to <@306523617188118528>";
-                    Helper.unhook(doverify + role.getAsMention() + suffix, failed, msgHook, member.getUser());
+                    Helper.unhook(doverify + role.getName()+ suffix, failed, msgHook, member.getUser());
                     return;
                 }
                 
@@ -170,7 +170,7 @@ public class Helper {
                 notBoth(role, student, guild, member, memRole, failed, msgHook);
             } else {
                 guild.addRoleToMember(member, role).complete();
-                String added = "I gave you " + role.getAsMention() + ".";
+                String added = "I gave you " + role.getName() + ".";
                 Helper.unhook(added, failed, msgHook, member.getUser());
             }            
         }
@@ -214,8 +214,8 @@ public class Helper {
             rem = true;
         }
 
-        if(rem) suffix += other.getAsMention();
-        Helper.unhook(added + change.getAsMention() +  suffix + ".", failed, msgHook, member.getUser());
+        if(rem) suffix += other.getName();
+        Helper.unhook(added + change.getName() +  suffix + ".", failed, msgHook, member.getUser());
     }
 
     public static void unhook(String message, boolean failed, InteractionHook hook, User user){
