@@ -24,11 +24,6 @@ public class CmdHandler {
 
     public CmdHandler(JDA bot) throws IOException {
 
-        //|X| TODO Remove Mute commands (mute + learning + admin cmds)
-            // only remove SQL Table left -> USERS and ADMINMUTE
-        //|X| TODO remove leaderboard for blind
-        //Only sql table left
-        
 
         // adding commands visible to @everyone
         addPublicCommand(new PingCMD());
@@ -247,10 +242,11 @@ public class CmdHandler {
                     switch(permissionLevel){
                         case 0:
                             if(ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ETH_ID) || ctx.getChannel().getParentCategory() == null 
-                            || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL) || ((IPublicCMD) cmd).getWhiteListBool())
+                            || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL) || ((IPublicCMD) cmd).getWhiteListBool()){
                                 ((IPublicCMD) cmd).handlePublic(ctx);
-                            else
+                            } else{
                                 ctx.getChannel().sendMessage("Please use the dedicated bot channels for this command.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                            }
                             break;
                         case 1:
                             ((IAdminCMD) cmd).handleAdmin(ctx);
