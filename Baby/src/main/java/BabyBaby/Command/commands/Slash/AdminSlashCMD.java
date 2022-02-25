@@ -143,7 +143,8 @@ public class AdminSlashCMD implements ISlashCMD{
 
         //delrole
         SubcommandData delrole = new SubcommandData("delrole", "Command to remove a selfassignable role.");
-        delrole.addOption(OptionType.ROLE, "role", "Select Role to delete from Bot.", true);
+        delrole.addOption(OptionType.ROLE, "role", "Select Role to delete from Bot.", false);
+        delrole.addOption(OptionType.STRING, "roleid", "Enter Role id to delete from Bot.", false);
         subc.add(delrole);
 
         //roleid
