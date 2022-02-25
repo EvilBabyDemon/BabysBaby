@@ -605,7 +605,7 @@ public class AdminCMDs {
         } else {
             stalking = event.getGuild().getMemberById(event.getOption("userid").getAsString());
         }
-        boolean ephemeral = event.getOption("ephemeral", true, OptionMapping::getAsBoolean);
+        boolean ephemeral = event.getOption("ephemeral", false, OptionMapping::getAsBoolean);
 
 		String nickname = (event.getMember().getNickname() != null) ? event.getMember().getNickname()
 					: event.getMember().getEffectiveName();
