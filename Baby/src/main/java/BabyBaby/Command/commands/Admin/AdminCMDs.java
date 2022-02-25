@@ -276,6 +276,7 @@ public class AdminCMDs {
                 c.close();
             } catch ( Exception e ) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+                e.printStackTrace();
                 return;
             }
 
