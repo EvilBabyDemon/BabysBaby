@@ -696,7 +696,7 @@ public class AdminCMDs {
 		
 		eb.addField("Nickname", "`" + ((stalking.getNickname() != null) ? stalking.getNickname() : stalking.getEffectiveName()) + "` " + stalking.getAsMention(), false);
 		eb.addField("Joined at", "`" + stalking.getTimeJoined().toLocalDateTime().format(jointime) + "`", false);
-		eb.addField("Invited by", invitee, false);
+        eb.addField("Invited by", (event.getMember().hasPermission(Permission.MODERATE_MEMBERS) ? invitee : "Not available to plebs"), false);
 		eb.addField("Highest Role", highest.getAsMention(), true);
 		eb.addField("Hoisted Role",(hoisted != null) ? hoisted.getAsMention(): "`Unhoisted`", true);
 		eb.addField("Roles obtained (" + (1+allrolesList.size()) + ")" , rolementions, false);
