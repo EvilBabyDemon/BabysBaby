@@ -64,9 +64,6 @@ public class AdminSlashCMD implements ISlashCMD{
             case "updaterole":
                 AdminCMDs.updateRole(event, hook, failed);
                 break;
-            case "whois":
-                AdminCMDs.whois(event, hook, failed);
-                break;
             default:
                 Helper.unhook("Smth went really wrong. Pls tell my Owner.", failed, hook, event.getUser());
                 break;
@@ -113,13 +110,6 @@ public class AdminSlashCMD implements ISlashCMD{
         warnings.addOption(OptionType.STRING, "userid", "Id of user for the case they left the server.", false);
         warnings.addOption(OptionType.BOOLEAN, "ephemeral", "True if message should be ephemeral. Default is false", false);
         subc.add(warnings);
-
-        //whois
-        SubcommandData whois = new SubcommandData("whois", "Cmd to see stuff about a user.");
-        whois.addOption(OptionType.USER, "user", "User to stalk.", false);
-        whois.addOption(OptionType.STRING, "userid", "Id of user for the case you can't type their username.", false);
-        whois.addOption(OptionType.BOOLEAN, "ephemeral", "True if message should be ephemeral. Default is false", false);
-        subc.add(whois);
 
         //rolebutton
         SubcommandData rolebutton = new SubcommandData("rolebutton", "Cmd to send a button for a role");

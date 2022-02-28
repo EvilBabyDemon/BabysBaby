@@ -16,6 +16,7 @@ import BabyBaby.Command.commands.Slash.RemindSlashCMD;
 import BabyBaby.Command.commands.Slash.ReportSlashCMD;
 import BabyBaby.Command.commands.Slash.RoleSlashCMD;
 import BabyBaby.Command.commands.Slash.RolesleftSlashCMD;
+import BabyBaby.Command.commands.Slash.WhoisSlashCMD;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.Data;
 
@@ -318,6 +319,7 @@ public class StartupListener extends ListenerAdapter{
             Data.slashcmds.add(new ReportSlashCMD());
             Data.slashcmds.add(new RoleSlashCMD());
             Data.slashcmds.add(new RolesleftSlashCMD());
+            Data.slashcmds.add(new WhoisSlashCMD());
 
             for (ISlashCMD cmd : Data.slashcmds) {
                 cmd.load(cmd.initialise(eth), eth);
