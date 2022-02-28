@@ -703,7 +703,8 @@ public class AdminCMDs {
 		eb.addField("Hoisted Role",(hoisted != null) ? hoisted.getAsMention(): "`Unhoisted`", true);
 		eb.addField("Roles obtained (" + (1+allrolesList.size()) + ")" , rolementions, false);
 		eb.addField("Additional Checks", addchecks, false);
-		eb.setFooter("Summoned by: " + nickname, event.getUser(). getAvatarUrl()),Thumbnail(stalking.getUser().getAvatarUrl());
+		eb.setFooter("Summoned by: " + nickname, event.getUser().getAvatarUrl());
+		eb.setThumbnail(stalking.getUser().getAvatarUrl());
 		
 		if(invID.size()!=0) channel.sendMessage("Cache reload").complete().editMessage(invitee).complete().delete().complete();
 		
