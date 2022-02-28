@@ -33,6 +33,8 @@ public class WhoisSlashCMD implements ISlashCMD {
 
     @Override
     public void handle(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
+        boolean pleb = !event.getMember().hasPermission(Permission.MODERATE_MEMBERS);
+
         MessageChannel channel = event.getChannel();
 
 		Member stalking = null;
@@ -134,7 +136,7 @@ public class WhoisSlashCMD implements ISlashCMD {
 		
 		eb.addField("Nickname", "`" + ((stalking.getNickname() != null) ? stalking.getNickname() : stalking.getEffectiveName()) + "` " + stalking.getAsMention(), false);
 		eb.addField("Joined at", "`" + stalking.getTimeJoined().toLocalDateTime().format(jointime) + "`", false);
-	    if (event.getMember().hasPermission(Permission.MODERATE_MEMBERS)) {
+	    if (!pleb) {
 			eb.addField("Invited by", invitee, false);
 		}
 		eb.addField("Highest Role", highest.getAsMention(), true);
@@ -144,13 +146,15 @@ public class WhoisSlashCMD implements ISlashCMD {
 		eb.setFooter("Summoned by: " + nickname, event.getUser().getAvatarUrl());
 		eb.setThumbnail(stalking.getUser().getAvatarUrl());
 		
-		if(event.getMember().hasPermission(Permission.MODERATE_MEMBERS) && invID.size()!=0) {
-            channel.sendMessage("Cache reload").complete().editMessage(invitee).complete().delete().complete();
-        }
-        if(ephemeral) {
+        boolean spamPrev = event.getGuild().getId().equals(Data.ETH_ID) && !event.getChannel().getId().equals(Data.SPAM_ID);
+        
+
+        if(ephemeral || spamPrev && pleb) {
             Helper.unhook(eb.build(), failed, hook, event.getUser());
         } else {
+            channel.sendMessage("Cache reload").complete().editMessage(invitee).complete().delete().complete();
             channel.sendMessageEmbeds(eb.build()).queue();
+            Helper.unhook("Done", failed, hook, event.getUser());
         }
     }
 
