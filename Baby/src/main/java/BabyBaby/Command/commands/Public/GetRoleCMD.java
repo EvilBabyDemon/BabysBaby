@@ -157,7 +157,7 @@ public class GetRoleCMD implements IPublicCMD{
             }
 
             if(smallest.size()!=1){
-                channel.sendMessage("Sorry you gotta write more precise as there is more than one Role you could have meant.").complete().delete().queueAfter(10, TimeUnit.SECONDS);;
+                channel.sendMessage("Sorry you gotta write more precise as there is more than one Role you could have meant.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 return;
             }
 
