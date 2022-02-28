@@ -50,7 +50,7 @@ public class Data {
     public static ArrayList<ISlashCMD> slashcmds = new ArrayList<>();
 
     
-    public static int[] covid = new int [21];
+    public static int[] covid = new int [15];
     
     //Filepaths
     public static final String TOKEN = "token.txt";
