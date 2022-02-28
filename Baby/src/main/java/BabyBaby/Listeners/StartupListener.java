@@ -306,6 +306,7 @@ public class StartupListener extends ListenerAdapter{
         }
         
         System.out.println("Started!" + (System.currentTimeMillis()-timestopper));
+        timestopper = System.currentTimeMillis();
 
 
         try {
@@ -328,6 +329,7 @@ public class StartupListener extends ListenerAdapter{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("Slash done: " + (System.currentTimeMillis()-timestopper));
         
     }
 
