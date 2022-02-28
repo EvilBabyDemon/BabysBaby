@@ -101,6 +101,7 @@ public class CmdHandler {
         addOwnerCommand(new TurnCMDsOff());
         addOwnerCommand(new ChangeLogCMD());
         addOwnerCommand(new SpeedCMD());
+        addOwnerCommand(new CovidGuesserCMD());
         
         
         
