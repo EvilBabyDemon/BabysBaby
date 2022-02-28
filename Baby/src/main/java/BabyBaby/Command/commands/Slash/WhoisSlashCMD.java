@@ -134,7 +134,7 @@ public class WhoisSlashCMD implements ISlashCMD {
 		
 		eb.addField("Nickname", "`" + ((stalking.getNickname() != null) ? stalking.getNickname() : stalking.getEffectiveName()) + "` " + stalking.getAsMention(), false);
 		eb.addField("Joined at", "`" + stalking.getTimeJoined().toLocalDateTime().format(jointime) + "`", false);
-	    	if (event.getMember().hasPermission(Permission.MODERATE_MEMBERS)) {
+	    if (event.getMember().hasPermission(Permission.MODERATE_MEMBERS)) {
 			eb.addField("Invited by", invitee, false);
 		}
 		eb.addField("Highest Role", highest.getAsMention(), true);
@@ -144,8 +144,9 @@ public class WhoisSlashCMD implements ISlashCMD {
 		eb.setFooter("Summoned by: " + nickname, event.getUser().getAvatarUrl());
 		eb.setThumbnail(stalking.getUser().getAvatarUrl());
 		
-		if(invID.size()!=0) channel.sendMessage("Cache reload").complete().editMessage(invitee).complete().delete().complete();
-		
+		if(event.getMember().hasPermission(Permission.MODERATE_MEMBERS) && invID.size()!=0) {
+            channel.sendMessage("Cache reload").complete().editMessage(invitee).complete().delete().complete();
+        }
         if(ephemeral) {
             Helper.unhook(eb.build(), failed, hook, event.getUser());
         } else {
