@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.Command.commands.Public.GetReminder;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import BabyBaby.Command.ISlashCMD;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -41,8 +40,6 @@ public class RemindSlashCMD implements ISlashCMD {
 
         */
 
-        MessageChannel channel = event.getChannel();
-
 
         String unit = event.getOption("unit") != null ? event.getOption("unit").getAsString() : "";
 		
@@ -59,7 +56,7 @@ public class RemindSlashCMD implements ISlashCMD {
         
 
         if(rounder <= 0){
-            channel.sendMessage("Use numbers above 0 second pls!").queue();
+            Helper.unhook("Use numbers above 0 second pls!", failed, hook, event.getUser());
             return;
         }
 
