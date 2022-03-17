@@ -114,9 +114,6 @@ public class BlindSlashCMD implements ISlashCMD{
         if(rounder <= 29){
             Helper.unhook("Use values of at least 30 seconds please!", failed, hook, mem);
             return;
-        } else if(force && rounder > 43200){
-            Helper.unhook("Your value has to be below 12 hours / 720 minutes (default unit) / 43200 seconds.", failed, hook, mem);
-            return;
         }
 
         
