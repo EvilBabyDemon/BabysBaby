@@ -225,6 +225,10 @@ public class Helper {
             hook.editOriginal(message).queue();
         }
     }
+
+    public static void unhook(String message, boolean failed, InteractionHook hook, Member member){
+        unhook(message, failed, hook, member.getUser());
+    }
     
     public static void unhook(MessageEmbed message, boolean failed, InteractionHook hook, User user){
         if(failed){
