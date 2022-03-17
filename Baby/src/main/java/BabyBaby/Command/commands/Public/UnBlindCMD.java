@@ -12,6 +12,7 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.Command.commands.Admin.AdminMuteBlindCMD;
+import BabyBaby.Command.commands.Slash.BlindSlashCMD;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.Guild;
@@ -59,9 +60,9 @@ public class UnBlindCMD implements IPublicCMD {
 
         LinkedList<GetRolesBack> classList = new LinkedList<>();        
         
-        for (Member member : BlindCMD.blind.keySet()) {
+        for (Member member : BlindSlashCMD.blind.keySet()) {
             if(member.getId().equals(authorID)){
-                classList.add(BlindCMD.blindexe.get(BlindCMD.blind.get(member)));
+                classList.add(BlindSlashCMD.blindexe.get(BlindSlashCMD.blind.get(member)));
             }
         }
         GetRolesBack blindclass = null;
@@ -104,7 +105,7 @@ public class UnBlindCMD implements IPublicCMD {
                 return;
             }
 
-            if(BlindForceCMD.force.contains(blindclass)){
+            if(BlindSlashCMD.forceSet.contains(blindclass)){
                 author.openPrivateChannel().queue(privchannel -> {
                     privchannel.sendMessage("You did a Force Blind. That are the consequences to your actions. Do not contact the admins! If it is an emergency contact Lukas, same if it is pobably a Bug.").queue();
                 });
@@ -114,10 +115,10 @@ public class UnBlindCMD implements IPublicCMD {
             Guild blindServ = blindclass.guild;
             Member blinded = blindServ.getMember(blindclass.blind);
 
-            ScheduledExecutorService blind = BlindCMD.blind.get(blinded);
-            BlindCMD.blindexe.remove(blind);
+            ScheduledExecutorService blind = BlindSlashCMD.blind.get(blinded);
+            BlindSlashCMD.blindexe.remove(blind);
             blind.shutdownNow();
-            BlindCMD.blind.remove(blinded);
+            BlindSlashCMD.blind.remove(blinded);
         
 
         String roles = "";
@@ -187,7 +188,7 @@ public class UnBlindCMD implements IPublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "", "Command to unblind you early after using " + new BlindCMD().getName() + ".");
+        return StandardHelp.Help(prefix, getName(), "", "Command to unblind you early after using " + new BlindSlashCMD().getName() + ".");
     }
     
     
