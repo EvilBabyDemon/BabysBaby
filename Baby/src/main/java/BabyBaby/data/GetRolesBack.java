@@ -7,8 +7,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ScheduledExecutorService;
 
 import BabyBaby.Command.commands.Admin.AdminMuteBlindCMD;
-import BabyBaby.Command.commands.Public.BlindCMD;
-import BabyBaby.Command.commands.Public.BlindForceCMD;
+import BabyBaby.Command.commands.Slash.BlindSlashCMD;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -51,12 +50,12 @@ public class GetRolesBack implements Runnable {
         guild.modifyMemberRoles(mem, addRole, delRole).complete();
         
 
-        ScheduledExecutorService blindex = BlindCMD.blind.get(mem);
+        ScheduledExecutorService blindex = BlindSlashCMD.blind.get(mem);
         
-        BlindForceCMD.force.remove(BlindCMD.blindexe.get(blindex));
+        BlindSlashCMD.forceSet.remove(BlindSlashCMD.blindexe.get(blindex));
 
-        BlindCMD.blindexe.remove(blindex);
-        BlindCMD.blind.remove(mem);
+        BlindSlashCMD.blindexe.remove(blindex);
+        BlindSlashCMD.blind.remove(mem);
 
 
         if(AdminMuteBlindCMD.userBlinded.contains(mem)){

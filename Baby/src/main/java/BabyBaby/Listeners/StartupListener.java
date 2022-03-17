@@ -274,8 +274,8 @@ public class StartupListener extends ListenerAdapter{
                         
                         GetRolesBack blindclass = new GetRolesBack(blindUser, called, rs.getString("ROLES"));
                         blindex.schedule(blindclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
-                        BlindCMD.blind.put(called.getMember(blindUser), blindex);
-                        BlindCMD.blindexe.put(blindex, blindclass);
+                        BlindSlashCMD.blind.put(called.getMember(blindUser), blindex);
+                        BlindSlashCMD.blindexe.put(blindex, blindclass);
                         
                         if(rs.getBoolean("ADMINMUTE")){
                             AdminMuteBlindCMD.userBlinded.add(called.getMember(blindUser));

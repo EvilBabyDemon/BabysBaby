@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.Command.commands.Public.BlindCMD;
+import BabyBaby.Command.commands.Slash.BlindSlashCMD;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -169,14 +169,14 @@ public class AdminMuteBlindCMD implements IAdminCMD{
             }
 
             if(timeold!=0){
-                ScheduledExecutorService tmp = BlindCMD.blind.get(blinded);
-                BlindCMD.blindexe.remove(tmp);
+                ScheduledExecutorService tmp = BlindSlashCMD.blind.get(blinded);
+                BlindSlashCMD.blindexe.remove(tmp);
                 try {
                     tmp.shutdown();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                BlindCMD.blind.remove(blinded);
+                BlindSlashCMD.blind.remove(blinded);
             }
 
 
@@ -188,11 +188,11 @@ public class AdminMuteBlindCMD implements IAdminCMD{
                 blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
     
                 blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
-                BlindCMD.blind.put(blinded, blind);
-                BlindCMD.blindexe.put(blind, scheduledclass);
+                BlindSlashCMD.blind.put(blinded, blind);
+                BlindSlashCMD.blindexe.put(blind, scheduledclass);
     
             } else {
-                BlindCMD.blind.put(blinded, null);
+                BlindSlashCMD.blind.put(blinded, null);
             }
 
 
@@ -235,8 +235,8 @@ public class AdminMuteBlindCMD implements IAdminCMD{
             userBlinded.add(ctx.getGuild().getMemberById(person));
 
             blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
-            BlindCMD.blind.put(blinded, blind);
-            BlindCMD.blindexe.put(blind, scheduledclass);
+            BlindSlashCMD.blind.put(blinded, blind);
+            BlindSlashCMD.blindexe.put(blind, scheduledclass);
 
         } else {
             userBlinded.add(ctx.getGuild().getMemberById(person));

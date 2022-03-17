@@ -22,6 +22,7 @@ import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Bot.*;
 //import BabyBaby.Command.commands.Bot.drawwithFerris;
 import BabyBaby.Command.commands.Public.*;
+import BabyBaby.Command.commands.Slash.BlindSlashCMD;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
 
@@ -65,7 +66,7 @@ public class BabyListener extends ListenerAdapter {
             }
 
 
-            if(!BlindCMD.blind.containsKey(event.getMember())){
+            if(!BlindSlashCMD.blind.containsKey(event.getMember())){
                 return;
             }
 
@@ -129,13 +130,13 @@ public class BabyListener extends ListenerAdapter {
             
             
             
-            if(BlindCMD.blind.get(blinded)!=null){
-                ScheduledExecutorService blind = BlindCMD.blind.get(blinded);
-                BlindForceCMD.force.remove(BlindCMD.blindexe.get(blind));
-                BlindCMD.blindexe.remove(blind);
+            if(BlindSlashCMD.blind.get(blinded)!=null){
+                ScheduledExecutorService blind = BlindSlashCMD.blind.get(blinded);
+                BlindSlashCMD.forceSet.remove(BlindSlashCMD.blindexe.get(blind));
+                BlindSlashCMD.blindexe.remove(blind);
                 blind.shutdownNow();
             }
-            BlindCMD.blind.remove(blinded);
+            BlindSlashCMD.blind.remove(blinded);
 
         
             try {
