@@ -48,7 +48,7 @@ public class PlaceDraw implements IOwnerCMD {
         for (int i = 0; i < x; i++) {
             for (int j = i; j < printer.size(); j += x) {
                 channel.sendMessage(printer.get(j)).complete();
-            }   
+            }
         }
        
         channel.sendMessage("I am done Boss! Pls start the next else I am bored..... <@!223932775474921472>" ).queue();
