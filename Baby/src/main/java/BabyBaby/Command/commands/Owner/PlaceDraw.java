@@ -45,9 +45,8 @@ public class PlaceDraw implements IOwnerCMD {
         ctx.getMessage().addReaction(Data.check).queue();
 
         for (int i = 0; i < x; i++) {
-            for (int j = i; j < printer.size();) {
+            for (int j = i; j < printer.size(); j += x) {
                 channel.sendMessage(printer.get(j)).queue();
-                j += x;
             }   
         }
        
