@@ -36,8 +36,9 @@ public class PlaceDraw implements IOwnerCMD {
             while(s.hasNextLine()){
                 printer.add(s.nextLine());
             }
+            s.close();
         } catch (Exception e){
-            ctx.getMessage().addReaction(Data.xmark);
+            ctx.getMessage().addReaction(Data.xmark).queue();
             e.printStackTrace();
             return;
         }
@@ -46,7 +47,7 @@ public class PlaceDraw implements IOwnerCMD {
 
         for (int i = 0; i < x; i++) {
             for (int j = i; j < printer.size(); j += x) {
-                channel.sendMessage(printer.get(j)).queue();
+                channel.sendMessage(printer.get(j)).complete();
             }   
         }
        
