@@ -93,7 +93,6 @@ public class CmdHandler {
         addOwnerCommand(new WhereamiCMD());
         addOwnerCommand(new TestCMD());
         //addOwnerCommand(new toMultipixelCMD());
-        addOwnerCommand(new stopdraw());
         addOwnerCommand(new SayMultiCMD());
         //addOwnerCommand(new BigSieveCMD());
         addOwnerCommand(new BubbleSortCMD());
