@@ -9,17 +9,14 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class PlaceDraw implements IOwnerCMD {
-    public static boolean on;
-    public static int stopped;
-    static ArrayList<String> printer;
-    static MessageChannel channel;
-    static int x;
-    static ArrayList<Emote> allemo;
+    public boolean on;
+    ArrayList<String> printer;
+    MessageChannel channel;
+    int x;
 
     @Override
     public String getName() {
@@ -32,11 +29,6 @@ public class PlaceDraw implements IOwnerCMD {
         x = Integer.parseInt(cmds.get(0));
         String file = cmds.get(1);
         printer = new ArrayList<>(); 
-
-        allemo = new ArrayList<>(); 
-        for (Emote emote : ctx.getGuild().getEmotes()) {
-            allemo.add(emote);
-        }
         
 
         try {
@@ -50,11 +42,14 @@ public class PlaceDraw implements IOwnerCMD {
             return;
         }
         channel = ctx.getGuild().getTextChannelById("819966095070330950");
-
         ctx.getMessage().addReaction(Data.check).queue();
-        on = false;
-        drawing();
 
+        for (int i = 0; i < x; i++) {
+            for (int j = i; j < printer.size();) {
+                channel.sendMessage(printer.get(j)).queue();
+                j += x;
+            }   
+        }
        
         channel.sendMessage("I am done Boss! Pls start the next else I am bored..... <@!223932775474921472>" ).queue();
     }
@@ -64,24 +59,4 @@ public class PlaceDraw implements IOwnerCMD {
         return StandardHelp.Help(prefix, getName(), "<Iterations> <FileName>", "Command to draw stuff on place");
     }
     
-    public void drawing(){
-        //Random rand = new Random();
-       
-        for (int i = stopped; i < x; i++) {
-            for (int j = i; j < printer.size();) {
-                if(on){
-                    stopped = i;
-                    return;
-                }
-                /*
-                String tmp = "";
-                for (int k = 0; k < 10; k++) {
-                    tmp += "\n " + allemo.get(rand.nextInt(allemo.size())).getAsMention();
-                }
-                */
-                channel.sendMessage(printer.get(j)).queue();
-                j += x;
-            }   
-        }
-    }
 }
