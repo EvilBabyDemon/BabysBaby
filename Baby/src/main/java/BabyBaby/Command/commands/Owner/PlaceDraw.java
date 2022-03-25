@@ -16,7 +16,7 @@ public class PlaceDraw implements IOwnerCMD {
     public boolean on;
     ArrayList<String> printer;
     MessageChannel channel;
-    int x;
+    int divider;
 
     @Override
     public String getName() {
@@ -26,11 +26,19 @@ public class PlaceDraw implements IOwnerCMD {
     @Override
     public void handleOwner(CommandContext ctx) {
         List<String> cmds = ctx.getArgs(); 
-        x = Integer.parseInt(cmds.get(0));
+        divider = Integer.parseInt(cmds.get(0));
         String file = cmds.get(1);
         printer = new ArrayList<>(); 
+        boolean startAt = false;
+        String x = "";
+        String y = "";
         
-
+        if(cmds.size()<4) {
+            x = cmds.get(2);
+            y = cmds.get(3);
+            startAt = true;
+        }
+        
         try {
             Scanner s = new Scanner(new File(Data.PLACE + file + ".txt"));
             while(s.hasNextLine()){
@@ -45,9 +53,17 @@ public class PlaceDraw implements IOwnerCMD {
         channel = ctx.getGuild().getTextChannelById("819966095070330950");
         ctx.getMessage().addReaction(Data.check).queue();
 
-        for (int i = 0; i < x; i++) {
-            for (int j = i; j < printer.size(); j += x) {
-                channel.sendMessage(printer.get(j)).complete();
+        for (int i = 0; i < divider; i++) {
+            for (int j = i; j < printer.size(); j += divider) {
+                if (startAt) {
+                    if(printer.get(j).toLowerCase().startsWith(".place setpixel " + x + " " + y){
+                        startAt = false;
+                    }
+                    continue;
+                }
+                try {
+                    channel.sendMessage(printer.get(j)).complete();
+                } catch (Exception e) {}
             }
         }
        
