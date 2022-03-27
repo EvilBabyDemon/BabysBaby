@@ -56,7 +56,7 @@ public class PlaceDraw implements IOwnerCMD {
         for (int i = 0; i < divider; i++) {
             for (int j = i; j < printer.size(); j += divider) {
                 if (startAt) {
-                    if(printer.get(j).toLowerCase().startsWith(".place setpixel " + x + " " + y){
+                    if(printer.get(j).toLowerCase().startsWith(".place setpixel " + x + " " + y)) {
                         startAt = false;
                     }
                     continue;
