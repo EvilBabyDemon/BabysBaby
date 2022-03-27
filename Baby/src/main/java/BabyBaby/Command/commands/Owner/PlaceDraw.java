@@ -33,7 +33,7 @@ public class PlaceDraw implements IOwnerCMD {
         String x = "";
         String y = "";
         
-        if(cmds.size()<4) {
+        if(cmds.size()==4) {
             x = cmds.get(2);
             y = cmds.get(3);
             startAt = true;
@@ -72,7 +72,7 @@ public class PlaceDraw implements IOwnerCMD {
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<Iterations> <FileName>", "Command to draw stuff on place");
+        return StandardHelp.Help(prefix, getName(), "<Iterations> <FileName> [x y]", "Command to draw stuff on place");
     }
     
 }
