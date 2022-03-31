@@ -318,7 +318,7 @@ public class AdminCMDs {
                 try{
                     butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
                 } catch (Exception e){
-                    event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                    event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
@@ -738,7 +738,7 @@ public class AdminCMDs {
                 try{
                     butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
                 } catch (Exception e){
-                    event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                    event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 

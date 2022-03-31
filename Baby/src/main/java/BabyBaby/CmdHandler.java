@@ -51,7 +51,7 @@ public class CmdHandler {
         //addPublicCommand(new BlindForceCMD());
         addPublicCommand(new TillBlindCMD());
         
-        //at the moment completly useless
+        //at the moment completely useless
         //addPublicCommand(new EmoteQueryCMD());
         addPublicCommand(new UsageCMD());
 

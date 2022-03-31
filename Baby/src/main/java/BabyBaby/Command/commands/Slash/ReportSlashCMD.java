@@ -40,8 +40,8 @@ public class ReportSlashCMD implements ISlashCMD {
     public CommandDataImpl initialise(Guild eth) {
         CommandDataImpl report = new CommandDataImpl(getName(), "A command to report a incident to Staff anonymously.");
         
-        report.addOption(OptionType.STRING, "issue", "The isssue you have or the incident that occured.", true);
-        report.addOption(OptionType.USER, "user", "If you want to report a User. This can be left empty.");
+        report.addOption(OptionType.STRING, "issue", "The issue you have or the incident that occurred.", true);
+        report.addOption(OptionType.USER, "user", "If you want to report a User, this can be left empty.");
         
         return report;
     }

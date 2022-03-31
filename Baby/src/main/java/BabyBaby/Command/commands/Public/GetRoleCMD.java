@@ -275,7 +275,7 @@ public class GetRoleCMD implements IPublicCMD{
                 try{
                     butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
                 } catch (Exception e){
-                    ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                    ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
@@ -507,7 +507,7 @@ public class GetRoleCMD implements IPublicCMD{
             try{
                 butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
             } catch (Exception e){
-                ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accesible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accessible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
             }
         }
 
