@@ -60,7 +60,7 @@ public class FlashedCMD implements IPublicCMD {
         
         
 
-        String shouldbeLearning = "<@!223932775474921472>";
+        String shouldBeLearning = "<@!223932775474921472>";
 
         String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname() : ctx.getMember().getEffectiveName();
 
@@ -68,7 +68,7 @@ public class FlashedCMD implements IPublicCMD {
             eb.setTitle("People who are learning or rather should be! (Blinded)", null);
             eb.setColor(1);
             eb.addField("" + countUsers, userNames, false);
-            eb.addField("people who should be studying right now",  shouldbeLearning, false);
+            eb.addField("people who should be studying right now",  shouldBeLearning, false);
             // eb.addBlankField(false);
             eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
         channel.sendMessage("cache refresh").complete().editMessage("a " + cache).complete().delete().queue();

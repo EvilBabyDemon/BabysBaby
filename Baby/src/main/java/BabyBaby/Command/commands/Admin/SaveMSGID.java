@@ -40,7 +40,7 @@ public class SaveMSGID implements IAdminCMD {
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<msgid>", "Use this cmd to save a getrole cmd message in a Channel like RoleAssignement.");
+        return StandardHelp.Help(prefix, getName(), "<msgid>", "Use this cmd to save a getrole cmd message in a Channel like RoleAssignment.");
     }
     
 }
