@@ -283,7 +283,7 @@ public class StartupListener extends ListenerAdapter{
                         
                         } catch (Exception e){
                             e.printStackTrace();
-                            System.out.println("Probably a User that left the server while being blinded.");
+                            System.out.println("Probably a User that left the server while being blinded. ID: " + rs.getString("USERID"));
                         }
 
                     }
