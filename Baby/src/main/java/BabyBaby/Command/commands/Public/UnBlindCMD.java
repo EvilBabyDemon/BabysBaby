@@ -147,11 +147,12 @@ public class UnBlindCMD implements IPublicCMD {
         LinkedList<Role> delRole = new LinkedList<>();
 
         for (String roleID : roles.split(" ")) {
-            try {
-                addRole.add(blindServ.getRoleById(roleID));
-            } catch (Exception e) {
-                System.out.println("Role doesnt exist anymore");
+            Role role = blindServ.getRoleById(roleID);
+            if(role == null){
+                System.out.println(roleID + "Role doesnt exist anymore");
+                continue;
             }
+            addRole.add(role);
         }
 
         try {

@@ -109,26 +109,22 @@ public class BabyListener extends ListenerAdapter {
             LinkedList<Role> delRole = new LinkedList<>();
 
             for (String roleID : roles.split(" ")) {
-                try {
-                    addRole.add(blindServ.getRoleById(roleID));
-                } catch (Exception e) {
-                    System.out.println("Role doesnt exist anymore");
+                Role role = blindServ.getRoleById(roleID);
+                if(role == null){
+                    System.out.println(roleID + "Role doesnt exist anymore");
+                    continue;
                 }
+                addRole.add(role);
             }
-
-
-            
 
             try {
                 delRole.add(blindServ.getRoleById(Data.BLIND_ID));
                 blindServ.modifyMemberRoles(blinded, addRole, delRole).complete();
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Role Blind doesnt exist anymore. This could be a serious issue.");
                 blindServ.modifyMemberRoles(blinded, addRole, null).complete();
             }
-
-            
-            
             
             if(BlindSlashCMD.blind.get(blinded)!=null){
                 ScheduledExecutorService blind = BlindSlashCMD.blind.get(blinded);
