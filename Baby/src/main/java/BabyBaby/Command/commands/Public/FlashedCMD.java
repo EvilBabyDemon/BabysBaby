@@ -11,6 +11,7 @@ import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -46,14 +47,19 @@ public class FlashedCMD implements IPublicCMD {
             while ( rs.next() ) {
                 String mutedUser = rs.getString("USERID");
                 countUsers++;
-                userNames += called.getMemberById(mutedUser).getAsMention() + "(" + Math.round(((Long.parseLong(rs.getString("MUTETIME"))-System.currentTimeMillis())/60000.0)) + "m), ";
-                cache += called.getMemberById(mutedUser).getAsMention();
+
+                Member blind = called.getMemberById(mutedUser);
+                String mention = mutedUser;
+                if(blind != null){
+                    mention = blind.getAsMention();
+                    cache += mention;
+                }
+                userNames += mention + "(" + Math.round(((Long.parseLong(rs.getString("MUTETIME"))-System.currentTimeMillis())/60000.0)) + "m), ";
             }
             rs.close();
             stmt.close();
             c.close();
         } catch ( Exception e ) {
-            channel.sendMessage( e.getClass().getName() + ": " + e.getMessage()).queue();
             e.printStackTrace(); 
             return;
         }          
