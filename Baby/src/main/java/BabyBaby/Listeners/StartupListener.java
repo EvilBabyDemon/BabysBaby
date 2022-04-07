@@ -267,25 +267,24 @@ public class StartupListener extends ListenerAdapter{
                     rs = stmt.executeQuery("SELECT * FROM ROLEREMOVAL");            
                     while(rs.next()){
                         try{
-                        Guild called = bot.getGuildById( rs.getString("GUILDID"));
-                        User blindUser = called.getMemberById(rs.getString("USERID")).getUser();
-                        long time = Long.parseLong(rs.getString("MUTETIME"));
-                        ScheduledExecutorService blindex = Executors.newScheduledThreadPool(1);
-                        
-                        GetRolesBack blindclass = new GetRolesBack(blindUser, called, rs.getString("ROLES"));
-                        blindex.schedule(blindclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
-                        BlindSlashCMD.blind.put(called.getMember(blindUser), blindex);
-                        BlindSlashCMD.blindexe.put(blindex, blindclass);
-                        
-                        if(rs.getBoolean("ADMINMUTE")){
-                            AdminMuteBlindCMD.userBlinded.add(called.getMember(blindUser));
-                        }
+                            Guild called = bot.getGuildById( rs.getString("GUILDID"));
+                            User blindUser = called.getMemberById(rs.getString("USERID")).getUser();
+                            long time = Long.parseLong(rs.getString("MUTETIME"));
+                            ScheduledExecutorService blindex = Executors.newScheduledThreadPool(1);
+                            
+                            GetRolesBack blindclass = new GetRolesBack(blindUser, called, rs.getString("ROLES"));
+                            blindex.schedule(blindclass, (time-System.currentTimeMillis())/1000, TimeUnit.SECONDS);
+                            BlindSlashCMD.blind.put(called.getMember(blindUser), blindex);
+                            BlindSlashCMD.blindexe.put(blindex, blindclass);
+                            
+                            if(rs.getBoolean("ADMINMUTE")){
+                                AdminMuteBlindCMD.userBlinded.add(called.getMember(blindUser));
+                            }
                         
                         } catch (Exception e){
                             e.printStackTrace();
                             System.out.println("Probably a User that left the server while being blinded. ID: " + rs.getString("USERID"));
                         }
-
                     }
                     stmt.close();
                     c.close();
