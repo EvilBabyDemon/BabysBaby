@@ -496,7 +496,6 @@ public class AdminCMDs {
             eb.setAuthor("Warnings from " + warned.getEffectiveName() + " (" + warned.getUser().getAsTag() + ")", warned.getUser().getAvatarUrl(), warned.getUser().getAvatarUrl());
         } catch (Exception e){
             eb.setAuthor("Warnings from " + person);
-            return;
         }
         
         eb.setColor(1);
