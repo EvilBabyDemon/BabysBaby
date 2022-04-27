@@ -41,7 +41,7 @@ public class RemindSlashCMD implements ISlashCMD {
         */
 
 
-        String unit = event.getOption("unit") != null ? event.getOption("unit").getAsString() : "";
+        String unit = event.getOption("unit") != null ? event.getOption("unit").getAsString() : null;
 		
         double time = event.getOption("time").getAsDouble();
         
