@@ -156,13 +156,13 @@ public class AdminSlashCMD implements ISlashCMD{
 
     public void load(CommandDataImpl cmd, Guild eth) {
         cmd.setDefaultEnabled(false);
-
+        
         String adminID = eth.upsertCommand(cmd).complete().getId();
         
         Role adminrole = eth.getRoleById(Data.ADMIN_ID);
         Role modrole = eth.getRoleById(Data.MODERATOR_ID);
         
-        eth.updateCommandPrivilegesById(adminID, Arrays.asList(CommandPrivilege.enable(adminrole), CommandPrivilege.enable(modrole))).complete();
+        //eth.updateCommandPrivilegesById(adminID, Arrays.asList(CommandPrivilege.enable(adminrole), CommandPrivilege.enable(modrole))).complete();
     }
     
 }
