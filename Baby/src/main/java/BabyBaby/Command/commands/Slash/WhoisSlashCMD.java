@@ -161,7 +161,7 @@ public class WhoisSlashCMD implements ISlashCMD {
     @Override
     public CommandDataImpl initialise(Guild eth) {
         //whois
-        CommandDataImpl whois = new CommandDataImpl("whois", "Cmd to see stuff about a user.");
+        CommandDataImpl whois = new CommandDataImpl(getName(), "Cmd to see stuff about a user.");
         whois.addOption(OptionType.USER, "user", "User to stalk.", false);
         whois.addOption(OptionType.STRING, "userid", "Id of user for the case you can't type their username.", false);
         whois.addOption(OptionType.BOOLEAN, "ephemeral", "True if message should be ephemeral. Default is false", false);
