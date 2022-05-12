@@ -11,8 +11,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class BotsOnlineCMD implements IPublicCMD{
-
+public class BotsOnlineCMD implements IPublicCMD {
 
     @Override
     public String getName() {
@@ -22,16 +21,16 @@ public class BotsOnlineCMD implements IPublicCMD{
     @Override
     public void handlePublic(CommandContext ctx) {
         ArrayList<Member> online = new ArrayList<>();
-        ArrayList<Member> offline = new ArrayList<>();        
+        ArrayList<Member> offline = new ArrayList<>();
         for (Member member : ctx.getGuild().getMembers()) {
-            if(member.getUser().isBot()){
+            if (member.getUser().isBot()) {
                 OnlineStatus stat = member.getOnlineStatus();
-                if(stat.equals(OnlineStatus.OFFLINE)){
+                if (stat.equals(OnlineStatus.OFFLINE)) {
                     offline.add(member);
-                } else{
+                } else {
                     online.add(member);
                 }
-            }        
+            }
         }
 
         String on = "";
@@ -48,15 +47,14 @@ public class BotsOnlineCMD implements IPublicCMD{
             pingstr += offMember.getAsMention() + " ";
         }
 
-        Message ping =  ctx.getChannel().sendMessage("wait").complete();
+        Message ping = ctx.getChannel().sendMessage("wait").complete();
         ping.editMessage(pingstr).complete().delete().queue();
-
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Bots on this server:");
         eb.addField("Online Bots: " + online.size(), on, true);
         eb.addField("Offline Bots: " + offline.size(), off, true);
-        
+
         String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
                 : ctx.getMember().getEffectiveName();
         eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
@@ -67,5 +65,5 @@ public class BotsOnlineCMD implements IPublicCMD{
     public MessageEmbed getPublicHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Get all bots and see if they are online or not");
     }
-    
+
 }

@@ -48,14 +48,18 @@ public class NewRoleCMD implements IAdminCMD {
             gemo = true;
         } catch (Exception e) {
         }
-        String msgID = ctx.getChannel().sendMessage("Get " + newRole.getName() + " with this button:").setActionRow(Button.primary(emoteStr, gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoteStr)): Emoji.fromUnicode(emoteStr))).complete().getId();
+        String msgID = ctx.getChannel().sendMessage("Get " + newRole.getName() + " with this button:")
+                .setActionRow(Button.primary(emoteStr,
+                        gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoteStr)) : Emoji.fromUnicode(emoteStr)))
+                .complete().getId();
         Data.buttonid.add(msgID);
-        
+
     }
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<role id>", "Sends a button with which you can get the role specified. For announcements and stuff like that");
+        return StandardHelp.Help(prefix, getName(), "<role id>",
+                "Sends a button with which you can get the role specified. For announcements and stuff like that");
     }
-    
+
 }

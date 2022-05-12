@@ -2,7 +2,6 @@ package CryptPart;
 
 public class VWA_Schluessellaenge {
 
-	
 	/*
 	 * probedurchlauf um zu schauen wie viele Wiederholungen vorkommen (f�r den
 	 * Friedmanntest)
@@ -111,29 +110,30 @@ public class VWA_Schluessellaenge {
 				}
 			}
 		}
-		
-		return new Object[] {folgen, nummerFolgen};
+
+		return new Object[] { folgen, nummerFolgen };
 
 	}
 
 	public static char[][] richtigemArrayFolgenZuweisen(int[] xarr, char[][] folgen300, char[][] folgenRichtig) {
-		
+
 		for (int i = 0; i < folgenRichtig.length; i++) {
 			folgenRichtig[i] = new char[xarr[i]];
 		}
-		
+
 		for (int i = 0; i < folgenRichtig.length; i++) {
 			for (int b = 0; b < folgenRichtig[i].length; b++) {
 				folgenRichtig[i][b] = folgen300[i][b];
 			}
 		}
-		
+
 		return folgenRichtig;
 	}
 
-	public static Object[] FolgenDezimieren(char[][] folgen, char[][] folgen300, int[] nummerFolgen300x2, int[] nummerFolgen,
+	public static Object[] FolgenDezimieren(char[][] folgen, char[][] folgen300, int[] nummerFolgen300x2,
+			int[] nummerFolgen,
 			int[] xarr) {
-		
+
 		int nummerz100 = 0;
 		int[] loescher = new int[300];
 		boolean loosch = false;
@@ -171,7 +171,7 @@ public class VWA_Schluessellaenge {
 			}
 			nummerz100 += 2;
 		}
-		
+
 		return new Object[] { folgen300, nummerFolgen300x2 };
 
 	}
@@ -191,14 +191,15 @@ public class VWA_Schluessellaenge {
 			}
 
 			for (int nenner = 2; nenner <= abstand; nenner++) {
-				if ((abstand%nenner) == 0) {
+				if ((abstand % nenner) == 0) {
 					gleich = false;
 					for (int i = 0; i < nennerAnzahl; i++) {
 						if (nennerZahlen[i] == nenner) {
 							nennerZahlenAnzahl[i]++;
 							abstand = abstand / nenner;
-							nenner = 1;		
-							gleich = true;;
+							nenner = 1;
+							gleich = true;
+							;
 							break;
 						}
 					}
@@ -232,16 +233,14 @@ public class VWA_Schluessellaenge {
 				}
 			}
 		}
-		
+
 		return new Object[] { nennerZahlen, nennerZahlenAnzahl };
 
 	}
 
-	
+	public static int[] myFriedamnnTest(char[] a2, int[] Friedmannschluessel) {
 
-	public static int [] myFriedamnnTest(char[] a2, int[] Friedmannschluessel) {
-
-		double koinzWerte[][] = new double[a2.length/10][];
+		double koinzWerte[][] = new double[a2.length / 10][];
 
 		int schluesselLaenge = 2;
 
@@ -251,7 +250,7 @@ public class VWA_Schluessellaenge {
 		}
 
 		for (int i = 2; i < koinzWerte.length; i++) { // dividiert durch 10 da man unter 10 buchstaben nicht wirklich e
-													// finden kann
+														// finden kann
 			int[] buchstabe = new int[26];
 
 			for (int k = 0; k < koinzWerte[i].length; k++) {
@@ -288,9 +287,10 @@ public class VWA_Schluessellaenge {
 
 				double x = 0;
 				for (int j = 0; j < 26; j++) {
-					x += ((buchstabe[j] * (buchstabe[j] - 1))*1000) / (laengenFuerRechnung[k] * (laengenFuerRechnung[k] - 1));
+					x += ((buchstabe[j] * (buchstabe[j] - 1)) * 1000)
+							/ (laengenFuerRechnung[k] * (laengenFuerRechnung[k] - 1));
 				}
-				
+
 				x = x / 1000;
 				koinzWerte[i][k] = x;
 			}
@@ -310,37 +310,36 @@ public class VWA_Schluessellaenge {
 		double momentanerAbstand = 0.0;
 		double momentanerAbstand2 = 0.0;
 		double deutscherKoinzidenzwert = 0.76;
-		int [] schluesselLaengeArray = new int [koinzschnitt.length];
-		
-		for(int i = 0; i < schluesselLaengeArray.length; i++) {
-			schluesselLaengeArray[i]=i;
+		int[] schluesselLaengeArray = new int[koinzschnitt.length];
+
+		for (int i = 0; i < schluesselLaengeArray.length; i++) {
+			schluesselLaengeArray[i] = i;
 		}
-		//Bubblesort methode
+		// Bubblesort methode
 		for (int i = 0; i < koinzschnitt.length; i++) {
 			for (int j = 3; j < koinzschnitt.length; j++) {
-				momentanerAbstand = koinzschnitt[j-1] - deutscherKoinzidenzwert;
-				if(momentanerAbstand < 0) {
+				momentanerAbstand = koinzschnitt[j - 1] - deutscherKoinzidenzwert;
+				if (momentanerAbstand < 0) {
 					momentanerAbstand = momentanerAbstand * -1;
 				}
 				momentanerAbstand2 = koinzschnitt[j] - deutscherKoinzidenzwert;
-				if(momentanerAbstand2 < 0) {
+				if (momentanerAbstand2 < 0) {
 					momentanerAbstand2 = momentanerAbstand2 * -1;
 				}
-				
+
 				if (momentanerAbstand2 < momentanerAbstand) {
 					double tmp = koinzschnitt[j];
 					koinzschnitt[j] = koinzschnitt[(j - 1)];
 					koinzschnitt[(j - 1)] = tmp;
 					int tmpInt = schluesselLaengeArray[j];
-					schluesselLaengeArray[j] = schluesselLaengeArray[j-1];
+					schluesselLaengeArray[j] = schluesselLaengeArray[j - 1];
 					schluesselLaengeArray[j - 1] = tmpInt;
 				}
 			}
 		}
 
-		
-		for(int i = 2; i < Friedmannschluessel.length+2; i++) {
-			Friedmannschluessel[i-2] = schluesselLaengeArray[i];
+		for (int i = 2; i < Friedmannschluessel.length + 2; i++) {
+			Friedmannschluessel[i - 2] = schluesselLaengeArray[i];
 		}
 		return Friedmannschluessel;
 

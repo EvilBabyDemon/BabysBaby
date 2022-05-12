@@ -24,24 +24,14 @@ public class TillBlindCMD implements IPublicCMD {
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        /*
-        if(!MuteCMD.userMuted.containsKey(ctx.getAuthor())){
-            ctx.getAuthor().openPrivateChannel().queue((channel) -> {
-                channel.sendMessage("You were never blinded. Or at least not by this bot. If you were pls report this problem to Lukas").queue();
-            });
-            return;
-        }
-        */
-        
         actualcmd(ctx.getAuthor(), ctx.getArgs(), ctx.getJDA());
     }
 
-    public void privhandle(User author, List<String> args, JDA jda){
+    public void privhandle(User author, List<String> args, JDA jda) {
         actualcmd(author, args, jda);
     }
 
-    private void actualcmd(User author, List<String> cmds, JDA jda){
-        
+    private void actualcmd(User author, List<String> cmds, JDA jda) {
 
         Connection c = null;
         PreparedStatement stmt = null;
@@ -51,30 +41,33 @@ public class TillBlindCMD implements IPublicCMD {
 
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            
+
             stmt = c.prepareStatement("SELECT * FROM ROLEREMOVAL WHERE USERID = ?;");
             stmt.setString(1, author.getId());
             ResultSet rs = stmt.executeQuery();
-            
-            while ( rs.next() ) {
+
+            while (rs.next()) {
                 String guildname = jda.getGuildById(rs.getString("GUILDID")).getName();
-                
-                user += guildname + " (" + Math.round(((Long.parseLong(rs.getString("MUTETIME"))-System.currentTimeMillis())/60000.0)) + "m) \n ";
+
+                user += guildname + " ("
+                        + Math.round(
+                                ((Long.parseLong(rs.getString("MUTETIME")) - System.currentTimeMillis()) / 60000.0))
+                        + "m) \n ";
             }
 
             rs.close();
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
-            e.printStackTrace(); 
+        } catch (Exception e) {
+            e.printStackTrace();
             return;
-        }    
+        }
 
         EmbedBuilder eb = new EmbedBuilder();
-            eb.setTitle("How long you are still blinded:", null);
-            eb.setColor(1);
-            eb.setDescription(user);
-            eb.setFooter("Summoned by: " + author.getAsTag(), author.getAvatarUrl());
+        eb.setTitle("How long you are still blinded:", null);
+        eb.setColor(1);
+        eb.setDescription(user);
+        eb.setFooter("Summoned by: " + author.getAsTag(), author.getAvatarUrl());
 
         try {
             author.openPrivateChannel().complete().sendMessageEmbeds(eb.build()).queue();
@@ -87,6 +80,5 @@ public class TillBlindCMD implements IPublicCMD {
     public MessageEmbed getPublicHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Command to find out how long you are blind.");
     }
-    
-    
+
 }

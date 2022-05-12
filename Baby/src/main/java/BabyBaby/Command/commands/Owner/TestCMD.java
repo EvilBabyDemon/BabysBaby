@@ -1,8 +1,5 @@
 package BabyBaby.Command.commands.Owner;
 
-
-
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,13 +27,14 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
+
 /*
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu.Builder;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 */
-public class TestCMD implements IOwnerCMD{
+public class TestCMD implements IOwnerCMD {
 
     @Override
     public String getName() {
@@ -45,7 +43,8 @@ public class TestCMD implements IOwnerCMD{
 
     @Override
     public void handleOwner(CommandContext ctx) {
-        /*
+
+                /*
         LinkedList<Member> allmem = new LinkedList<>(); 
         
         Role student = ctx.getGuild().getRoleById(Data.ethstudent);
@@ -110,58 +109,60 @@ public class TestCMD implements IOwnerCMD{
         msg.setActionRows(tmp);
         msg.queue();
         */
-       
 
-        if(ctx.getArgs().get(0).equalsIgnoreCase("emote")) {
-            
-            Role rolesArr[] = new Role[ctx.getArgs().size()-2];
-            
+
+        if (ctx.getArgs().get(0).equalsIgnoreCase("emote")) {
+
+            Role rolesArr[] = new Role[ctx.getArgs().size() - 2];
+
             for (int i = 2; i < ctx.getArgs().size(); i++) {
-                rolesArr[i-2] = ctx.getGuild().getRoleById(ctx.getArgs().get(i));
+                rolesArr[i - 2] = ctx.getGuild().getRoleById(ctx.getArgs().get(i));
             }
-            
+
             try {
-                ctx.getGuild().createEmote(ctx.getArgs().get(1), Icon.from(ctx.getMessage().getAttachments().get(0).downloadToFile().join()), rolesArr).complete();
+                ctx.getGuild()
+                        .createEmote(ctx.getArgs().get(1),
+                                Icon.from(ctx.getMessage().getAttachments().get(0).downloadToFile().join()), rolesArr)
+                        .complete();
             } catch (Exception e) {
                 ctx.getChannel().sendMessage("File not found \n" + e).complete();
             }
             return;
         }
 
-        if(ctx.getArgs().size() == 2 && ctx.getArgs().get(0).equalsIgnoreCase("student") && ctx.getArgs().get(1).equalsIgnoreCase("yes")) {
+        if (ctx.getArgs().size() == 2 && ctx.getArgs().get(0).equalsIgnoreCase("student")
+                && ctx.getArgs().get(1).equalsIgnoreCase("yes")) {
             List<Member> allMem = ctx.getGuild().getMembers();
-            
-            
+
             LinkedList<String> pings = new LinkedList<>();
             String tempSmall = "";
 
             for (Member mem : allMem) {
-                if(mem.getRoles().size() != 1 || !mem.getRoles().get(0).getId().equals("747786383317532823")){
+                if (mem.getRoles().size() != 1 || !mem.getRoles().get(0).getId().equals("747786383317532823")) {
                     continue;
                 }
 
-                if(tempSmall.length() + mem.getAsMention().length() < 1999){
+                if (tempSmall.length() + mem.getAsMention().length() < 1999) {
                     tempSmall += mem.getAsMention() + " ";
                 } else {
                     pings.add(tempSmall);
-                    tempSmall = mem.getAsMention() + " "; 
+                    tempSmall = mem.getAsMention() + " ";
                 }
             }
             pings.add(tempSmall);
 
             for (String ping : pings) {
-               ctx.getChannel().sendMessage(ping).complete().delete().complete();
+                ctx.getChannel().sendMessage(ping).complete().delete().complete();
             }
             return;
         }
-        
 
         Data.automaticRoleAddThingy = !Data.automaticRoleAddThingy;
 
         AuditLogPaginationAction logs = ctx.getGuild().retrieveAuditLogs();
-        //logs.type()
-        
-        if(ctx.getArgs().size() == 0){
+        // logs.type()
+
+        if (ctx.getArgs().size() == 0) {
             String output = "";
             for (ActionType actType : ActionType.values()) {
                 output += actType.name() + " ";
@@ -170,19 +171,20 @@ public class TestCMD implements IOwnerCMD{
             return;
         }
 
-
         String finalorso = ctx.getArgs().get(0);
-        List<Object[]> minedit = List.of(ActionType.values()).parallelStream().map(actionType -> new Object[] {Helper.minDistance(finalorso, actionType.name()), actionType}).collect(Collectors.toList());
-        
-        LinkedList<Object[]> smallest = new LinkedList<Object[]>();    
-        
+        List<Object[]> minedit = List.of(ActionType.values()).parallelStream()
+                .map(actionType -> new Object[] { Helper.minDistance(finalorso, actionType.name()), actionType })
+                .collect(Collectors.toList());
+
+        LinkedList<Object[]> smallest = new LinkedList<Object[]>();
+
         smallest.add(minedit.remove(0));
         int smallestint = (int) smallest.get(0)[0];
         for (Object[] minEditObj : minedit) {
             int x = (int) minEditObj[0];
-            if(smallestint == x){
+            if (smallestint == x) {
                 smallest.add(minEditObj);
-            } else if(smallestint > x){
+            } else if (smallestint > x) {
                 smallest = new LinkedList<>();
                 smallest.add(minEditObj);
                 smallestint = x;
@@ -194,24 +196,27 @@ public class TestCMD implements IOwnerCMD{
         for (AuditLogEntry entry : logs) {
             String time = "" + entry.getTimeCreated().toEpochSecond();
             String user = entry.getUser().getAsMention();
-            String changes = entry.getChanges().values().stream().map(change -> change.getOldValue() + " " + change.getNewValue()).collect(Collectors.joining("\n"));
+            String changes = entry.getChanges().values().stream()
+                    .map(change -> change.getOldValue() + " " + change.getNewValue()).collect(Collectors.joining("\n"));
             msg += user + " <t:" + time + ">" + "\n" + changes + "\n";
-            entry.getOptions().values().stream().map(option -> option.getClass() + " " + option).collect(Collectors.joining(" "));
-            
-        }
-        
-        ctx.getChannel().sendMessage("give me a sec").complete().editMessage("AuditLog: " + (msg.length()>1980 ? msg.substring(0, 1980) : msg)).complete();
+            entry.getOptions().values().stream().map(option -> option.getClass() + " " + option)
+                    .collect(Collectors.joining(" "));
 
-    }   
+        }
+
+        ctx.getChannel().sendMessage("give me a sec").complete()
+                .editMessage("AuditLog: " + (msg.length() > 1980 ? msg.substring(0, 1980) : msg)).complete();
+
+    }
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "(whatever it is atm)", "A cmd to test things out.");
     }
     /*
-    private static String rgbToHex(Color c) {
-        return String.format("#%02x%02x%02x", c.getRed(),                 c.getGreen(), c.getBlue());
-    } 
-    */
-    
+     * private static String rgbToHex(Color c) {
+     * return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
+     * }
+     */
+
 }

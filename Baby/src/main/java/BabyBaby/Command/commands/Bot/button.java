@@ -12,13 +12,13 @@ public class button {
     static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     static boolean shut = false;
     static Guild eth;
-    
-    public static void tap(MessageReceivedEvent event){
-        
-        if(!event.getGuild().getId().equals("747752542741725244"))  
+
+    public static void tap(MessageReceivedEvent event) {
+
+        if (!event.getGuild().getId().equals("747752542741725244"))
             return;
 
-        if(eth == null){
+        if (eth == null) {
             eth = event.getGuild();
         }
 
@@ -37,12 +37,11 @@ public class button {
         }
 
         scheduler.schedule(new Later(), time, TimeUnit.SECONDS);
-        
-        System.out.println("In " + time/60 + " minutes");
+
+        System.out.println("In " + time / 60 + " minutes");
 
         shut = true;
     }
-
 
 }
 
@@ -55,9 +54,6 @@ class Later implements Runnable {
         button.eth.getMemberById("223932775474921472").getUser().openPrivateChannel().queue((channel) -> {
             channel.sendMessage("Do it now!").queue();
         });
-        
+
     }
 }
-
-
-

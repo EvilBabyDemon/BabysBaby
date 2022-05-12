@@ -1,18 +1,14 @@
 package CryptPart;
 
-
 public class KeyDecrypt {
 
 	public static String decrypter(String t, String textcode) {
-		
 
 		t = t.toLowerCase();
 		t = t.replace("\u00e4", "ae");
 		t = t.replace("\u00f6", "oe");
 		t = t.replace("\u00fc", "ue");
 		t = t.replace("\u00df", "ss");
-		
-
 
 		char[] cde = new char[textcode.length()];
 
@@ -25,13 +21,8 @@ public class KeyDecrypt {
 		for (int i = 0; i < cde.length; i++) { // Umwandlung der Buchstaben des Codes zu Zahlen
 			code[i] = ((int) cde[i]) - 97;
 		}
-		
-		
-		//Key zum decrypten
-		
-		
-		
-		
+
+		// Key zum decrypten
 
 		char[] a = new char[t.length()];
 
@@ -45,19 +36,18 @@ public class KeyDecrypt {
 												// wird
 			neuCode[i] = code[i % code.length];
 		}
-		
+
 		int x = 0;
-		
+
 		for (int i = 0; i < a.length; i++) { // Schleife um den Text zu verschl�sseln
-			
-			
-			if(!(a[i]>96 && a[i] < 123)) {
+
+			if (!(a[i] > 96 && a[i] < 123)) {
 				continue;
 			}
-			
+
 			a[i] = (char) (a[i] - neuCode[x]); // Buchstabe + Verschiebung (Zahl des Codes)
 			if (a[i] < 97) {
-				a[i] = (char) (26 + a[i]); 
+				a[i] = (char) (26 + a[i]);
 			}
 			x++;
 		}
@@ -66,7 +56,7 @@ public class KeyDecrypt {
 		for (int i = 0; i < a.length; i++) {
 			encrypted += a[i];
 		}
-		
+
 		return encrypted;
 
 	}

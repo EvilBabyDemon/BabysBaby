@@ -23,11 +23,13 @@ public class tick implements IOwnerCMD {
     public void handleOwner(CommandContext ctx) {
         LocalTime myObj = LocalTime.now();
         clock.clock = Executors.newScheduledThreadPool(1);
-        String minuteString = (myObj.getMinute() - myObj.getMinute()%15) == 0 ? ""  : "" + (myObj.getMinute() - myObj.getMinute()%15);
-        clock.clock.schedule(new clockTower(((myObj.getHour())%12) + minuteString, ctx.getGuild()), 0, TimeUnit.SECONDS);
+        String minuteString = (myObj.getMinute() - myObj.getMinute() % 15) == 0 ? ""
+                : "" + (myObj.getMinute() - myObj.getMinute() % 15);
+        clock.clock.schedule(new clockTower(((myObj.getHour()) % 12) + minuteString, ctx.getGuild()), 0,
+                TimeUnit.SECONDS);
 
         ctx.getMessage().addReaction(Data.check).queue();
-        
+
     }
 
     @Override
@@ -35,7 +37,7 @@ public class tick implements IOwnerCMD {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
 }
 
 class clockTower implements Runnable {
@@ -48,7 +50,7 @@ class clockTower implements Runnable {
     }
 
     public void run() {
-        clock.timenow  = new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\clock\\" + time + ".png");
+        clock.timenow = new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\clock\\" + time + ".png");
         clock.timerchange = true;
         eth.getTextChannelById("819966095070330950").sendMessage(".place pixelverify 900 720").queue();
         eth.getTextChannelById("819966095070330950").sendMessage("+clock").queue();

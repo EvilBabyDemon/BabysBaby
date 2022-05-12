@@ -2,20 +2,21 @@ package CryptPart;
 
 public class VWA_Entschluesseln {
 
-	public static Object[] myFriedmanEntschluesseln(char[] a2, int [] Friedmannschluessel, int friedmannzaehler) {
+	public static Object[] myFriedmanEntschluesseln(char[] a2, int[] Friedmannschluessel, int friedmannzaehler) {
 
 		int schluessel = 0;
-		
-		if(friedmannzaehler<Friedmannschluessel.length) {
+
+		if (friedmannzaehler < Friedmannschluessel.length) {
 			schluessel = Friedmannschluessel[friedmannzaehler];
 		} else {
-			System.out.println("Der Friedmann Test hat nicht funktioniert. Wählen sie eine andere Methode für diesen Text aus");
+			System.out.println(
+					"Der Friedmann Test hat nicht funktioniert. Wählen sie eine andere Methode für diesen Text aus");
 			System.exit(0);
 		}
 		friedmannzaehler++;
-		
+
 		int[] verschl = new int[schluessel];
-		
+
 		for (int schwied = 0; schwied < schluessel; schwied++) {
 
 			int[] haufigk = new int[26];
@@ -91,26 +92,27 @@ public class VWA_Entschluesseln {
 		return new Object[] { verschlLaenge, entschlLaenge, verschlChar, entschlChar, entschlText, friedmannzaehler };
 	}
 
-	public static Object[] myKasiskiEntschluesseln(char[] a2, int[] nennerZahlen, int kasiskiZaehler, boolean erstenFuenfNenner) {
+	public static Object[] myKasiskiEntschluesseln(char[] a2, int[] nennerZahlen, int kasiskiZaehler,
+			boolean erstenFuenfNenner) {
 
 		int schluessel = 0;
-		
-		if(erstenFuenfNenner) {
+
+		if (erstenFuenfNenner) {
 			schluessel = nennerZahlen[kasiskiZaehler];
 			kasiskiZaehler++;
-			if(kasiskiZaehler>4) {
+			if (kasiskiZaehler > 4) {
 				erstenFuenfNenner = false;
 				kasiskiZaehler = 0;
 			}
 		} else {
-			schluessel = nennerZahlen[kasiskiZaehler]*nennerZahlen[kasiskiZaehler+1];
+			schluessel = nennerZahlen[kasiskiZaehler] * nennerZahlen[kasiskiZaehler + 1];
 			kasiskiZaehler++;
 		}
-		
+
 		if (kasiskiZaehler < 20) {
 			return new Object[] { null, null, null, null, null };
 		}
-		
+
 		if (schluessel == 0) {
 			System.out.println("Schluessel ist 0...");
 			System.exit(0);
@@ -141,7 +143,6 @@ public class VWA_Entschluesseln {
 			}
 			verschl[schwied] = sORTi;
 		}
-
 
 		for (int i = 0; i < schluessel; i++) {
 			verschl[i] += 93;
@@ -189,7 +190,6 @@ public class VWA_Entschluesseln {
 		return new Object[] { verschlLaenge, entschlLaenge, verschlChar, entschlChar, entschlText };
 	}
 
-
 	public static Object[] myBruteForceEntschluesseln(char[] a2, boolean bruteFunktionierte, int bruteForce) {
 
 		bruteFunktionierte = false;
@@ -234,7 +234,6 @@ public class VWA_Entschluesseln {
 				}
 				verschl[schwied] = sORTi;
 			}
-
 
 			for (int i = 0; i < schluessel; i++) {
 				verschl[i] += 93;

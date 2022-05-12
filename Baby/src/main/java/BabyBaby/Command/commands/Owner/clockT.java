@@ -15,7 +15,7 @@ public class clockT implements Runnable {
     }
 
     public void run() {
-        clock.timenow  = new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\clock\\" + time + ".png");
+        clock.timenow = new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\clock\\" + time + ".png");
         clock.timerchange = true;
         eth.getTextChannelById("819966095070330950").sendMessage(".place pixelverify 900 720").queue();
         eth.getTextChannelById("819966095070330950").sendMessage("+clock").queue();

@@ -22,25 +22,25 @@ import java.util.List;
 
 public class HelpCMD implements IPublicCMD {
 
-    Comparator<IPublicCMD> compPub = new Comparator<>(){
+    Comparator<IPublicCMD> compPub = new Comparator<>() {
         @Override
         public int compare(IPublicCMD o1, IPublicCMD o2) {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
-    Comparator<IAdminCMD> compAdm = new Comparator<>(){
+    Comparator<IAdminCMD> compAdm = new Comparator<>() {
         @Override
         public int compare(IAdminCMD o1, IAdminCMD o2) {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
-    Comparator<IOwnerCMD> compOwn = new Comparator<>(){
+    Comparator<IOwnerCMD> compOwn = new Comparator<>() {
         @Override
         public int compare(IOwnerCMD o1, IOwnerCMD o2) {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
         }
     };
-    Comparator<ISlashCMD> compSlash = new Comparator<>(){
+    Comparator<ISlashCMD> compSlash = new Comparator<>() {
         @Override
         public int compare(ISlashCMD o1, ISlashCMD o2) {
             return o1.getName().charAt(0) - o2.getName().charAt(0);
@@ -48,7 +48,7 @@ public class HelpCMD implements IPublicCMD {
     };
 
     @Override
-    public boolean getWhiteListBool(){
+    public boolean getWhiteListBool() {
         return true;
     }
 
@@ -187,67 +187,67 @@ public class HelpCMD implements IPublicCMD {
                         .setDescription(new ColouredStringAsciiDoc()
                                 .addBlueAboveDash("try " + prefix + "help to see all commands")
                                 .build())
-                        .build()
-        ).queue();
+                        .build())
+                .queue();
     }
 
-    private String getPrefix(String id){
+    private String getPrefix(String id) {
         Connection c = null;
         Statement stmt = null;
-		ResultSet rs;
+        ResultSet rs;
         String prefix = "+";
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
             c.setAutoCommit(false);
-            
+
             stmt = c.createStatement();
 
-            rs = stmt.executeQuery("SELECT PREFIX FROM GUILD WHERE ID = "  + id + ";");
-            
+            rs = stmt.executeQuery("SELECT PREFIX FROM GUILD WHERE ID = " + id + ";");
+
             String tmp = rs.getString("PREFIX");
-            if(tmp!= null)
+            if (tmp != null)
                 prefix = tmp;
-            
 
             rs.close();
             stmt.close();
             c.close();
-            } catch ( Exception e ) {
-                System.out.println(e.getClass().getName() + ": " + e.getMessage());
-            }
+        } catch (Exception e) {
+            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+        }
         return prefix;
     }
 
-    private String ownerCMDs (CmdHandler manager, String prefix){
-        String ownerstr = ""; 
+    private String ownerCMDs(CmdHandler manager, String prefix) {
+        String ownerstr = "";
         List<IOwnerCMD> ownerlist = manager.getOwnerCommands();
         ownerlist.sort(compOwn);
         for (IOwnerCMD ownerCMD : ownerlist) {
-            ownerstr += prefix + ownerCMD.getName() +  "\n";
+            ownerstr += prefix + ownerCMD.getName() + "\n";
         }
         return ownerstr;
     }
 
-    private String slashCMDs () {
-        String slashstr = ""; 
+    private String slashCMDs() {
+        String slashstr = "";
         Data.slashcmds.sort(compSlash);
         for (ISlashCMD slashCMD : Data.slashcmds) {
-            slashstr += "/" + slashCMD.getName() +  "\n";
+            slashstr += "/" + slashCMD.getName() + "\n";
         }
         return slashstr;
     }
 
-    private void publicCMDsordered (CmdHandler manager, String prefix, EmbedBuilder eb){
-        
+    private void publicCMDsordered(CmdHandler manager, String prefix, EmbedBuilder eb) {
+
         ArrayList<IPublicCMD> publiclist = new ArrayList<>(manager.getPublicCommands());
         publiclist.sort(compPub);
         ArrayList<HashSet<String>> groups = new ArrayList<>();
-        groups.add(new HashSet<>(Arrays.asList("blind", "flashed", "forceblind", "groupblind", "learning", "muteme", "stats", "till", "unmuteme", "unblind")));
+        groups.add(new HashSet<>(Arrays.asList("blind", "flashed", "forceblind", "groupblind", "learning", "muteme",
+                "stats", "till", "unmuteme", "unblind")));
         groups.add(new HashSet<>(Arrays.asList("poll", "role", "remind")));
         groups.add(new HashSet<>(Arrays.asList("crypt", "decrypt", "nokey")));
         groups.add(new HashSet<>(Arrays.asList("ping", "help", "source", "suggestion", "usage")));
-        
+
         String[] cmdString = new String[5];
         for (int i = 0; i < 5; i++) {
             cmdString[i] = "";
@@ -256,37 +256,41 @@ public class HelpCMD implements IPublicCMD {
         cmds: for (int i = 0; i < publiclist.size(); i++) {
             String str = publiclist.get(i).getName();
             for (int j = 0; j < groups.size(); j++) {
-                if(groups.get(j).contains(str)){
-                    cmdString[j] += prefix + publiclist.remove(i--).getName() +"\n";
+                if (groups.get(j).contains(str)) {
+                    cmdString[j] += prefix + publiclist.remove(i--).getName() + "\n";
                     continue cmds;
                 }
             }
-            cmdString[4] += prefix + publiclist.remove(i--).getName() +"\n";
+            cmdString[4] += prefix + publiclist.remove(i--).getName() + "\n";
         }
-        String[] titles = {"Anti-Procrastinator", "Useful", "Cypher", "Bot Info", "Other"};
+        String[] titles = { "Anti-Procrastinator", "Useful", "Cypher", "Bot Info", "Other" };
 
         for (int i = 0; i < 5; i++) {
             eb.addField("", new ColouredStringAsciiDoc().addBlueAboveEq(titles[i]).addDiff(cmdString[i]).build(), true);
         }
-        
+
     }
 
-    private void generalHelp(CmdHandler manager, String prefix, int rank, TextChannel channel){
+    private void generalHelp(CmdHandler manager, String prefix, int rank, TextChannel channel) {
         EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
 
         embed.setTitle("BabysBaby");
-        
+
         publicCMDsordered(manager, prefix, embed);
 
-        //embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public CMD").addDiff(publicCMDs(manager, prefix)).build(), true);
+        // embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Public
+        // CMD").addDiff(publicCMDs(manager, prefix)).build(), true);
 
-        if(rank>1){
-            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Owner CMDs").addDiff(ownerCMDs(manager, prefix)).build(), true);
+        if (rank > 1) {
+            embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Owner CMDs")
+                    .addDiff(ownerCMDs(manager, prefix)).build(), true);
         }
-        
-        embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Slash CMDs").addDiff(slashCMDs()).build(), true);
-        
-        embed.setFooter("With all CMDS you can get help how to use them by writing " + prefix + "help <cmdname>. For example " + prefix + "help ping");
+
+        embed.addField("", new ColouredStringAsciiDoc().addBlueAboveEq("Slash CMDs").addDiff(slashCMDs()).build(),
+                true);
+
+        embed.setFooter("With all CMDS you can get help how to use them by writing " + prefix
+                + "help <cmdname>. For example " + prefix + "help ping");
         channel.sendMessageEmbeds(embed.build()).queue();
     }
 

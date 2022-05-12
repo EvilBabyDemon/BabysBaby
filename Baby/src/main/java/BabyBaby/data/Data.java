@@ -9,7 +9,7 @@ import BabyBaby.Command.ISlashCMD;
 
 public class Data {
     public static boolean antibamboozle = true;
-    //TODO Remove msgid and check on msgToChan
+    // TODO Remove msgid and check on msgToChan
     public static HashSet<String> msgid = new HashSet<>();
     public static HashMap<String, ArrayList<String>> catToMsg = new HashMap<>();
     public static HashMap<String, String> msgToChan = new HashMap<>();
@@ -26,8 +26,8 @@ public class Data {
     public static final String SERVERBOT_ID = "750439532050251778";
     public static final String ETH_ID = "747752542741725244";
     public static final String SPAM_ID = "768600365602963496";
-    public static final String stfuID = "765542118701400134"; //TODO Remove
-    public static final String BLIND_ID= "844136589163626526";
+    public static final String stfuID = "765542118701400134"; // TODO Remove
+    public static final String BLIND_ID = "844136589163626526";
     public static OffsetDateTime kick;
     public static OffsetDateTime ban;
     public static final String myselfID = "223932775474921472";
@@ -35,7 +35,7 @@ public class Data {
     public static final String ethstudent = "747786383317532823";
     public static final String ethexternal = "767315361443741717";
     public static final String ETH_NEWCOMERS_CH_ID = "815881148307210260";
-    public static final String BOTS_BATTROYAL = "783818541849378867"; 
+    public static final String BOTS_BATTROYAL = "783818541849378867";
     public static boolean elthision = false;
     public static boolean marc = false;
     public static HashSet<String> buttonid = new HashSet<>();
@@ -49,10 +49,9 @@ public class Data {
     public static int slashAndButton = 0;
     public static ArrayList<ISlashCMD> slashcmds = new ArrayList<>();
 
-    
-    public static int[] covid = new int [15];
-    
-    //Filepaths
+    public static int[] covid = new int[15];
+
+    // Filepaths
     public static final String TOKEN = "token.txt";
     public static final String SUGGESTION = "suggestions.txt";
     public static final String PLACE = "place/";

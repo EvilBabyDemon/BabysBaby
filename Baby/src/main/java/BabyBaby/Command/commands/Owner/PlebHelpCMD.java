@@ -18,12 +18,12 @@ public class PlebHelpCMD implements IOwnerCMD {
 
     @Override
     public void handleOwner(CommandContext ctx) {
-        
+
         CmdHandler handler;
         try {
             handler = new CmdHandler(null);
             IPublicCMD cmd = handler.searchPublicCommand("help");
-            cmd.handlePublic(ctx);   
+            cmd.handlePublic(ctx);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,5 +34,5 @@ public class PlebHelpCMD implements IOwnerCMD {
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Get Help of a mormal User.");
     }
-    
+
 }

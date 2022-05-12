@@ -32,13 +32,13 @@ public class UsageCMD implements IPublicCMD {
         Data.cmdUses.keySet().stream().map(cmdname -> cmdname).sorted().collect(Collectors.toList());
         ArrayList<Entry<String, Integer>> sortList = new ArrayList<>(Data.cmdUses.entrySet());
 
-        Collections.sort(sortList, new Comparator<Entry<String, Integer>>(){  
-            public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2){  
-                return o2.getValue().compareTo(o1.getValue()); 
+        Collections.sort(sortList, new Comparator<Entry<String, Integer>>() {
+            public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue());
             }
         });
-        
-        ArrayList<String> top10Array = new ArrayList<>(); 
+
+        ArrayList<String> top10Array = new ArrayList<>();
         for (int i = 0; i < 10 && i < sortList.size(); i++) {
             top10Array.add("`" + sortList.get(i).getKey() + "` : " + sortList.get(i).getValue());
         }
@@ -46,9 +46,9 @@ public class UsageCMD implements IPublicCMD {
         String content = String.join("\n", top10Array);
         eb.setColor(Color.GREEN);
         eb.addField("Most used Commands", content, true);
-        
+
         eb.addField("Button and Slash Commands", "Count: " + Data.slashAndButton, true);
-        
+
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
         ctx.getMessage().addReaction(Data.check).queue();
     }
@@ -57,5 +57,5 @@ public class UsageCMD implements IPublicCMD {
     public MessageEmbed getPublicHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Get some stats about the usage of this bot.");
     }
-    
+
 }

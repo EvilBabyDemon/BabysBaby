@@ -13,7 +13,7 @@ import BabyBaby.Command.commands.Bot.clock;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class ucheck implements IOwnerCMD{
+public class ucheck implements IOwnerCMD {
 
     @Override
     public String getName() {
@@ -22,9 +22,8 @@ public class ucheck implements IOwnerCMD{
 
     @Override
     public void handleOwner(CommandContext ctx) {
-       
-        File filecheck = new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\checker.png");
 
+        File filecheck = new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\Pictures\\checker.png");
 
         try {
             BufferedImage img = ImageIO.read(filecheck);
@@ -39,10 +38,10 @@ public class ucheck implements IOwnerCMD{
         }
 
         for (int i = 0; i < 1000; i++) {
-            for (int j = 0; j < 1000; j++) {    
-                if(clock.rgbs[i][j] != 0 || clock.grid[i/100][j/100]){
-                    clock.grid[i/100][j/100] = true;
-                    j += -j%100 + 100;
+            for (int j = 0; j < 1000; j++) {
+                if (clock.rgbs[i][j] != 0 || clock.grid[i / 100][j / 100]) {
+                    clock.grid[i / 100][j / 100] = true;
+                    j += -j % 100 + 100;
                 }
             }
         }
@@ -53,5 +52,5 @@ public class ucheck implements IOwnerCMD{
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Should reload an Array, but is out of use atm.");
     }
-    
+
 }

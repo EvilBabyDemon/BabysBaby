@@ -25,23 +25,23 @@ public class GetWarnedCMD implements IAdminCMD {
     public void handleAdmin(CommandContext ctx) {
         MessageChannel channel = ctx.getChannel();
         HashSet<String> UserIds = new HashSet<>();
-        
+
         Connection c = null;
         Statement stmt = null;
 
-        try { 	
+        try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
 
             stmt = c.createStatement();
             String sql = "SELECT USER FROM WARNINGS;";
             ResultSet rs = stmt.executeQuery(sql);
-            while ( rs.next() ) 
+            while (rs.next())
                 UserIds.add(rs.getString("USER"));
-            
+
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             return;
         }
@@ -51,14 +51,14 @@ public class GetWarnedCMD implements IAdminCMD {
         eb.setColor(1);
 
         String all = "";
-        if(UserIds.size() != 0){
-            for (String userID : UserIds){
+        if (UserIds.size() != 0) {
+            for (String userID : UserIds) {
                 try {
-                    all += ctx.getGuild().getMemberById(userID).getAsMention() + "\n";    
+                    all += ctx.getGuild().getMemberById(userID).getAsMention() + "\n";
                 } catch (Exception e) {
                     all += userID + "\n";
                 }
-                
+
             }
         }
 
@@ -76,5 +76,5 @@ public class GetWarnedCMD implements IAdminCMD {
     public MessageEmbed getAdminHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Get all the users that got a Warning.");
     }
-    
+
 }

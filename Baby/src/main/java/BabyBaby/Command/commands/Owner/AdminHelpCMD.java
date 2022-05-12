@@ -11,7 +11,6 @@ import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-
 public class AdminHelpCMD implements IOwnerCMD {
 
     @Override
@@ -21,7 +20,7 @@ public class AdminHelpCMD implements IOwnerCMD {
 
     @Override
     public void handleOwner(CommandContext ctx) {
-        
+
         CmdHandler handler;
         try {
             handler = new CmdHandler(null);
@@ -37,7 +36,7 @@ public class AdminHelpCMD implements IOwnerCMD {
     public MessageEmbed getOwnerHelp(String prefix) {
         EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
 
-        embed.setTitle("Help page of: `" + getName()+"`");
+        embed.setTitle("Help page of: `" + getName() + "`");
         embed.setDescription("Get Help page of an admin.");
 
         // general use
@@ -48,5 +47,5 @@ public class AdminHelpCMD implements IOwnerCMD {
 
         return embed.build();
     }
-    
+
 }

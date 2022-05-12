@@ -6,10 +6,10 @@ import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SourceCMD implements IPublicCMD{
+public class SourceCMD implements IPublicCMD {
 
     @Override
-    public boolean getWhiteListBool(){
+    public boolean getWhiteListBool() {
         return true;
     }
 
@@ -22,11 +22,11 @@ public class SourceCMD implements IPublicCMD{
     public void handlePublic(CommandContext ctx) {
         ctx.getChannel().sendMessage("<https://github.com/EvilBabyDemon/BabysBaby>").queue();
         ctx.getMessage().addReaction(Data.check).queue();
-    }   
+    }
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Get the link to my github page.");
     }
-    
+
 }

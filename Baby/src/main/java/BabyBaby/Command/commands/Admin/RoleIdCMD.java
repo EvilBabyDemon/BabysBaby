@@ -27,12 +27,12 @@ public class RoleIdCMD implements IAdminCMD {
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            
+
             stmt = c.createStatement();
 
             ResultSet rs = stmt.executeQuery("SELECT ID FROM ASSIGNROLES;");
             String result = "";
-            while ( rs.next() ) {
+            while (rs.next()) {
                 String id = rs.getString("id");
 
                 String rolename = "deleted-role";
@@ -47,18 +47,18 @@ public class RoleIdCMD implements IAdminCMD {
             stmt.close();
             c.close();
             channel.sendMessage(result).queue();
-         } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             return;
-         }
-        
+        }
+
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
-        
+
     }
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Get all SelfAssignable role IDs");
     }
-    
+
 }

@@ -32,11 +32,11 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-public class GetRoleCMD implements IPublicCMD{
+public class GetRoleCMD implements IPublicCMD {
     boolean flipflop = false;
 
     @Override
-    public boolean getWhiteListBool(){
+    public boolean getWhiteListBool() {
         return true;
     }
 
@@ -53,7 +53,7 @@ public class GetRoleCMD implements IPublicCMD{
 
     @Override
     public void handleOwner(CommandContext ctx) {
-       handlePublic(ctx);
+        handlePublic(ctx);
     }
 
     @Override
@@ -68,40 +68,40 @@ public class GetRoleCMD implements IPublicCMD{
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(Data.ETH_ID))
+        if (!ctx.getGuild().getId().equals(Data.ETH_ID))
             return;
 
         MessageChannel channel = ctx.getChannel();
         ctx.getMessage().delete().queueAfter(15, TimeUnit.SECONDS);
         List<String> cmds = ctx.getArgs();
-        
+
         Connection c = null;
         Statement stmt = null;
-        HashSet<String> cats = new HashSet<String>(); 
+        HashSet<String> cats = new HashSet<String>();
 
         ResultSet rs;
 
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            
+
             stmt = c.createStatement();
 
             rs = stmt.executeQuery("SELECT categories FROM ASSIGNROLES;");
-            while ( rs.next() ) {
+            while (rs.next()) {
                 String cat = rs.getString("categories");
                 cats.add(cat);
             }
             rs.close();
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
-            e.printStackTrace(); 
+            e.printStackTrace();
             return;
         }
 
-        if(cmds.size() != 0){
+        if (cmds.size() != 0) {
 
             HashMap<String, String> emoterolelist = Data.emoteassign;
             HashMap<String, Object> namerole = new HashMap<>();
@@ -113,64 +113,67 @@ public class GetRoleCMD implements IPublicCMD{
                 namerole.put(strCats.toLowerCase(), strCats);
             }
 
-
             String msg = ctx.getMessage().getContentRaw();
             msg = msg.substring(1 + getName().length() + 1);
             msg.toLowerCase();
-            if(msg.length() > 100){
-                channel.sendMessage("I think you are using this command wrong...").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+            if (msg.length() > 100) {
+                channel.sendMessage("I think you are using this command wrong...").complete().delete().queueAfter(10,
+                        TimeUnit.SECONDS);
                 return;
             }
 
-            if(namerole.containsKey(msg)){
-                
-                if(namerole.get(msg) instanceof Role)
+            if (namerole.containsKey(msg)) {
+
+                if (namerole.get(msg) instanceof Role)
                     gibRole(ctx, (Role) namerole.get(msg));
                 else
                     sendEmbed(ctx, (String) namerole.get(msg));
                 return;
             }
 
-
             String finalorso = msg;
-            
-            List<Object[]> minedit = namerole.keySet().parallelStream().map(role -> new Object[] {Helper.minDistance(finalorso, role), namerole.get(role)}).collect(Collectors.toList());
 
-            LinkedList<Object[]> smallest = new LinkedList<Object[]>();    
-            
+            List<Object[]> minedit = namerole.keySet().parallelStream()
+                    .map(role -> new Object[] { Helper.minDistance(finalorso, role), namerole.get(role) })
+                    .collect(Collectors.toList());
+
+            LinkedList<Object[]> smallest = new LinkedList<Object[]>();
+
             smallest.add(minedit.remove(0));
             int smallestint = (int) smallest.get(0)[0];
             for (Object[] minEditObj : minedit) {
                 int x = (int) minEditObj[0];
-                if(smallestint == x){
+                if (smallestint == x) {
                     smallest.add(minEditObj);
-                } else if(smallestint > x){
+                } else if (smallestint > x) {
                     smallest = new LinkedList<>();
                     smallest.add(minEditObj);
                     smallestint = x;
                 }
             }
-            
-            if(smallestint == 100){
-                channel.sendMessage("I don't think this role exists.").complete().delete().queueAfter(10, TimeUnit.SECONDS);;
+
+            if (smallestint == 100) {
+                channel.sendMessage("I don't think this role exists.").complete().delete().queueAfter(10,
+                        TimeUnit.SECONDS);
+                ;
                 return;
             }
 
-            if(smallest.size()!=1){
-                channel.sendMessage("Sorry you gotta write more precise as there is more than one Role you could have meant.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+            if (smallest.size() != 1) {
+                channel.sendMessage(
+                        "Sorry you gotta write more precise as there is more than one Role you could have meant.")
+                        .complete().delete().queueAfter(10, TimeUnit.SECONDS);
                 return;
             }
 
-            if(smallest.size()==1){
-                if(smallest.get(0)[1] instanceof Role)
+            if (smallest.size() == 1) {
+                if (smallest.get(0)[1] instanceof Role)
                     gibRole(ctx, (Role) smallest.get(0)[1]);
                 else
                     sendEmbed(ctx, (String) smallest.get(0)[1]);
                 return;
             }
         }
-
-        
 
         String msg = "";
 
@@ -183,12 +186,12 @@ public class GetRoleCMD implements IPublicCMD{
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
-                
+
                 stmt = c.createStatement();
 
                 Guild called = ctx.getGuild();
                 rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + strCats + "';");
-                while ( rs.next() ) {
+                while (rs.next()) {
                     String rcat = rs.getString("ID");
                     String emoteStr = rs.getString("EMOTE");
                     String orig = emoteStr;
@@ -196,21 +199,21 @@ public class GetRoleCMD implements IPublicCMD{
                     try {
                         Long.parseLong(emoteStr);
                         try {
-                            emoteStr = ctx.getJDA().getEmoteById(emoteStr).getAsMention();   
+                            emoteStr = ctx.getJDA().getEmoteById(emoteStr).getAsMention();
                         } catch (Exception e) {
                             emoteStr = "ERROR";
                         }
                     } catch (Exception e) {
                     }
-                    
-                    msg = emoteStr + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
-                    sorting.put(called.getRoleById(rcat), new Object[] {orig, msg});
+
+                    msg = emoteStr + " : " + called.getRoleById(rcat).getAsMention() + "\n";
+                    sorting.put(called.getRoleById(rcat), new Object[] { orig, msg });
                 }
                 rs.close();
                 stmt.close();
                 c.close();
-            } catch ( Exception e ) {
-                System.out.println(e.getClass().getName() + ": " + e.getMessage()); 
+            } catch (Exception e) {
+                System.out.println(e.getClass().getName() + ": " + e.getMessage());
                 return;
             }
 
@@ -233,11 +236,10 @@ public class GetRoleCMD implements IPublicCMD{
         HashMap<String, String> tmp = new HashMap<>();
         LinkedList<Integer> emotewhen = new LinkedList<>();
 
-
         for (int i = 0; i < categ.size(); i++) {
             int x = roles.get(i).split("\n").length;
             count += x;
-            if(count>20){
+            if (count > 20) {
                 emotewhen.add(i);
                 emb.add(embeds(tmp, ctx));
                 count = x;
@@ -246,21 +248,19 @@ public class GetRoleCMD implements IPublicCMD{
             tmp.put(categ.get(i), roles.get(i));
         }
 
-        
-
         emotewhen.add(categ.size());
         emb.add(embeds(tmp, ctx));
         int max = 0;
         for (EmbedBuilder eb : emb) {
             LinkedList<String> emoList = new LinkedList<>();
-            max = emotewhen.remove(0)-max;
+            max = emotewhen.remove(0) - max;
             for (int i = 0; i < max; i++) {
                 try {
                     emoList.addAll(emotes.remove(0));
                 } catch (Exception e) {
                     break;
                 }
-               
+
             }
 
             ArrayList<Button> butt = new ArrayList<>();
@@ -271,21 +271,23 @@ public class GetRoleCMD implements IPublicCMD{
                     gemo = true;
                 } catch (Exception e) {
                 }
-                
-                try{
-                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
-                } catch (Exception e){
-                    ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+
+                try {
+                    butt.add(Button.primary(emoID,
+                            gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoID)) : Emoji.fromUnicode(emoID)));
+                } catch (Exception e) {
+                    ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete()
+                            .delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
             MessageAction msgAct = channel.sendMessageEmbeds(eb.build());
-            
+
             LinkedList<ActionRow> acR = new LinkedList<>();
-            for (int i = 0; i < butt.size(); i +=5) {
+            for (int i = 0; i < butt.size(); i += 5) {
                 ArrayList<Button> row = new ArrayList<>();
-                for (int j = 0; j < 5 && j+i < butt.size(); j++) {
-                    row.add(butt.get(i+j));
+                for (int j = 0; j < 5 && j + i < butt.size(); j++) {
+                    row.add(butt.get(i + j));
                 }
                 acR.add(ActionRow.of(row));
             }
@@ -293,7 +295,7 @@ public class GetRoleCMD implements IPublicCMD{
             Message msgs = msgAct.complete();
             Data.msgid.add(msgs.getId());
             try {
-                msgs.delete().queueAfter(90, TimeUnit.SECONDS);    
+                msgs.delete().queueAfter(90, TimeUnit.SECONDS);
             } catch (Exception e) {
             }
         }
@@ -304,9 +306,10 @@ public class GetRoleCMD implements IPublicCMD{
     public MessageEmbed getPublicHelp(String prefix) {
         EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
 
-        embed.setTitle("Help page of: `" + getName() +"`");
-        embed.setDescription("Command to see all roles with emotes such that you can assign them yourself. Or add the role name and directly get a Role added or removed.");
-        
+        embed.setTitle("Help page of: `" + getName() + "`");
+        embed.setDescription(
+                "Command to see all roles with emotes such that you can assign them yourself. Or add the role name and directly get a Role added or removed.");
+
         // general use
         embed.addField("", new ColouredStringAsciiDoc()
                 .addBlueAboveEq("general use")
@@ -321,27 +324,23 @@ public class GetRoleCMD implements IPublicCMD{
                 .addNormal(prefix + getName() + " " + "Channel Roles")
                 .build(), true);
         return embed.build();
-        
+
     }
 
+    public EmbedBuilder embeds(HashMap<String, String> fields, CommandContext ctx) {
 
-
-
-    public EmbedBuilder embeds(HashMap<String, String> fields, CommandContext ctx){
-        
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Roles you can assign yourself", null);
 
-        if(flipflop){
+        if (flipflop) {
             eb.setColor(Color.BLACK);
         } else {
             eb.setColor(Color.WHITE);
         }
         flipflop = !flipflop;
 
-
         for (String field : fields.keySet()) {
-            eb.addField(field, fields.get(field), true); 
+            eb.addField(field, fields.get(field), true);
         }
 
         String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
@@ -351,12 +350,12 @@ public class GetRoleCMD implements IPublicCMD{
         return eb;
     }
 
-    public LinkedList<Object[]> rolesorter (HashMap<Role, Object[]> sorting){
+    public LinkedList<Object[]> rolesorter(HashMap<Role, Object[]> sorting) {
         LinkedList<Object[]> res = new LinkedList<>();
-        while(sorting.size()!=0){
+        while (sorting.size() != 0) {
             Role highest = null;
             for (Role role : sorting.keySet()) {
-                if(highest == null || role.getPosition() > highest.getPosition()){
+                if (highest == null || role.getPosition() > highest.getPosition()) {
                     highest = role;
                 }
             }
@@ -366,66 +365,68 @@ public class GetRoleCMD implements IPublicCMD{
         return res;
     }
 
-
-    private void gibRole (CommandContext ctx, Role role){
-        //767315361443741717 External data.ethexternal
-        //747786383317532823 Student data.ethstudent
+    private void gibRole(CommandContext ctx, Role role) {
+        // 767315361443741717 External data.ethexternal
+        // 747786383317532823 Student data.ethstudent
         MessageChannel channel = ctx.getChannel();
         Member member = ctx.getMember();
         List<Role> autroles = member.getRoles();
         Message sent;
-        //Removing Role
-        if(autroles.contains(role)){
-            //External
-            if(role.getId().equals(Data.ethexternal)){
+        // Removing Role
+        if (autroles.contains(role)) {
+            // External
+            if (role.getId().equals(Data.ethexternal)) {
                 Role student = ctx.getGuild().getRoleById(Data.ethstudent);
-                if(autroles.contains(student)){
+                if (autroles.contains(student)) {
                     ctx.getGuild().addRoleToMember(member, student).complete();
                     ctx.getGuild().removeRoleFromMember(member, role).complete();
                     sent = channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
-                } else{
+                } else {
                     sent = channel.sendMessage("You need at least either the Student or External Role").complete();
                 }
-            //Student
-            } else if(role.getId().equals(Data.ethstudent)){
+                // Student
+            } else if (role.getId().equals(Data.ethstudent)) {
                 Role external = ctx.getGuild().getRoleById(Data.ethexternal);
-                
-                if(autroles.contains(external)){
+
+                if (autroles.contains(external)) {
                     ctx.getGuild().addRoleToMember(member, external).complete();
                     ctx.getGuild().removeRoleFromMember(member, role).complete();
                     sent = channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
-                } else{
+                } else {
                     sent = channel.sendMessage("You need at least either the Student or External Role").complete();
                 }
-            //Smth else
+                // Smth else
             } else {
                 ctx.getGuild().removeRoleFromMember(member, role).complete();
                 sent = channel.sendMessage("Removed the Role " + role.getName() + ".").complete();
             }
 
-        //Adding Role
+            // Adding Role
         } else {
-            //External
-            if(role.getId().equals(Data.ethexternal)){
+            // External
+            if (role.getId().equals(Data.ethexternal)) {
                 Role student = ctx.getGuild().getRoleById(Data.ethstudent);
                 ctx.getGuild().addRoleToMember(member, role).complete();
                 ctx.getGuild().removeRoleFromMember(member, student).complete();
-                sent = channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + student.getName()).complete();
-            //Student
-            } else if(role.getId().equals(Data.ethstudent)){
+                sent = channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + student.getName())
+                        .complete();
+                // Student
+            } else if (role.getId().equals(Data.ethstudent)) {
 
-                if(!Helper.verifiedUser(member.getId())){
+                if (!Helper.verifiedUser(member.getId())) {
                     String doverify = "You have to get verified to get the role ";
                     String suffix = ". You can do that here: https://dauth.spclr.ch/ and write the token to <@306523617188118528>";
-                    member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix).complete();
+                    member.getUser().openPrivateChannel().complete().sendMessage(doverify + role.getName() + suffix)
+                            .complete();
                     return;
                 }
 
                 Role external = ctx.getGuild().getRoleById(Data.ethexternal);
                 ctx.getGuild().addRoleToMember(member, role).complete();
-                ctx.getGuild().removeRoleFromMember(member, external).complete();  
-                sent = channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + external.getName()).complete();  
-            //Smth else
+                ctx.getGuild().removeRoleFromMember(member, external).complete();
+                sent = channel.sendMessage("Gave you the Role " + role.getName() + " and removed " + external.getName())
+                        .complete();
+                // Smth else
             } else {
                 ctx.getGuild().addRoleToMember(member, role).complete();
                 sent = channel.sendMessage("Gave you the Role " + role.getName() + ".").complete();
@@ -434,7 +435,7 @@ public class GetRoleCMD implements IPublicCMD{
         sent.delete().queueAfter(10, TimeUnit.SECONDS);
     }
 
-    private void sendEmbed(CommandContext ctx, String cat){
+    private void sendEmbed(CommandContext ctx, String cat) {
 
         Connection c = null;
         PreparedStatement stmt = null;
@@ -444,33 +445,32 @@ public class GetRoleCMD implements IPublicCMD{
         String msg = "";
         LinkedList<String> roles = new LinkedList<>();
 
-        
         HashMap<Role, Object[]> sorting = new HashMap<>();
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            
+
             stmt = c.prepareStatement("SELECT * FROM ASSIGNROLES WHERE categories=?;");
             stmt.setString(1, cat);
             Guild called = ctx.getGuild();
             rs = stmt.executeQuery();
-            while ( rs.next() ) {
+            while (rs.next()) {
                 String rcat = rs.getString("ID");
                 String emote = rs.getString("EMOTE");
                 String orig = emote;
 
-                if(emote == null || emote.length() == 0){
+                if (emote == null || emote.length() == 0) {
                     emote = "";
                 } else {
                     emote = emote.contains(":") ? "<" + emote + ">" : emote;
                 }
-                msg = emote + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
-                sorting.put(called.getRoleById(rcat), new Object[] {orig, msg});
+                msg = emote + " : " + called.getRoleById(rcat).getAsMention() + "\n";
+                sorting.put(called.getRoleById(rcat), new Object[] { orig, msg });
             }
             rs.close();
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
             return;
         }
@@ -486,38 +486,39 @@ public class GetRoleCMD implements IPublicCMD{
         roles.add(msg);
 
         EmbedBuilder eb = new EmbedBuilder();
-        
+
         eb.setTitle(cat);
         eb.setColor(1);
         eb.setDescription(roles.get(0));
-        
+
         eb.setFooter("Click on the Emotes to assign yourself Roles.");
-        
 
         ArrayList<Button> butt = new ArrayList<>();
         for (String emoID : emotes) {
-            if(emoID == null || emoID.length() == 0)
-                    continue;
+            if (emoID == null || emoID.length() == 0)
+                continue;
             String emote = emoID;
             boolean gemo = false;
-            if((gemo=emote.contains(":"))){
+            if ((gemo = emote.contains(":"))) {
                 emote = emote.split(":")[2];
             }
-            
-            try{
-                butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)): Emoji.fromUnicode(emote)));
-            } catch (Exception e){
-                ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accessible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+
+            try {
+                butt.add(Button.primary(emoID,
+                        gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)) : Emoji.fromUnicode(emote)));
+            } catch (Exception e) {
+                ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accessible.").complete().delete()
+                        .queueAfter(10, TimeUnit.SECONDS);
             }
         }
 
         MessageAction msgAct = channel.sendMessageEmbeds(eb.build());
-        
+
         LinkedList<ActionRow> acR = new LinkedList<>();
-        for (int i = 0; i < butt.size(); i +=5) {
+        for (int i = 0; i < butt.size(); i += 5) {
             ArrayList<Button> row = new ArrayList<>();
-            for (int j = 0; j < 5 && j+i < butt.size(); j++) {
-                row.add(butt.get(i+j));
+            for (int j = 0; j < 5 && j + i < butt.size(); j++) {
+                row.add(butt.get(i + j));
             }
             acR.add(ActionRow.of(row));
         }

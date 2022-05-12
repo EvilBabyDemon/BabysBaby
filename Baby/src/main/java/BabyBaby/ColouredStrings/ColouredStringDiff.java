@@ -67,4 +67,4 @@ public class ColouredStringDiff {
         this.value += "\n" + value;
         return this;
     }
-}   
+}

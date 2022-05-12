@@ -11,7 +11,7 @@ import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
-public class SendUserCMD implements IOwnerCMD{
+public class SendUserCMD implements IOwnerCMD {
 
     @Override
     public String getName() {
@@ -25,16 +25,16 @@ public class SendUserCMD implements IOwnerCMD{
         User ollieUser = ctx.getGuild().getMemberById(cmds.get(0)).getUser();
 
         ollie.schedule(new schribollie(ollieUser), Integer.parseInt(cmds.get(1)), TimeUnit.SECONDS);
-        
+
     }
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<UserID> <Time in Seconds>", "Send a Private Message to a User, only meant for ollie rly.");
+        return StandardHelp.Help(prefix, getName(), "<UserID> <Time in Seconds>",
+                "Send a Private Message to a User, only meant for ollie rly.");
     }
-    
-}
 
+}
 
 class schribollie implements Runnable {
     User ollie;
@@ -43,7 +43,7 @@ class schribollie implements Runnable {
         ollie = user;
     }
 
-    public void run() {	
+    public void run() {
         ollie.openPrivateChannel().queue((channel) -> {
             channel.sendMessage("Dis Mami (This message is sponsored by Modernwarfare Aaron").queue();
         });

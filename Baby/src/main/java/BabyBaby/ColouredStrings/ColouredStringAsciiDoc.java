@@ -52,4 +52,3 @@ public class ColouredStringAsciiDoc extends ColouredStringBase {
         return this;
     }
 }
-

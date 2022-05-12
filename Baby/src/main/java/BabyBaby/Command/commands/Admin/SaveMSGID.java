@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class SaveMSGID implements IAdminCMD {
 
-
     @Override
     public String getName() {
         return "savemsgid";
@@ -27,20 +26,21 @@ public class SaveMSGID implements IAdminCMD {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
             pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID,MSGID) VALUES (?, ?);");
-            pstmt.setString(1, ctx.getGuild().getId()); 
+            pstmt.setString(1, ctx.getGuild().getId());
             pstmt.setString(2, ctx.getArgs().get(0));
             pstmt.executeUpdate();
             pstmt.close();
             c.close();
-        } catch ( Exception e ) {
-            e.printStackTrace(); 
+        } catch (Exception e) {
+            e.printStackTrace();
             return;
         }
     }
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<msgid>", "Use this cmd to save a getrole cmd message in a Channel like RoleAssignment.");
+        return StandardHelp.Help(prefix, getName(), "<msgid>",
+                "Use this cmd to save a getrole cmd message in a Channel like RoleAssignment.");
     }
-    
+
 }

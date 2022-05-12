@@ -1,6 +1,5 @@
 package BabyBaby.Command.commands.Admin;
 
-
 import java.util.LinkedList;
 
 import BabyBaby.Command.IAdminCMD;
@@ -12,8 +11,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class KickCMD implements IAdminCMD{
-
+public class KickCMD implements IAdminCMD {
 
     @Override
     public String getName() {
@@ -24,8 +22,8 @@ public class KickCMD implements IAdminCMD{
     public void handleAdmin(CommandContext ctx) {
         LinkedList<String> cmds = new LinkedList<>();
         MessageChannel channel = ctx.getChannel();
-        
-        if(!ctx.getMember().hasPermission(Permission.KICK_MEMBERS)){
+
+        if (!ctx.getMember().hasPermission(Permission.KICK_MEMBERS)) {
             ctx.getChannel().sendMessage("Missing Permissions.").complete();
             return;
         }
@@ -37,8 +35,8 @@ public class KickCMD implements IAdminCMD{
         String person = cmds.remove(0);
 
         String reason = "";
-        if(cmds.size() != 0){
-            reason = ctx.getMessage().getContentRaw().substring(getName().length() + person.length()+3);
+        if (cmds.size() != 0) {
+            reason = ctx.getMessage().getContentRaw().substring(getName().length() + person.length() + 3);
         }
 
         person = person.replace("<", "");
@@ -54,30 +52,32 @@ public class KickCMD implements IAdminCMD{
             return;
         }
 
-        if(bad.getRoles().get(0).getPosition() >= ctx.getMember().getRoles().get(0).getPosition()){
+        if (bad.getRoles().get(0).getPosition() >= ctx.getMember().getRoles().get(0).getPosition()) {
             ctx.getChannel().sendMessage("Can't kick someone with a higher or same role.").complete();
             return;
         }
 
-        if(reason==""){
+        if (reason == "") {
             bad.kick().complete();
         } else {
             bad.kick(reason).complete();
         }
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(ctx.getAuthor().getAsTag() + " (" + ctx.getAuthor().getId() + ")", ctx.getAuthor().getAvatarUrl(), ctx.getAuthor().getAvatarUrl());
+        eb.setAuthor(ctx.getAuthor().getAsTag() + " (" + ctx.getAuthor().getId() + ")", ctx.getAuthor().getAvatarUrl(),
+                ctx.getAuthor().getAvatarUrl());
         eb.setColor(0);
         eb.setThumbnail(ctx.getAuthor().getAvatarUrl());
         Member warned = ctx.getMember();
-        eb.setDescription(":warning: **Kicked** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
+        eb.setDescription(":warning: **Kicked** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() + ")"
+                + " \n :page_facing_up: **Reason:** " + reason);
         channel.sendMessageEmbeds(eb.build()).queue();
-        
+
     }
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<User Ping> [Reason]", "Command to kick a person.");
     }
-    
+
 }

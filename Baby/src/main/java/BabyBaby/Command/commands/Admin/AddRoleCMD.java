@@ -14,8 +14,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class AddRoleCMD implements IAdminCMD {
 
-
-
     @Override
     public String getName() {
         return "addrole";
@@ -25,34 +23,31 @@ public class AddRoleCMD implements IAdminCMD {
     public void handleAdmin(CommandContext ctx) {
         LinkedList<String> cmds = new LinkedList<>(ctx.getArgs());
 
-
         String id = cmds.remove(0);
         String emote = cmds.remove(0);
 
-        if(emote.contains("<")){
+        if (emote.contains("<")) {
             emote = emote.split(":")[2];
             emote.replace(">", "");
         }
         MessageChannel channel = ctx.getChannel();
         String categ = "";
-        if(cmds.size() == 0){
+        if (cmds.size() == 0) {
             categ = "Other";
         } else {
             for (String strCateg : cmds) {
-                categ += strCateg + " "; 
+                categ += strCateg + " ";
             }
-            categ = categ.substring(0, categ.length()-1);
+            categ = categ.substring(0, categ.length() - 1);
         }
-        
 
         Connection c = null;
         PreparedStatement pstmt = null;
-        try { 	
+        try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
 
-            
-            String sql = "INSERT INTO ASSIGNROLES (ID,CATEGORIES,EMOTE) VALUES (?, ?, ?);"; 
+            String sql = "INSERT INTO ASSIGNROLES (ID,CATEGORIES,EMOTE) VALUES (?, ?, ?);";
             pstmt = c.prepareStatement(sql);
             pstmt.setLong(1, Long.parseLong(id));
             pstmt.setString(2, categ);
@@ -61,7 +56,7 @@ public class AddRoleCMD implements IAdminCMD {
 
             pstmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             return;
         }
@@ -69,12 +64,13 @@ public class AddRoleCMD implements IAdminCMD {
         Data.emoteassign.put(emote, id);
         Data.roles.add(id);
         ctx.getMessage().addReaction(Data.check).queue();
-        
+
     }
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<RoleID> <emote> [category]", "Command to add a selfassignable role.");
+        return StandardHelp.Help(prefix, getName(), "<RoleID> <emote> [category]",
+                "Command to add a selfassignable role.");
     }
 
 }

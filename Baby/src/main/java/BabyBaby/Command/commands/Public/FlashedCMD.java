@@ -28,55 +28,56 @@ public class FlashedCMD implements IPublicCMD {
         int countUsers = 0;
         String userNames = "";
         String cache = "";
-        
+
         Guild called = ctx.getGuild();
 
         Connection c = null;
         Statement stmt = null;
-         
 
         ResultSet rs;
 
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            
+
             stmt = c.createStatement();
 
             rs = stmt.executeQuery("SELECT * FROM ROLEREMOVAL WHERE GUILDID =" + called.getId() + ";");
-            while ( rs.next() ) {
+            while (rs.next()) {
                 String mutedUser = rs.getString("USERID");
                 countUsers++;
 
                 Member blind = called.getMemberById(mutedUser);
                 String mention = mutedUser;
-                if(blind != null){
+                if (blind != null) {
                     mention = blind.getAsMention();
                     cache += mention;
                 }
-                userNames += mention + "(" + Math.round(((Long.parseLong(rs.getString("MUTETIME"))-System.currentTimeMillis())/60000.0)) + "m), ";
+                userNames += mention + "("
+                        + Math.round(
+                                ((Long.parseLong(rs.getString("MUTETIME")) - System.currentTimeMillis()) / 60000.0))
+                        + "m), ";
             }
             rs.close();
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
-            e.printStackTrace(); 
+        } catch (Exception e) {
+            e.printStackTrace();
             return;
-        }          
-        
-        
+        }
 
         String shouldBeLearning = "<@!223932775474921472>";
 
-        String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname() : ctx.getMember().getEffectiveName();
+        String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
+                : ctx.getMember().getEffectiveName();
 
         EmbedBuilder eb = new EmbedBuilder();
-            eb.setTitle("People who are learning or rather should be! (Blinded)", null);
-            eb.setColor(1);
-            eb.addField("" + countUsers, userNames, false);
-            eb.addField("people who should be studying right now",  shouldBeLearning, false);
-            // eb.addBlankField(false);
-            eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
+        eb.setTitle("People who are learning or rather should be! (Blinded)", null);
+        eb.setColor(1);
+        eb.addField("" + countUsers, userNames, false);
+        eb.addField("people who should be studying right now", shouldBeLearning, false);
+        // eb.addBlankField(false);
+        eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
         channel.sendMessage("cache refresh").complete().editMessage("a " + cache).complete().delete().queue();
         channel.sendMessageEmbeds(eb.build()).queue();
     }
@@ -85,5 +86,5 @@ public class FlashedCMD implements IPublicCMD {
     public MessageEmbed getPublicHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Get all people that blinded themself to concentrate better.");
     }
-    
+
 }

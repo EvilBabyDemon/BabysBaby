@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public class SuggestionCMD implements IPublicCMD {
 
     @Override
-    public boolean getWhiteListBool(){
+    public boolean getWhiteListBool() {
         return true;
     }
 
@@ -29,14 +29,14 @@ public class SuggestionCMD implements IPublicCMD {
         MessageChannel channel = ctx.getChannel();
         File suggestions = new File(Data.SUGGESTION);
         String content = "";
-        
+
         List<String> args = ctx.getArgs();
         for (String arg : args) {
             content += arg + " ";
         }
 
         content = ctx.getAuthor().getAsTag() + " " + content;
-        
+
         ctx.getMessage().delete().queue();
         try {
             FileWriter fr = new FileWriter(suggestions, true);
@@ -46,14 +46,15 @@ public class SuggestionCMD implements IPublicCMD {
             e.printStackTrace();
         }
         channel.sendMessage("Thx for the suggestion!").queue();
-        
+
         ctx.getJDA().getUserById(Data.myselfID).openPrivateChannel().complete().sendMessage(content).queue();
 
     }
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), " <Suggestions>", "Suggest anything to my bot what I should add or change!");
+        return StandardHelp.Help(prefix, getName(), " <Suggestions>",
+                "Suggest anything to my bot what I should add or change!");
     }
-    
+
 }

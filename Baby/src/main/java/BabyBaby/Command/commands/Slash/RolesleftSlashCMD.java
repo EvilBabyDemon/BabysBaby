@@ -19,11 +19,11 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 public class RolesleftSlashCMD implements ISlashCMD {
-    Comparator<Role> compRole = new Comparator<>(){
+    Comparator<Role> compRole = new Comparator<>() {
         @Override
-        public int compare(Role o1, Role o2){  
-            return o2.getPosition() - o1.getPosition();  
-        } 
+        public int compare(Role o1, Role o2) {
+            return o2.getPosition() - o1.getPosition();
+        }
     };
 
     @Override
@@ -38,13 +38,13 @@ public class RolesleftSlashCMD implements ISlashCMD {
         Connection c = null;
         PreparedStatement stmt = null;
         ResultSet rs;
-        HashMap<String,LinkedList<Role>> roles = new HashMap<>();
+        HashMap<String, LinkedList<Role>> roles = new HashMap<>();
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
             stmt = c.prepareStatement("SELECT * FROM ASSIGNROLES;");
             rs = stmt.executeQuery();
-            while ( rs.next() ) {
+            while (rs.next()) {
                 String roleID = rs.getString("ID");
                 String categ = rs.getString("categories");
                 LinkedList<Role> ids = roles.getOrDefault(categ, new LinkedList<>());
@@ -55,7 +55,7 @@ public class RolesleftSlashCMD implements ISlashCMD {
             rs.close();
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             System.out.println(e.getClass().getName() + ": " + e.getMessage());
             return;
         }
@@ -66,18 +66,18 @@ public class RolesleftSlashCMD implements ISlashCMD {
             LinkedList<Role> roleList = roles.get(categ);
             String pings = "";
             for (Role role : roleList) {
-                if(!user.contains(role)){
+                if (!user.contains(role)) {
                     pings += role.getAsMention() + "\n";
                 }
             }
-            if(pings.length() > 1){
+            if (pings.length() > 1) {
                 message += "**" + categ + "**\n" + pings;
             }
         }
-        if (message.length() == 0){
+        if (message.length() == 0) {
             message = "You have all roles! Maybe tone it down a bit...";
         } else {
-            message = "These are all the roles you can get:\n" + message; 
+            message = "These are all the roles you can get:\n" + message;
         }
 
         Helper.unhook(message, failed, hook, event.getUser());
@@ -88,5 +88,5 @@ public class RolesleftSlashCMD implements ISlashCMD {
         CommandDataImpl rolesleft = new CommandDataImpl(getName(), "A command to see which roles you still could get.");
         return rolesleft;
     }
-    
+
 }

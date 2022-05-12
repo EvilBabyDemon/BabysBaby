@@ -25,28 +25,29 @@ public class operationsecret implements IOwnerCMD {
         List<Member> everyone = ctx.getGuild().getMembers();
 
         // setup code
-        char[] c = new char[] {'|', 'I', 'l', '‖'};
+        char[] c = new char[] { '|', 'I', 'l', '‖' };
         Random rand = new Random();
 
         for (Member var : everyone) {
-            if(x <= Long.parseLong(var.getId()) && Long.parseLong(var.getId()) < y){
-                try{
+            if (x <= Long.parseLong(var.getId()) && Long.parseLong(var.getId()) < y) {
+                try {
                     int len = rand.nextInt(20) + 10;
                     String name = "";
-                    while(len-->0) name += c[rand.nextInt(c.length)];
+                    while (len-- > 0)
+                        name += c[rand.nextInt(c.length)];
                     var.modifyNickname(name).queue();
-                } catch(Exception e){
+                } catch (Exception e) {
                     ctx.getChannel().sendMessage(var.getUser().getAsTag()).queue();
                     continue;
                 }
             }
         }
-        
+
     }
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<bottom ID> <top ID>", "April Fools Joke");
     }
-    
+
 }

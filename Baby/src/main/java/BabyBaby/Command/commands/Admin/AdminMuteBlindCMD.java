@@ -26,7 +26,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class AdminMuteBlindCMD implements IAdminCMD{
+public class AdminMuteBlindCMD implements IAdminCMD {
     public static HashSet<Member> userBlinded = new HashSet<>();
 
     @Override
@@ -36,22 +36,19 @@ public class AdminMuteBlindCMD implements IAdminCMD{
 
     @Override
     public void handleAdmin(CommandContext ctx) {
-        if(!ctx.getGuild().getId().equals(Data.ETH_ID)){
+        if (!ctx.getGuild().getId().equals(Data.ETH_ID)) {
             return;
         }
 
-
-        
         LinkedList<String> cmds = new LinkedList<>();
 
         for (String arg : ctx.getArgs()) {
             cmds.add(arg);
         }
-        
 
         String person = cmds.remove(0);
         int leng = person.length();
-        
+
         person = person.replace("<", "");
         person = person.replace(">", "");
         person = person.replace("!", "");
@@ -65,30 +62,27 @@ public class AdminMuteBlindCMD implements IAdminCMD{
             return;
         }
 
-
-
         int time = 0;
         String reason = "";
-        if(cmds.size() > 0){
+        if (cmds.size() > 0) {
             try {
-                time = Integer.parseInt(cmds.get(0)); 
-                if(cmds.size()>1)
-                    reason = ctx.getMessage().getContentRaw().substring(1 + getName().length() + 1 + cmds.get(0).length() + 1 + leng + 1);
+                time = Integer.parseInt(cmds.get(0));
+                if (cmds.size() > 1)
+                    reason = ctx.getMessage().getContentRaw()
+                            .substring(1 + getName().length() + 1 + cmds.get(0).length() + 1 + leng + 1);
             } catch (Exception e) {
                 reason = ctx.getMessage().getContentRaw().substring(1 + getName().length() + 1 + leng + 1);
             }
         }
 
-
         LinkedList<GuildChannel> gchan = new LinkedList<>();
 
         for (TextChannel textChannel : ctx.getGuild().getTextChannels()) {
-            if(!textChannel.getId().equals("769261792491995176") && !textChannel.getId().equals("815881148307210260") && textChannel.getParentCategory() != null){
+            if (!textChannel.getId().equals("769261792491995176") && !textChannel.getId().equals("815881148307210260")
+                    && textChannel.getParentCategory() != null) {
                 gchan.add(textChannel);
             }
         }
-
-
 
         List<Role> begone = blinded.getRoles();
         LinkedList<Role> permrole = new LinkedList<>();
@@ -104,9 +98,11 @@ public class AdminMuteBlindCMD implements IAdminCMD{
 
         for (Role role : begone) {
             for (GuildChannel guildChannel : gchan) {
-                if(role.hasAccess(guildChannel)){
-                    if(role.getPosition()>highestbot.getPosition()){
-                        channel.sendMessage("Sry you have a higher Role than this bot with viewing permissions. Can't take your roles away").queue();
+                if (role.hasAccess(guildChannel)) {
+                    if (role.getPosition() > highestbot.getPosition()) {
+                        channel.sendMessage(
+                                "Sry you have a higher Role than this bot with viewing permissions. Can't take your roles away")
+                                .queue();
                         return;
                     }
                     permrole.add(role);
@@ -115,34 +111,29 @@ public class AdminMuteBlindCMD implements IAdminCMD{
             }
         }
 
-
-
-
         MessageChannel log = ctx.getGuild().getTextChannelById(Data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(ctx.getAuthor().getAsTag() + " (" + ctx.getAuthor().getId() + ")", ctx.getAuthor().getAvatarUrl(), ctx.getAuthor().getAvatarUrl());
+        eb.setAuthor(ctx.getAuthor().getAsTag() + " (" + ctx.getAuthor().getId() + ")", ctx.getAuthor().getAvatarUrl(),
+                ctx.getAuthor().getAvatarUrl());
         eb.setColor(0);
         eb.setThumbnail(blinded.getUser().getAvatarUrl());
-        
 
-        eb.setDescription(":warning: **Muteblinded for** " + (time==0? "Infinite" : time) + " minutes " + blinded.getAsMention() + "(" + blinded.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
+        eb.setDescription(":warning: **Muteblinded for** " + (time == 0 ? "Infinite" : time) + " minutes "
+                + blinded.getAsMention() + "(" + blinded.getUser().getAsTag() + ")"
+                + " \n :page_facing_up: **Reason:** " + reason);
 
         log.sendMessageEmbeds(eb.build()).queue();
 
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
 
-        
         long timesql = 0;
-        
+
         ctx.getMessage().addReaction(Data.check).queue();
 
-
-        
         String role = "";
 
-
-        if(userBlinded.contains(blinded)){
+        if (userBlinded.contains(blinded)) {
 
             Connection c = null;
             PreparedStatement stmt = null;
@@ -151,24 +142,24 @@ public class AdminMuteBlindCMD implements IAdminCMD{
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
-    
+
                 stmt = c.prepareStatement("SELECT * FROM ROLEREMOVAL WHERE USERID=? AND GUILDID=?;");
                 stmt.setString(1, blinded.getId());
                 stmt.setString(2, ctx.getGuild().getId());
-                
+
                 ResultSet rs = stmt.executeQuery();
-                
+
                 role = rs.getString("ROLES");
                 timeold = rs.getInt("MUTETIME");
 
                 stmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 return;
             }
 
-            if(timeold!=0){
+            if (timeold != 0) {
                 ScheduledExecutorService tmp = BlindSlashCMD.blind.get(blinded);
                 BlindSlashCMD.blindexe.remove(tmp);
                 try {
@@ -179,62 +170,57 @@ public class AdminMuteBlindCMD implements IAdminCMD{
                 BlindSlashCMD.blind.remove(blinded);
             }
 
-
-            if(time != 0){
-                time = time*60;
+            if (time != 0) {
+                time = time * 60;
                 GetRolesBack scheduledclass = new GetRolesBack(blinded.getUser(), called, role);
-                timesql = (System.currentTimeMillis() + time*1000);
+                timesql = (System.currentTimeMillis() + time * 1000);
                 ScheduledExecutorService blind = Executors.newScheduledThreadPool(1);
-                blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
-    
-                blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
+                blind.schedule(scheduledclass, time, TimeUnit.SECONDS);
+
+                blind.schedule(scheduledclass, time, TimeUnit.SECONDS);
                 BlindSlashCMD.blind.put(blinded, blind);
                 BlindSlashCMD.blindexe.put(blind, scheduledclass);
-    
+
             } else {
                 BlindSlashCMD.blind.put(blinded, null);
             }
 
-
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
-    
-                stmt = c.prepareStatement("REPLACE INTO ROLEREMOVAL (MUTETIME) VALUES (?) WHERE USERID=? AND GUILDID=?;");
+
+                stmt = c.prepareStatement(
+                        "REPLACE INTO ROLEREMOVAL (MUTETIME) VALUES (?) WHERE USERID=? AND GUILDID=?;");
                 stmt.setString(2, blinded.getId());
                 stmt.setString(3, ctx.getGuild().getId());
                 stmt.setString(1, timesql + "");
-                
-                
+
                 stmt.executeUpdate();
-    
+
                 stmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 return;
             }
 
             return;
-        } 
-
+        }
 
         userBlinded.add(blinded);
 
-        
         for (Role roleID : permrole) {
             role += roleID.getId() + " ";
         }
 
-        
-        if(time != 0){
+        if (time != 0) {
             GetRolesBack scheduledclass = new GetRolesBack(blinded.getUser(), called, role);
-            timesql = (System.currentTimeMillis() + time*60*1000);
+            timesql = (System.currentTimeMillis() + time * 60 * 1000);
             ScheduledExecutorService blind = Executors.newScheduledThreadPool(1);
-            blind.schedule(scheduledclass, time*60 , TimeUnit.SECONDS);
+            blind.schedule(scheduledclass, time * 60, TimeUnit.SECONDS);
             userBlinded.add(ctx.getGuild().getMemberById(person));
 
-            blind.schedule(scheduledclass, time , TimeUnit.SECONDS);
+            blind.schedule(scheduledclass, time, TimeUnit.SECONDS);
             BlindSlashCMD.blind.put(blinded, blind);
             BlindSlashCMD.blindexe.put(blind, scheduledclass);
 
@@ -244,44 +230,43 @@ public class AdminMuteBlindCMD implements IAdminCMD{
 
         Connection c = null;
         PreparedStatement stmt = null;
-        
 
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
 
-            stmt = c.prepareStatement("INSERT INTO ROLEREMOVAL (USERID, GUILDID, MUTETIME, ROLES, ADMINMUTE) VALUES (?, ?, ?, ?, ?);");
+            stmt = c.prepareStatement(
+                    "INSERT INTO ROLEREMOVAL (USERID, GUILDID, MUTETIME, ROLES, ADMINMUTE) VALUES (?, ?, ?, ?, ?);");
             stmt.setString(1, blinded.getId());
             stmt.setString(2, ctx.getGuild().getId());
             stmt.setString(3, timesql + "");
             stmt.setString(4, role);
             stmt.setString(5, "true");
-            
+
             stmt.executeUpdate();
 
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             return;
         }
-
-        
 
         LinkedList<Role> tmp = new LinkedList<>();
         try {
             tmp.add(ctx.getGuild().getRoleById("844136589163626526"));
         } catch (Exception e) {
-           ctx.getChannel().sendMessage("Role Blind doesnt exist anymore. This could be a serious issue.").queue();
+            ctx.getChannel().sendMessage("Role Blind doesnt exist anymore. This could be a serious issue.").queue();
         }
-        
+
         called.modifyMemberRoles(ctx.getMember(), tmp, permrole).complete();
 
     }
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "args", "Command to mute blind a person that didn't behave by the rules.");
+        return StandardHelp.Help(prefix, getName(), "args",
+                "Command to mute blind a person that didn't behave by the rules.");
     }
-    
+
 }

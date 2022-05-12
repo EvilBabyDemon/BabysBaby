@@ -21,52 +21,53 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class clock {
     public static boolean clockused;
     public static File timenow;
-	public static boolean timerchange;
-	public static ScheduledExecutorService clock = Executors.newScheduledThreadPool(1);
+    public static boolean timerchange;
+    public static ScheduledExecutorService clock = Executors.newScheduledThreadPool(1);
     public static boolean openforcmds = true;
     public static boolean[][] grid = new boolean[10][10];
     public static int[][] rgbs;
-    
-    public static void clockTick(MessageReceivedEvent event){
-        
+
+    public static void clockTick(MessageReceivedEvent event) {
+
         event.getMessage().addReaction("🕰️").queue();
         LocalTime myObj = LocalTime.now();
-        
-        int clocktime = (15 - myObj.getMinute()%15)*60 + 60 - myObj.getSecond();
+
+        int clocktime = (15 - myObj.getMinute() % 15) * 60 + 60 - myObj.getSecond();
 
         if (clockused) {
             clock.shutdownNow();
             clock = Executors.newScheduledThreadPool(1);
         }
-        String minuteString = ((15 + myObj.getMinute())%60 - myObj.getMinute()%15) == 0 ? ""  : "" + ((15 + myObj.getMinute())%60 - myObj.getMinute()%15);
+        String minuteString = ((15 + myObj.getMinute()) % 60 - myObj.getMinute() % 15) == 0 ? ""
+                : "" + ((15 + myObj.getMinute()) % 60 - myObj.getMinute() % 15);
 
         clockused = true;
-        clock.schedule(new clockT(((myObj.getHour() + ((myObj.getMinute() > 44) ? 1 : 0) )%12) + minuteString, event.getGuild()), clocktime, TimeUnit.SECONDS);
+        clock.schedule(new clockT(((myObj.getHour() + ((myObj.getMinute() > 44) ? 1 : 0)) % 12) + minuteString,
+                event.getGuild()), clocktime, TimeUnit.SECONDS);
         event.getMessage().addReaction(":checkmark:769279808244809798").queue();
-        
+
     }
 
-    public static void verify(MessageReceivedEvent event){
+    public static void verify(MessageReceivedEvent event) {
 
-        Message message = event.getMessage(); 
+        Message message = event.getMessage();
         String content = message.getContentRaw();
         String[] cmd = content.split(" ");
-        
+
         int xver = Integer.parseInt(cmd[1]);
         int yver = Integer.parseInt(cmd[2]);
 
-        if(xver%100==0 && yver%100==0 && grid[xver/100][yver/100]){
-            
-            
+        if (xver % 100 == 0 && yver % 100 == 0 && grid[xver / 100][yver / 100]) {
+
             message.addReaction(":checkmark:769279808244809798").queue();
             List<Attachment> test = message.getAttachments();
             Attachment test2 = test.get(0);
 
             try {
-                
+
                 BufferedImage img2 = ImageIO.read(new URL(test2.getUrl()));
 
-                int[][] rgbs2 = new int [img2.getWidth()][img2.getHeight()];
+                int[][] rgbs2 = new int[img2.getWidth()][img2.getHeight()];
 
                 for (int i = 0; i < img2.getHeight(); i++) {
                     for (int j = 0; j < img2.getWidth(); j++) {
@@ -74,20 +75,22 @@ public class clock {
                     }
                 }
 
-                //PrintStream out = new PrintStream(new File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\checker" + tmp.getX() + tmp.getY() + ".txt"));
+                // PrintStream out = new PrintStream(new
+                // File("C:\\Users\\Lukas\\Desktop\\PlacePrint\\checker" + tmp.getX() +
+                // tmp.getY() + ".txt"));
                 MessageChannel channel = event.getGuild().getTextChannelById("819966095070330950");
 
                 for (int i = 0; i < img2.getWidth(); i++) {
                     for (int j = 0; j < img2.getHeight(); j++) {
-                        if(rgbs[i+xver][j+yver] != rgbs2[i][j] && rgbs[i+xver][j+yver] != 0){
-                            String col = Integer.toHexString(rgbs[i+xver][j+yver]);
+                        if (rgbs[i + xver][j + yver] != rgbs2[i][j] && rgbs[i + xver][j + yver] != 0) {
+                            String col = Integer.toHexString(rgbs[i + xver][j + yver]);
                             col = col.substring(2);
-                            //String pixelset = (Math.random()<0.5) ? "setpIxel" : "setpixel";
-                            channel.sendMessage(".place setpIxel " + (i+xver) + " " + (j+yver) + " " + "#" + col).queue();//String.format("#%02x%02x%02x", c1.getRed(),c1.getGreen(), c1.getBlue());
-                        }	
+                            // String pixelset = (Math.random()<0.5) ? "setpIxel" : "setpixel";
+                            channel.sendMessage(".place setpIxel " + (i + xver) + " " + (j + yver) + " " + "#" + col)
+                                    .queue();// String.format("#%02x%02x%02x", c1.getRed(),c1.getGreen(), c1.getBlue());
+                        }
                     }
                 }
-            
 
                 channel.sendMessage("DONE WITH A GRID").queue(response -> {
                     openforcmds = true;
@@ -95,7 +98,7 @@ public class clock {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if(timerchange && xver == 900 && yver == 720){
+        } else if (timerchange && xver == 900 && yver == 720) {
             timerchange = false;
             message.addReaction(":checkmark:769279808244809798").queue();
             List<Attachment> test = message.getAttachments();
@@ -104,9 +107,9 @@ public class clock {
             String timename = timenow.getName();
 
             try {
-                
+
                 BufferedImage timer = ImageIO.read(timenow);
-                int[][] tim = new int [timer.getWidth()][timer.getHeight()];
+                int[][] tim = new int[timer.getWidth()][timer.getHeight()];
                 for (int i = 720; i < timer.getHeight(); i++) {
                     for (int j = 900; j < timer.getWidth(); j++) {
                         tim[j][i] = timer.getRGB(j, i);
@@ -114,7 +117,7 @@ public class clock {
                 }
 
                 BufferedImage img2 = ImageIO.read(new URL(test2.getUrl()));
-                int[][] rgbs2 = new int [img2.getWidth()][img2.getHeight()];
+                int[][] rgbs2 = new int[img2.getWidth()][img2.getHeight()];
                 for (int i = 0; i < img2.getHeight(); i++) {
                     for (int j = 0; j < img2.getWidth(); j++) {
                         rgbs2[j][i] = img2.getRGB(j, i);
@@ -124,11 +127,12 @@ public class clock {
                 MessageChannel channel = event.getGuild().getTextChannelById("819966095070330950");
                 for (int i = 0; i < img2.getWidth(); i++) {
                     for (int j = 0; j < img2.getHeight(); j++) {
-                        if(tim[i+xver][j+yver] != rgbs2[i][j] && tim[i+xver][j+yver] != 0){
-                            String col = Integer.toHexString(tim[i+xver][j+yver]);
+                        if (tim[i + xver][j + yver] != rgbs2[i][j] && tim[i + xver][j + yver] != 0) {
+                            String col = Integer.toHexString(tim[i + xver][j + yver]);
                             col = col.substring(2);
-                            channel.sendMessage(".place setpIxel " + (i+xver) + " " + (j+yver) + " " + "#" + col + " | " + timename).queue();
-                        }	
+                            channel.sendMessage(".place setpIxel " + (i + xver) + " " + (j + yver) + " " + "#" + col
+                                    + " | " + timename).queue();
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -136,10 +140,6 @@ public class clock {
             }
         }
 
-
-
     }
-    
-
 
 }

@@ -7,7 +7,7 @@ import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class RoleChangeCMD implements IOwnerCMD{
+public class RoleChangeCMD implements IOwnerCMD {
 
     @Override
     public String getName() {
@@ -18,7 +18,7 @@ public class RoleChangeCMD implements IOwnerCMD{
     public void handleOwner(CommandContext ctx) {
         List<String> cmds = ctx.getArgs();
 
-        if(Boolean.parseBoolean(cmds.get(0))){
+        if (Boolean.parseBoolean(cmds.get(0))) {
             ctx.getGuild().addRoleToMember(ctx.getMember(), ctx.getGuild().getRoleById(cmds.get(1))).queue();
         } else {
             ctx.getGuild().removeRoleFromMember(ctx.getMember(), ctx.getGuild().getRoleById(cmds.get(1))).queue();
@@ -27,7 +27,7 @@ public class RoleChangeCMD implements IOwnerCMD{
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-    return StandardHelp.Help(prefix, getName(), "<boolean> <roleID>", "Add or remove a Role.");
+        return StandardHelp.Help(prefix, getName(), "<boolean> <roleID>", "Add or remove a Role.");
     }
-    
+
 }

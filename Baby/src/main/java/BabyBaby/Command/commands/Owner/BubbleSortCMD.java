@@ -18,8 +18,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class BubbleSortCMD implements IOwnerCMD {
-    
-    
+
     @Override
     public String getName() {
         return "bubblesort";
@@ -30,15 +29,15 @@ public class BubbleSortCMD implements IOwnerCMD {
         MessageChannel channel = ctx.getChannel();
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
 
-        //Comments just for Georg
+        // Comments just for Georg
 
-        //Get everything
+        // Get everything
         List<String> cmds = ctx.getArgs();
         LinkedList<String> sort = new LinkedList<>();
         try {
             Scanner s = new Scanner(new File(Data.PLACE + cmds.get(0) + ".txt"));
-            
-            while(s.hasNext()){
+
+            while (s.hasNext()) {
                 sort.add(s.nextLine());
             }
             s.close();
@@ -46,22 +45,23 @@ public class BubbleSortCMD implements IOwnerCMD {
             e.printStackTrace();
         }
 
-        //with the HashMap we store all same entries together in one ArrayList
+        // with the HashMap we store all same entries together in one ArrayList
         HashMap<String, ArrayList<String>> adder = new HashMap<>();
         for (String hex : sort) {
-            
-            String hexString = hex.substring(hex.length()-6, hex.length());
-            int[] color_array = {Integer.parseInt(hexString.substring(0,2), 16),Integer.parseInt(hexString.substring(2,4), 16),Integer.parseInt(hexString.substring(4,6), 16)};
-            //This here to norm the colours to only 64 possibilities (our Buckets)
-            int norm = Math.max(color_array[0]+color_array[1]+color_array[2],1);
-            if(norm!=0){
-                color_array[0] = (int)Math.round(4.0*color_array[0]/norm);
-                color_array[1] = (int)Math.round(4.0*color_array[1]/norm);
-                color_array[2] = (int)Math.round(4.0*color_array[2]/norm);
-                
-                hexString = ""+color_array[0]+color_array[1]+color_array[2];
+
+            String hexString = hex.substring(hex.length() - 6, hex.length());
+            int[] color_array = { Integer.parseInt(hexString.substring(0, 2), 16),
+                    Integer.parseInt(hexString.substring(2, 4), 16), Integer.parseInt(hexString.substring(4, 6), 16) };
+            // This here to norm the colours to only 64 possibilities (our Buckets)
+            int norm = Math.max(color_array[0] + color_array[1] + color_array[2], 1);
+            if (norm != 0) {
+                color_array[0] = (int) Math.round(4.0 * color_array[0] / norm);
+                color_array[1] = (int) Math.round(4.0 * color_array[1] / norm);
+                color_array[2] = (int) Math.round(4.0 * color_array[2] / norm);
+
+                hexString = "" + color_array[0] + color_array[1] + color_array[2];
             }
-            //now you have 64 different colors to iterate through.
+            // now you have 64 different colors to iterate through.
 
             ArrayList<String> tmp = adder.getOrDefault(hexString, new ArrayList<String>());
             tmp.add(hex);
@@ -70,78 +70,78 @@ public class BubbleSortCMD implements IOwnerCMD {
 
         ArrayList<ArrayList<String>> copier = new ArrayList<>();
 
-        //Now we iterate all Buckets from the HashMap
+        // Now we iterate all Buckets from the HashMap
         HashMap<Thread, ArrayList<String>> threads = new HashMap<>();
 
         for (ArrayList<String> var : adder.values()) {
-            
+
             ArrayList<String> tmp = new ArrayList<>();
             for (String str : var) {
                 tmp.add(str);
             }
 
-            //Multithreading to sort every bucket 
+            // Multithreading to sort every bucket
             Thread t = new Thread(new Runnable() {
                 public int xavg;
                 public int yavg;
+
                 @Override
-                public void run() {    
+                public void run() {
                     xavg = 0;
                     yavg = 0;
-                    
-                    //get avg x and y for this bucket
+
+                    // get avg x and y for this bucket
                     for (int i = 0; i < tmp.size(); i++) {
                         String[] parts = tmp.get(i).split(" ");
                         xavg += Integer.parseInt(parts[2]);
                         yavg += Integer.parseInt(parts[3]);
                     }
-                    xavg = xavg/tmp.size();
-                    yavg = yavg/tmp.size();
+                    xavg = xavg / tmp.size();
+                    yavg = yavg / tmp.size();
 
-
-                    //Comparator mit euklidischer distance on every Bucket 
-                    Comparator<String> comp = new Comparator<String>(){
+                    // Comparator mit euklidischer distance on every Bucket
+                    Comparator<String> comp = new Comparator<String>() {
                         @Override
                         public int compare(String o1, String o2) {
                             int[] oxy1 = tonum(o1);
                             int[] oxy2 = tonum(o2);
 
-                            return (int) (Math.pow(xavg - oxy1[0],2) + Math.pow(yavg - oxy1[1],2)-(Math.pow(xavg - oxy2[0],2) + Math.pow(yavg - oxy2[1],2)));
+                            return (int) (Math.pow(xavg - oxy1[0], 2) + Math.pow(yavg - oxy1[1], 2)
+                                    - (Math.pow(xavg - oxy2[0], 2) + Math.pow(yavg - oxy2[1], 2)));
                         }
-                        public int[] tonum (String s){
+
+                        public int[] tonum(String s) {
                             String[] cmds = s.split(" ");
-                            return new int[] {Integer.parseInt(cmds[2]), Integer.parseInt(cmds[3])};
+                            return new int[] { Integer.parseInt(cmds[2]), Integer.parseInt(cmds[3]) };
                         }
                     };
                     tmp.sort(comp);
                 }
             });
             t.start();
-            //Storing threads and Sorted Lists in a HashMap
+            // Storing threads and Sorted Lists in a HashMap
             threads.put(t, tmp);
 
-            //copier.add(tmp);
+            // copier.add(tmp);
         }
-        //I probably have way too many threads and this doesnt give any speedup but whatever xD
-        //joining all threads and adding them all together in one List
+        // I probably have way too many threads and this doesnt give any speedup but
+        // whatever xD
+        // joining all threads and adding them all together in one List
 
         for (Thread var : threads.keySet()) {
-            try{
+            try {
                 var.join();
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             copier.add(threads.get(var));
         }
 
-        
-
-        //print everything in a file again
+        // print everything in a file again
         try {
-            PrintStream out = new PrintStream(new File(Data.PLACE + "bubblesortseq" + cmds.get(0) + ".txt"));	
-            PrintStream paraout = new PrintStream(new File(Data.PLACE + "bubblesort" + cmds.get(0) + ".txt"));	
+            PrintStream out = new PrintStream(new File(Data.PLACE + "bubblesortseq" + cmds.get(0) + ".txt"));
+            PrintStream paraout = new PrintStream(new File(Data.PLACE + "bubblesort" + cmds.get(0) + ".txt"));
             PrintStream oneout = new PrintStream(new File(Data.PLACE + "bubblesortper" + cmds.get(0) + ".txt"));
-
 
             for (ArrayList<String> var : copier) {
                 for (String var2 : var) {
@@ -151,23 +151,21 @@ public class BubbleSortCMD implements IOwnerCMD {
             out.flush();
             out.close();
 
-
             int[] lastdone = new int[copier.size()];
             for (int i = 0; i < 100; i++) {
                 for (int j = 0; j < copier.size(); j++) {
-                    for (int k = lastdone[j]; k < lastdone[j]+copier.get(j).size()/100+1 && k <copier.get(j).size() ; k++) {
+                    for (int k = lastdone[j]; k < lastdone[j] + copier.get(j).size() / 100 + 1
+                            && k < copier.get(j).size(); k++) {
                         oneout.println(copier.get(j).get(k));
                     }
-                    lastdone[j] += copier.get(j).size()/100+1;
-                }   
+                    lastdone[j] += copier.get(j).size() / 100 + 1;
+                }
             }
             oneout.flush();
             oneout.close();
-            
-
 
             int j = 0;
-            while(copier.size()!=0){
+            while (copier.size() != 0) {
                 for (int i = 0; i < copier.size(); i++) {
                     try {
                         paraout.println(copier.get(i).get(j));
@@ -177,14 +175,14 @@ public class BubbleSortCMD implements IOwnerCMD {
                 }
                 j++;
             }
-            
+
             paraout.flush();
             paraout.close();
         } catch (NumberFormatException | IOException e) {
             e.printStackTrace();
         }
         channel.sendMessage("Done").queue();
-        
+
     }
 
     @Override

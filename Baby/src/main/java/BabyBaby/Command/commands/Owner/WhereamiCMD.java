@@ -19,7 +19,8 @@ public class WhereamiCMD implements IOwnerCMD {
 
     @Override
     public void handleOwner(CommandContext ctx) {
-        List<String> guildNames = ctx.getJDA().getGuilds().stream().map(guild -> guild.getName()).collect(Collectors.toList());;
+        List<String> guildNames = ctx.getJDA().getGuilds().stream().map(guild -> guild.getName())
+                .collect(Collectors.toList());
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Guilds I am on.");
         eb.setColor(Color.GREEN);
@@ -31,5 +32,5 @@ public class WhereamiCMD implements IOwnerCMD {
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "", "Find out on which servers I am.");
     }
-    
+
 }

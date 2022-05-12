@@ -19,9 +19,9 @@ public class SayMultiCMD implements IOwnerCMD {
 
     @Override
     public void handleOwner(CommandContext ctx) {
-       
+
         MessageChannel channel = ctx.getChannel();
-        
+
         List<String> args = ctx.getArgs();
         LinkedList<String> cmds = new LinkedList<>();
 
@@ -32,7 +32,7 @@ public class SayMultiCMD implements IOwnerCMD {
         int x = Integer.parseInt(cmds.get(0));
 
         Message message = ctx.getMessage();
-        
+
         String content = message.getContentRaw();
 
         content = content.substring(1 + getName().length() + 1 + cmds.get(0).length());
@@ -47,6 +47,5 @@ public class SayMultiCMD implements IOwnerCMD {
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<int> <text to spam>", "Iterative spam function.");
     }
-    
 
 }

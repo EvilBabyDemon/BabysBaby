@@ -28,94 +28,87 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-public class EditAssignCMD implements IAdminCMD{
+public class EditAssignCMD implements IAdminCMD {
 
+    @Override
+    public String getName() {
+        return "editassign";
+    }
 
-	@Override
-	public String getName() {
-		return "editassign";
-	}
-
-	@Override
-	public void handleAdmin(CommandContext ctx) {
-		if(!ctx.getGuild().getId().equals(Data.ETH_ID)){
+    @Override
+    public void handleAdmin(CommandContext ctx) {
+        if (!ctx.getGuild().getId().equals(Data.ETH_ID)) {
             return;
         }
-        
-    
 
         Connection c = null;
         Statement stmt = null;
         MessageChannel channel = ctx.getChannel();
-        HashSet<String> cats = new HashSet<String>(); 
+        HashSet<String> cats = new HashSet<String>();
 
         ResultSet rs;
 
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            
+
             stmt = c.createStatement();
 
             rs = stmt.executeQuery("SELECT categories FROM ASSIGNROLES;");
-            while ( rs.next() ) {
+            while (rs.next()) {
                 String cat = rs.getString("categories");
                 cats.add(cat);
             }
-            
+
             rs.close();
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
-            channel.sendMessage( e.getClass().getName() + ": " + e.getMessage()).queue();
-            e.printStackTrace(); 
+        } catch (Exception e) {
+            channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+            e.printStackTrace();
             return;
         }
-        
-        //doing embeds with each category
+
+        // doing embeds with each category
 
         String msg = "";
-
-
 
         LinkedList<LinkedList<String>> emotes = new LinkedList<>();
         ArrayList<String> categ = new ArrayList<>();
         LinkedList<String> roles = new LinkedList<>();
-        
+
         for (String strCateg : cats) {
             HashMap<Role, Object[]> sorting = new HashMap<>();
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
-                
+
                 stmt = c.createStatement();
 
                 Guild called = ctx.getGuild();
                 rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + strCateg + "';");
-                while ( rs.next() ) {
+                while (rs.next()) {
                     String rcat = rs.getString("ID");
                     String emoteStr = rs.getString("EMOTE");
                     String orig = emoteStr;
 
-
                     try {
                         Long.parseLong(emoteStr);
                         try {
-                            emoteStr = ctx.getJDA().getEmoteById(emoteStr).getAsMention();   
+                            emoteStr = ctx.getJDA().getEmoteById(emoteStr).getAsMention();
                         } catch (Exception e) {
                             emoteStr = "ERROR";
                         }
                     } catch (Exception e) {
                     }
 
-
-                    msg = emoteStr + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
-                    sorting.put(called.getRoleById(rcat), new Object[] {orig, msg});
+                    msg = emoteStr + " : " + called.getRoleById(rcat).getAsMention() + "\n";
+                    sorting.put(called.getRoleById(rcat), new Object[] { orig, msg });
                 }
                 rs.close();
                 stmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 return;
             }
@@ -146,39 +139,38 @@ public class EditAssignCMD implements IAdminCMD{
             LinkedList<String> tempEmo = new LinkedList<>();
             tempEmo.addAll(emotes.remove(0));
 
-            
             ArrayList<Button> butt = new ArrayList<>();
             for (String emoID : tempEmo) {
-                
+
                 boolean gemo = false;
-                
+
                 try {
                     Long.parseLong(emoID);
                     gemo = true;
                 } catch (Exception e) {
                 }
-                
-                try{
-                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
-                } catch (Exception e){
-                    ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+
+                try {
+                    butt.add(Button.primary(emoID,
+                            gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoID)) : Emoji.fromUnicode(emoID)));
+                } catch (Exception e) {
+                    ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete()
+                            .delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
-            
-
             LinkedList<ActionRow> acR = new LinkedList<>();
-            for (int i = 0; i < butt.size(); i +=5) {
+            for (int i = 0; i < butt.size(); i += 5) {
                 ArrayList<Button> row = new ArrayList<>();
-                for (int j = 0; j < 5 && j+i < butt.size(); j++) {
-                    row.add(butt.get(i+j));
+                for (int j = 0; j < 5 && j + i < butt.size(); j++) {
+                    row.add(butt.get(i + j));
                 }
                 acR.add(ActionRow.of(row));
             }
 
             MessageAction msgAct;
 
-            if(!Data.catToMsg.containsKey(categ.get(k))){
+            if (!Data.catToMsg.containsKey(categ.get(k))) {
                 msgAct = channel.sendMessageEmbeds(eb.build());
                 msgAct.setActionRows(acR);
                 Message msgs = msgAct.complete();
@@ -187,30 +179,28 @@ public class EditAssignCMD implements IAdminCMD{
                 templist.add(msgs.getId());
                 Data.catToMsg.put(categ.get(k), templist);
                 Data.msgToChan.put(msgs.getId(), msgs.getChannel().getId());
-                
+
                 c = null;
                 PreparedStatement pstmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
                     c = DriverManager.getConnection(Data.db);
-                    pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
+                    pstmt = c.prepareStatement(
+                            "INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
                     pstmt.setString(1, ctx.getGuild().getId());
                     pstmt.setString(2, ctx.getChannel().getId());
                     pstmt.setString(3, msgs.getId());
-                    pstmt.setString(4, categ.get(k)); 
+                    pstmt.setString(4, categ.get(k));
                     pstmt.executeUpdate();
                     pstmt.close();
                     c.close();
-                } catch ( Exception e ) {
-                    e.printStackTrace(); 
+                } catch (Exception e) {
+                    e.printStackTrace();
                     return;
                 }
                 continue;
             }
 
-
-
-            
             for (String msgid : Data.catToMsg.get(categ.get(k))) {
                 TextChannel chan = ctx.getGuild().getTextChannelById(Data.msgToChan.get(msgid));
                 try {
@@ -220,15 +210,13 @@ public class EditAssignCMD implements IAdminCMD{
                     remover.add(msgid);
                     continue;
                 }
-                
+
                 msgAct.setActionRows(acR);
                 msgAct.complete();
             }
 
         }
 
-
-        
         for (String oldMsgID : remover) {
             c = null;
             PreparedStatement pstmt = null;
@@ -240,28 +228,27 @@ public class EditAssignCMD implements IAdminCMD{
                 pstmt.executeUpdate();
                 pstmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
-                e.printStackTrace(); 
+                e.printStackTrace();
             }
             Data.msgid.remove(oldMsgID);
-            
+
             Data.msgToChan.remove(oldMsgID);
         }
 
         ctx.getMessage().delete().queue();
 
-		
-	}
+    }
 
-	@Override
-	public MessageEmbed getAdminHelp(String prefix) {
-		return StandardHelp.Help(prefix, getName(), "", "Update'" + new RoleAssignCMD().getName() + "' cmd messages. This technically can be used in any channel and it will update all saved embeds but if a new category was added it will send that embed in the channel the command was used.");
-	}
+    @Override
+    public MessageEmbed getAdminHelp(String prefix) {
+        return StandardHelp.Help(prefix, getName(), "", "Update'" + new RoleAssignCMD().getName()
+                + "' cmd messages. This technically can be used in any channel and it will update all saved embeds but if a new category was added it will send that embed in the channel the command was used.");
+    }
 
+    public EmbedBuilder embeds(String title, String msg) {
 
-    public EmbedBuilder embeds(String title, String msg){
-        
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle(title);
         eb.setColor(1);
@@ -271,12 +258,12 @@ public class EditAssignCMD implements IAdminCMD{
         return eb;
     }
 
-    public LinkedList<Object[]> rolesorter (HashMap<Role, Object[]> sorting){
+    public LinkedList<Object[]> rolesorter(HashMap<Role, Object[]> sorting) {
         LinkedList<Object[]> res = new LinkedList<>();
-        while(sorting.size()!=0){
+        while (sorting.size() != 0) {
             Role highest = null;
             for (Role role : sorting.keySet()) {
-                if(highest == null || role.getPosition() > highest.getPosition()){
+                if (highest == null || role.getPosition() > highest.getPosition()) {
                     highest = role;
                 }
             }
@@ -286,13 +273,13 @@ public class EditAssignCMD implements IAdminCMD{
         return res;
     }
 
-    public boolean cont (List<String> c, String s){
+    public boolean cont(List<String> c, String s) {
         for (String str : c) {
-            if(str.contains(s)){
+            if (str.contains(s)) {
                 return true;
             }
         }
         return false;
     }
-    
+
 }

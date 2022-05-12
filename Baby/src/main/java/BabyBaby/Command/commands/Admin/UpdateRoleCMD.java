@@ -35,19 +35,18 @@ public class UpdateRoleCMD implements IAdminCMD {
         String id = cmds.remove(0);
         String update = "";
         for (String roleID : cmds) {
-            update += roleID + " "; 
+            update += roleID + " ";
         }
-        
 
-        //ASSIGNROLES ID categories emote
+        // ASSIGNROLES ID categories emote
         try {
-            update = update.substring(0, update.length()-1);
+            update = update.substring(0, update.length() - 1);
         } catch (Exception e) {
             ctx.getChannel().sendMessage("You forgot an arg.").queue();
             return;
         }
-        //TODO add new HashSet and also old HashMap to update
-        switch(casing){
+        // TODO add new HashSet and also old HashMap to update
+        switch (casing) {
             case "emote":
                 try {
                     Class.forName("org.sqlite.JDBC");
@@ -55,18 +54,18 @@ public class UpdateRoleCMD implements IAdminCMD {
                     update = update.replace("<", "");
                     update = update.replace(">", "");
                     stmt = c.createStatement();
-                    String sql= "UPDATE ASSIGNROLES SET EMOTE = '" + update + "' where ID=" + id + ";";
-                    stmt.executeUpdate(sql); 
-                    
+                    String sql = "UPDATE ASSIGNROLES SET EMOTE = '" + update + "' where ID=" + id + ";";
+                    stmt.executeUpdate(sql);
+
                     stmt.close();
                     c.close();
-                } catch ( Exception e ) {
+                } catch (Exception e) {
                     channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                     return;
                 }
                 String oldemo = "";
                 for (String emoteID : Data.emoteassign.keySet()) {
-                    if(Data.emoteassign.get(emoteID).equals(id)){
+                    if (Data.emoteassign.get(emoteID).equals(id)) {
                         oldemo = emoteID;
                         break;
                     }
@@ -74,61 +73,60 @@ public class UpdateRoleCMD implements IAdminCMD {
                 Data.emoteassign.remove(oldemo);
                 Data.emoteassign.put(update, id);
 
-
                 break;
-            
+
             case "id":
-                
+
                 try {
                     Class.forName("org.sqlite.JDBC");
                     c = DriverManager.getConnection(Data.db);
-                    
-                    stmt = c.createStatement(); 
+
+                    stmt = c.createStatement();
                     String sql = "UPDATE ASSIGNROLES SET ID = " + update + " where ID=" + id + ";";
                     stmt.executeUpdate(sql);
-            
+
                     stmt.close();
                     c.close();
-                } catch ( Exception e ) {
+                } catch (Exception e) {
                     channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                     return;
                 }
                 Data.roles.remove(update);
                 Data.roles.add(id);
 
-
                 break;
-            
+
             case "category":
-                
+
                 try {
                     Class.forName("org.sqlite.JDBC");
                     c = DriverManager.getConnection(Data.db);
-            
+
                     stmt = c.createStatement();
                     String sql = "UPDATE ASSIGNROLES SET categories = '" + update + "' where ID=" + id + ";";
                     stmt.executeUpdate(sql);
-            
+
                     stmt.close();
                     c.close();
-                } catch ( Exception e ) {
+                } catch (Exception e) {
                     channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                     return;
                 }
-                
+
                 break;
             default:
                 ctx.getMessage().addReaction(Data.xmark).queue();
                 return;
-        }	
-    
+        }
+
         ctx.getMessage().addReaction(Data.check).queue();
-        
+
     }
 
     @Override
     public MessageEmbed getAdminHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<id/category/emote> <roleID atm> <new emote/id/...>", "Command to update the assignable roles if a emote or something changed.");
+        return StandardHelp.Help(prefix, getName(), "<id/category/emote> <roleID atm> <new emote/id/...>",
+                "Command to update the assignable roles if a emote or something changed.");
     }
-    
+
 }

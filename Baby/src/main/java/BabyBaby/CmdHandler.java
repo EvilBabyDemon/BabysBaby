@@ -20,10 +20,9 @@ public class CmdHandler {
 
     public static HashSet<String> offCMD = new HashSet<>();
 
-    //private final List<Command> allCommands = new ArrayList<>();
+    // private final List<Command> allCommands = new ArrayList<>();
 
     public CmdHandler(JDA bot) throws IOException {
-
 
         // adding commands visible to @everyone
         addPublicCommand(new PingCMD());
@@ -36,84 +35,81 @@ public class CmdHandler {
 
         addPublicCommand(new NoKeyCMD());
         addPublicCommand(new PolyCMD());
-        //addPublicCommand(new ReminderCMD());
+        // addPublicCommand(new ReminderCMD());
         addPublicCommand(new RockPaperCMD());
-        //addPublicCommand(new RoleMuteCMD());
+        // addPublicCommand(new RoleMuteCMD());
         addPublicCommand(new SieveCMD());
         addPublicCommand(new SourceCMD());
         addPublicCommand(new SuggestionCMD());
-        //addPublicCommand(new PollCMD());
+        // addPublicCommand(new PollCMD());
         addPublicCommand(new PlaceGifCMD());
         addPublicCommand(new BotsOnlineCMD());
-        //addPublicCommand(new BlindCMD());
+        // addPublicCommand(new BlindCMD());
         addPublicCommand(new UnBlindCMD());
         addPublicCommand(new FlashedCMD());
-        //addPublicCommand(new BlindForceCMD());
+        // addPublicCommand(new BlindForceCMD());
         addPublicCommand(new TillBlindCMD());
-        
-        //at the moment completely useless
-        //addPublicCommand(new EmoteQueryCMD());
+
+        // at the moment completely useless
+        // addPublicCommand(new EmoteQueryCMD());
         addPublicCommand(new UsageCMD());
 
         // adding commands visible to @admin
-        /* Everything slash now
-        addAdminCommand(new AddRoleCMD());
-        addAdminCommand(new DelRoleCMD());
-        addAdminCommand(new RoleIdCMD());
-        addAdminCommand(new UpdateRoleCMD());
-        addAdminCommand(new WhoisCMD());
-        addAdminCommand(new RoleAssignCMD());
-        addAdminCommand(new WarnCMD());
-        addAdminCommand(new GetWarnedCMD());
-        addAdminCommand(new GetWarningsFromUserCMD());
-        addAdminCommand(new EditAssignCMD());
-        addAdminCommand(new KickCMD());
-        addAdminCommand(new BanCMD());
-        addAdminCommand(new NewRoleCMD());
-        */
-        //TODO Fix that cmd
-        //addAdminCommand(new AdminMuteBlindCMD());
-
+        /*
+         * Everything slash now
+         * addAdminCommand(new AddRoleCMD());
+         * addAdminCommand(new DelRoleCMD());
+         * addAdminCommand(new RoleIdCMD());
+         * addAdminCommand(new UpdateRoleCMD());
+         * addAdminCommand(new WhoisCMD());
+         * addAdminCommand(new RoleAssignCMD());
+         * addAdminCommand(new WarnCMD());
+         * addAdminCommand(new GetWarnedCMD());
+         * addAdminCommand(new GetWarningsFromUserCMD());
+         * addAdminCommand(new EditAssignCMD());
+         * addAdminCommand(new KickCMD());
+         * addAdminCommand(new BanCMD());
+         * addAdminCommand(new NewRoleCMD());
+         */
+        // TODO Fix that cmd
+        // addAdminCommand(new AdminMuteBlindCMD());
 
         // adding commands visible to owner
         addOwnerCommand(new AdminHelpCMD());
         addOwnerCommand(new cleartable());
         addOwnerCommand(new ConvertPlace());
         addOwnerCommand(new PlaceDraw());
-        //addOwnerCommand(new operationcheck());
-        //addOwnerCommand(new operationsecret());
+        // addOwnerCommand(new operationcheck());
+        // addOwnerCommand(new operationsecret());
         addOwnerCommand(new PlebHelpCMD());
         addOwnerCommand(new SayCMD());
-        //addOwnerCommand(new SendUserCMD());
-        //addOwnerCommand(new SetButtonCMD());
+        // addOwnerCommand(new SendUserCMD());
+        // addOwnerCommand(new SetButtonCMD());
         addOwnerCommand(new SetPrefixCMD());
         addOwnerCommand(new PlaceSorter());
-        //addOwnerCommand(new tick());
-        //addOwnerCommand(new ucheck());
+        // addOwnerCommand(new tick());
+        // addOwnerCommand(new ucheck());
         addOwnerCommand(new WhereamiCMD());
         addOwnerCommand(new TestCMD());
-        //addOwnerCommand(new toMultipixelCMD());
+        // addOwnerCommand(new toMultipixelCMD());
         addOwnerCommand(new SayMultiCMD());
-        //addOwnerCommand(new BigSieveCMD());
+        // addOwnerCommand(new BigSieveCMD());
         addOwnerCommand(new BubbleSortCMD());
-        //addOwnerCommand(new RoleChangeCMD());
+        // addOwnerCommand(new RoleChangeCMD());
         addOwnerCommand(new TurnCMDsOff());
         addOwnerCommand(new ChangeLogCMD());
         addOwnerCommand(new SpeedCMD());
         addOwnerCommand(new CovidGuesserCMD());
-        
-        
-        
+
         addPublicCommand(new HelpCMD(this));
 
     }
 
     private void addPublicCommand(IPublicCMD cmd) {
-        //addAdminCommand(cmd); // admins can use @everyone commands as well
+        // addAdminCommand(cmd); // admins can use @everyone commands as well
 
         boolean nameFound = this.publicCommands.stream().anyMatch(
-                (it) -> it.getName().equalsIgnoreCase(cmd.getName())
-        );
+                (it) -> it.getName().equalsIgnoreCase(cmd.getName()));
 
         if (nameFound) {
             throw new IllegalArgumentException("A command with this name is already present in Public");
@@ -123,11 +119,10 @@ public class CmdHandler {
     }
 
     public void addAdminCommand(IAdminCMD cmd) {
-        //addOwnerCommand(cmd); // owner can use @admin commands as well
+        // addOwnerCommand(cmd); // owner can use @admin commands as well
 
         boolean nameFound = this.adminCommands.stream().anyMatch(
-                (it) -> it.getName().equalsIgnoreCase(cmd.getName())
-        );
+                (it) -> it.getName().equalsIgnoreCase(cmd.getName()));
 
         if (nameFound) {
             throw new IllegalArgumentException("A command with this name is already present in Admin");
@@ -138,8 +133,7 @@ public class CmdHandler {
 
     public void addOwnerCommand(IOwnerCMD cmd) {
         boolean nameFound = this.ownerCommands.stream().anyMatch(
-                (it) -> it.getName().equalsIgnoreCase(cmd.getName())
-        );
+                (it) -> it.getName().equalsIgnoreCase(cmd.getName()));
 
         if (nameFound) {
             throw new IllegalArgumentException("A command with this name is already in Owner");
@@ -148,15 +142,14 @@ public class CmdHandler {
         ownerCommands.add(cmd);
     }
 
-
     public void handle(MessageReceivedEvent event, String prefix) {
 
         String[] split = event.getMessage().getContentRaw()
                 .replaceFirst("(?i)" + Pattern.quote(prefix), "")
                 .split("\\s+");
-        
+
         List<String> args = Arrays.asList(split).subList(1, split.length);
-        
+
         CommandContext ctx = new CommandContext(event, args);
 
         int permissionLevel = ctx.getPermissionLevel();
@@ -211,8 +204,6 @@ public class CmdHandler {
         }
         return null;
     }
- 
-
 
     public List<IPublicCMD> getPublicCommands() {
         return publicCommands;
@@ -226,26 +217,30 @@ public class CmdHandler {
         return ownerCommands;
     }
 
-
-    private void runCMD (ICommand cmd, CommandContext ctx, int permissionLevel){
+    private void runCMD(ICommand cmd, CommandContext ctx, int permissionLevel) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
 
-                //check if blinded and then just ignore cmd
-                if(ctx.getGuild().getId().equals(Data.ETH_ID) && ctx.getMember().getRoles().contains(ctx.getGuild().getRoleById(Data.BLIND_ID))){
-                    ctx.getAuthor().openPrivateChannel().complete().sendMessage("Unblind yourself and don't try to cheat!").queue();
+                // check if blinded and then just ignore cmd
+                if (ctx.getGuild().getId().equals(Data.ETH_ID)
+                        && ctx.getMember().getRoles().contains(ctx.getGuild().getRoleById(Data.BLIND_ID))) {
+                    ctx.getAuthor().openPrivateChannel().complete()
+                            .sendMessage("Unblind yourself and don't try to cheat!").queue();
                     return;
                 }
-                
+
                 try {
-                    switch(permissionLevel){
+                    switch (permissionLevel) {
                         case 0:
-                            if(ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ETH_ID) || ctx.getChannel().getParentCategory() == null 
-                            || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL) || ((IPublicCMD) cmd).getWhiteListBool()){
+                            if (ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ETH_ID)
+                                    || ctx.getChannel().getParentCategory() == null
+                                    || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL)
+                                    || ((IPublicCMD) cmd).getWhiteListBool()) {
                                 ((IPublicCMD) cmd).handlePublic(ctx);
-                            } else{
-                                ctx.getChannel().sendMessage("Please use the dedicated bot channels for this command.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+                            } else {
+                                ctx.getChannel().sendMessage("Please use the dedicated bot channels for this command.")
+                                        .complete().delete().queueAfter(10, TimeUnit.SECONDS);
                             }
                             break;
                         case 1:
@@ -254,11 +249,11 @@ public class CmdHandler {
                         case 2:
                             long time = System.currentTimeMillis();
                             ((IOwnerCMD) cmd).handleOwner(ctx);
-                            System.out.println(System.currentTimeMillis()-time);
+                            System.out.println(System.currentTimeMillis() - time);
                             break;
                     }
 
-                } catch(Exception e){
+                } catch (Exception e) {
                     System.out.println(ctx.getMessage().getContentRaw());
                     e.printStackTrace();
                     ctx.getMessage().addReaction(Data.xmark).queue();

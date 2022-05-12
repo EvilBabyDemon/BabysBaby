@@ -6,19 +6,20 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class drawwithFerris {
-    
-    public void drawing(MessageReceivedEvent event){
-        ArrayList<String> printer = new ArrayList<>(); 
+
+    public void drawing(MessageReceivedEvent event) {
+        ArrayList<String> printer = new ArrayList<>();
         String[] cmds = event.getMessage().getContentRaw().split("\n");
-        MessageChannel channel = event.getJDA().getGuildById("747752542741725244").getTextChannelById("819966095070330950");
+        MessageChannel channel = event.getJDA().getGuildById("747752542741725244")
+                .getTextChannelById("819966095070330950");
 
         for (int i = 1; i < cmds.length; i++) {
             printer.add(cmds[i]);
         }
 
-        if(printer.size()==0)
+        if (printer.size() == 0)
             System.out.println("WTF");
-        
+
         for (int i = 0; i < printer.size(); i++) {
             channel.sendMessage(printer.get(i)).queue();
         }

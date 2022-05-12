@@ -20,7 +20,7 @@ public class TestSlashCMD implements ISlashCMD {
 
     @Override
     public void handle(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
-        if(failed){
+        if (failed) {
             return;
         }
         /*
@@ -50,5 +50,5 @@ public class TestSlashCMD implements ISlashCMD {
         test.addOption(OptionType.USER, "user", "User to stalk.", false);
         return test;
     }
-    
+
 }

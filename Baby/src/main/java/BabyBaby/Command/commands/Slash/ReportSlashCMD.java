@@ -22,15 +22,17 @@ public class ReportSlashCMD implements ISlashCMD {
     public void handle(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         String issue = "Report:\n" + event.getOption("issue").getAsString();
         Member member = event.getOption("user", OptionMapping::getAsMember);
-        if(member != null){
-            issue += " (Accused user: " + member.getAsMention() + ")"; 
+        if (member != null) {
+            issue += " (Accused user: " + member.getAsMention() + ")";
         }
-        
-        while(issue.length()>2000){
-            event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete().editMessage(issue.substring(0, 2000)).complete();
+
+        while (issue.length() > 2000) {
+            event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete()
+                    .editMessage(issue.substring(0, 2000)).complete();
             issue = issue.substring(2000);
         }
-        event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete().editMessage(issue).complete();
+        event.getGuild().getTextChannelById(Data.ADMIN_BOT_ID).sendMessage("a").complete().editMessage(issue)
+                .complete();
 
         String acknowledged = "The issue was sent to the admin team anonymously.";
         Helper.unhook(acknowledged, failed, hook, event.getUser());
@@ -39,11 +41,11 @@ public class ReportSlashCMD implements ISlashCMD {
     @Override
     public CommandDataImpl initialise(Guild eth) {
         CommandDataImpl report = new CommandDataImpl(getName(), "A command to report a incident to Staff anonymously.");
-        
+
         report.addOption(OptionType.STRING, "issue", "The issue you have or the incident that occurred.", true);
         report.addOption(OptionType.USER, "user", "If you want to report a User, this can be left empty.");
-        
+
         return report;
     }
-    
+
 }

@@ -13,7 +13,7 @@ import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SetPrefixCMD implements IOwnerCMD{
+public class SetPrefixCMD implements IOwnerCMD {
 
     @Override
     public String getName() {
@@ -34,26 +34,25 @@ public class SetPrefixCMD implements IOwnerCMD{
             c = DriverManager.getConnection(Data.db);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
-            
+
             stmt = c.createStatement();
             String sql = "INSERT INTO GUILD (ID,PREFIX) " +
-                            "VALUES (" + ctx.getGuild().getId() + ", '"+ cmds.get(0) + "');";
+                    "VALUES (" + ctx.getGuild().getId() + ", '" + cmds.get(0) + "');";
             ResultSet rs = stmt.executeQuery(sql);
-                
-            
+
             rs.close();
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             return;
         }
-        
+
     }
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<prefix>", "To set the Prefix of this server");
     }
-    
+
 }

@@ -28,17 +28,17 @@ public class ConvertPlace implements IOwnerCMD {
         List<String> cmds = ctx.getArgs();
 
         boolean onpc = Boolean.parseBoolean(cmds.get(0));
-        
+
         try {
-            
+
             BufferedImage img;
-            if(onpc){
-                img = ImageIO.read(new File(Data.PLACE + cmds.get(1)  + ".png"));
-            } else{
+            if (onpc) {
+                img = ImageIO.read(new File(Data.PLACE + cmds.get(1) + ".png"));
+            } else {
                 img = ImageIO.read(new URL(ctx.getMessage().getAttachments().get(0).getUrl()));
             }
-            
-            int[][] rgbs = new int [img.getWidth()][img.getHeight()];
+
+            int[][] rgbs = new int[img.getWidth()][img.getHeight()];
 
             for (int i = 0; i < img.getHeight(); i++) {
                 for (int j = 0; j < img.getWidth(); j++) {
@@ -49,31 +49,31 @@ public class ConvertPlace implements IOwnerCMD {
 
             for (int i = 0; i < img.getWidth(); i++) {
                 for (int j = 0; j < img.getHeight(); j++) {
-                    if(rgbs[i][j] != 0){
+                    if (rgbs[i][j] != 0) {
                         String col = Integer.toHexString(rgbs[i][j]);
                         col = (col.length() == 7) ? col.substring(1) : col.substring(2);
                         out.println(".place setpIxel " + i + " " + j + " " + "#" + col);
-                        //String.format("#%02x%02x%02x", c1.getRed(),c1.getGreen(), c1.getBlue());
+                        // String.format("#%02x%02x%02x", c1.getRed(),c1.getGreen(), c1.getBlue());
                     }
                 }
             }
-                
+
             out.flush();
             out.close();
 
             ctx.getMessage().addReaction(Data.check).queue();
-            
-            
+
         } catch (IOException e) {
             ctx.getMessage().addReaction(Data.xmark).queue();
             e.printStackTrace();
         }
-        
+
     }
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<boolean on pc or not> <file/filename>", "Converts an image to txt place file");
+        return StandardHelp.Help(prefix, getName(), "<boolean on pc or not> <file/filename>",
+                "Converts an image to txt place file");
     }
-    
+
 }

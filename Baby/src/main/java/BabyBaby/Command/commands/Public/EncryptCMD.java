@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class EncryptCMD implements IPublicCMD {
 
-
     @Override
     public String getName() {
         return "crypt";
@@ -21,22 +20,25 @@ public class EncryptCMD implements IPublicCMD {
 
     @Override
     public void handlePublic(CommandContext ctx) {
-        
+
         MessageChannel channel = ctx.getChannel();
 
-        /*  we need to load the list into a new Linked List
-            because ctx.getArgs() returns a fixed size list
-            which we can't remove args from */
+        /*
+         * we need to load the list into a new Linked List
+         * because ctx.getArgs() returns a fixed size list
+         * which we can't remove args from
+         */
         List<String> args = new LinkedList<>(ctx.getArgs());
 
         String key = args.remove(0);
-        String content = String.join(" ", args);  // joins the list properly
-        
-        /*if (cryptdeleter)
-            channel.deleteMessageById(message.getId()).queue();
-        else
-            message.addReaction(check).queue();
-        */
+        String content = String.join(" ", args); // joins the list properly
+
+        /*
+         * if (cryptdeleter)
+         * channel.deleteMessageById(message.getId()).queue();
+         * else
+         * message.addReaction(check).queue();
+         */
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Encrypted text with key: " + key);
         eb.setDescription(VWA_Verschluesseln.encrypter(content, key));
@@ -48,7 +50,7 @@ public class EncryptCMD implements IPublicCMD {
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
         StandardHelpEmbed make = new StandardHelpEmbed();
-        return make.    StandardHelp(prefix, getName(), "Encrypt text with Viginere or Caesar.", "crypt <key> <text>");
+        return make.StandardHelp(prefix, getName(), "Encrypt text with Viginere or Caesar.", "crypt <key> <text>");
     }
-    
+
 }

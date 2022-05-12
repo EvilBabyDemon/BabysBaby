@@ -1,18 +1,14 @@
 package CryptPart;
 
-
 public class VWA_Verschluesseln {
 
 	public static String encrypter(String t, String textcode) {
-		
 
 		t = t.toLowerCase();
 		t = t.replace("\u00e4", "ae");
 		t = t.replace("\u00f6", "oe");
 		t = t.replace("\u00fc", "ue");
 		t = t.replace("\u00df", "ss");
-		
-
 
 		char[] cde = new char[textcode.length()];
 
@@ -38,19 +34,18 @@ public class VWA_Verschluesseln {
 												// wird
 			neuCode[i] = code[i % code.length];
 		}
-		
+
 		int x = 0;
-		
+
 		for (int i = 0; i < a.length; i++) { // Schleife um den Text zu verschluesseln
-			
-			
-			if(!(a[i]>96 && a[i] < 123)) {
+
+			if (!(a[i] > 96 && a[i] < 123)) {
 				continue;
 			}
-			
+
 			a[i] = (char) (neuCode[x] + a[i]); // Buchstabe + Verschiebung (Zahl des Codes)
 			if (a[i] > 122) {
-				a[i] = (char) (-26 + a[i]); 
+				a[i] = (char) (-26 + a[i]);
 			}
 			x++;
 		}
@@ -59,7 +54,7 @@ public class VWA_Verschluesseln {
 		for (int i = 0; i < a.length; i++) {
 			encrypted += a[i];
 		}
-		
+
 		return encrypted;
 
 	}

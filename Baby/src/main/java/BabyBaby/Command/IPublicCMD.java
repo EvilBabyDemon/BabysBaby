@@ -4,25 +4,25 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public interface IPublicCMD extends IAdminCMD {
 
-    default boolean getWhiteListBool(){
+    default boolean getWhiteListBool() {
         return false;
     }
 
-    default void handleOwner(CommandContext ctx){
+    default void handleOwner(CommandContext ctx) {
         handlePublic(ctx);
     }
 
-    default void handleAdmin(CommandContext ctx){
+    default void handleAdmin(CommandContext ctx) {
         handlePublic(ctx);
     }
-    
+
     void handlePublic(CommandContext ctx);
 
-    default MessageEmbed getOwnerHelp(String prefix){
+    default MessageEmbed getOwnerHelp(String prefix) {
         return getPublicHelp(prefix);
     }
 
-    default MessageEmbed getAdminHelp(String prefix){
+    default MessageEmbed getAdminHelp(String prefix) {
         return getPublicHelp(prefix);
     }
 

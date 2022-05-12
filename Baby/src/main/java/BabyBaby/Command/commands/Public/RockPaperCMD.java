@@ -20,11 +20,11 @@ public class RockPaperCMD implements IPublicCMD {
     public void handlePublic(CommandContext ctx) {
         // TODO Put Bad User somewhere else (not hardcoded)
 
-        String[] baduser = {"304587987956531201"};
+        String[] baduser = { "304587987956531201" };
 
         List<String> args = ctx.getArgs();
 
-        MessageChannel channel = ctx.getChannel();    
+        MessageChannel channel = ctx.getChannel();
 
         // no subcommand -> allRoles
         if (args == null || args.isEmpty() || args.size() > 1) {
@@ -35,7 +35,7 @@ public class RockPaperCMD implements IPublicCMD {
         String content = args.get(0);
 
         String[] decision = { "rock", "paper", "scissors" };
-        
+
         boolean goodString = false;
         for (int i = 0; i < decision.length; i++) {
             if (decision[i].equals(content)) {
@@ -87,8 +87,8 @@ public class RockPaperCMD implements IPublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        return StandardHelp.Help(prefix, getName(), "<rock/paper/scissors>", "Play a game of Rock, Paper or Scissors against this Bot.");
+        return StandardHelp.Help(prefix, getName(), "<rock/paper/scissors>",
+                "Play a game of Rock, Paper or Scissors against this Bot.");
     }
 
-    
 }

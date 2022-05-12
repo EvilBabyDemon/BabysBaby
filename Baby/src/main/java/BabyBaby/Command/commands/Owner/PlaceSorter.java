@@ -29,15 +29,15 @@ public class PlaceSorter implements IOwnerCMD {
         MessageChannel channel = ctx.getChannel();
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
 
-        //Comments just for Georg
+        // Comments just for Georg
 
-        //Get everything
+        // Get everything
         List<String> cmds = ctx.getArgs();
         LinkedList<String> sort = new LinkedList<>();
         try {
             Scanner s = new Scanner(new File(Data.PLACE + cmds.get(0) + ".txt"));
-            
-            while(s.hasNext()){
+
+            while (s.hasNext()) {
                 sort.add(s.nextLine());
             }
             s.close();
@@ -45,22 +45,23 @@ public class PlaceSorter implements IOwnerCMD {
             e.printStackTrace();
         }
 
-        //with the HashMap we store all same entries together in one ArrayList
+        // with the HashMap we store all same entries together in one ArrayList
         HashMap<String, ArrayList<String>> adder = new HashMap<>();
         for (String hex : sort) {
-            
-            String hexString = hex.substring(hex.length()-6, hex.length());
-            int[] color_array = {Integer.parseInt(hexString.substring(0,2), 16),Integer.parseInt(hexString.substring(2,4), 16),Integer.parseInt(hexString.substring(4,6), 16)};
-            //This here to norm the colours to only 64 possibilities (our Buckets)
-            int norm = Math.max(color_array[0]+color_array[1]+color_array[2],1);
-            if(norm!=0){
-                color_array[0] = (int)Math.round(4.0*color_array[0]/norm);
-                color_array[1] = (int)Math.round(4.0*color_array[1]/norm);
-                color_array[2] = (int)Math.round(4.0*color_array[2]/norm);
-                
-                hexString = ""+color_array[0]+color_array[1]+color_array[2];
+
+            String hexString = hex.substring(hex.length() - 6, hex.length());
+            int[] color_array = { Integer.parseInt(hexString.substring(0, 2), 16),
+                    Integer.parseInt(hexString.substring(2, 4), 16), Integer.parseInt(hexString.substring(4, 6), 16) };
+            // This here to norm the colours to only 64 possibilities (our Buckets)
+            int norm = Math.max(color_array[0] + color_array[1] + color_array[2], 1);
+            if (norm != 0) {
+                color_array[0] = (int) Math.round(4.0 * color_array[0] / norm);
+                color_array[1] = (int) Math.round(4.0 * color_array[1] / norm);
+                color_array[2] = (int) Math.round(4.0 * color_array[2] / norm);
+
+                hexString = "" + color_array[0] + color_array[1] + color_array[2];
             }
-            //now you have 64 different colors to iterate through.
+            // now you have 64 different colors to iterate through.
 
             ArrayList<String> tmp = adder.getOrDefault(hexString, new ArrayList<String>());
             tmp.add(hex);
@@ -69,49 +70,51 @@ public class PlaceSorter implements IOwnerCMD {
 
         ArrayList<ArrayList<String>> copier = new ArrayList<>();
 
-        //Now we iterate all Buckets from the HashMap
+        // Now we iterate all Buckets from the HashMap
         HashMap<Thread, ArrayList<String>> threads = new HashMap<>();
 
         for (ArrayList<String> var : adder.values()) {
-            
+
             ArrayList<String> tmp = new ArrayList<>();
             for (String str : var) {
                 tmp.add(str);
             }
 
-            //Multithreading to sort every bucket 
+            // Multithreading to sort every bucket
             Thread t = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    //Simple Comparator to sort them
-                    Comparator<String> comp = new Comparator<String>(){
+                    // Simple Comparator to sort them
+                    Comparator<String> comp = new Comparator<String>() {
                         @Override
                         public int compare(String o1, String o2) {
-                            return Integer.parseInt(o1.substring(o1.length()-6, o1.length()),16)-Integer.parseInt(o2.substring(o2.length()-6, o2.length()),16);
+                            return Integer.parseInt(o1.substring(o1.length() - 6, o1.length()), 16)
+                                    - Integer.parseInt(o2.substring(o2.length() - 6, o2.length()), 16);
                         }
                     };
                     tmp.sort(comp);
                 }
             });
             t.start();
-            //Storing threads and Sorted Lists in a HashMap
+            // Storing threads and Sorted Lists in a HashMap
             threads.put(t, tmp);
         }
-        //I probably have way too many threads and this doesnt give any speedup but whatever xD
-        //joining all threads and adding them all together in one List
+        // I probably have way too many threads and this doesnt give any speedup but
+        // whatever xD
+        // joining all threads and adding them all together in one List
         for (Thread var : threads.keySet()) {
-            try{
+            try {
                 var.join();
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             copier.add(threads.get(var));
         }
 
-        //print everything in a file again
+        // print everything in a file again
         try {
-            PrintStream out = new PrintStream(new File(Data.PLACE + "sort" + cmds.get(0) + ".txt"));	
-            
+            PrintStream out = new PrintStream(new File(Data.PLACE + "sort" + cmds.get(0) + ".txt"));
+
             for (ArrayList<String> var : copier) {
                 for (String var2 : var) {
                     out.println(var2);
@@ -124,12 +127,12 @@ public class PlaceSorter implements IOwnerCMD {
             e.printStackTrace();
         }
         channel.sendMessage("Done").queue();
-        
+
     }
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<Filename>", "Command to sort a place file by colour.");
     }
-    
+
 }

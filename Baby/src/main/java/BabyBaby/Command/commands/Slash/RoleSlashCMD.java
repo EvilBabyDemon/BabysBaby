@@ -20,13 +20,13 @@ public class RoleSlashCMD implements ISlashCMD {
     @Override
     public void handle(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         Role role = event.getOption("role").getAsRole();
-        if(!Data.roles.contains(role.getId()) && !event.getMember().getId().equals(Data.myselfID)){
+        if (!Data.roles.contains(role.getId()) && !event.getMember().getId().equals(Data.myselfID)) {
             String nope = "I can't give you that role.";
             Helper.unhook(nope, failed, hook, event.getUser());
         } else {
             Helper.roleGiving(event.getMember(), event.getGuild(), failed, role, hook);
         }
-        
+
     }
 
     @Override
@@ -35,5 +35,5 @@ public class RoleSlashCMD implements ISlashCMD {
         role.addOption(OptionType.ROLE, "role", "The Role you want to have or get removed.", true);
         return role;
     }
-    
+
 }

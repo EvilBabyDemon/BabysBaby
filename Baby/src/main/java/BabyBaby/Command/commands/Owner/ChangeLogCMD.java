@@ -21,7 +21,7 @@ public class ChangeLogCMD implements IOwnerCMD {
         String result = "<:plusplus:816779826202411038> ";
 
         LinkedList<Emote> emo = new LinkedList<>();
-        
+
         for (String arg : ctx.getArgs()) {
             emo.add(ctx.getGuild().getEmotesByName(arg, true).get(0));
         }
@@ -40,5 +40,5 @@ public class ChangeLogCMD implements IOwnerCMD {
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<emote id> {emote id}", "To send animated emotes for changelog");
     }
-    
+
 }

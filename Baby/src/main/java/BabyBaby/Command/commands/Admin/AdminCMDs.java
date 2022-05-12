@@ -1,6 +1,5 @@
 package BabyBaby.Command.commands.Admin;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -34,27 +33,25 @@ import net.dv8tion.jda.api.entities.User;
 
 public class AdminCMDs {
 
-    //ban
+    // ban
     public static void ban(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
 
         MessageChannel channel = event.getChannel();
 
-        
-        if(!event.getMember().hasPermission(Permission.BAN_MEMBERS)){
+        if (!event.getMember().hasPermission(Permission.BAN_MEMBERS)) {
             Helper.unhook("Missing Permissions.", failed, hook, event.getUser());
             return;
         }
 
         Member bad = event.getOption("user").getAsMember();
-        
 
-        if(bad.getRoles().get(0).getPosition() >= event.getMember().getRoles().get(0).getPosition()){
+        if (bad.getRoles().get(0).getPosition() >= event.getMember().getRoles().get(0).getPosition()) {
             Helper.unhook("Can't ban someone with a higher or same role.", failed, hook, event.getUser());
             return;
         }
         String reason = event.getOption("reason", "", OptionMapping::getAsString);
 
-        if(reason==""){
+        if (reason == "") {
             bad.ban(0).complete();
         } else {
             bad.ban(0, reason).complete();
@@ -65,16 +62,17 @@ public class AdminCMDs {
         eb.setAuthor(author.getAsTag() + " (" + author.getId() + ")", author.getAvatarUrl(), author.getAvatarUrl());
         eb.setColor(0);
         eb.setThumbnail(author.getAvatarUrl());
-        eb.setDescription(":warning: **Banned** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
+        eb.setDescription(":warning: **Banned** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() + ")"
+                + " \n :page_facing_up: **Reason:** " + reason);
         channel.sendMessageEmbeds(eb.build()).queue();
         Helper.unhook("Done", failed, hook, event.getUser());
     }
 
-    //kick
+    // kick
     public static void kick(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         MessageChannel channel = event.getChannel();
-        
-        if(!event.getMember().hasPermission(Permission.KICK_MEMBERS)){
+
+        if (!event.getMember().hasPermission(Permission.KICK_MEMBERS)) {
             Helper.unhook("Missing Permissions.", failed, hook, event.getUser());
             return;
         }
@@ -83,34 +81,36 @@ public class AdminCMDs {
 
         String reason = event.getOption("reason", "", OptionMapping::getAsString);
 
-        if(bad.getRoles().get(0).getPosition() >= event.getMember().getRoles().get(0).getPosition()){
+        if (bad.getRoles().get(0).getPosition() >= event.getMember().getRoles().get(0).getPosition()) {
             Helper.unhook("Can't kick someone with a higher or same role.", failed, hook, event.getUser());
             return;
         }
 
-        if(reason==""){
+        if (reason == "") {
             bad.kick().complete();
         } else {
             bad.kick(reason).complete();
         }
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
+        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(),
+                event.getUser().getAvatarUrl());
         eb.setColor(0);
         eb.setThumbnail(event.getUser().getAvatarUrl());
-        
-        eb.setDescription(":warning: **Kicked** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
+
+        eb.setDescription(":warning: **Kicked** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() + ")"
+                + " \n :page_facing_up: **Reason:** " + reason);
         channel.sendMessageEmbeds(eb.build()).queue();
 
         Helper.unhook("Done.", failed, hook, event.getUser());
     }
 
-    //warn
+    // warn
     public static void warn(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         MessageChannel channel = event.getChannel();
         String person = event.getOption("user").getAsString();
         String reason = event.getOption("reason").getAsString();
-        
+
         LocalDate time = LocalDate.now();
 
         String date = time.getDayOfMonth() + "." + time.getMonthValue() + "." + time.getYear();
@@ -118,15 +118,14 @@ public class AdminCMDs {
         Connection c = null;
         PreparedStatement stmt = null;
 
-        try { 	
+        try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
 
-            
             String sql = "INSERT INTO WARNINGS (USER,REASON,DATE) " +
-                            "VALUES (?,?,?);"; 
+                    "VALUES (?,?,?);";
             stmt = c.prepareStatement(sql);
-            
+
             stmt.setLong(1, Long.parseLong(person));
             stmt.setString(2, reason);
             stmt.setString(3, date);
@@ -134,7 +133,7 @@ public class AdminCMDs {
 
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             e.printStackTrace();
             return;
@@ -143,38 +142,40 @@ public class AdminCMDs {
         MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
+        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(),
+                event.getUser().getAvatarUrl());
         eb.setColor(0);
         eb.setThumbnail(event.getGuild().getMemberById(person).getUser().getAvatarUrl());
         Member warned = event.getGuild().getMemberById(person);
 
-        eb.setDescription(":warning: **Warned** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() +")"+ " \n :page_facing_up: **Reason:** " + reason);
+        eb.setDescription(":warning: **Warned** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() + ")"
+                + " \n :page_facing_up: **Reason:** " + reason);
 
         log.sendMessageEmbeds(eb.build()).queue();
 
         event.getChannel().sendMessageEmbeds(eb.build()).queue();
 
         warned.getUser().openPrivateChannel().complete().sendMessageEmbeds(eb.build()).queue();
-        Helper.unhook("Done", failed, hook, event.getUser());   
+        Helper.unhook("Done", failed, hook, event.getUser());
     }
 
-    //timeout
+    // timeout
     public static void timeout(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         Member bad = event.getOption("user").getAsMember();
         double time = event.getOption("time").getAsDouble();
         String unit = event.getOption("unit").getAsString();
-        String reason = event.getOption("reason", "", OptionMapping::getAsString); 
-        
+        String reason = event.getOption("reason", "", OptionMapping::getAsString);
+
         Object[] retrieverObj = Helper.getUnits(unit, time);
-        String strUnit = ""+retrieverObj[0];
+        String strUnit = "" + retrieverObj[0];
         long rounder = (long) retrieverObj[1];
-        
-        if(!event.getMember().hasPermission(Permission.MODERATE_MEMBERS)) {
+
+        if (!event.getMember().hasPermission(Permission.MODERATE_MEMBERS)) {
             Helper.unhook("Need moderate Members permissions!", failed, hook, event.getUser());
             return;
         }
 
-        if(bad.hasPermission(Permission.ADMINISTRATOR)) {
+        if (bad.hasPermission(Permission.ADMINISTRATOR)) {
             Helper.unhook("Can't timeout an Admin.", failed, hook, event.getUser());
             return;
         }
@@ -184,94 +185,92 @@ public class AdminCMDs {
         } catch (Exception e) {
             Helper.unhook("Pretty sure the time was too long.", failed, hook, event.getUser());
         }
-        
+
         String timeMessage = bad.getAsMention() + "was timed out for " + time + " " + strUnit;
         Helper.unhook(timeMessage, failed, hook, event.getUser());
-        
+
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(), event.getUser().getAvatarUrl());
+        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(),
+                event.getUser().getAvatarUrl());
         eb.setColor(0);
         eb.setThumbnail(event.getUser().getAvatarUrl());
-        
-        eb.setDescription(":warning: **Timeout** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() +")"+ " \n" + 
-         " :page_facing_up: **Reason:** " + reason + "\n" + timeMessage);
-        event.getChannel().sendMessageEmbeds(eb.build()).queue();
 
+        eb.setDescription(":warning: **Timeout** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() + ")" + " \n" +
+                " :page_facing_up: **Reason:** " + reason + "\n" + timeMessage);
+        event.getChannel().sendMessageEmbeds(eb.build()).queue();
 
     }
 
-    //edit Assign
+    // edit Assign
     public static void editAssign(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         Connection c = null;
         Statement stmt = null;
         MessageChannel channel = event.getChannel();
-        HashSet<String> cats = new HashSet<String>(); 
+        HashSet<String> cats = new HashSet<String>();
 
         ResultSet rs;
 
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            
+
             stmt = c.createStatement();
 
             rs = stmt.executeQuery("SELECT categories FROM ASSIGNROLES;");
-            while ( rs.next() ) {
+            while (rs.next()) {
                 String cat = rs.getString("categories");
                 cats.add(cat);
             }
-            
+
             rs.close();
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
-            channel.sendMessage( e.getClass().getName() + ": " + e.getMessage()).queue();
-            e.printStackTrace(); 
+        } catch (Exception e) {
+            channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+            e.printStackTrace();
             return;
         }
-        
-        //doing embeds with each category
+
+        // doing embeds with each category
 
         String msg = "";
 
         LinkedList<LinkedList<String>> emotes = new LinkedList<>();
         ArrayList<String> categ = new ArrayList<>();
         LinkedList<String> roles = new LinkedList<>();
-        
+
         for (String strCateg : cats) {
             HashMap<Role, Object[]> sorting = new HashMap<>();
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
-                
+
                 stmt = c.createStatement();
 
                 Guild called = event.getGuild();
                 rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + strCateg + "';");
-                while ( rs.next() ) {
+                while (rs.next()) {
                     String rcat = rs.getString("ID");
                     String emoteStr = rs.getString("EMOTE");
                     String orig = emoteStr;
 
-
                     try {
                         Long.parseLong(emoteStr);
                         try {
-                            emoteStr = event.getJDA().getEmoteById(emoteStr).getAsMention();   
+                            emoteStr = event.getJDA().getEmoteById(emoteStr).getAsMention();
                         } catch (Exception e) {
                             emoteStr = "ERROR";
                         }
                     } catch (Exception e) {
                     }
 
-
-                    msg = emoteStr + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
-                    sorting.put(called.getRoleById(rcat), new Object[] {orig, msg});
+                    msg = emoteStr + " : " + called.getRoleById(rcat).getAsMention() + "\n";
+                    sorting.put(called.getRoleById(rcat), new Object[] { orig, msg });
                 }
                 rs.close();
                 stmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 e.printStackTrace();
                 return;
@@ -303,39 +302,38 @@ public class AdminCMDs {
             LinkedList<String> tempEmo = new LinkedList<>();
             tempEmo.addAll(emotes.remove(0));
 
-            
             ArrayList<Button> butt = new ArrayList<>();
             for (String emoID : tempEmo) {
-                
+
                 boolean gemo = false;
-                
+
                 try {
                     Long.parseLong(emoID);
                     gemo = true;
                 } catch (Exception e) {
                 }
-                
-                try{
-                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
-                } catch (Exception e){
-                    event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+
+                try {
+                    butt.add(Button.primary(emoID,
+                            gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoID)) : Emoji.fromUnicode(emoID)));
+                } catch (Exception e) {
+                    event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete()
+                            .delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
-            
-
             LinkedList<ActionRow> acR = new LinkedList<>();
-            for (int i = 0; i < butt.size(); i +=5) {
+            for (int i = 0; i < butt.size(); i += 5) {
                 ArrayList<Button> row = new ArrayList<>();
-                for (int j = 0; j < 5 && j+i < butt.size(); j++) {
-                    row.add(butt.get(i+j));
+                for (int j = 0; j < 5 && j + i < butt.size(); j++) {
+                    row.add(butt.get(i + j));
                 }
                 acR.add(ActionRow.of(row));
             }
 
             MessageAction msgAct;
 
-            if(!Data.catToMsg.containsKey(categ.get(k))){
+            if (!Data.catToMsg.containsKey(categ.get(k))) {
                 msgAct = channel.sendMessageEmbeds(eb.build());
                 msgAct.setActionRows(acR);
                 Message msgs = msgAct.complete();
@@ -344,28 +342,28 @@ public class AdminCMDs {
                 templist.add(msgs.getId());
                 Data.catToMsg.put(categ.get(k), templist);
                 Data.msgToChan.put(msgs.getId(), msgs.getChannel().getId());
-                
+
                 c = null;
                 PreparedStatement pstmt = null;
                 try {
                     Class.forName("org.sqlite.JDBC");
                     c = DriverManager.getConnection(Data.db);
-                    pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
+                    pstmt = c.prepareStatement(
+                            "INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
                     pstmt.setString(1, event.getGuild().getId());
                     pstmt.setString(2, event.getChannel().getId());
                     pstmt.setString(3, msgs.getId());
-                    pstmt.setString(4, categ.get(k)); 
+                    pstmt.setString(4, categ.get(k));
                     pstmt.executeUpdate();
                     pstmt.close();
                     c.close();
-                } catch ( Exception e ) {
-                    e.printStackTrace(); 
+                } catch (Exception e) {
+                    e.printStackTrace();
                     return;
                 }
                 continue;
             }
 
-            
             for (String msgid : Data.catToMsg.get(categ.get(k))) {
                 TextChannel chan = event.getGuild().getTextChannelById(Data.msgToChan.get(msgid));
                 try {
@@ -375,14 +373,13 @@ public class AdminCMDs {
                     remover.add(msgid);
                     continue;
                 }
-                
+
                 msgAct.setActionRows(acR);
                 msgAct.complete();
             }
 
         }
 
-        
         for (String oldMsgID : remover) {
             c = null;
             PreparedStatement pstmt = null;
@@ -394,19 +391,20 @@ public class AdminCMDs {
                 pstmt.executeUpdate();
                 pstmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
-                e.printStackTrace(); 
+                e.printStackTrace();
             }
             Data.msgid.remove(oldMsgID);
-            
+
             Data.msgToChan.remove(oldMsgID);
         }
         Helper.unhook("Done", failed, hook, event.getUser());
-	}
-    //helper for editAssign
-    private static EmbedBuilder embeds(String title, String msg){
-        
+    }
+
+    // helper for editAssign
+    private static EmbedBuilder embeds(String title, String msg) {
+
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle(title);
         eb.setColor(1);
@@ -415,13 +413,14 @@ public class AdminCMDs {
 
         return eb;
     }
-    //helper for editAssign
-    private static LinkedList<Object[]> rolesorter (HashMap<Role, Object[]> sorting){
+
+    // helper for editAssign
+    private static LinkedList<Object[]> rolesorter(HashMap<Role, Object[]> sorting) {
         LinkedList<Object[]> res = new LinkedList<>();
-        while(sorting.size()!=0){
+        while (sorting.size() != 0) {
             Role highest = null;
             for (Role role : sorting.keySet()) {
-                if(highest == null || role.getPosition() > highest.getPosition()){
+                if (highest == null || role.getPosition() > highest.getPosition()) {
                     highest = role;
                 }
             }
@@ -431,29 +430,27 @@ public class AdminCMDs {
         return res;
     }
 
-    //Addrole
+    // Addrole
     public static void addrole(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
 
         String id = event.getOption("role").getAsString();
         String emote = event.getOption("emote").getAsString();
         String categ = event.getOption("category", "", OptionMapping::getAsString);
-        if(emote.contains("<")){
+        if (emote.contains("<")) {
             emote = emote.split(":")[2];
             emote.replace(">", "");
         }
-        if(categ.equals("")){
+        if (categ.equals("")) {
             categ = "Other";
-        } 
-        
+        }
 
         Connection c = null;
         PreparedStatement pstmt = null;
-        try { 	
+        try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
 
-            
-            String sql = "INSERT INTO ASSIGNROLES (ID,CATEGORIES,EMOTE) VALUES (?, ?, ?);"; 
+            String sql = "INSERT INTO ASSIGNROLES (ID,CATEGORIES,EMOTE) VALUES (?, ?, ?);";
             pstmt = c.prepareStatement(sql);
             pstmt.setLong(1, Long.parseLong(id));
             pstmt.setString(2, categ);
@@ -462,7 +459,7 @@ public class AdminCMDs {
 
             pstmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             Helper.unhook(e.getClass().getName() + ": " + e.getMessage(), failed, hook, event.getUser());
             return;
         }
@@ -472,15 +469,15 @@ public class AdminCMDs {
         Helper.unhook("Done", failed, hook, event.getUser());
     }
 
-    //getWarnings
+    // getWarnings
     public static void getWarnings(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         MessageChannel channel = event.getChannel();
-        
+
         boolean ephemeral = event.getOption("ephemeral", true, OptionMapping::getAsBoolean);
-        
+
         String person = "";
 
-        if(event.getOption("user") == null && event.getOption("userid") == null)  {
+        if (event.getOption("user") == null && event.getOption("userid") == null) {
             getWarned(event, hook, failed, ephemeral);
             return;
         } else if (event.getOption("user") != null) {
@@ -488,48 +485,46 @@ public class AdminCMDs {
         } else {
             person = event.getOption("userid").getAsString();
         }
-        
 
         EmbedBuilder eb = new EmbedBuilder();
-        try{
+        try {
             Member warned = event.getGuild().getMemberById(person);
-            eb.setAuthor("Warnings from " + warned.getEffectiveName() + " (" + warned.getUser().getAsTag() + ")", warned.getUser().getAvatarUrl(), warned.getUser().getAvatarUrl());
-        } catch (Exception e){
+            eb.setAuthor("Warnings from " + warned.getEffectiveName() + " (" + warned.getUser().getAsTag() + ")",
+                    warned.getUser().getAvatarUrl(), warned.getUser().getAvatarUrl());
+        } catch (Exception e) {
             eb.setAuthor("Warnings from " + person);
         }
-        
-        eb.setColor(1);
 
+        eb.setColor(1);
 
         Connection c = null;
         PreparedStatement stmt = null;
 
-        try { 	
+        try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
 
-            
             String sql = "SELECT * FROM WARNINGS WHERE USER = ?;";
             stmt = c.prepareStatement(sql);
             stmt.setLong(1, Long.parseLong(person));
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 String time = rs.getString("DATE");
                 String reason = rs.getString("REASON");
                 eb.addField(time, reason, true);
             }
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             return;
         }
-        
+
         String nickname = (event.getMember().getNickname() != null) ? event.getMember().getNickname()
                 : event.getMember().getEffectiveName();
         eb.setFooter("Summoned by: " + nickname, event.getUser().getAvatarUrl());
 
-        if(ephemeral){
+        if (ephemeral) {
             Helper.unhook(eb.build(), failed, hook, event.getUser());
         } else {
             channel.sendMessageEmbeds(eb.build()).queue();
@@ -537,27 +532,28 @@ public class AdminCMDs {
 
     }
 
-    //getWarned
-    private static void getWarned(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed, boolean ephemeral) {
+    // getWarned
+    private static void getWarned(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed,
+            boolean ephemeral) {
         MessageChannel channel = event.getChannel();
         HashSet<String> UserIds = new HashSet<>();
-        
+
         Connection c = null;
         Statement stmt = null;
 
-        try { 	
+        try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
 
             stmt = c.createStatement();
             String sql = "SELECT USER FROM WARNINGS;";
             ResultSet rs = stmt.executeQuery(sql);
-            while ( rs.next() ) 
+            while (rs.next())
                 UserIds.add(rs.getString("USER"));
-            
+
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             return;
         }
@@ -567,14 +563,14 @@ public class AdminCMDs {
         eb.setColor(1);
 
         String all = "";
-        if(UserIds.size() != 0){
-            for (String userID : UserIds){
+        if (UserIds.size() != 0) {
+            for (String userID : UserIds) {
                 try {
-                    all += event.getGuild().getMemberById(userID).getAsMention() + "\n";    
+                    all += event.getGuild().getMemberById(userID).getAsMention() + "\n";
                 } catch (Exception e) {
                     all += userID + "\n";
                 }
-                
+
             }
         }
 
@@ -582,16 +578,16 @@ public class AdminCMDs {
         String nickname = (event.getMember().getNickname() != null) ? event.getMember().getNickname()
                 : event.getMember().getEffectiveName();
         eb.setFooter("Summoned by: " + nickname, event.getUser().getAvatarUrl());
-        if(ephemeral){
+        if (ephemeral) {
             Helper.unhook(eb.build(), failed, hook, event.getUser());
         } else {
             event.getChannel().sendMessageEmbeds(eb.build()).queue();
         }
     }
-    
-    //newRole, Rolebutton
+
+    // newRole, Rolebutton
     public static void newRole(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
-        
+
         Role newRole = event.getOption("role").getAsRole();
 
         Connection c = null;
@@ -617,46 +613,47 @@ public class AdminCMDs {
             gemo = true;
         } catch (Exception e) {
         }
-        String msgID = event.getChannel().sendMessage("Get " + newRole.getName() + " with this button:").setActionRow(Button.primary(emoteStr, gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoteStr)): Emoji.fromUnicode(emoteStr))).complete().getId();
+        String msgID = event.getChannel().sendMessage("Get " + newRole.getName() + " with this button:")
+                .setActionRow(Button.primary(emoteStr,
+                        gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoteStr)) : Emoji.fromUnicode(emoteStr)))
+                .complete().getId();
         Data.buttonid.add(msgID);
         Helper.unhook("Done", failed, hook, event.getUser());
     }
 
-    //assign
+    // assign
     public static void roleAssign(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         Connection c = null;
         Statement stmt = null;
         MessageChannel channel = event.getChannel();
-        HashSet<String> cats = new HashSet<String>(); 
+        HashSet<String> cats = new HashSet<String>();
 
         ResultSet rs;
 
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            
+
             stmt = c.createStatement();
 
             rs = stmt.executeQuery("SELECT categories FROM ASSIGNROLES;");
-            while ( rs.next() ) {
+            while (rs.next()) {
                 String cat = rs.getString("categories");
                 cats.add(cat);
             }
-            
+
             rs.close();
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
-            channel.sendMessage( e.getClass().getName() + ": " + e.getMessage()).queue();
-            e.printStackTrace(); 
+        } catch (Exception e) {
+            channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
+            e.printStackTrace();
             return;
         }
-        
-        //doing embeds with each category
+
+        // doing embeds with each category
 
         String msg = "";
-
-
 
         LinkedList<LinkedList<String>> emotes = new LinkedList<>();
         ArrayList<String> categ = new ArrayList<>();
@@ -667,12 +664,12 @@ public class AdminCMDs {
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
-                
+
                 stmt = c.createStatement();
 
                 Guild called = event.getGuild();
                 rs = stmt.executeQuery("SELECT * FROM ASSIGNROLES WHERE categories='" + strCats + "';");
-                while ( rs.next() ) {
+                while (rs.next()) {
                     String rcat = rs.getString("ID");
                     String emote = rs.getString("EMOTE");
                     String orig = emote;
@@ -680,20 +677,20 @@ public class AdminCMDs {
                     try {
                         Long.parseLong(emote);
                         try {
-                            emote = event.getJDA().getEmoteById(emote).getAsMention();   
+                            emote = event.getJDA().getEmoteById(emote).getAsMention();
                         } catch (Exception e) {
                             emote = "ERROR";
                         }
                     } catch (Exception e) {
                     }
 
-                    msg = emote + " : "+ called.getRoleById(rcat).getAsMention() + "\n";
-                    sorting.put(called.getRoleById(rcat), new Object[] {orig, msg});
+                    msg = emote + " : " + called.getRoleById(rcat).getAsMention() + "\n";
+                    sorting.put(called.getRoleById(rcat), new Object[] { orig, msg });
                 }
                 rs.close();
                 stmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 return;
             }
@@ -714,7 +711,6 @@ public class AdminCMDs {
 
         ArrayList<EmbedBuilder> emb = new ArrayList<>();
 
-
         for (int i = 0; i < categ.size(); i++) {
             emb.add(embeds(categ.get(i), roles.get(i)));
         }
@@ -723,31 +719,32 @@ public class AdminCMDs {
             LinkedList<String> emoList = new LinkedList<>();
             emoList.addAll(emotes.remove(0));
 
-            
             ArrayList<Button> butt = new ArrayList<>();
             for (String emoID : emoList) {
                 boolean gemo = false;
-                
+
                 try {
                     Long.parseLong(emoID);
                     gemo = true;
                 } catch (Exception e) {
                 }
-                
-                try{
-                    butt.add(Button.primary(emoID, gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoID)): Emoji.fromUnicode(emoID)));
-                } catch (Exception e){
-                    event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete().delete().queueAfter(10, TimeUnit.SECONDS);
+
+                try {
+                    butt.add(Button.primary(emoID,
+                            gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoID)) : Emoji.fromUnicode(emoID)));
+                } catch (Exception e) {
+                    event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete()
+                            .delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
             MessageAction msgAct = channel.sendMessageEmbeds(eb.build());
-            
+
             LinkedList<ActionRow> acR = new LinkedList<>();
-            for (int i = 0; i < butt.size(); i +=5) {
+            for (int i = 0; i < butt.size(); i += 5) {
                 ArrayList<Button> row = new ArrayList<>();
-                for (int j = 0; j < 5 && j+i < butt.size(); j++) {
-                    row.add(butt.get(i+j));
+                for (int j = 0; j < 5 && j + i < butt.size(); j++) {
+                    row.add(butt.get(i + j));
                 }
                 acR.add(ActionRow.of(row));
             }
@@ -758,52 +755,51 @@ public class AdminCMDs {
             ArrayList<String> templist = Data.catToMsg.getOrDefault(categ.get(k), new ArrayList<String>());
             templist.add(msgs.getId());
             Data.catToMsg.put(categ.get(k), templist);
-            
+
             Data.msgToChan.put(msgs.getId(), msgs.getChannel().getId());
-            
+
             c = null;
             PreparedStatement pstmt = null;
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
-                pstmt = c.prepareStatement("INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
+                pstmt = c.prepareStatement(
+                        "INSERT INTO MSGS (GUILDID, CHANNELID, MSGID, CATEGORY) VALUES (?, ?, ?, ?);");
                 pstmt.setString(1, event.getGuild().getId());
                 pstmt.setString(2, event.getChannel().getId());
                 pstmt.setString(3, msgs.getId());
-                pstmt.setString(4, categ.get(k)); 
+                pstmt.setString(4, categ.get(k));
                 pstmt.executeUpdate();
                 pstmt.close();
                 c.close();
-            } catch ( Exception e ) {
-                e.printStackTrace(); 
+            } catch (Exception e) {
+                e.printStackTrace();
                 return;
             }
         }
 
-        Helper.unhook("Done!", failed, hook,event.getUser());
-    } 
+        Helper.unhook("Done!", failed, hook, event.getUser());
+    }
 
-    //delrole
+    // delrole
     public static void delRole(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         String roleid = "";
-        if(event.getOption("role") == null && event.getOption("roleid") == null){
+        if (event.getOption("role") == null && event.getOption("roleid") == null) {
             Helper.unhook("You need to use at least one field!", failed, hook, event.getUser());
-            return;  
+            return;
         } else if (event.getOption("role") != null) {
             roleid = event.getOption("role").getAsString();
         } else {
             roleid = event.getOption("roleid").getAsString();
         }
-        
-        
 
-        if(!Data.roles.contains(roleid)){
+        if (!Data.roles.contains(roleid)) {
             Helper.unhook("Role doesn't exist sry.", failed, hook, event.getUser());
             return;
         }
         Data.roles.remove(roleid);
         for (String emoteID : Data.emoteassign.keySet()) {
-            if(Data.emoteassign.get(emoteID).equals(roleid)){
+            if (Data.emoteassign.get(emoteID).equals(roleid)) {
                 Data.emoteassign.remove(emoteID);
                 break;
             }
@@ -817,34 +813,34 @@ public class AdminCMDs {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
             c.setAutoCommit(false);
-    
+
             stmt = c.createStatement();
             String sql = "DELETE from ASSIGNROLES where ID=" + roleid + ";";
             stmt.executeUpdate(sql);
             c.commit();
-                
+
             stmt.close();
             c.close();
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             return;
         }
         Helper.unhook("Done!", failed, hook, event.getUser());
     }
-    
-    //roleid
+
+    // roleid
     public static void roleID(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         Connection c = null;
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
-            
+
             stmt = c.createStatement();
 
             ResultSet rs = stmt.executeQuery("SELECT ID FROM ASSIGNROLES;");
             String result = "";
-            while ( rs.next() ) {
+            while (rs.next()) {
                 String id = rs.getString("id");
 
                 String rolename = "**deleted-role**";
@@ -859,17 +855,18 @@ public class AdminCMDs {
             stmt.close();
             c.close();
             Helper.unhook(result, failed, hook, event.getUser());
-         } catch ( Exception e ) {
+        } catch (Exception e) {
             Helper.unhook(e.getClass().getName() + ": " + e.getMessage(), failed, hook, event.getUser());
             return;
-         }
+        }
     }
 
-    //updateRole
+    // updateRole
     public static void updateRole(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
         String roleID = event.getOption("roleid").getAsString();
 
-        if(event.getOption("emote") == null && event.getOption("newrole") == null && event.getOption("category") == null) {
+        if (event.getOption("emote") == null && event.getOption("newrole") == null
+                && event.getOption("category") == null) {
             Helper.unhook("Provide at least one of the optional fields.", failed, hook, event.getUser());
             return;
         }
@@ -878,10 +875,9 @@ public class AdminCMDs {
         Connection c = null;
         Statement stmt = null;
 
-
         String update = "";
-        
-        if(event.getOption("emote") != null) {
+
+        if (event.getOption("emote") != null) {
             update = event.getOption("emote").getAsString();
             try {
                 Class.forName("org.sqlite.JDBC");
@@ -889,18 +885,18 @@ public class AdminCMDs {
                 update = update.replace("<", "");
                 update = update.replace(">", "");
                 stmt = c.createStatement();
-                String sql= "UPDATE ASSIGNROLES SET EMOTE = '" + update + "' where ID=" + roleID + ";";
-                stmt.executeUpdate(sql); 
-                
+                String sql = "UPDATE ASSIGNROLES SET EMOTE = '" + update + "' where ID=" + roleID + ";";
+                stmt.executeUpdate(sql);
+
                 stmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 return;
             }
             String oldemo = "";
             for (String emoteID : Data.emoteassign.keySet()) {
-                if(Data.emoteassign.get(emoteID).equals(roleID)){
+                if (Data.emoteassign.get(emoteID).equals(roleID)) {
                     oldemo = emoteID;
                     break;
                 }
@@ -908,21 +904,21 @@ public class AdminCMDs {
             Data.emoteassign.remove(oldemo);
             Data.emoteassign.put(update, roleID);
         }
-        
-        if(event.getOption("newrole") != null) {
+
+        if (event.getOption("newrole") != null) {
             update = event.getOption("newrole").getAsString();
-            
+
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
-                
-                stmt = c.createStatement(); 
+
+                stmt = c.createStatement();
                 String sql = "UPDATE ASSIGNROLES SET ID = " + update + " where ID=" + roleID + ";";
                 stmt.executeUpdate(sql);
-        
+
                 stmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 return;
             }
@@ -930,20 +926,20 @@ public class AdminCMDs {
             Data.roles.add(roleID);
         }
 
-        if(event.getOption("category") != null) {
+        if (event.getOption("category") != null) {
             update = event.getOption("category").getAsString();
 
             try {
                 Class.forName("org.sqlite.JDBC");
                 c = DriverManager.getConnection(Data.db);
-        
+
                 stmt = c.createStatement();
                 String sql = "UPDATE ASSIGNROLES SET categories = '" + update + "' where ID=" + roleID + ";";
                 stmt.executeUpdate(sql);
-        
+
                 stmt.close();
                 c.close();
-            } catch ( Exception e ) {
+            } catch (Exception e) {
                 channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
                 return;
             }

@@ -18,9 +18,9 @@ public class SayCMD implements IOwnerCMD {
     public void handleOwner(CommandContext ctx) {
 
         List<String> contentList = ctx.getArgs();
-        if(contentList == null || contentList.size()==0)
+        if (contentList == null || contentList.size() == 0)
             return;
-        
+
         String content = ctx.getMessage().getContentRaw().substring(4);
         ctx.getChannel().deleteMessageById(ctx.getMessage().getId()).queue();
         ctx.getChannel().sendMessage(content).queue();
@@ -30,5 +30,5 @@ public class SayCMD implements IOwnerCMD {
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<txt>", "A simple say command.");
     }
-    
+
 }

@@ -1,13 +1,12 @@
 package BabyBaby.Command.commands.Owner;
 
-
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.Command.commands.Bot.button;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class SetButtonCMD implements IOwnerCMD{
+public class SetButtonCMD implements IOwnerCMD {
 
     @Override
     public String getName() {
@@ -23,5 +22,5 @@ public class SetButtonCMD implements IOwnerCMD{
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<int>", "Sets a number higher, idk.");
     }
-    
+
 }

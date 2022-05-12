@@ -1,6 +1,5 @@
 package CryptPart;
 
-
 public class VWA_HelperEntschluesseln {
 
 	/*
@@ -12,14 +11,14 @@ public class VWA_HelperEntschluesseln {
 	public static String textCleaner(String text) {
 
 		text = text.toLowerCase();
-		//text = text.replace("\u00e4", "ae");
-		//text = text.replace("\u00f6", "oe");
-		//text = text.replace("\u00fc", "ue");
-		//text = text.replace("\u00df", "ss");
-		
+		// text = text.replace("\u00e4", "ae");
+		// text = text.replace("\u00f6", "oe");
+		// text = text.replace("\u00fc", "ue");
+		// text = text.replace("\u00df", "ss");
+
 		String text2 = "";
 		for (int i = 0; i < text.length(); i++) {
-			if(!(text.charAt(i)>96 && text.charAt(i) < 123)) {
+			if (!(text.charAt(i) > 96 && text.charAt(i) < 123)) {
 				continue;
 			}
 			text2 += text.charAt(i);

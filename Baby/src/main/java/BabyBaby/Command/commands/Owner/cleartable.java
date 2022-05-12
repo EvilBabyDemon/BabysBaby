@@ -11,7 +11,7 @@ import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public class cleartable implements IOwnerCMD{
+public class cleartable implements IOwnerCMD {
 
     @Override
     public String getName() {
@@ -28,26 +28,26 @@ public class cleartable implements IOwnerCMD{
             c = DriverManager.getConnection(Data.db);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
-            
+
             stmt = c.createStatement();
 
             stmt.executeQuery("DELETE FROM" + ctx.getArgs().get(0) + ";");
-            
+
             stmt.close();
             c.close();
-            } catch ( Exception e ) {
+        } catch (Exception e) {
             channel.sendMessage(e.getClass().getName() + ": " + e.getMessage()).queue();
             return;
-            }
+        }
         System.out.println("Get done successfully");
 
         channel.deleteMessageById(ctx.getMessage().getId()).queue();
-        
+
     }
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
         return StandardHelp.Help(prefix, getName(), "<tablename>", "Command to clear all entries in a table.");
     }
-    
+
 }
