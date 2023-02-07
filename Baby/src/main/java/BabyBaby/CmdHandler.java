@@ -27,52 +27,21 @@ public class CmdHandler {
         // adding commands visible to @everyone
         addPublicCommand(new PingCMD());
         addPublicCommand(new AllRolesCMD());
-        addPublicCommand(new DecryptCMD());
-        addPublicCommand(new DuckyCMD());
 
-        addPublicCommand(new EncryptCMD());
         addPublicCommand(new GetRoleCMD());
 
-        addPublicCommand(new NoKeyCMD());
         addPublicCommand(new PolyCMD());
-        // addPublicCommand(new ReminderCMD());
         addPublicCommand(new RockPaperCMD());
-        // addPublicCommand(new RoleMuteCMD());
         addPublicCommand(new SieveCMD());
         addPublicCommand(new SourceCMD());
         addPublicCommand(new SuggestionCMD());
-        // addPublicCommand(new PollCMD());
         addPublicCommand(new PlaceGifCMD());
         addPublicCommand(new BotsOnlineCMD());
-        // addPublicCommand(new BlindCMD());
         addPublicCommand(new UnBlindCMD());
         addPublicCommand(new FlashedCMD());
-        // addPublicCommand(new BlindForceCMD());
         addPublicCommand(new TillBlindCMD());
 
-        // at the moment completely useless
-        // addPublicCommand(new EmoteQueryCMD());
         addPublicCommand(new UsageCMD());
-
-        // adding commands visible to @admin
-        /*
-         * Everything slash now
-         * addAdminCommand(new AddRoleCMD());
-         * addAdminCommand(new DelRoleCMD());
-         * addAdminCommand(new RoleIdCMD());
-         * addAdminCommand(new UpdateRoleCMD());
-         * addAdminCommand(new WhoisCMD());
-         * addAdminCommand(new RoleAssignCMD());
-         * addAdminCommand(new WarnCMD());
-         * addAdminCommand(new GetWarnedCMD());
-         * addAdminCommand(new GetWarningsFromUserCMD());
-         * addAdminCommand(new EditAssignCMD());
-         * addAdminCommand(new KickCMD());
-         * addAdminCommand(new BanCMD());
-         * addAdminCommand(new NewRoleCMD());
-         */
-        // TODO Fix that cmd
-        // addAdminCommand(new AdminMuteBlindCMD());
 
         // adding commands visible to owner
         addOwnerCommand(new AdminHelpCMD());
