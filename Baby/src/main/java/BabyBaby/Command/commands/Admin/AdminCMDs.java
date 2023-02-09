@@ -15,95 +15,26 @@ import java.util.concurrent.TimeUnit;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.LayoutComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 public class AdminCMDs {
-
-    // ban
-    public static void ban(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
-
-        MessageChannel channel = event.getChannel();
-
-        if (!event.getMember().hasPermission(Permission.BAN_MEMBERS)) {
-            Helper.unhook("Missing Permissions.", failed, hook, event.getUser());
-            return;
-        }
-
-        Member bad = event.getOption("user").getAsMember();
-
-        if (bad.getRoles().get(0).getPosition() >= event.getMember().getRoles().get(0).getPosition()) {
-            Helper.unhook("Can't ban someone with a higher or same role.", failed, hook, event.getUser());
-            return;
-        }
-        String reason = event.getOption("reason", "", OptionMapping::getAsString);
-
-        if (reason == "") {
-            bad.ban(0).complete();
-        } else {
-            bad.ban(0, reason).complete();
-        }
-
-        User author = event.getUser();
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(author.getAsTag() + " (" + author.getId() + ")", author.getAvatarUrl(), author.getAvatarUrl());
-        eb.setColor(0);
-        eb.setThumbnail(author.getAvatarUrl());
-        eb.setDescription(":warning: **Banned** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() + ")"
-                + " \n :page_facing_up: **Reason:** " + reason);
-        channel.sendMessageEmbeds(eb.build()).queue();
-        Helper.unhook("Done", failed, hook, event.getUser());
-    }
-
-    // kick
-    public static void kick(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
-        MessageChannel channel = event.getChannel();
-
-        if (!event.getMember().hasPermission(Permission.KICK_MEMBERS)) {
-            Helper.unhook("Missing Permissions.", failed, hook, event.getUser());
-            return;
-        }
-
-        Member bad = event.getOption("kick").getAsMember();
-
-        String reason = event.getOption("reason", "", OptionMapping::getAsString);
-
-        if (bad.getRoles().get(0).getPosition() >= event.getMember().getRoles().get(0).getPosition()) {
-            Helper.unhook("Can't kick someone with a higher or same role.", failed, hook, event.getUser());
-            return;
-        }
-
-        if (reason == "") {
-            bad.kick().complete();
-        } else {
-            bad.kick(reason).complete();
-        }
-
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(),
-                event.getUser().getAvatarUrl());
-        eb.setColor(0);
-        eb.setThumbnail(event.getUser().getAvatarUrl());
-
-        eb.setDescription(":warning: **Kicked** " + bad.getAsMention() + "(" + bad.getUser().getAsTag() + ")"
-                + " \n :page_facing_up: **Reason:** " + reason);
-        channel.sendMessageEmbeds(eb.build()).queue();
-
-        Helper.unhook("Done.", failed, hook, event.getUser());
-    }
 
     // warn
     public static void warn(SlashCommandInteractionEvent event, InteractionHook hook, boolean failed) {
@@ -139,7 +70,7 @@ public class AdminCMDs {
             return;
         }
 
-        MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
+        TextChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", event.getUser().getAvatarUrl(),
@@ -257,7 +188,7 @@ public class AdminCMDs {
                     try {
                         Long.parseLong(emoteStr);
                         try {
-                            emoteStr = event.getJDA().getEmoteById(emoteStr).getAsMention();
+                            emoteStr = event.getJDA().getEmojiById(emoteStr).getAsMention();
                         } catch (Exception e) {
                             emoteStr = "ERROR";
                         }
@@ -315,14 +246,14 @@ public class AdminCMDs {
 
                 try {
                     butt.add(Button.primary(emoID,
-                            gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoID)) : Emoji.fromUnicode(emoID)));
+                            gemo ? event.getJDA().getEmojiById(emoID) : Emoji.fromUnicode(emoID)));
                 } catch (Exception e) {
                     event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete()
                             .delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
-            LinkedList<ActionRow> acR = new LinkedList<>();
+            LinkedList<LayoutComponent> acR = new LinkedList<>();
             for (int i = 0; i < butt.size(); i += 5) {
                 ArrayList<Button> row = new ArrayList<>();
                 for (int j = 0; j < 5 && j + i < butt.size(); j++) {
@@ -330,12 +261,11 @@ public class AdminCMDs {
                 }
                 acR.add(ActionRow.of(row));
             }
-
-            MessageAction msgAct;
-
+            
+            MessageCreateAction msgAct;
             if (!Data.catToMsg.containsKey(categ.get(k))) {
                 msgAct = channel.sendMessageEmbeds(eb.build());
-                msgAct.setActionRows(acR);
+                msgAct.setActionRow(acR);
                 Message msgs = msgAct.complete();
                 Data.msgid.add(msgs.getId());
                 ArrayList<String> templist = Data.catToMsg.getOrDefault(categ.get(k), new ArrayList<String>());
@@ -615,7 +545,7 @@ public class AdminCMDs {
         }
         String msgID = event.getChannel().sendMessage("Get " + newRole.getName() + " with this button:")
                 .setActionRow(Button.primary(emoteStr,
-                        gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoteStr)) : Emoji.fromUnicode(emoteStr)))
+                        gemo ? event.getJDA().getEmojiById(emoteStr) : Emoji.fromUnicode(emoteStr)))
                 .complete().getId();
         Data.buttonid.add(msgID);
         Helper.unhook("Done", failed, hook, event.getUser());
@@ -677,7 +607,7 @@ public class AdminCMDs {
                     try {
                         Long.parseLong(emote);
                         try {
-                            emote = event.getJDA().getEmoteById(emote).getAsMention();
+                            emote = event.getJDA().getEmojiById(emote).getAsMention();
                         } catch (Exception e) {
                             emote = "ERROR";
                         }
@@ -731,14 +661,14 @@ public class AdminCMDs {
 
                 try {
                     butt.add(Button.primary(emoID,
-                            gemo ? Emoji.fromEmote(event.getJDA().getEmoteById(emoID)) : Emoji.fromUnicode(emoID)));
+                            gemo ? event.getJDA().getEmojiById(emoID) : Emoji.fromUnicode(emoID)));
                 } catch (Exception e) {
                     event.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete()
                             .delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
-            MessageAction msgAct = channel.sendMessageEmbeds(eb.build());
+            MessageCreateAction msgAct = channel.sendMessageEmbeds(eb.build());
 
             LinkedList<ActionRow> acR = new LinkedList<>();
             for (int i = 0; i < butt.size(); i += 5) {

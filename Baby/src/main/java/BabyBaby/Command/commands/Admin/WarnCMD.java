@@ -12,8 +12,9 @@ import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class WarnCMD implements IAdminCMD {
 
@@ -81,7 +82,7 @@ public class WarnCMD implements IAdminCMD {
             return;
         }
 
-        MessageChannel log = ctx.getGuild().getTextChannelById(Data.modlog);
+        TextChannel log = ctx.getGuild().getTextChannelById(Data.modlog);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setAuthor(ctx.getAuthor().getAsTag() + " (" + ctx.getAuthor().getId() + ")", ctx.getAuthor().getAvatarUrl(),
@@ -99,7 +100,7 @@ public class WarnCMD implements IAdminCMD {
 
         warned.getUser().openPrivateChannel().complete().sendMessageEmbeds(eb.build()).queue();
 
-        ctx.getMessage().addReaction(Data.check).queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
 
     }
 

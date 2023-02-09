@@ -8,8 +8,6 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-import javax.security.auth.login.LoginException;
-
 import BabyBaby.Listeners.BabyListener;
 import BabyBaby.Listeners.ButtonSlashListener;
 import BabyBaby.Listeners.ModerationListener;
@@ -25,7 +23,6 @@ public class Baby {
 
     public static void main(String[] args) throws IOException {
 
-        try {
             String token = "";
 
             Scanner s = new Scanner(new File(Data.TOKEN));
@@ -38,7 +35,7 @@ public class Baby {
                     GatewayIntent.DIRECT_MESSAGE_REACTIONS,
                     GatewayIntent.DIRECT_MESSAGE_TYPING,
                     GatewayIntent.GUILD_BANS,
-                    GatewayIntent.GUILD_EMOJIS,
+                    GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
                     GatewayIntent.GUILD_INVITES,
                     GatewayIntent.GUILD_MEMBERS,
                     GatewayIntent.GUILD_MESSAGES,
@@ -57,8 +54,5 @@ public class Baby {
             Data.startUp = OffsetDateTime.now();
 
             jda.getPresence().setActivity(Activity.listening(" +help [cmd]"));
-        } catch (LoginException e) {
-            e.printStackTrace();
-        }
     }
 }

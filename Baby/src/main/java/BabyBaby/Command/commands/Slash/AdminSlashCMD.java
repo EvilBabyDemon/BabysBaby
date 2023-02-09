@@ -1,6 +1,5 @@
 package BabyBaby.Command.commands.Slash;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import BabyBaby.Command.ISlashCMD;
@@ -11,9 +10,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
 public class AdminSlashCMD implements ISlashCMD {
@@ -28,12 +27,6 @@ public class AdminSlashCMD implements ISlashCMD {
         String sub = event.getSubcommandName();
 
         switch (sub) {
-            case "ban":
-                AdminCMDs.ban(event, hook, failed);
-                break;
-            case "kick":
-                AdminCMDs.kick(event, hook, failed);
-                break;
             case "timeout":
                 AdminCMDs.timeout(event, hook, failed);
                 break;
@@ -160,8 +153,7 @@ public class AdminSlashCMD implements ISlashCMD {
     }
 
     public void load(CommandDataImpl cmd, Guild eth) {
-        cmd.setDefaultEnabled(false);
-
+        cmd.setDefaultPermissions(DefaultMemberPermissions.DISABLED);
         String adminID = eth.upsertCommand(cmd).complete().getId();
 
         Role adminrole = eth.getRoleById(Data.ADMIN_ID);

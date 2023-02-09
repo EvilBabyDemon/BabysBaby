@@ -12,9 +12,6 @@ import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationActi
 import org.jetbrains.annotations.NotNull;
 
 import BabyBaby.CmdHandler;
-import BabyBaby.Command.commands.Admin.*;
-import BabyBaby.Command.commands.Bot.*;
-//import BabyBaby.Command.commands.Bot.drawwithFerris;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.Command.commands.Slash.BlindSlashCMD;
 import BabyBaby.data.Data;
@@ -48,159 +45,84 @@ public class BabyListener extends ListenerAdapter {
             return;
 
         List<Role> removed = event.getRoles();
-        if (!removed.contains(event.getGuild().getRoleById(Data.stfuID))) {
-            if (!removed.contains(event.getGuild().getRoleById(Data.BLIND_ID))) {
-                return;
-            }
-
-            if (!BlindSlashCMD.blind.containsKey(event.getMember())) {
-                return;
-            }
-
-            AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
-            for (AuditLogEntry entry : logs) {
-                if (entry.getType().equals(ActionType.MEMBER_ROLE_UPDATE)) {
-                    if (entry.getUser().getId().equals(event.getJDA().getSelfUser().getId()))
-                        return;
-                    else
-                        break;
-                }
-            }
-
-            Guild blindServ = event.getGuild();
-            Member blinded = event.getMember();
-            String roles = "";
-
-            Connection c = null;
-            PreparedStatement stmt = null;
-            try {
-                Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(Data.db);
-
-                stmt = c.prepareStatement("SELECT ROLES FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
-                stmt.setString(1, blinded.getId());
-                stmt.setString(2, blindServ.getId());
-                ResultSet rs = stmt.executeQuery();
-
-                roles = rs.getString("ROLES");
-
-                stmt.close();
-                c.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-
-            LinkedList<Role> addRole = new LinkedList<>();
-            LinkedList<Role> delRole = new LinkedList<>();
-
-            for (String roleID : roles.split(" ")) {
-                Role role = blindServ.getRoleById(roleID);
-                if (role == null) {
-                    System.out.println(roleID + "Role doesnt exist anymore");
-                    continue;
-                }
-                addRole.add(role);
-            }
-
-            try {
-                delRole.add(blindServ.getRoleById(Data.BLIND_ID));
-                blindServ.modifyMemberRoles(blinded, addRole, delRole).complete();
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Role Blind doesnt exist anymore. This could be a serious issue.");
-                blindServ.modifyMemberRoles(blinded, addRole, null).complete();
-            }
-
-            if (BlindSlashCMD.blind.get(blinded) != null) {
-                ScheduledExecutorService blind = BlindSlashCMD.blind.get(blinded);
-                BlindSlashCMD.forceSet.remove(BlindSlashCMD.blindexe.get(blind));
-                BlindSlashCMD.blindexe.remove(blind);
-                blind.shutdownNow();
-            }
-            BlindSlashCMD.blind.remove(blinded);
-
-            try {
-                Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(Data.db);
-
-                stmt = c.prepareStatement("DELETE FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
-                stmt.setString(1, blinded.getId());
-                stmt.setString(2, blindServ.getId());
-                stmt.execute();
-                stmt.close();
-                c.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-
-            if (AdminMuteBlindCMD.userBlinded.contains(blinded)) {
-                MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
-
-                EmbedBuilder eb = new EmbedBuilder();
-                eb.setAuthor("Unmute through Role removal.");
-
-                eb.setColor(0);
-                eb.setThumbnail(blinded.getUser().getAvatarUrl());
-
-                eb.setDescription(
-                        ":loud_sound: **Unblinded ** " + blinded.getAsMention() + "(" + blinded.getUser().getAsTag()
-                                + ")" + " \n :page_facing_up: **Reason:** Manually unblinded with Role Removal.");
-
-                log.sendMessageEmbeds(eb.build()).queue();
-                AdminMuteBlindCMD.userBlinded.remove(blinded);
-            }
-
+        if (!removed.contains(event.getGuild().getRoleById(Data.BLIND_ID))) {
             return;
         }
 
-        if (event.getUser().getId().equals("177498563637542921")) {
-            Connection c = null;
-            PreparedStatement stmt = null;
-            try {
-                Class.forName("org.sqlite.JDBC");
-                c = DriverManager.getConnection(Data.db);
-
-                stmt = c.prepareStatement("DELETE FROM USERS WHERE ID = ? AND GUILDID = ?;");
-                stmt.setString(1, event.getUser().getId());
-                stmt.setString(2, event.getGuild().getId());
-                stmt.execute();
-                stmt.close();
-                c.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (!BlindSlashCMD.blind.containsKey(event.getMember())) {
             return;
         }
 
-        MessageChannel log = event.getGuild().getTextChannelById(Data.modlog);
+        AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
+        for (AuditLogEntry entry : logs) {
+            if (entry.getType().equals(ActionType.MEMBER_ROLE_UPDATE)) {
+                if (entry.getUser().getId().equals(event.getJDA().getSelfUser().getId()))
+                    return;
+                else
+                    break;
+            }
+        }
 
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor("Unmute through Role removal.");
-        eb.setColor(0);
-        Member warned = event.getMember();
-        eb.setThumbnail(warned.getUser().getAvatarUrl());
-
-        eb.setDescription(":loud_sound: **Unmuted ** " + warned.getAsMention() + "(" + warned.getUser().getAsTag() + ")"
-                + " \n :page_facing_up: **Reason:** Manually unmuted with Role Removal.");
-
-        log.sendMessageEmbeds(eb.build()).queue();
-
-        Role muteR = event.getGuild().getRoleById(Data.stfuID);
-
-        event.getGuild().removeRoleFromMember(warned, muteR).queue();
+        Guild blindServ = event.getGuild();
+        Member blinded = event.getMember();
+        String roles = "";
 
         Connection c = null;
         PreparedStatement stmt = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection(Data.db);
+
+            stmt = c.prepareStatement("SELECT ROLES FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
+            stmt.setString(1, blinded.getId());
+            stmt.setString(2, blindServ.getId());
+            ResultSet rs = stmt.executeQuery();
+
+            roles = rs.getString("ROLES");
+
+            stmt.close();
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        LinkedList<Role> addRole = new LinkedList<>();
+        LinkedList<Role> delRole = new LinkedList<>();
+
+        for (String roleID : roles.split(" ")) {
+            Role role = blindServ.getRoleById(roleID);
+            if (role == null) {
+                System.out.println(roleID + "Role doesnt exist anymore");
+                continue;
+            }
+            addRole.add(role);
+        }
+
+        try {
+            delRole.add(blindServ.getRoleById(Data.BLIND_ID));
+            blindServ.modifyMemberRoles(blinded, addRole, delRole).complete();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Role Blind doesnt exist anymore. This could be a serious issue.");
+            blindServ.modifyMemberRoles(blinded, addRole, null).complete();
+        }
+
+        if (BlindSlashCMD.blind.get(blinded) != null) {
+            ScheduledExecutorService blind = BlindSlashCMD.blind.get(blinded);
+            BlindSlashCMD.forceSet.remove(BlindSlashCMD.blindexe.get(blind));
+            BlindSlashCMD.blindexe.remove(blind);
+            blind.shutdownNow();
+        }
+        BlindSlashCMD.blind.remove(blinded);
 
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection(Data.db);
 
-            stmt = c.prepareStatement("DELETE FROM ADMINMUTE WHERE USERID = ? AND GUILDID = ?;");
-            stmt.setString(1, event.getMember().getId());
-            stmt.setString(2, event.getGuild().getId());
+            stmt = c.prepareStatement("DELETE FROM ROLEREMOVAL WHERE USERID = ? AND GUILDID = ?;");
+            stmt.setString(1, blinded.getId());
+            stmt.setString(2, blindServ.getId());
             stmt.execute();
             stmt.close();
             c.close();
@@ -262,41 +184,6 @@ public class BabyListener extends ListenerAdapter {
         }
 
         User user = event.getAuthor();
-        /*
-         * if(user.getId().equals("781949572103536650")){
-         * String prefixstr = prefix.get(event.getGuild().getId());
-         * String content = event.getMessage().getContentRaw();
-         * if(content.startsWith(prefixstr + "clock")){
-         * clock.clockTick(event);
-         * }
-         * } else if(user.getId().equals("781949572103536650")){
-         * String content = event.getMessage().getContentRaw();
-         * if(content.startsWith("PIXELVERIFY") &&
-         * content.split(" ")[3].equals("SUCCESS")){
-         * clock.verify(event);
-         * }
-         * } else
-         */
-
-        if (user.getId().equals("778731540359675904") && Data.antibamboozle) {
-            String content = event.getMessage().getContentRaw();
-            if (content.equals("Press the button to claim the points.")) {
-                button.tap(event);
-            }
-        }
-        /*
-         * else if(user.getId().equals("590453186922545152") ||
-         * user.getId().equals("223932775474921472")){
-         * String content = event.getMessage().getContentRaw();
-         * if(content.contains("781949572103536650")){
-         * new drawwithFerris().drawing(event);
-         * }
-         * }
-         * /*
-         * else if(event.getMessage().getContentRaw().equals("?bamboozle")){
-         * manager.handle(event, "?");
-         * }
-         */
         if (user.isBot() || event.isWebhookMessage()) {
             return;
         }

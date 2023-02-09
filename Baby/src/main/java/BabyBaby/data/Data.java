@@ -26,7 +26,6 @@ public class Data {
     public static final String SERVERBOT_ID = "750439532050251778";
     public static final String ETH_ID = "747752542741725244";
     public static final String SPAM_ID = "768600365602963496";
-    public static final String stfuID = "765542118701400134"; // TODO Remove
     public static final String BLIND_ID = "844136589163626526";
     public static OffsetDateTime kick;
     public static OffsetDateTime ban;
@@ -44,7 +43,6 @@ public class Data {
     public static HashMap<String, Integer> cmdUses = new HashMap<>();
     public static HashSet<String> users = new HashSet<>();
     public static OffsetDateTime startUp;
-    public static HashSet<String> newErstie = new HashSet<>();
     public static boolean automaticRoleAddThingy = false;
     public static int slashAndButton = 0;
     public static ArrayList<ISlashCMD> slashcmds = new ArrayList<>();

@@ -9,9 +9,9 @@ import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
-import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 public class NewRoleCMD implements IAdminCMD {
@@ -50,7 +50,7 @@ public class NewRoleCMD implements IAdminCMD {
         }
         String msgID = ctx.getChannel().sendMessage("Get " + newRole.getName() + " with this button:")
                 .setActionRow(Button.primary(emoteStr,
-                        gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoteStr)) : Emoji.fromUnicode(emoteStr)))
+                        gemo ? ctx.getJDA().getEmojiById(emoteStr) : Emoji.fromUnicode(emoteStr)))
                 .complete().getId();
         Data.buttonid.add(msgID);
 

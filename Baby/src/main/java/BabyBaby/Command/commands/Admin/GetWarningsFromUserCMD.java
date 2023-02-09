@@ -3,6 +3,8 @@ package BabyBaby.Command.commands.Admin;
 import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,7 +14,6 @@ import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
 
 public class GetWarningsFromUserCMD implements IAdminCMD {
 
@@ -72,7 +73,7 @@ public class GetWarningsFromUserCMD implements IAdminCMD {
 
         channel.sendMessageEmbeds(eb.build()).queue();
 
-        ctx.getMessage().addReaction(Data.check).queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
     }
 
     @Override

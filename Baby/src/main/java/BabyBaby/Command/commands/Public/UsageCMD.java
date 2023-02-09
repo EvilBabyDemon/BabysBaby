@@ -50,7 +50,7 @@ public class UsageCMD implements IPublicCMD {
         eb.addField("Button and Slash Commands", "Count: " + Data.slashAndButton, true);
 
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
-        ctx.getMessage().addReaction(Data.check).queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
     }
 
     @Override

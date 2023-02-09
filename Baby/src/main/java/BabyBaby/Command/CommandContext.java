@@ -1,9 +1,13 @@
 package BabyBaby.Command;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.List;
@@ -27,11 +31,9 @@ public class CommandContext {
         // owner -> 2
         // admin -> 1
         // public -> 0
-        permissionLevel = member.getId().equals(Data.myselfID) ? 2 : event.getGuild().getId().equals(Data.ETH_ID) && (member.hasPermission(Permission.ADMINISTRATOR) || member.getRoles().contains(mod)) ? 1 : 0;
+       this.permissionLevel = member.getId().equals(Data.myselfID) ? 2 : event.getGuild().getId().equals(Data.ETH_ID) && (member.hasPermission(Permission.ADMINISTRATOR) || member.getRoles().contains(mod)) ? 1 : 0;
     }
     
-
-
     public Guild getGuild() {
         return this.getEvent().getGuild();
     }
@@ -48,73 +50,35 @@ public class CommandContext {
         return this.permissionLevel;
     }
 
-    public net.dv8tion.jda.api.entities.TextChannel getChannel() {
-        return this.event.getTextChannel();
-    }
+    //public Channel getChannel() {
+    //    return new Channel(this.event.getChannel());
+    //}
+    public MessageChannel getChannel() {
+      return this.event.getChannel();
+  }
       
-    public net.dv8tion.jda.api.entities.Message getMessage() {
+    public Message getMessage() {
       return this.event.getMessage();
     }
     
-    public net.dv8tion.jda.api.entities.User getAuthor() {
+    public User getAuthor() {
       return this.event.getAuthor();
     }
     
-    public net.dv8tion.jda.api.entities.Member getMember() {
+    public Member getMember() {
       return this.event.getMember();
     }
     
-    public net.dv8tion.jda.api.JDA getJDA() {
+    public JDA getJDA() {
       return this.event.getJDA();
     }
     
-    public net.dv8tion.jda.api.entities.User getSelfUser() {
+    public User getSelfUser() {
       return this.event.getJDA().getSelfUser();
     }
     
-    
-    public net.dv8tion.jda.api.entities.Member getSelfMember() {
+    public Member getSelfMember() {
       return this.event.getGuild().getMember(this.getSelfUser());
     }
       
 }
-    /*
-   public net.dv8tion.jda.api.entities.Guild getGuild() {
-     return null;
-   }
-   
-   public abstract net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent getEvent();
-   
-   public net.dv8tion.jda.api.entities.TextChannel getChannel() {
-     return null;
-   }
-   
-   public net.dv8tion.jda.api.entities.Message getMessage() {
-     return null;
-   }
-   
-   public net.dv8tion.jda.api.entities.User getAuthor() {
-     return null;
-   }
-   
-   public net.dv8tion.jda.api.entities.Member getMember() {
-     return null;
-   }
-   
-   public net.dv8tion.jda.api.JDA getJDA() {
-     return null;
-   }
-   
-   public net.dv8tion.jda.api.sharding.ShardManager getShardManager() {
-     return null;
-   }
-   
-   public net.dv8tion.jda.api.entities.User getSelfUser() {
-     return null;
-   }
-   
-   public net.dv8tion.jda.api.entities.Member getSelfMember() {
-     return null;
-   }
- }
- */

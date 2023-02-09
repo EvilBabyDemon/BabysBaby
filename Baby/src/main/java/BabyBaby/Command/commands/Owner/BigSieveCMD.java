@@ -177,7 +177,7 @@ public class BigSieveCMD implements IOwnerCMD {
         }
         editor.delete().queue();
 
-        ctx.getMessage().addReaction(Data.check).queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
 
         for (EmbedBuilder eb : alleb) {
             ctx.getChannel().sendMessageEmbeds(eb.build()).queue();

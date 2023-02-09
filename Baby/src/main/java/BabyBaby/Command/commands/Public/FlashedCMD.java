@@ -12,8 +12,8 @@ import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 
 public class FlashedCMD implements IPublicCMD {
 
@@ -53,10 +53,8 @@ public class FlashedCMD implements IPublicCMD {
                     mention = blind.getAsMention();
                     cache += mention;
                 }
-                userNames += mention + "("
-                        + Math.round(
-                                ((Long.parseLong(rs.getString("MUTETIME")) - System.currentTimeMillis()) / 60000.0))
-                        + "m), ";
+                long ms = Long.parseLong(rs.getString("MUTETIME")) - System.currentTimeMillis();
+                userNames += mention + " <t:" + ms + ":R> left (<t:" + ms + ":F>) |";
             }
             rs.close();
             stmt.close();
@@ -66,7 +64,6 @@ public class FlashedCMD implements IPublicCMD {
             return;
         }
 
-        String shouldBeLearning = "<@!223932775474921472>";
 
         String nickname = (ctx.getMember().getNickname() != null) ? ctx.getMember().getNickname()
                 : ctx.getMember().getEffectiveName();
@@ -75,8 +72,6 @@ public class FlashedCMD implements IPublicCMD {
         eb.setTitle("People who are learning or rather should be! (Blinded)", null);
         eb.setColor(1);
         eb.addField("" + countUsers, userNames, false);
-        eb.addField("people who should be studying right now", shouldBeLearning, false);
-        // eb.addBlankField(false);
         eb.setFooter("Summoned by: " + nickname, ctx.getAuthor().getAvatarUrl());
         channel.sendMessage("cache refresh").complete().editMessage("a " + cache).complete().delete().queue();
         channel.sendMessageEmbeds(eb.build()).queue();

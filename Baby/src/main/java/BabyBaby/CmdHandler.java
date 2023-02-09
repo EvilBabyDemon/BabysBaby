@@ -5,6 +5,8 @@ import BabyBaby.Command.commands.Owner.*;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.io.IOException;
@@ -31,7 +33,6 @@ public class CmdHandler {
         addPublicCommand(new GetRoleCMD());
 
         addPublicCommand(new PolyCMD());
-        addPublicCommand(new RockPaperCMD());
         addPublicCommand(new SieveCMD());
         addPublicCommand(new SourceCMD());
         addPublicCommand(new SuggestionCMD());
@@ -67,8 +68,6 @@ public class CmdHandler {
         // addOwnerCommand(new RoleChangeCMD());
         addOwnerCommand(new TurnCMDsOff());
         addOwnerCommand(new ChangeLogCMD());
-        addOwnerCommand(new SpeedCMD());
-        addOwnerCommand(new CovidGuesserCMD());
 
         addPublicCommand(new HelpCMD(this));
 
@@ -202,7 +201,11 @@ public class CmdHandler {
                 try {
                     switch (permissionLevel) {
                         case 0:
+                            //|| ctx.getChannel().getParentCategory() == null
+                            //|| ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL)
+                            //|| ((IPublicCMD) cmd).getWhiteListBool())
                             if (ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ETH_ID)
+                                    || ctx.getEvent().getChannel().asGuildMessageChannel().
                                     || ctx.getChannel().getParentCategory() == null
                                     || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL)
                                     || ((IPublicCMD) cmd).getWhiteListBool()) {
@@ -225,7 +228,8 @@ public class CmdHandler {
                 } catch (Exception e) {
                     System.out.println(ctx.getMessage().getContentRaw());
                     e.printStackTrace();
-                    ctx.getMessage().addReaction(Data.xmark).queue();
+                    
+                    ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.xmark)).queue();
                 }
             }
         });

@@ -9,8 +9,8 @@ import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class RoleIdCMD implements IAdminCMD {
 

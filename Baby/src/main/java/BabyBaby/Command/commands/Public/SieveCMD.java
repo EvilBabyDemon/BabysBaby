@@ -15,11 +15,11 @@ import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
 import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 
 public class SieveCMD implements IPublicCMD {
     boolean pleb = true;
@@ -355,7 +355,7 @@ public class SieveCMD implements IPublicCMD {
         }
         editor.delete().queue();
 
-        ctx.getMessage().addReaction(Data.check).queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
 
         for (EmbedBuilder eb : alleb) {
             ctx.getChannel().sendMessageEmbeds(eb.build()).queue();

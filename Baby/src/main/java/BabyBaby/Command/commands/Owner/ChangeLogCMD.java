@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 public class ChangeLogCMD implements IOwnerCMD {
 
@@ -20,18 +20,18 @@ public class ChangeLogCMD implements IOwnerCMD {
     public void handleOwner(CommandContext ctx) {
         String result = "<:plusplus:816779826202411038> ";
 
-        LinkedList<Emote> emo = new LinkedList<>();
+        LinkedList<Emoji> emo = new LinkedList<>();
 
         for (String arg : ctx.getArgs()) {
-            emo.add(ctx.getGuild().getEmotesByName(arg, true).get(0));
+            emo.add(ctx.getGuild().getEmojisByName(arg, true).get(0));
         }
 
-        for (Emote emote : emo) {
-            result += emote.getAsMention() + " ";
+        for (Emoji emote : emo) {
+            result += emote.getFormatted() + " ";
         }
         Message tmp = ctx.getChannel().sendMessage(result).complete();
 
-        for (Emote emote : emo) {
+        for (Emoji emote : emo) {
             tmp.addReaction(emote).complete();
         }
     }

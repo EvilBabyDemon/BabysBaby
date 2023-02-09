@@ -7,8 +7,8 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class SayMultiCMD implements IOwnerCMD {
 

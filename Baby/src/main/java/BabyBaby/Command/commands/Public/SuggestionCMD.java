@@ -9,8 +9,8 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class SuggestionCMD implements IPublicCMD {
 
@@ -27,6 +27,7 @@ public class SuggestionCMD implements IPublicCMD {
     @Override
     public void handlePublic(CommandContext ctx) {
         MessageChannel channel = ctx.getChannel();
+        
         File suggestions = new File(Data.SUGGESTION);
         String content = "";
 

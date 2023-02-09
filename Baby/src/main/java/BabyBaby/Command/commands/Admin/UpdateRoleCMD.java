@@ -9,8 +9,8 @@ import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class UpdateRoleCMD implements IAdminCMD {
 
@@ -115,11 +115,11 @@ public class UpdateRoleCMD implements IAdminCMD {
 
                 break;
             default:
-                ctx.getMessage().addReaction(Data.xmark).queue();
+                ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.xmark)).queue();
                 return;
         }
 
-        ctx.getMessage().addReaction(Data.check).queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
 
     }
 
