@@ -5,8 +5,11 @@ import BabyBaby.Command.commands.Owner.*;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.entities.Widget.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.NewsChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.io.IOException;
@@ -201,14 +204,21 @@ public class CmdHandler {
                 try {
                     switch (permissionLevel) {
                         case 0:
-                            //|| ctx.getChannel().getParentCategory() == null
-                            //|| ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL)
-                            //|| ((IPublicCMD) cmd).getWhiteListBool())
+                            MessageChannelUnion channel = ctx.getEvent().getChannel();
+                            String id = "";
+
+                            if (channel instanceof ThreadChannel) {
+                                id = channel.asThreadChannel().getParentMessageChannel().asStandardGuildChannel().getParentCategoryId();
+                            } else if(channel instanceof NewsChannel) {
+                                id = channel.asNewsChannel().getParentCategoryId();
+                            } else if (channel instanceof VoiceChannel) {
+                                id = channel.asVoiceChannel().getParentCategoryId();
+                            } else if (channel instanceof TextChannel) {
+                                id = channel.asTextChannel().getParentCategoryId();
+                            }
                             if (ctx.getGuild() == null || !ctx.getGuild().getId().equals(Data.ETH_ID)
-                                    || ctx.getEvent().getChannel().asGuildMessageChannel().
-                                    || ctx.getChannel().getParentCategory() == null
-                                    || ctx.getChannel().getParentCategoryId().equals(Data.BOTS_BATTROYAL)
-                                    || ((IPublicCMD) cmd).getWhiteListBool()) {
+                                || Data.BOTS_BATTROYAL.equals(id)
+                                || ((IPublicCMD) cmd).getWhiteListBool()) {
                                 ((IPublicCMD) cmd).handlePublic(ctx);
                             } else {
                                 ctx.getChannel().sendMessage("Please use the dedicated bot channels for this command.")

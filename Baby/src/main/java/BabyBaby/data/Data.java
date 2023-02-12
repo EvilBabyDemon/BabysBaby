@@ -37,7 +37,6 @@ public class Data {
     public static final String BOTS_BATTROYAL = "783818541849378867";
     public static boolean elthision = false;
     public static boolean marc = false;
-    public static HashSet<String> buttonid = new HashSet<>();
     public static int mydel = 0;
     public static int otherdel = 0;
     public static HashMap<String, Integer> cmdUses = new HashMap<>();

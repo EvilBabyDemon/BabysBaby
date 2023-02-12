@@ -1,13 +1,11 @@
 package BabyBaby.Command.commands.Slash;
 
 import java.util.LinkedList;
-
 import BabyBaby.Command.ISlashCMD;
 import BabyBaby.Command.commands.Admin.AdminCMDs;
-import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -154,14 +152,8 @@ public class AdminSlashCMD implements ISlashCMD {
 
     public void load(CommandDataImpl cmd, Guild eth) {
         cmd.setDefaultPermissions(DefaultMemberPermissions.DISABLED);
-        String adminID = eth.upsertCommand(cmd).complete().getId();
-
-        Role adminrole = eth.getRoleById(Data.ADMIN_ID);
-        Role modrole = eth.getRoleById(Data.MODERATOR_ID);
-
-        // eth.updateCommandPrivilegesById(adminID,
-        // Arrays.asList(CommandPrivilege.enable(adminrole),
-        // CommandPrivilege.enable(modrole))).complete();
+        cmd.setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_CHANNEL));
+        eth.upsertCommand(cmd).complete();
     }
 
 }

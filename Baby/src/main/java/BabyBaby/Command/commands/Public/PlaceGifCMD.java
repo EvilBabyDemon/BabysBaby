@@ -23,7 +23,7 @@ import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Message.Attachment;
-import net.dv8tion.jda.api.utils.AttachmentProxy;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 public class PlaceGifCMD implements IPublicCMD {
     File inp;
@@ -122,7 +122,7 @@ public class PlaceGifCMD implements IPublicCMD {
         }
         File gif = new File(Data.PLACE + ctx.getAuthor().getId() + ".gif");
         ctx.getChannel().sendMessage(ctx.getAuthor().getAsMention()).queue();
-        ctx.getChannel().sendFile(gif).complete();
+        ctx.getChannel().sendFiles(FileUpload.fromData(gif)).complete();
         gif.delete();
     }
 

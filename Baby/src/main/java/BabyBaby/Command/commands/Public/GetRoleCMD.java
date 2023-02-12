@@ -31,7 +31,6 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
-import net.dv8tion.jda.internal.requests.Route.Emojis;
 
 public class GetRoleCMD implements IPublicCMD {
     boolean flipflop = false;
@@ -292,7 +291,7 @@ public class GetRoleCMD implements IPublicCMD {
                 }
                 acR.add(ActionRow.of(row));
             }
-            msgAct.setActionRows(acR);
+            msgAct.setComponents(acR);
             Message msgs = msgAct.complete();
             Data.msgid.add(msgs.getId());
             try {
@@ -524,7 +523,7 @@ public class GetRoleCMD implements IPublicCMD {
             acR.add(ActionRow.of(row));
         }
 
-        msgAct.setActionRows(acR);
+        msgAct.setComponents(acR);
 
         Data.msgid.add(msgAct.complete().getId());
     }

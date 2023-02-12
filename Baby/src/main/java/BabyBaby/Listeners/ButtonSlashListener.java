@@ -46,8 +46,6 @@ public class ButtonSlashListener extends ListenerAdapter {
         InteractionHook msgHook = null;
         boolean failed = false;
         try {
-            // event.editComponents(ActionRow.of(event.getSelectionMenu()),
-            // ActionRow.of(event.getSelectionMenu())).queue();
             msgHook = event.deferReply(true).complete();
         } catch (Exception e) {
             System.out.println("Why so slow :/");

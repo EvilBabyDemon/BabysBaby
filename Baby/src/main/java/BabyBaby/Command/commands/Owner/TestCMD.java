@@ -1,5 +1,6 @@
 package BabyBaby.Command.commands.Owner;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -120,10 +121,10 @@ public class TestCMD implements IOwnerCMD {
             }
 
             try {
-                ctx.getGuild()
-                        .createEmote(ctx.getArgs().get(1),
-                                Icon.from(ctx.getMessage().getAttachments().get(0).downloadToFile().join()), rolesArr)
-                        .complete();
+                File emoji = new File(ctx.getMessage().getAttachments().get(0).getFileName());
+                emoji = ctx.getMessage().getAttachments().get(0).getProxy().downloadToFile(emoji).join();
+                ctx.getGuild().createEmoji(ctx.getArgs().get(1), Icon.from(emoji), rolesArr).complete();
+                emoji.delete();
             } catch (Exception e) {
                 ctx.getChannel().sendMessage("File not found \n" + e).complete();
             }

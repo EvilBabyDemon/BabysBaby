@@ -25,13 +25,11 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.LayoutComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
-import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.requests.restaction.MessageEditAction;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 public class AdminCMDs {
@@ -262,10 +260,9 @@ public class AdminCMDs {
                 acR.add(ActionRow.of(row));
             }
             
-            MessageCreateAction msgAct;
             if (!Data.catToMsg.containsKey(categ.get(k))) {
-                msgAct = channel.sendMessageEmbeds(eb.build());
-                msgAct.setActionRow(acR);
+                MessageCreateAction msgAct = channel.sendMessageEmbeds(eb.build());
+                msgAct.setComponents(acR);
                 Message msgs = msgAct.complete();
                 Data.msgid.add(msgs.getId());
                 ArrayList<String> templist = Data.catToMsg.getOrDefault(categ.get(k), new ArrayList<String>());
@@ -296,6 +293,7 @@ public class AdminCMDs {
 
             for (String msgid : Data.catToMsg.get(categ.get(k))) {
                 TextChannel chan = event.getGuild().getTextChannelById(Data.msgToChan.get(msgid));
+                MessageEditAction msgAct;
                 try {
                     Message sent = chan.retrieveMessageById(msgid).complete();
                     msgAct = sent.editMessageEmbeds(eb.build());
@@ -304,7 +302,7 @@ public class AdminCMDs {
                     continue;
                 }
 
-                msgAct.setActionRows(acR);
+                msgAct.setComponents(acR);
                 msgAct.complete();
             }
 
@@ -543,11 +541,10 @@ public class AdminCMDs {
             gemo = true;
         } catch (Exception e) {
         }
-        String msgID = event.getChannel().sendMessage("Get " + newRole.getName() + " with this button:")
+        event.getChannel().sendMessage("Get " + newRole.getName() + " with this button:")
                 .setActionRow(Button.primary(emoteStr,
                         gemo ? event.getJDA().getEmojiById(emoteStr) : Emoji.fromUnicode(emoteStr)))
-                .complete().getId();
-        Data.buttonid.add(msgID);
+                .complete();
         Helper.unhook("Done", failed, hook, event.getUser());
     }
 
@@ -678,7 +675,7 @@ public class AdminCMDs {
                 }
                 acR.add(ActionRow.of(row));
             }
-            msgAct.setActionRows(acR);
+            msgAct.setComponents(acR);
             Message msgs = msgAct.complete();
             Data.msgid.add(msgs.getId());
 
