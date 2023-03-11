@@ -13,7 +13,6 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IPublicCMD;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
-import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -365,7 +364,7 @@ public class SieveCMD implements IPublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+        EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle("Help page of: `" + getName() + "`");
         embed.setDescription(
@@ -376,6 +375,10 @@ public class SieveCMD implements IPublicCMD {
         embed.addField("", new ColouredStringAsciiDoc()
                 .addBlueAboveEq("general use")
                 .addNormal(prefix + getName() + " " + "<roleID> {<!/&/|> <roleID>}")
+                .addNormal(prefix + getName() + " " + "<userID>")
+                .addNormal(prefix + getName() + " " + "<serverID>")
+                .addNormal(prefix + getName() + " " + "<YYYYMMDD>")
+                .addNormal(prefix + getName() + " " + "roles")
                 .addBlueAboveEq("Example Italian ! Swiss-German & German")
                 .addNormal(prefix + getName() + " 747792281855197285 ! 747791537089544283 & 747791435570610256")
                 .build(), false);
