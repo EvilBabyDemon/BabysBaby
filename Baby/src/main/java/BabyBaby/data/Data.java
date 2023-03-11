@@ -15,8 +15,8 @@ public class Data {
     public static HashMap<String, String> msgToChan = new HashMap<>();
     public static HashMap<String, String> emoteassign = new HashMap<>();
     public static HashSet<String> roles = new HashSet<>();
-    public static final String check = ":checkmark:769279808244809798";
-    public static final String xmark = ":xmark:769279807916998728";
+    public static final String check = "769279808244809798";
+    public static final String xmark = "769279807916998728";
     public static final String db = "jdbc:sqlite:testone.db";
     public static final String modlog = "774322031688679454";
     public static final String adminlog = "774322847812157450";
@@ -26,7 +26,6 @@ public class Data {
     public static final String SERVERBOT_ID = "750439532050251778";
     public static final String ETH_ID = "747752542741725244";
     public static final String SPAM_ID = "768600365602963496";
-    public static final String stfuID = "765542118701400134"; // TODO Remove
     public static final String BLIND_ID = "844136589163626526";
     public static OffsetDateTime kick;
     public static OffsetDateTime ban;
@@ -38,13 +37,11 @@ public class Data {
     public static final String BOTS_BATTROYAL = "783818541849378867";
     public static boolean elthision = false;
     public static boolean marc = false;
-    public static HashSet<String> buttonid = new HashSet<>();
     public static int mydel = 0;
     public static int otherdel = 0;
     public static HashMap<String, Integer> cmdUses = new HashMap<>();
     public static HashSet<String> users = new HashSet<>();
     public static OffsetDateTime startUp;
-    public static HashSet<String> newErstie = new HashSet<>();
     public static boolean automaticRoleAddThingy = false;
     public static int slashAndButton = 0;
     public static ArrayList<ISlashCMD> slashcmds = new ArrayList<>();

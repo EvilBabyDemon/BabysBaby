@@ -34,7 +34,7 @@ public class TurnCMDsOff implements IOwnerCMD {
             }
             ctx.getChannel().sendMessage(output).queue();
         } catch (IOException e) {
-            ctx.getMessage().addReaction(Data.xmark).queue();
+            ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.xmark)).queue();
             e.printStackTrace();
         }
 

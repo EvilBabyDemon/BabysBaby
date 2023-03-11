@@ -16,8 +16,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -128,6 +128,7 @@ public class WhoisSlashCMD implements ISlashCMD {
 			try {
 				invitee += event.getGuild().getMemberById(userID).getAsMention();
 			} catch (Exception e) {
+				invitee += userID + " ";
 			}
 		}
 
@@ -156,7 +157,7 @@ public class WhoisSlashCMD implements ISlashCMD {
 		if (ephemeral || spamPrev && pleb) {
 			Helper.unhook(eb.build(), failed, hook, event.getUser());
 		} else {
-			channel.sendMessage("Cache reload").complete().editMessage(invitee).complete().delete().complete();
+			channel.sendMessage("Cache reload").complete().editMessage(invitee + stalking.getAsMention()).complete().delete().complete();
 			channel.sendMessageEmbeds(eb.build()).queue();
 			Helper.unhook("Done", failed, hook, event.getUser());
 		}

@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -25,8 +26,8 @@ public class PollSlashCMD implements ISlashCMD {
         }
         String topic = event.getOption("title").getAsString();
 
-        String[] emot = { "0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", ":keycap_ten:" };
-
+        String[] emot = { "0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟" };
+        
         if (topic.length() > 256) {
             event.getChannel().sendMessage("Your Title can't be longer than 256 chars.").queue();
             return;
@@ -58,7 +59,7 @@ public class PollSlashCMD implements ISlashCMD {
 
         Message built = event.getChannel().sendMessageEmbeds(eb.build()).complete();
         for (int i = 0; i < amount; i++) {
-            built.addReaction(emot[i]).queue();
+            built.addReaction(Emoji.fromUnicode(emot[i])).queue();
         }
 
         Helper.unhook("Done", failed, hook, event.getUser());

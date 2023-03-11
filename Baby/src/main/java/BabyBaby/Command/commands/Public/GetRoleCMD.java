@@ -19,18 +19,17 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IPublicCMD;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
-import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 
 public class GetRoleCMD implements IPublicCMD {
     boolean flipflop = false;
@@ -199,7 +198,7 @@ public class GetRoleCMD implements IPublicCMD {
                     try {
                         Long.parseLong(emoteStr);
                         try {
-                            emoteStr = ctx.getJDA().getEmoteById(emoteStr).getAsMention();
+                            emoteStr = ctx.getJDA().getEmojiById(emoteStr).getAsMention();
                         } catch (Exception e) {
                             emoteStr = "ERROR";
                         }
@@ -274,14 +273,14 @@ public class GetRoleCMD implements IPublicCMD {
 
                 try {
                     butt.add(Button.primary(emoID,
-                            gemo ? Emoji.fromEmote(ctx.getJDA().getEmoteById(emoID)) : Emoji.fromUnicode(emoID)));
+                            gemo ? ctx.getJDA().getEmojiById(emoID) : Emoji.fromUnicode(emoID)));
                 } catch (Exception e) {
                     ctx.getChannel().sendMessage("Reaction with ID:" + emoID + " is not accessible.").complete()
                             .delete().queueAfter(10, TimeUnit.SECONDS);
                 }
             }
 
-            MessageAction msgAct = channel.sendMessageEmbeds(eb.build());
+            MessageCreateAction msgAct = channel.sendMessageEmbeds(eb.build());
 
             LinkedList<ActionRow> acR = new LinkedList<>();
             for (int i = 0; i < butt.size(); i += 5) {
@@ -291,7 +290,7 @@ public class GetRoleCMD implements IPublicCMD {
                 }
                 acR.add(ActionRow.of(row));
             }
-            msgAct.setActionRows(acR);
+            msgAct.setComponents(acR);
             Message msgs = msgAct.complete();
             Data.msgid.add(msgs.getId());
             try {
@@ -304,7 +303,7 @@ public class GetRoleCMD implements IPublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+        EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle("Help page of: `" + getName() + "`");
         embed.setDescription(
@@ -505,14 +504,14 @@ public class GetRoleCMD implements IPublicCMD {
 
             try {
                 butt.add(Button.primary(emoID,
-                        gemo ? Emoji.fromEmote(ctx.getGuild().getEmoteById(emote)) : Emoji.fromUnicode(emote)));
+                        gemo ? ctx.getGuild().getEmojiById(emote) : Emoji.fromUnicode(emote)));
             } catch (Exception e) {
                 ctx.getChannel().sendMessage("Reaction with ID:" + emote + " is not accessible.").complete().delete()
                         .queueAfter(10, TimeUnit.SECONDS);
             }
         }
 
-        MessageAction msgAct = channel.sendMessageEmbeds(eb.build());
+        MessageCreateAction msgAct = channel.sendMessageEmbeds(eb.build());
 
         LinkedList<ActionRow> acR = new LinkedList<>();
         for (int i = 0; i < butt.size(); i += 5) {
@@ -523,7 +522,7 @@ public class GetRoleCMD implements IPublicCMD {
             acR.add(ActionRow.of(row));
         }
 
-        msgAct.setActionRows(acR);
+        msgAct.setComponents(acR);
 
         Data.msgid.add(msgAct.complete().getId());
     }

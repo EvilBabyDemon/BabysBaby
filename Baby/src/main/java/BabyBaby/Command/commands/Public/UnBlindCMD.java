@@ -11,7 +11,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
-import BabyBaby.Command.commands.Admin.AdminMuteBlindCMD;
 import BabyBaby.Command.commands.Slash.BlindSlashCMD;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.Data;
@@ -102,13 +101,6 @@ public class UnBlindCMD implements IPublicCMD {
                     break;
                 }
             }
-        }
-
-        Member mem = blindclass.guild.getMember(blindclass.blind);
-        if (AdminMuteBlindCMD.userBlinded.contains(mem)) {
-            author.openPrivateChannel().complete().sendMessage("You got blinded by admins. You can't unblind yourself.")
-                    .complete();
-            return;
         }
 
         if (BlindSlashCMD.forceSet.contains(blindclass)) {

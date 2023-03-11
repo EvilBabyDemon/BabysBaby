@@ -24,7 +24,7 @@ public class WhereamiCMD implements IOwnerCMD {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Guilds I am on.");
         eb.setColor(Color.GREEN);
-        eb.setDescription(String.join(" ", guildNames));
+        eb.setDescription(String.join("\n", guildNames));
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
     }
 

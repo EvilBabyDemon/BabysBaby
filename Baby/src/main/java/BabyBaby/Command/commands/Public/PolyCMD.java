@@ -3,8 +3,8 @@ package BabyBaby.Command.commands.Public;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class PolyCMD implements IPublicCMD {
 

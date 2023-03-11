@@ -5,6 +5,7 @@ import java.util.List;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
+import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
@@ -45,7 +46,7 @@ public class AllRolesCMD implements IPublicCMD {
 
         ctx.getChannel().sendMessageEmbeds(eb.build()).queue();
 
-        ctx.getMessage().addReaction(":checkmark:769279808244809798").queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
     }
 
     @Override

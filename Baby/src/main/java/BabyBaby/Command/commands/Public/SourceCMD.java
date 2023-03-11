@@ -21,7 +21,7 @@ public class SourceCMD implements IPublicCMD {
     @Override
     public void handlePublic(CommandContext ctx) {
         ctx.getChannel().sendMessage("<https://github.com/EvilBabyDemon/BabysBaby>").queue();
-        ctx.getMessage().addReaction(Data.check).queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
     }
 
     @Override

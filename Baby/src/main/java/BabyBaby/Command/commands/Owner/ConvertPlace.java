@@ -61,10 +61,10 @@ public class ConvertPlace implements IOwnerCMD {
             out.flush();
             out.close();
 
-            ctx.getMessage().addReaction(Data.check).queue();
+            ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
 
         } catch (IOException e) {
-            ctx.getMessage().addReaction(Data.xmark).queue();
+            ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.xmark)).queue();
             e.printStackTrace();
         }
 

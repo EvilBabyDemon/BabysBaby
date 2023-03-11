@@ -57,7 +57,7 @@ public class Helper {
                 rounder = (long) (time);
             }
         }
-        long endOfTime = Long.MAX_VALUE / 1000 - System.currentTimeMillis();
+        long endOfTime = 8640000000000L + System.currentTimeMillis();
         if (rounder > endOfTime) {
             rounder = endOfTime - 100000;
         }

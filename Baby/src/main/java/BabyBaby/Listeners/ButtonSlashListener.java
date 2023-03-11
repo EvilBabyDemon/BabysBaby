@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Role;
 //import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
@@ -40,14 +40,12 @@ public class ButtonSlashListener extends ListenerAdapter {
     }
 
     // SelectionMenu
-    @Override
-    public void onSelectMenuInteraction(SelectMenuInteractionEvent event) {
+
+
+    public void onStringSelectInteraction(StringSelectInteractionEvent event) {
         InteractionHook msgHook = null;
         boolean failed = false;
         try {
-            // event.editComponents(ActionRow.of(event.getSelectionMenu()),
-            // ActionRow.of(event.getSelectionMenu())).queue();
-
             msgHook = event.deferReply(true).complete();
         } catch (Exception e) {
             System.out.println("Why so slow :/");
@@ -58,7 +56,7 @@ public class ButtonSlashListener extends ListenerAdapter {
 
         if (event.getSelectMenu().getId().equals("menu:class")) {
             if (!failed) {
-                msgHook.editOriginal("You have selected " + event.getSelectedOptions().size()).queue();
+                msgHook.editOriginal("You have selected " + event.getValues().size()).queue();
             }
         }
     }
@@ -111,17 +109,5 @@ public class ButtonSlashListener extends ListenerAdapter {
         Data.cmdUses.putIfAbsent(cmdClass.getName(), 0);
         Data.cmdUses.computeIfPresent(cmdClass.getName(), (name, x) -> ++x);
     }
-
-    /*
-     * @Override
-     * public void onModalInteraction(ModalInteractionEvent event) {
-     * if (event.getModalId().equals("test")) {
-     * String email = event.getValue("email").getAsString();
-     * String body = event.getValue("body").getAsString();
-     * event.reply("Thanks for your request! " + email + " " +
-     * body).setEphemeral(true).queue();
-     * }
-     * }
-     */
 
 }

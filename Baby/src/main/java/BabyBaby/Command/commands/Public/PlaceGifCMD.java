@@ -23,6 +23,7 @@ import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Message.Attachment;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 public class PlaceGifCMD implements IPublicCMD {
     File inp;
@@ -31,8 +32,9 @@ public class PlaceGifCMD implements IPublicCMD {
     @Override
     public void handleOwner(CommandContext ctx) {
         List<String> cmds = ctx.getArgs();
-        if (Boolean.parseBoolean(cmds.get(0)))
+        if (Boolean.parseBoolean(cmds.get(0))){
             inp = new File(Data.PLACE + cmds.get(1) + ".txt");
+        }
         handlePublic(ctx);
     }
 
@@ -51,7 +53,7 @@ public class PlaceGifCMD implements IPublicCMD {
         if (inp == null) {
             try {
                 Attachment placefile = ctx.getMessage().getAttachments().get(0);
-                inp = placefile.downloadToFile().join();
+                placefile.getProxy().downloadToFile(inp);
                 outsider = true;
             } catch (Exception e) {
                 ctx.getChannel().sendMessage("You probably didn't include the file").queue();
@@ -59,7 +61,7 @@ public class PlaceGifCMD implements IPublicCMD {
             }
         }
 
-        ctx.getMessage().addReaction(Data.check).queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
 
         try {
             doing = true;
@@ -120,7 +122,7 @@ public class PlaceGifCMD implements IPublicCMD {
         }
         File gif = new File(Data.PLACE + ctx.getAuthor().getId() + ".gif");
         ctx.getChannel().sendMessage(ctx.getAuthor().getAsMention()).queue();
-        ctx.getChannel().sendFile(gif).complete();
+        ctx.getChannel().sendFiles(FileUpload.fromData(gif)).complete();
         gif.delete();
     }
 

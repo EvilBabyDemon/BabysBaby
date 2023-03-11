@@ -7,9 +7,9 @@ import java.util.List;
 
 import BabyBaby.data.Data;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 
 public class GetReminder implements Runnable {
     public User reminder;
@@ -45,7 +45,7 @@ public class GetReminder implements Runnable {
             return;
         }
 
-        List<Emote> emoList = guild.getJDA().getEmotesByName("dinkdonk", true);
+        List<RichCustomEmoji> emoList = guild.getJDA().getEmojisByName("dinkdonk", true);
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setThumbnail(emoList.get(0).getImageUrl());

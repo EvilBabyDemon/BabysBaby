@@ -4,8 +4,8 @@ import BabyBaby.Command.IPublicCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
 import BabyBaby.Command.CommandContext;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class PingCMD implements IPublicCMD {
 
@@ -29,7 +29,7 @@ public class PingCMD implements IPublicCMD {
                         .queue());
         */
         MessageChannel channel = ctx.getChannel();
-        ctx.getMessage().addReaction(Data.check).complete();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).complete();
         String ping = "<:pinged:747783377322508290> Ping!";
         long time = System.currentTimeMillis();
         channel.sendMessage(ping).queue(response -> {

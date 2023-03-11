@@ -4,10 +4,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.audit.*;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 import BabyBaby.Command.ISlashCMD;
-import BabyBaby.Command.commands.Admin.*;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.Command.commands.Slash.AdminSlashCMD;
 import BabyBaby.Command.commands.Slash.BlindSlashCMD;
@@ -16,12 +15,9 @@ import BabyBaby.Command.commands.Slash.RemindSlashCMD;
 import BabyBaby.Command.commands.Slash.ReportSlashCMD;
 import BabyBaby.Command.commands.Slash.RoleSlashCMD;
 import BabyBaby.Command.commands.Slash.RolesleftSlashCMD;
-import BabyBaby.Command.commands.Slash.TestSlashCMD;
 import BabyBaby.Command.commands.Slash.WhoisSlashCMD;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.Data;
-
-import javax.annotation.Nonnull;
 
 import java.io.IOException;
 import java.sql.*;
@@ -37,7 +33,7 @@ public class StartupListener extends ListenerAdapter {
     }
 
     @Override
-    public void onReady(@Nonnull ReadyEvent event) {
+    public void onReady(ReadyEvent event) {
         long timestopper = System.currentTimeMillis();
 
         LinkedList<Thread> threads = new LinkedList<>();
@@ -274,10 +270,6 @@ public class StartupListener extends ListenerAdapter {
                             blindex.schedule(blindclass, (time - System.currentTimeMillis()) / 1000, TimeUnit.SECONDS);
                             BlindSlashCMD.blind.put(called.getMember(blindUser), blindex);
                             BlindSlashCMD.blindexe.put(blindex, blindclass);
-
-                            if (rs.getBoolean("ADMINMUTE")) {
-                                AdminMuteBlindCMD.userBlinded.add(called.getMember(blindUser));
-                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -9,13 +9,13 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IOwnerCMD;
 import BabyBaby.Command.StandardHelp;
 import BabyBaby.data.Data;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public class PlaceDraw implements IOwnerCMD {
     public boolean on;
     ArrayList<String> printer;
-    MessageChannel channel;
+    TextChannel channel;
     int divider;
 
     @Override
@@ -46,12 +46,12 @@ public class PlaceDraw implements IOwnerCMD {
             }
             s.close();
         } catch (Exception e) {
-            ctx.getMessage().addReaction(Data.xmark).queue();
+            ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.xmark)).queue();
             e.printStackTrace();
             return;
         }
         channel = ctx.getGuild().getTextChannelById("819966095070330950");
-        ctx.getMessage().addReaction(Data.check).queue();
+        ctx.getMessage().addReaction(ctx.getJDA().getEmojiById(Data.check)).queue();
 
         for (int i = 0; i < divider; i++) {
             for (int j = i; j < printer.size(); j += divider) {

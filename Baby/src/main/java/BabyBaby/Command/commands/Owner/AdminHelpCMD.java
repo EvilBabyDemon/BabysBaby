@@ -7,7 +7,6 @@ import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.Command.IAdminCMD;
 import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IOwnerCMD;
-import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -34,7 +33,7 @@ public class AdminHelpCMD implements IOwnerCMD {
 
     @Override
     public MessageEmbed getOwnerHelp(String prefix) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+        EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle("Help page of: `" + getName() + "`");
         embed.setDescription("Get Help page of an admin.");
