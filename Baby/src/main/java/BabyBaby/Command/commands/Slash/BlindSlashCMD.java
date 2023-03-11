@@ -96,7 +96,7 @@ public class BlindSlashCMD implements ISlashCMD {
                 time = Double.parseDouble(number);
             }
         } catch (NumberFormatException e) {
-            Helper.unhook("You probably forgot the space between the time and unit, if not use numbers pls!", failed,
+            Helper.unhook("You must use numbers!", failed,
                     hook, mem);
             return;
         }
@@ -115,7 +115,7 @@ public class BlindSlashCMD implements ISlashCMD {
             return;
         }
 
-        long timesql = (System.currentTimeMillis() + rounder * 1000);
+        long timesql = System.currentTimeMillis() + rounder * 1000;
 
         Role highestbot = guild.getSelfMember().getRoles().get(0);
 

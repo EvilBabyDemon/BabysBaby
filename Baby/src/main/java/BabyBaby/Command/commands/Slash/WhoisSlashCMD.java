@@ -157,7 +157,7 @@ public class WhoisSlashCMD implements ISlashCMD {
 		if (ephemeral || spamPrev && pleb) {
 			Helper.unhook(eb.build(), failed, hook, event.getUser());
 		} else {
-			channel.sendMessage("Cache reload").complete().editMessage(invitee).complete().delete().complete();
+			channel.sendMessage("Cache reload").complete().editMessage(invitee + stalking.getAsMention()).complete().delete().complete();
 			channel.sendMessageEmbeds(eb.build()).queue();
 			Helper.unhook("Done", failed, hook, event.getUser());
 		}
