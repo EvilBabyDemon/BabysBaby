@@ -53,8 +53,8 @@ public class FlashedCMD implements IPublicCMD {
                     mention = blind.getAsMention();
                     cache += mention;
                 }
-                long ms = Long.parseLong(rs.getString("MUTETIME")) - System.currentTimeMillis();
-                userNames += mention + " <t:" + ms + ":R> left (<t:" + ms + ":F>) |";
+                long ms = Long.parseLong(rs.getString("MUTETIME"))/1000;
+                userNames += mention + " <t:" + ms + ":R> left (<t:" + ms + ":F>) \n";
             }
             rs.close();
             stmt.close();

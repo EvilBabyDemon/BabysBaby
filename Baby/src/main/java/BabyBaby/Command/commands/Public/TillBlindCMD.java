@@ -49,7 +49,7 @@ public class TillBlindCMD implements IPublicCMD {
             while (rs.next()) {
                 String guildname = jda.getGuildById(rs.getString("GUILDID")).getName();
 
-                long ms = Long.parseLong(rs.getString("MUTETIME")) - System.currentTimeMillis();
+                long ms = Long.parseLong(rs.getString("MUTETIME"))/1000;
 
                 user += guildname + " | <t:" + ms + ":R> left (<t:" + ms + ":F>)) \n ";
             }
