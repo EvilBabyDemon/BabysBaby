@@ -4,7 +4,6 @@ import BabyBaby.ColouredStrings.ColouredStringAsciiDoc;
 import BabyBaby.CmdHandler;
 import BabyBaby.Command.*;
 import BabyBaby.data.Data;
-import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -142,7 +141,7 @@ public class HelpCMD implements IPublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+        EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle("Help page of: `" + getName() + "`");
         embed.setDescription("A command that shows you what my bot can or can't do.");
@@ -180,7 +179,7 @@ public class HelpCMD implements IPublicCMD {
 
     void commandNotFound(MessageChannel channel, String search, String prefix) {
         channel.sendMessageEmbeds(
-                EmbedUtils.getDefaultEmbed()
+                new EmbedBuilder()
                         .setTitle("Error: Command `" + search + "` not found")
                         .setDescription(new ColouredStringAsciiDoc()
                                 .addBlueAboveDash("try " + prefix + "help to see all commands")
@@ -240,14 +239,14 @@ public class HelpCMD implements IPublicCMD {
         ArrayList<IPublicCMD> publiclist = new ArrayList<>(manager.getPublicCommands());
         publiclist.sort(compPub);
         ArrayList<HashSet<String>> groups = new ArrayList<>();
-        groups.add(new HashSet<>(Arrays.asList("blind", "flashed", "forceblind", "groupblind", "learning", "muteme",
-                "stats", "till", "unmuteme", "unblind")));
+        groups.add(new HashSet<>(Arrays.asList("blind", "flashed", "till", "unblind")));
         groups.add(new HashSet<>(Arrays.asList("poll", "role", "remind")));
-        groups.add(new HashSet<>(Arrays.asList("crypt", "decrypt", "nokey")));
         groups.add(new HashSet<>(Arrays.asList("ping", "help", "source", "suggestion", "usage")));
 
+        String[] titles = { "Anti-Procrastinator", "Useful", "Bot Info", "Other" };
+        
         String[] cmdString = new String[5];
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < titles.length; i++) {
             cmdString[i] = "";
         }
 
@@ -259,18 +258,17 @@ public class HelpCMD implements IPublicCMD {
                     continue cmds;
                 }
             }
-            cmdString[4] += prefix + publiclist.remove(i--).getName() + "\n";
+            cmdString[titles.length-1] += prefix + publiclist.remove(i--).getName() + "\n";
         }
-        String[] titles = { "Anti-Procrastinator", "Useful", "Cypher", "Bot Info", "Other" };
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < titles.length; i++) {
             eb.addField("", new ColouredStringAsciiDoc().addBlueAboveEq(titles[i]).addDiff(cmdString[i]).build(), true);
         }
 
     }
 
     private void generalHelp(CmdHandler manager, String prefix, int rank, MessageChannel channel) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+        EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle("BabysBaby");
 

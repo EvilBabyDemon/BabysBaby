@@ -1,12 +1,11 @@
 package BabyBaby.ColouredStrings;
 
-import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class StandardHelpEmbed {
     public MessageEmbed StandardHelp(String prefix, String name, String description, String cmd) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+        EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle("Help page of: `" + name + "`");
         embed.setDescription(description);

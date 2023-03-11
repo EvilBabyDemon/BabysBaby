@@ -19,8 +19,6 @@ import BabyBaby.Command.commands.Slash.WhoisSlashCMD;
 import BabyBaby.data.GetRolesBack;
 import BabyBaby.data.Data;
 
-import javax.annotation.Nonnull;
-
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
@@ -35,7 +33,7 @@ public class StartupListener extends ListenerAdapter {
     }
 
     @Override
-    public void onReady(@Nonnull ReadyEvent event) {
+    public void onReady(ReadyEvent event) {
         long timestopper = System.currentTimeMillis();
 
         LinkedList<Thread> threads = new LinkedList<>();

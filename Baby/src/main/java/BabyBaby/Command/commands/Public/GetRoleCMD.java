@@ -19,7 +19,6 @@ import BabyBaby.Command.CommandContext;
 import BabyBaby.Command.IPublicCMD;
 import BabyBaby.data.Data;
 import BabyBaby.data.Helper;
-import me.duncte123.botcommons.messaging.EmbedUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -304,7 +303,7 @@ public class GetRoleCMD implements IPublicCMD {
 
     @Override
     public MessageEmbed getPublicHelp(String prefix) {
-        EmbedBuilder embed = EmbedUtils.getDefaultEmbed();
+        EmbedBuilder embed = new EmbedBuilder();
 
         embed.setTitle("Help page of: `" + getName() + "`");
         embed.setDescription(
