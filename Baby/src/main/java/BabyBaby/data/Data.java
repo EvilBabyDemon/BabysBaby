@@ -15,8 +15,8 @@ public class Data {
     public static HashMap<String, String> msgToChan = new HashMap<>();
     public static HashMap<String, String> emoteassign = new HashMap<>();
     public static HashSet<String> roles = new HashSet<>();
-    public static final String check = ":checkmark:769279808244809798";
-    public static final String xmark = ":xmark:769279807916998728";
+    public static final String check = "769279808244809798";
+    public static final String xmark = "769279807916998728";
     public static final String db = "jdbc:sqlite:testone.db";
     public static final String modlog = "774322031688679454";
     public static final String adminlog = "774322847812157450";
