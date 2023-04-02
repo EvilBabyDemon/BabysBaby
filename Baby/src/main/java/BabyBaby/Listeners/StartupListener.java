@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 import BabyBaby.Command.ISlashCMD;
-import BabyBaby.Command.commands.Admin.AprilFools;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.Command.commands.Slash.AdminSlashCMD;
 import BabyBaby.Command.commands.Slash.BlindSlashCMD;
@@ -311,8 +310,6 @@ public class StartupListener extends ListenerAdapter {
             Data.slashcmds.add(new RoleSlashCMD());
             Data.slashcmds.add(new RolesleftSlashCMD());
             Data.slashcmds.add(new WhoisSlashCMD());
-            Data.slashcmds.add(new AprilFools());
-            // Data.slashcmds.add(new TestSlashCMD());
 
             for (ISlashCMD cmd : Data.slashcmds) {
                 cmd.load(cmd.initialise(eth), eth);
