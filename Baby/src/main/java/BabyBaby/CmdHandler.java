@@ -1,6 +1,7 @@
 package BabyBaby;
 
 import BabyBaby.Command.*;
+import BabyBaby.Command.commands.Admin.AprilFools;
 import BabyBaby.Command.commands.Owner.*;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.data.Data;
@@ -46,6 +47,7 @@ public class CmdHandler {
         addPublicCommand(new TillBlindCMD());
 
         addPublicCommand(new UsageCMD());
+        addPublicCommand(new AprilFools());
 
         // adding commands visible to owner
         addOwnerCommand(new AdminHelpCMD());

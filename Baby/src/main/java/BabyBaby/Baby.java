@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-
+import BabyBaby.Listeners.AprilListener;
 import BabyBaby.Listeners.BabyListener;
 import BabyBaby.Listeners.ButtonSlashListener;
 import BabyBaby.Listeners.ModerationListener;
@@ -49,7 +49,7 @@ public class Baby {
             builder.setMemberCachePolicy(MemberCachePolicy.ALL);
 
             JDA jda = builder.build();
-            jda.addEventListener(new StartupListener(jda), new BabyListener(jda), new ModerationListener(),
+            jda.addEventListener(new StartupListener(jda), new BabyListener(jda), new ModerationListener(), new AprilListener(),
                     new ButtonSlashListener());
 
             Data.startUp = OffsetDateTime.now();

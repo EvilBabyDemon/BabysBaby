@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 import BabyBaby.Command.ISlashCMD;
+import BabyBaby.Command.commands.Admin.AprilFools;
 import BabyBaby.Command.commands.Public.*;
 import BabyBaby.Command.commands.Slash.AdminSlashCMD;
 import BabyBaby.Command.commands.Slash.BlindSlashCMD;
@@ -297,7 +298,7 @@ public class StartupListener extends ListenerAdapter {
 
         System.out.println("Started!" + (System.currentTimeMillis() - timestopper));
         timestopper = System.currentTimeMillis();
-
+        
         try {
             Guild eth = bot.getGuildById(Data.ETH_ID);
             eth.updateCommands().complete();
@@ -310,6 +311,7 @@ public class StartupListener extends ListenerAdapter {
             Data.slashcmds.add(new RoleSlashCMD());
             Data.slashcmds.add(new RolesleftSlashCMD());
             Data.slashcmds.add(new WhoisSlashCMD());
+            Data.slashcmds.add(new AprilFools());
             // Data.slashcmds.add(new TestSlashCMD());
 
             for (ISlashCMD cmd : Data.slashcmds) {
@@ -319,6 +321,8 @@ public class StartupListener extends ListenerAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        
         System.out.println("Slash done: " + (System.currentTimeMillis() - timestopper));
 
     }
