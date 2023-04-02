@@ -9,7 +9,7 @@ public interface IPublicCMD extends IAdminCMD {
     }
 
     default void handleOwner(CommandContext ctx) {
-        handlePublic(ctx);
+        handleAdmin(ctx);
     }
 
     default void handleAdmin(CommandContext ctx) {
@@ -19,7 +19,7 @@ public interface IPublicCMD extends IAdminCMD {
     void handlePublic(CommandContext ctx);
 
     default MessageEmbed getOwnerHelp(String prefix) {
-        return getPublicHelp(prefix);
+        return getAdminHelp(prefix);
     }
 
     default MessageEmbed getAdminHelp(String prefix) {
