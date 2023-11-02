@@ -117,8 +117,11 @@ public class ModerationListener extends ListenerAdapter {
             return;
         }
 
-        DateTimeFormatter linkcreate = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
-        String timecreate = urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate);
+        //DateTimeFormatter linkcreate = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm:ss");
+        //String timecreate = urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate);
+
+        long unixTimeStamp = urls.get(url).getTimeCreated().toEpochSecond();
+        String timecreate = "<t:" + unixTimeStamp + ":f> <t:" + unixTimeStamp + ":R>";
 
         memberJoinModLog(urls.get(url).getInviter().getAsMention(), event.getUser(), log, url, timecreate,
                 urls.get(url).getUses(), urls.get(url).getInviter().getId());
@@ -147,7 +150,7 @@ public class ModerationListener extends ListenerAdapter {
     private void memberJoinModLog(String inviter, User joined, MessageChannel log, String url, String invCreate,
             int uses, String invitee) {
 
-        DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
+        DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy HH:mm:ss");
         OffsetDateTime created = joined.getTimeCreated();
         OffsetDateTime now = OffsetDateTime.now();
         int day = now.getDayOfYear() - created.getDayOfYear();
@@ -158,8 +161,9 @@ public class ModerationListener extends ListenerAdapter {
         String multday = (day == 1) ? " day ago" : " days ago";
         String actualtime = (year > 0) ? (year + Math.round(day / 365.0)) + multyear : day + multday;
 
-        String acccrea = "Account created at: **" + joined.getTimeCreated().format(createtime) + "** `(" + actualtime
-                + ")`";
+        //String acccrea = "Account created at: **" + joined.getTimeCreated().format(createtime) + "** `(" + actualtime + ")`";
+        long unixTimeStamp = created.toEpochSecond();
+        String acccrea = "Account created at: <t:" + unixTimeStamp + ":f> <t:" + unixTimeStamp + ":R>";
 
         String desc = "User that joined " + joined.getAsMention() + "\n" +
                 "Used Link: " + url + "\n Creator: " + inviter + "\n" +
