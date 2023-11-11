@@ -1,10 +1,5 @@
 package BabyBaby.Command.commands.Slash;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,11 +46,8 @@ public class WhoisSlashCMD implements ISlashCMD {
 				: event.getMember().getEffectiveName();
 		List<Role> allrolesList = stalking.getRoles();
 
-		LinkedList<Role> allroles = new LinkedList<>();
+		LinkedList<Role> allroles = new LinkedList<>(allrolesList);
 
-		for (Role role : allrolesList) {
-			allroles.add(role);
-		}
 		allroles.add(event.getGuild().getRoleById(event.getGuild().getId()));
 		Role highest = allroles.peek();
 		Role hoisted = null;
@@ -68,7 +60,6 @@ public class WhoisSlashCMD implements ISlashCMD {
 		}
 
 		DateTimeFormatter jointime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
-		DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
 
 		String rolementions = "";
 
@@ -83,54 +74,10 @@ public class WhoisSlashCMD implements ISlashCMD {
 		} else {
 			rolementions += "` and " + allroles.size() + " more...`";
 		}
-		OffsetDateTime created = stalking.getUser().getTimeCreated();
-		OffsetDateTime now = OffsetDateTime.now();
-		int day = now.getDayOfYear() - created.getDayOfYear();
-		day = (day < 0) ? 365 + day : day;
-		int year = now.getYear() - created.getYear() + ((now.getDayOfYear() < created.getDayOfYear()) ? -1 : 0);
 
-		String multyear = ((year + Math.round(day / 365.0)) == 1) ? " year ago" : " years ago";
-		String multday = (day == 1) ? " day ago" : " days ago";
-		String actualtime = (year > 0) ? (year + Math.round(day / 365.0)) + multyear : day + multday;
+		String addchecks = Helper.creationTime(stalking);
 
-		String addchecks = "Created as: **a " + ((stalking.getUser().isBot()) ? "bot" : "user")
-				+ " account** \n Created at: **" + stalking.getUser().getTimeCreated().format(createtime) + "** `("
-				+ actualtime + ")`";
-
-		LinkedList<String> invID = new LinkedList<>();
-		String invitee = "";
-
-		Connection c = null;
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection(Data.db);
-
-			pstmt = c.prepareStatement("SELECT INVITEE FROM INVITED WHERE INVITED = ?;");
-			pstmt.setString(1, stalking.getId());
-			ResultSet rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				invID.add(rs.getString("INVITEE"));
-			}
-
-			pstmt.close();
-			c.close();
-		} catch (Exception e) {
-			System.out.println(e.getClass().getName() + ": " + e.getMessage());
-			e.printStackTrace();
-		}
-
-		if (invID.size() == 0) {
-			invitee = "No one found.";
-		}
-		for (String userID : invID) {
-			try {
-				invitee += event.getGuild().getMemberById(userID).getAsMention();
-			} catch (Exception e) {
-				invitee += userID + " ";
-			}
-		}
+		String inviter = Helper.getInviter(stalking);
 
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle("@" + stalking.getUser().getAsTag() + " (" + stalking.getId() + ")");
@@ -142,7 +89,7 @@ public class WhoisSlashCMD implements ISlashCMD {
 				false);
 		eb.addField("Joined at", "`" + stalking.getTimeJoined().toLocalDateTime().format(jointime) + "`", false);
 		if (!pleb) {
-			eb.addField("Invited by", invitee, false);
+			eb.addField("Invited by", inviter, false);
 		}
 		eb.addField("Highest Role", highest.getAsMention(), true);
 		eb.addField("Hoisted Role", (hoisted != null) ? hoisted.getAsMention() : "`Unhoisted`", true);
@@ -157,7 +104,7 @@ public class WhoisSlashCMD implements ISlashCMD {
 		if (ephemeral || spamPrev && pleb) {
 			Helper.unhook(eb.build(), failed, hook, event.getUser());
 		} else {
-			channel.sendMessage("Cache reload").complete().editMessage(invitee + stalking.getAsMention()).complete().delete().complete();
+			channel.sendMessage("Cache reload").complete().editMessage(inviter + stalking.getAsMention()).complete().delete().complete();
 			channel.sendMessageEmbeds(eb.build()).queue();
 			Helper.unhook("Done", failed, hook, event.getUser());
 		}
