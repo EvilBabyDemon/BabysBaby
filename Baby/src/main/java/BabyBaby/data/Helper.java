@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -238,5 +240,61 @@ public class Helper {
         } else {
             hook.editOriginalEmbeds(message).queue();
         }
+    }
+
+    public static String creationTime(Member member) {
+        DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
+        OffsetDateTime created = member.getUser().getTimeCreated();
+		OffsetDateTime now = OffsetDateTime.now();
+		int day = now.getDayOfYear() - created.getDayOfYear();
+		day = (day < 0) ? 365 + day : day;
+		int year = now.getYear() - created.getYear() + ((now.getDayOfYear() < created.getDayOfYear()) ? -1 : 0);
+
+		String multyear = ((year + Math.round(day / 365.0)) == 1) ? " year ago" : " years ago";
+		String multday = (day == 1) ? " day ago" : " days ago";
+		String actualtime = (year > 0) ? (year + Math.round(day / 365.0)) + multyear : day + multday;
+
+		String addchecks = "Created as: **a " + ((member.getUser().isBot()) ? "bot" : "user")
+				+ " account** \n Created at: **" + member.getUser().getTimeCreated().format(createtime) + "** `("
+				+ actualtime + ")`";
+
+        return addchecks;
+    }
+    public static String getInviter(Member member) {
+        LinkedList<String> invID = new LinkedList<>();
+		String invitee = "";
+
+		Connection c = null;
+		PreparedStatement pstmt = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection(Data.db);
+
+			pstmt = c.prepareStatement("SELECT INVITEE FROM INVITED WHERE INVITED = ?;");
+			pstmt.setString(1, member.getId());
+			ResultSet rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				invID.add(rs.getString("INVITEE"));
+			}
+
+			pstmt.close();
+			c.close();
+		} catch (Exception e) {
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		if (invID.size() == 0) {
+			invitee = "No one found.";
+		}
+		for (String userID : invID) {
+			try {
+				invitee += member.getGuild().getMemberById(userID).getAsMention();
+			} catch (Exception e) {
+				invitee += userID + " ";
+			}
+		}
+        return invitee;
     }
 }

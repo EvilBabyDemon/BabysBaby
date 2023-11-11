@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.member.*;
@@ -16,6 +17,7 @@ import net.dv8tion.jda.api.managers.channel.concrete.VoiceChannelManager;
 import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 
 import BabyBaby.data.Data;
+import BabyBaby.data.Helper;
 
 import java.sql.*;
 import java.time.OffsetDateTime;
@@ -67,7 +69,7 @@ public class ModerationListener extends ListenerAdapter {
         TextChannel log = event.getGuild().getTextChannelById(Data.modlog);
 
         if (event.getUser().isBot()) {
-            memberJoinModLog("Admin (Bot addition)", event.getUser(), log, url, "NaN", 1, "bot");
+            memberJoinModLog("Admin (Bot addition)", event.getMember(), log, url, "NaN", 1, "bot");
             return;
         }
 
@@ -107,7 +109,7 @@ public class ModerationListener extends ListenerAdapter {
         if (!found) {
             try {
                 VanityInvite vanity = event.getGuild().retrieveVanityInvite().complete();
-                memberJoinModLog("Admin (Vanity URL)", event.getUser(), log, vanity.getUrl(), "NaN", vanity.getUses(),
+                memberJoinModLog("Admin (Vanity URL)", event.getMember(), log, vanity.getUrl(), "NaN", vanity.getUses(),
                         "vanity");
             } catch (Exception e) {
                 event.getGuild().getTextChannelById("747768907992924192").sendMessage(
@@ -120,7 +122,7 @@ public class ModerationListener extends ListenerAdapter {
         DateTimeFormatter linkcreate = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
         String timecreate = urls.get(url).getTimeCreated().toLocalDateTime().format(linkcreate);
 
-        memberJoinModLog(urls.get(url).getInviter().getAsMention(), event.getUser(), log, url, timecreate,
+        memberJoinModLog(urls.get(url).getInviter().getAsMention(), event.getMember(), log, url, timecreate,
                 urls.get(url).getUses(), urls.get(url).getInviter().getId());
 
         if (urls.get(url) != null) {
@@ -144,22 +146,10 @@ public class ModerationListener extends ListenerAdapter {
         }
     }
 
-    private void memberJoinModLog(String inviter, User joined, MessageChannel log, String url, String invCreate,
+    private void memberJoinModLog(String inviter, Member joined, MessageChannel log, String url, String invCreate,
             int uses, String invitee) {
 
-        DateTimeFormatter createtime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy");
-        OffsetDateTime created = joined.getTimeCreated();
-        OffsetDateTime now = OffsetDateTime.now();
-        int day = now.getDayOfYear() - created.getDayOfYear();
-        day = (day < 0) ? 365 + day : day;
-        int year = now.getYear() - created.getYear() + ((now.getDayOfYear() < created.getDayOfYear()) ? -1 : 0);
-
-        String multyear = ((year + Math.round(day / 365.0)) == 1) ? " year ago" : " years ago";
-        String multday = (day == 1) ? " day ago" : " days ago";
-        String actualtime = (year > 0) ? (year + Math.round(day / 365.0)) + multyear : day + multday;
-
-        String acccrea = "Account created at: **" + joined.getTimeCreated().format(createtime) + "** `(" + actualtime
-                + ")`";
+        String acccrea = Helper.creationTime(joined);
 
         String desc = "User that joined " + joined.getAsMention() + "\n" +
                 "Used Link: " + url + "\n Creator: " + inviter + "\n" +
@@ -168,13 +158,21 @@ public class ModerationListener extends ListenerAdapter {
                 acccrea;
 
         EmbedBuilder eb = new EmbedBuilder();
-        eb.setAuthor(joined.getAsTag() + " (" + joined.getId() + ")", joined.getAvatarUrl(), joined.getAvatarUrl());
+        eb.setAuthor(joined.getUser().getAsTag() + " (" + joined.getId() + ")", joined.getAvatarUrl(),
+                joined.getAvatarUrl());
         eb.setColor(1);
         eb.setThumbnail(joined.getAvatarUrl());
         eb.setDescription(desc);
 
-        log.sendMessage("cache reload").complete().editMessage(inviter + joined.getAsMention()).complete()
+        Message msg = log.sendMessage("cache reload").complete().editMessage(inviter + joined.getAsMention()).complete()
                 .editMessageEmbeds(eb.build()).complete();
+
+        // if account newer than a week add emote
+        long epoch = OffsetDateTime.now().toEpochSecond() - joined.getTimeCreated().toEpochSecond();
+        if (epoch < 7 * 24 * 60 * 60) {
+            Emoji alarm = log.getJDA().getEmojiById("796671967922749441");
+            msg.addReaction(alarm).queue();
+        }
 
         Connection c = null;
         PreparedStatement pstmt = null;
@@ -203,25 +201,59 @@ public class ModerationListener extends ListenerAdapter {
             return;
 
         Role student = event.getGuild().getRoleById(Data.ethstudent);
+        Role nonVerified = event.getGuild().getRoleById(Data.ethNonVerifyStudent);
+        Role external = event.getGuild().getRoleById(Data.ethexternal);
+        Member member = event.getMember();
 
-        if (!event.getRoles().contains(student))
+        if (event.getRoles().contains(student)) {
+            Connection c = null;
+            PreparedStatement pstmt = null;
+            try {
+                Class.forName("org.sqlite.JDBC");
+                c = DriverManager.getConnection(Data.db);
+
+                pstmt = c.prepareStatement("INSERT OR IGNORE INTO VERIFIED (ID) VALUES (?);");
+                pstmt.setString(1, event.getUser().getId());
+                pstmt.execute();
+
+                pstmt.close();
+                c.close();
+            } catch (Exception e) {
+                System.out.println(e.getClass().getName() + ": " + e.getMessage());
+                return;
+            }
+            List<Role> roles = member.getRoles();
+            if (roles.contains(external)) {
+                event.getGuild().removeRoleFromMember(member, external).queue();
+            }
+            if (roles.contains(nonVerified)) {
+                event.getGuild().removeRoleFromMember(member, nonVerified).queue();
+            }
+            // dont accidentally remove all (main) roles
             return;
+        }
 
-        Connection c = null;
-        PreparedStatement pstmt = null;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection(Data.db);
-
-            pstmt = c.prepareStatement("INSERT OR IGNORE INTO VERIFIED (ID) VALUES (?);");
-            pstmt.setString(1, event.getUser().getId());
-            pstmt.execute();
-
-            pstmt.close();
-            c.close();
-        } catch (Exception e) {
-            System.out.println(e.getClass().getName() + ": " + e.getMessage());
+        if (event.getRoles().contains(nonVerified)) {
+            List<Role> roles = member.getRoles();
+            if (roles.contains(external)) {
+                event.getGuild().removeRoleFromMember(member, external).queue();
+            }
+            if (Helper.verifiedUser(member.getId())) {
+                event.getGuild().addRoleToMember(member, student).complete();
+                event.getGuild().removeRoleFromMember(member, nonVerified).queue();
+            }
+            // dont accidentally remove all (main) roles
             return;
+        }
+
+        if (event.getRoles().contains(external)) {
+            List<Role> roles = member.getRoles();
+            if (roles.contains(nonVerified)) {
+                event.getGuild().removeRoleFromMember(member, nonVerified).queue();
+            }
+            if (roles.contains(student)) {
+                event.getGuild().removeRoleFromMember(member, student).queue();
+            }
         }
 
     }
@@ -268,6 +300,62 @@ public class ModerationListener extends ListenerAdapter {
     public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
         if (!event.getGuild().getId().equals(Data.ETH_ID)) {
             return;
+        }
+        Member left = event.getMember();
+
+        if (left != null) {
+            DateTimeFormatter jointime = DateTimeFormatter.ofPattern("E, dd.MM.yyyy, HH:mm");
+            List<Role> allrolesList = left.getRoles();
+
+            LinkedList<Role> allroles = new LinkedList<>(allrolesList);
+
+            allroles.add(event.getGuild().getRoleById(event.getGuild().getId()));
+            Role highest = allroles.peek();
+            Role hoisted = null;
+
+            for (Role role : allroles) {
+                if (role.isHoisted()) {
+                    hoisted = role;
+                    break;
+                }
+            }
+
+            String addchecks = Helper.creationTime(left);
+            String inviter = Helper.getInviter(left);
+
+            String rolementions = "";
+
+            while (allroles != null && rolementions.length() < 250 && allroles.size() != 0) {
+                rolementions += allroles.poll().getAsMention() + ", ";
+            }
+
+            if (allroles.size() == 0) {
+                if (rolementions.charAt(rolementions.length() - 1) == ',') {
+                    rolementions = rolementions.substring(0, rolementions.length() - 1);
+                }
+            } else {
+                rolementions += "` and " + allroles.size() + " more...`";
+            }
+
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setTitle("@" + left.getUser().getAsTag() + " (" + left.getId() + ")");
+            eb.setColor(highest.getColor());
+
+            eb.addField("Nickname",
+                    "`" + ((left.getNickname() != null) ? left.getNickname() : left.getEffectiveName()) + "` "
+                            + left.getAsMention(),
+                    false);
+            eb.addField("Joined at", "`" + left.getTimeJoined().toLocalDateTime().format(jointime) + "`", false);
+
+            eb.addField("Invited by", inviter, false);
+
+            eb.addField("Highest Role", highest.getAsMention(), true);
+            eb.addField("Hoisted Role", (hoisted != null) ? hoisted.getAsMention() : "`Unhoisted`", true);
+            eb.addField("Roles obtained (" + (1 + allrolesList.size()) + ")", rolementions, false);
+            eb.addField("Additional Checks", addchecks, false);
+            eb.setThumbnail(left.getUser().getAvatarUrl());
+            TextChannel log = event.getGuild().getTextChannelById(Data.modlog);
+            log.sendMessageEmbeds(eb.build()).queue();
         }
 
         AuditLogPaginationAction logs = event.getGuild().retrieveAuditLogs();
