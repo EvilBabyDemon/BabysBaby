@@ -22,6 +22,7 @@ jobs:
         
       - name: Build Maven Project
         run: |
+          cd Baby
           mvn -B package --file pom.xml
           mkdir staging && cp target/*.jar staging
           
