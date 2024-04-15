@@ -106,7 +106,7 @@ public class UnBlindCMD implements IPublicCMD {
         if (BlindSlashCMD.forceSet.contains(blindclass)) {
             author.openPrivateChannel().queue(privchannel -> {
                 privchannel.sendMessage(
-                        "You did a Force Blind. That are the consequences to your actions. Do not contact the admins! If it is an emergency contact Lukas, same if it is pobably a Bug.")
+                        "You did a Force Blind. That are the consequences to your actions. Do not contact the admins! If it is an emergency contact Lukas, same if it is probably a Bug.")
                         .queue();
             });
             return;
