@@ -38,7 +38,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           atomicPut: true    
-          local: staging/BabysBaby-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+          local: Baby/staging/BabysBaby-0.0.1-SNAPSHOT-jar-with-dependencies.jar
           remote: ${{ secrets.TARGET_DIRECTORY }}/BabysBaby.jar
           host: ${{ secrets.VSOS_IP_ADDRESS }}
           username: ${{ secrets.USERNAME }}
