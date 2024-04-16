@@ -26,7 +26,15 @@ jobs:
           mvn -B package --file pom.xml
           mkdir staging && cp target/*.jar staging
           cd target && ls
-          
+
+      - name: Move old BabysBaby.jar to a save place
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: mkdir --parents ${{ secrets.TARGET_DIRECTORY }}/oldVersions/$(date +%Y%m%d_%H%M%S) && mv ${{ secrets.TARGET_DIRECTORY }}/BabysBaby.jar $_
+          host: ${{ secrets.VSOS_IP_ADDRESS }}
+          username: ${{ secrets.USERNAME }}
+          privateKey: ${{ secrets.SSH_KEY }}
+           
 
       - name: Deploy BabysBaby.jar to server
         uses: garygrossgarten/github-action-scp@release
