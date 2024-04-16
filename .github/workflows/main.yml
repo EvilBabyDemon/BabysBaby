@@ -25,7 +25,6 @@ jobs:
           cd Baby
           mvn -B package --file pom.xml
           mkdir staging && cp target/*.jar staging
-          cd target && ls
 
       - name: Move old BabysBaby.jar to a save place
         uses: garygrossgarten/github-action-ssh@release
