@@ -134,6 +134,7 @@ public class BabyListener extends ListenerAdapter {
     }
 
     // User Typing
+    /*
     @Override
     public void onUserTyping(UserTypingEvent event) {
         if (event.getGuild() != null && event.getMember().getId().equals("848908721900093440")
@@ -141,7 +142,7 @@ public class BabyListener extends ListenerAdapter {
             event.getGuild().getTextChannelById("789509420447039510")
                     .sendMessage("<@!223932775474921472> <:uhh:816589889898414100> <#768600365602963496>").queue();
         }
-    }
+    }*/
 
     // Message Received
     @Override
