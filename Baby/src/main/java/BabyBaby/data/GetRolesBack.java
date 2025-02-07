@@ -34,7 +34,7 @@ public class GetRolesBack implements Runnable {
             try {
                 addRole.add(guild.getRoleById(roleID));
             } catch (Exception e) {
-                System.out.println("Role doesnt exist anymore");
+                System.out.println(roleID + " : Role doesnt exist anymore, isn't really a problem.");
             }
         }
 
