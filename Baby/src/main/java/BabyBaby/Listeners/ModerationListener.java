@@ -203,6 +203,7 @@ public class ModerationListener extends ListenerAdapter {
         Role student = event.getGuild().getRoleById(Data.ethstudent);
         Role nonVerified = event.getGuild().getRoleById(Data.ethNonVerifyStudent);
         Role external = event.getGuild().getRoleById(Data.ethexternal);
+        Role hasToVerify = event.getGuild().getRoleById(Data.ethHasToVerify);
         Member member = event.getMember();
 
         if (event.getRoles().contains(student)) {
@@ -228,6 +229,9 @@ public class ModerationListener extends ListenerAdapter {
             }
             if (roles.contains(nonVerified)) {
                 event.getGuild().removeRoleFromMember(member, nonVerified).queue();
+            }
+            if (roles.contains(hasToVerify)) {
+                event.getGuild().removeRoleFromMember(member, hasToVerify).queue();
             }
             // dont accidentally remove all (main) roles
             return;
